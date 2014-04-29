@@ -1,0 +1,153 @@
+@CHARSET "UTF-8";
+
+@font-face {
+  font-family: 'Ubuntu';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Ubuntu'), url(_xyN3apAT_yRRDeqB3sPRg.woff) format('woff');
+}
+
+#bloqueMain{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	height: 620px;
+}
+#bloqueUpRight{
+	border: 3px solid #666666;
+	height: 300px;
+	width:48%;
+	float: right;
+	padding:4px;
+	border-radius: 10px;
+}
+
+#bloqueUpLeft{
+	border: 3px solid #666666;
+	height: 300px;
+	width: 48%;
+	padding: 4px;
+	border-radius: 10px;
+}
+
+#bloqueDownRight{
+	border: 3px solid #666666;
+	height: 292px;
+	width: 48%;
+	float:right;
+	margin-top:10px;
+	padding:4px;
+	border-radius: 10px;
+	padding-top:10px;
+}
+
+#bloqueDownLeft{
+	border: 3px solid #666666;
+	height: 300px;
+	width: 48%;
+	float: left;
+	margin-top: 10px;
+	padding: 4px;
+	border-radius: 10px;
+}
+/*Color de fuente de TH*/
+.grid-view .table th > .sort-link {
+  color: #FFF;
+}
+#tituloDashboard{
+	font-size: 14px;
+	color: #AEAE00;
+	margin-bottom: -25px;
+	padding-left:20px;
+}
+#iconoExportar{
+	width: 100%;
+	margin-bottom: 3px;
+}
+
+.anchoBotonSubmenu{
+	width: 100%;
+}
+
+.estiloBotones{
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0'
+}
+
+body
+{
+	font: normal 10pt Ubuntu;
+}
+
+thead th {
+	text-align: center; height:30px;vertical-align: middle;color:white;
+	background: #cedce7; /* Old browsers */
+	background: -moz-linear-gradient(top, #cedce7 0%, #596a72 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cedce7), color-stop(100%,#596a72)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #cedce7 0%,#596a72 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #cedce7 0%,#596a72 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #cedce7 0%,#596a72 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #cedce7 0%,#596a72 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=#cedce7, endColorstr=#596a72,GradientType=0 );
+}
+.table thead th {
+	vertical-align: middle !important;
+}
+.table th {
+	text-align: center !important;
+	font-size: 12px;
+}
+.mmf_table thead th{
+	height:10px;
+}
+.button-column{
+	width: 85px;
+}
+.estiloAlert{
+	position: relative;
+	margin-top:60px;
+	width:300px;
+	z-index: 200;
+	text-align:center;
+	min-height:45px;
+	left: -50%;
+	
+}
+#bloqueAlert{
+	position:absolute;
+	left:50%;
+}
+.table tfoot tr {
+	font-size: 14px;
+	background-color: #CCC;
+}
+.errorUpdateMM{
+	border-color: #C00 !important;
+	background:#FEE !important;
+}
+#modalUpdateFactura {
+	width: 720px; /* SET THE WIDTH OF THE MODAL */
+	margin: -20px 0 0 -370px; /* CHANGE MARGINS TO ACCOMODATE THE NEW WIDTH (original = margin: -250px 0 0 -280px;) */
+}
+#modalcreate {
+	margin-top: -20px;
+}
+#modalup {
+	margin-top: -20px;
+}
+#modalHistoricos {
+	width: 720px; /* SET THE WIDTH OF THE MODAL */
+	margin: -20px 0 0 -370px; /* CHANGE MARGINS TO ACCOMODATE THE NEW WIDTH (original = margin: -250px 0 0 -280px;) */
+}
+.colorDebe{
+	color:green;
+}
+.colorHaber{
+	color:red;
+}
+.anchoSmall{
+	width:35px;	
+}
+.anchoMedium{
+	width:130px;	
+}
