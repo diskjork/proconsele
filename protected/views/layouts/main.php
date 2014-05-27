@@ -44,7 +44,12 @@
 					'items'=>array(
 						array('label'=>'DASHBOARD','icon'=>'icon-th-large','url'=>Yii::app()->request->baseUrl.'/index.php'),
 						array('label'=>'REPORTES','icon'=>'icon-signal','url'=>Yii::app()->request->baseUrl.'/index.php/reporte/index'),
-
+						array('label'=>'CUENTAS','icon'=>'icon-signal','url'=>'#',
+							'items'=>array(
+									array('label'=>'CUENTAS','url'=>Yii::app()->request->baseUrl.'/index.php/cuenta/admin'),
+									array('label'=>'ASIENTO','url'=>Yii::app()->request->baseUrl.'/index.php/asiento/admin'),
+							)
+						),
 						array('label'=>'CONFIGURACION','icon'=>'icon-wrench','url'=>'#',
 								'items'=>array(
 									array('label'=>'Usuarios', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/admin'),

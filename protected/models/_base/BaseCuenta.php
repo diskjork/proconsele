@@ -19,7 +19,6 @@
  * @property Caja[] $cajas
  * @property Tipocuenta $tipocuentaIdtipocuenta
  * @property Factura[] $facturas
- * @property Subcuenta[] $subcuentas
  */
 abstract class BaseCuenta extends GxActiveRecord {
 
@@ -36,7 +35,7 @@ abstract class BaseCuenta extends GxActiveRecord {
 	}
 
 	public static function representingColumn() {
-		return 'codigocta';
+		return 'nombre';
 	}
 
 	public function rules() {
@@ -54,7 +53,6 @@ abstract class BaseCuenta extends GxActiveRecord {
 			'cajas' => array(self::HAS_MANY, 'Caja', 'cuenta_idcuenta'),
 			'tipocuentaIdtipocuenta' => array(self::BELONGS_TO, 'Tipocuenta', 'tipocuenta_idtipocuenta'),
 			'facturas' => array(self::HAS_MANY, 'Factura', 'cuenta_idcuenta'),
-			'subcuentas' => array(self::HAS_MANY, 'Subcuenta', 'cuenta_idcuenta'),
 		);
 	}
 
@@ -74,7 +72,6 @@ abstract class BaseCuenta extends GxActiveRecord {
 			'cajas' => null,
 			'tipocuentaIdtipocuenta' => null,
 			'facturas' => null,
-			'subcuentas' => null,
 		);
 	}
 

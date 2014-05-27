@@ -12,16 +12,11 @@
  * @property integer $idasiento
  * @property string $fecha
  * @property string $descripcion
- * @property double $debe
- * @property double $haber
- * @property integer $cuenta_idcuenta
- * @property integer $subcuenta_idsubcuenta
  *
- * @property Cuenta $cuentaIdcuenta
- * @property Subcuenta $subcuentaIdsubcuenta
+ * @property Detalleasiento[] $detalleasientos
  */
 abstract class BaseAsiento extends GxActiveRecord {
-
+	public $totaldebe, $totalhaber;
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -40,19 +35,18 @@ abstract class BaseAsiento extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('fecha, cuenta_idcuenta, subcuenta_idsubcuenta', 'required'),
-			array('cuenta_idcuenta, subcuenta_idsubcuenta', 'numerical', 'integerOnly'=>true),
-			array('debe, haber', 'numerical'),
-			array('descripcion', 'length', 'max'=>200),
-			array('descripcion, debe, haber', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idasiento, fecha, descripcion, debe, haber, cuenta_idcuenta, subcuenta_idsubcuenta', 'safe', 'on'=>'search'),
+			array('fecha, descripcion', 'required'),
+			array('descripcion', 'length', 'max'=>255),
+			array('descripcion', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idasiento, fecha, descripcion', 'safe', 'on'=>'search'),
+			array('totaldebe, totalhaber','safe'),
+			array('totaldebe, totalhaber','validarPartidaDoble'),
 		);
 	}
 
 	public function relations() {
 		return array(
-			'cuentaIdcuenta' => array(self::BELONGS_TO, 'Cuenta', 'cuenta_idcuenta'),
-			'subcuentaIdsubcuenta' => array(self::BELONGS_TO, 'Subcuenta', 'subcuenta_idsubcuenta'),
+			'detalleasientos' => array(self::HAS_MANY, 'Detalleasiento', 'asiento_idasiento'),
 		);
 	}
 
@@ -66,28 +60,39 @@ abstract class BaseAsiento extends GxActiveRecord {
 			'idasiento' => Yii::t('app', 'Idasiento'),
 			'fecha' => Yii::t('app', 'Fecha'),
 			'descripcion' => Yii::t('app', 'Descripcion'),
-			'debe' => Yii::t('app', 'Debe'),
-			'haber' => Yii::t('app', 'Haber'),
-			'cuenta_idcuenta' => null,
-			'subcuenta_idsubcuenta' => null,
-			'cuentaIdcuenta' => null,
-			'subcuentaIdsubcuenta' => null,
+			'detalleasientos' => null,
 		);
 	}
-
+	
+	public function validarPartidaDoble($attribute,$params){
+               
+               if($this->totaldebe != $this->totalhaber){
+               	$this->addError('debe','partida doble');
+                        
+               }
+    }
 	public function search() {
 		$criteria = new CDbCriteria;
 
 		$criteria->compare('idasiento', $this->idasiento);
-		$criteria->compare('fecha', $this->fecha, true);
+		//$criteria->compare('fecha', $this->fecha, true);
+		$criteria->compare("DATE_FORMAT(fecha,'%d/%m/%Y')",$this->fecha);
 		$criteria->compare('descripcion', $this->descripcion, true);
-		$criteria->compare('debe', $this->debe);
-		$criteria->compare('haber', $this->haber);
-		$criteria->compare('cuenta_idcuenta', $this->cuenta_idcuenta);
-		$criteria->compare('subcuenta_idsubcuenta', $this->subcuenta_idsubcuenta);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 		));
 	}
+	public function behaviors()
+		{
+		    return array(
+		    	'datetimeI18NBehavior' => array('class' => 'ext.DateTimeI18NBehavior.DateTimeI18NBehavior'),
+		    	'ERememberFiltersBehavior' => array(
+	            	'class' => 'application.components.ERememberFiltersBehavior',
+	               	'defaults'=>array(),           /* optional line */
+	               	'defaultStickOnClear'=>false   /* optional line */
+	           	),
+		    
+		   ); // 'ext' is in Yii 1.0.8 version. For early versions, use 'application.extensions' instead.
+		}
 }
