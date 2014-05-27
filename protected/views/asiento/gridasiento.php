@@ -1,3 +1,4 @@
+
 <?php
 
 $gridColumns= array(
@@ -38,3 +39,4 @@ $gridColumns= array(
 		'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
 ));
 ?>
+

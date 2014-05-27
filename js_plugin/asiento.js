@@ -2,6 +2,33 @@ $(document).on('ready',function(){
 
 $("label:contains('Fecha')").append('<span class="required">*</span>');
 //$("label:contains('Descripcion')").append('<span class="required">*</span>')
+$("span.wh-relational-column").append('<i class="icon-chevron-down"></i>');
+$("span.wh-relational-column").find("i").tooltip({
+	title: "Mostrar"
+	});
+//función para cambiar el ícono utilizado para desplegar el asiento en la grilla
+$("span.wh-relational-column").find("i").click(function(){
+ 	var clase=$(this).attr('class');
+ 	switch(clase){
+ 		case "icon-chevron-down":
+ 			$(this).removeClass("icon-chevron-down");
+ 			$(this).addClass("icon-chevron-up");
+ 			$(this).tooltip('destroy');
+ 			$(this).tooltip({
+				title: "Ocultar"
+			});
+ 			break;
+ 		case "icon-chevron-up":
+ 			$(this).removeClass("icon-chevron-up");
+ 			$(this).addClass("icon-chevron-down");
+ 			$(this).tooltip('destroy');
+ 			$(this).tooltip({
+				title: "Mostrar"
+			});
+ 			break;
+ 	}
+ 	
+});
 formato();
 $("#id_member").click(function(){
 	newElem();
