@@ -18,48 +18,71 @@ $this->menu=array(
 
 <h1>Asientos</h1>
 <!-- search-form -->
+<?php 
 
-<?php
-$gridColumns= array(
-		array(
-				'header'=>'N°',
-				'name'=>'idasiento',
-				'htmlOptions' => array('width' =>'60px'),
-			),
-		array(
-				'header'=>'FECHA',
-				'name'=>'fecha',
-				'htmlOptions' => array('width' =>'90px'),
-			),
-		array(
-			'header'=>'DESCRIPCION',
-			'name'=>'descripcion',
-			'htmlOptions' => array('width' =>'60%',
-										'style'=>'text-align:left;'),
-		),
+				 
+		//para la barra de los años 
+		if(!isset($_GET['anioTab'])){
+				//$_GET['anioTab']=0;
+				$anioTab=date('Y');
+			}else{
+				$anioTab=$_GET['anioTab'];
+			}
 		
+		
+		$anioInicio=2014;
+		$anioSiguiente=date('Y')+1;
+		$nomVar='modoActive';
+		
+		for ($i=$anioInicio;$i<$anioSiguiente;$i++){	
+			$varTemp=$nomVar.$i;
+			$$varTemp=false;
+			
+			if ($anioTab==$i){
+				$$varTemp=true;
+				}
+			$arregloTabs [] =array('label'=>$i, 'url'=>array('admin','anioTab'=>$i),'active'=>$$varTemp);
+			}
+	
+// ---------------------------BARRA DE A�OS----------------------------------		
+		$this->widget('bootstrap.widgets.TbNav', array(
+	    'type'=> TbHtml::NAV_TYPE_PILLS, // '', 'tabs', 'pills' (or 'list')
+	    'stacked'=>false, // whether this is a stacked menu
+	    'items'=>$arregloTabs,
+		)); 
+//---------------------------------------------------------------		
+	
+	$meses=array(
+		array('01','ENE'),array('02','FEB'),array('03','MAR'),array('04','ABR'),
+		array('05','MAY'),array('06','JUN'),array('07','JUL'),array('08','AGO'),
+		array('09','SET'),array('10','OCT'),array('11','NOV'),array('12','DIC'),
 	);
+	
+	
+	$nomVarMes='modoActive';
+	for($i=0;$i<12;$i++){
+		$varTempMes=$nomVarMes.$meses[$i][1];
+		$$varTempMes=false;
+		if (date('m')==$meses[$i][0]){
+			$$varTempMes=true;
+		}
+		$arregloTabsMeses[]=array('label'=>$meses[$i][1],'content'=>$this->renderPartial('gridadmin', array('model'=>$model,'anioTab'=>$anioTab,'mesTab'=>$meses[$i][0],), true),'active'=>$$varTempMes);
+		}
+	//print_r($arregloTabsMeses);
+	
+	$this->widget('bootstrap.widgets.TbTabs', array(
+		'type' => TbHtml::NAV_TYPE_TABS,
+		'tabs'=>$arregloTabsMeses,
+	));
+	
+	
+	
+?>
 
-//Yii::app()->getComponent('yiiwheels')->registerAssetJs('bootbox.min.js');
-$this->widget('yiiwheels.widgets.grid.WhGridView', array(
-	'type' => 'striped bordered',
-	'dataProvider' => $model->search(),
-	'template' => "{items}",
-	'columns' => array_merge(
-					$gridColumns,
-					array(
-						array(
-								'class' => 'yiiwheels.widgets.grid.WhRelationalColumn',
-								'name' => 'Visualizar',
-								'url' => $this->createUrl('asiento/grilla'),
-								'value' =>'""',
-								
-								'afterAjaxUpdate' => 'js:function(tr,rowid,data){
-								$("td[colspan]").css("background-color","rgb(222, 245, 217)");
-								//$("span.wh-relational-column[data-rowid="+rowid+"]").find("i").removeClass("icon-chevron-down");
-								//$("span.wh-relational-column[data-rowid="+rowid+"]").find("i").addClass("icon-chevron-up");
-								}'
-							)
-						) 	
-						),
-)); ?>
+
+
+
+
+
+
+

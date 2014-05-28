@@ -75,8 +75,8 @@ abstract class BaseAsiento extends GxActiveRecord {
 		$criteria = new CDbCriteria;
 
 		$criteria->compare('idasiento', $this->idasiento);
-		//$criteria->compare('fecha', $this->fecha, true);
-		$criteria->compare("DATE_FORMAT(fecha,'%d/%m/%Y')",$this->fecha);
+		$criteria->compare('fecha', $this->fecha, true);
+		//$criteria->compare("DATE_FORMAT(fecha,'%d/%m/%Y')",$this->fecha);
 		$criteria->compare('descripcion', $this->descripcion, true);
 
 		return new CActiveDataProvider($this, array(
