@@ -34,12 +34,13 @@ $this->widget('yiiwheels.widgets.grid.WhGridView', array(
 								'name' => 'Visualizar',
 								'url' => $this->createUrl('asiento/grilla'),
 								'value' =>'""',
+								'htmlOptions' => array('width' =>'10%'),
 								'cacheData'=>false,
-														/*'afterAjaxUpdate' => 'js:function(tr,rowid,data){
-								
+								'afterAjaxUpdate' => 'js:function(tr,rowid,data){
+								$("td[colspan]").css("background-color","rgb(222,245,217)");
 								//$("span.wh-relational-column[data-rowid="+rowid+"]").find("i").removeClass("icon-chevron-down");
 								//$("span.wh-relational-column[data-rowid="+rowid+"]").find("i").addClass("icon-chevron-up");
-								}'*/
+								}'
 							)
 						) 	
 						),

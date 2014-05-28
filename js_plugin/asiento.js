@@ -11,6 +11,7 @@ $("span.wh-relational-column").find("i").click(function(){
  	var clase=$(this).attr('class');
  	switch(clase){
  		case "icon-chevron-down":
+ 			
  			$(this).removeClass("icon-chevron-down");
  			$(this).addClass("icon-chevron-up");
  			$(this).tooltip('destroy');
@@ -19,6 +20,7 @@ $("span.wh-relational-column").find("i").click(function(){
 			});
  			break;
  		case "icon-chevron-up":
+ 			
  			$(this).removeClass("icon-chevron-up");
  			$(this).addClass("icon-chevron-down");
  			$(this).tooltip('destroy');
