@@ -108,11 +108,15 @@
             'data' => $member->findAll('asiento_idasiento=:idasiento', array(':idasiento'=>$model->idasiento)),
         ));
     ?>
-        <div class="form-actions">
-        <?php echo TbHtml::submitButton($model->isNewRecord ? 'Crear' : 'Save',array(
+        <div class="form-actions" align="center">
+        <?php echo TbHtml::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar',array(
 		    'class'=>'btn btn-primary',
         	'id'=>'boton-submit',
 		)); ?>
+		<?php 
+		    	echo CHtml::link('Cancelar',Yii::app()->createUrl("asiento/admin"),
+				array('class'=>'btn btn-primary'));
+			?>
     </div>
 
     <?php $this->endWidget(); ?>

@@ -7,17 +7,22 @@
 $this->breadcrumbs=array(
 	'Asientos'=>array('index'),
 	$model->idasiento=>array('view','id'=>$model->idasiento),
-	'Update',
+	'Actualizar',
 );
 
 $this->menu=array(
-	array('label'=>'List Asiento', 'url'=>array('index')),
-	array('label'=>'Create Asiento', 'url'=>array('create')),
-	array('label'=>'View Asiento', 'url'=>array('view', 'id'=>$model->idasiento)),
-	array('label'=>'Manage Asiento', 'url'=>array('admin')),
+	array(
+		'label'=>'Administrar', 
+		'url'=>array('admin'),
+		'active' => true,
+	),
+	array(
+		'label'=>'Nuevo asiento', 
+		'url'=>array('/asiento/create'),
+	),
 );
 ?>
 
-    <h1>Update Asiento <?php echo $model->idasiento; ?></h1>
-
+    <h5 class="well well-small">ACTUALIZACIÓN ASIENTO N°: <?php echo $model->idasiento; ?></h5>
+	<br>
 <?php $this->renderPartial('_form', array('model'=>$model,'member'=>$member,'validatedMembers'=>$validatedMembers)); ?>

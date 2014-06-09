@@ -18,6 +18,36 @@ $gridColumns= array(
 			'htmlOptions' => array('width' =>'60%',
 										'style'=>'text-align:left;'),
 		),
+		array(
+            'header'=>'Opciones',
+            'class'=>'bootstrap.widgets.TbButtonColumn',
+			'template'=>'{update}{delete}',
+            'buttons'=>array(
+             /*   'view'=>
+                    array(
+                        'url'=>'Yii::app()->createUrl("ordendepago/view", array("id"=>$data->idordendepago))',
+                        'options'=>array(
+                            'ajax'=>array(
+                                'type'=>'POST',
+                                'url'=>"js:$(this).attr('href')",
+                                'success'=>'function(data) { $("#viewModal .modal-body p").html(data); $("#viewModal").modal(); }'
+                            ),
+                        ),
+                    ),*/
+                 'update'=>array(
+					'label'=>'Modificar asiento',
+	                    //'icon'=>TbHtml::ICON_MINUS_SIGN,
+	                    
+						'url'=> 'Yii::app()->createUrl("asiento/update",
+								 array(	"id"=>$data->idasiento,
+								 		//"idctacte"=>$data->ctacteprov_idctacteprov,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+            ),
+           
+        ),
 		
 	);
 

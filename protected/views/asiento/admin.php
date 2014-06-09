@@ -16,7 +16,8 @@ $this->menu=array(
 );
 ?>
 
-<h1>Asientos</h1>
+<h5 class="well well-small">ASIENTOS</h5>
+<br>
 <!-- search-form -->
 <?php 
 

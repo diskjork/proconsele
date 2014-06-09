@@ -44,6 +44,7 @@ abstract class BaseCuenta extends GxActiveRecord {
 			array('tipocuenta_idtipocuenta, asentable', 'numerical', 'integerOnly'=>true),
 			array('codigocta, nombre', 'length', 'max'=>45),
 			array('idcuenta, codigocta, nombre, tipocuenta_idtipocuenta, asentable', 'safe', 'on'=>'search'),
+			array('codigocta','nuevaCuentaRepetida'),
 		);
 	}
 
@@ -87,5 +88,13 @@ abstract class BaseCuenta extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 		));
+	}
+	public function nuevaCuentaRepetida($attribute,$params){
+		$codnueva=$this->codigocta;
+		$existcuenta=Cuenta::model()->count('codigocta=:codnueva',array(':codnueva'=>$codnueva));
+		
+		if($existcuenta > 0){
+			$this->addError('codigocta', 'Ya existe una cuenta con este código');
+		}
 	}
 }

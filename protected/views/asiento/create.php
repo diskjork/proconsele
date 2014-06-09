@@ -6,15 +6,19 @@
 <?php
 $this->breadcrumbs=array(
 	'Asientos'=>array('index'),
-	'Create',
+	'Nuevo asiento',
 );
 
 $this->menu=array(
-	array('label'=>'List Asiento', 'url'=>array('index')),
-	array('label'=>'Manage Asiento', 'url'=>array('admin')),
+	array(
+		'label'=>'Administrar', 
+		'url'=>array('admin'),
+		'active' => true,
+	)
+	
 );
 ?>
 
-<h1>Nuevo asiento</h1>
-
+<h5 class="well well-small">NUEVO ASIENTO</h5>
+<br>
 <?php $this->renderPartial('_form', array('model'=>$model,'member'=>$member,'validatedMembers'=>$validatedMembers)); ?>

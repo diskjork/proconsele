@@ -50,10 +50,19 @@
 									array('label'=>'ASIENTO','url'=>Yii::app()->request->baseUrl.'/index.php/asiento/admin'),
 							)
 						),
+						array('label'=>'PROVEEDORES','icon'=>'icon-star-empty','items'=>array(
+							array('label'=>'Administrar','url'=>Yii::app()->request->baseUrl.'/index.php/proveedor/admin'),
+							array('label'=>'Cuentas Corrientes', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctacteprov/admin'),
+						)),
+						array('label'=>'CLIENTES','icon'=>'icon-star-empty','items'=>array(
+							array('label'=>'Administrar','url'=>Yii::app()->request->baseUrl.'/index.php/cliente/admin'),
+							array('label'=>'Cuentas Corrientes', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctactecliente/admin'),
+						)),
 						array('label'=>'CONFIGURACION','icon'=>'icon-wrench','url'=>'#',
 								'items'=>array(
 									array('label'=>'Usuarios', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/admin'),
 									array('label'=>'Contraseña', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/updateClave'),
+									array('label'=>'Datos Empresa', 'url'=>Yii::app()->request->baseUrl.'/index.php/empresa/index'),
 								)),	
 						
 					array('label'=>'Acceder', 'icon'=>'icon-check','url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
