@@ -99,4 +99,5 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
+	
 }

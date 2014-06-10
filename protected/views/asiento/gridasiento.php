@@ -4,7 +4,8 @@
 $gridColumns= array(
 	array(
 			'header'=>'CUENTA',
-			'name'=>'cuentaIdcuenta',
+			'name'=>'cuentaIdcuenta.codNombre',
+			//'value'=>'hola',
 			'htmlOptions' => array('width' =>'60%',
 										'style'=>'text-align:left;'),
 		),

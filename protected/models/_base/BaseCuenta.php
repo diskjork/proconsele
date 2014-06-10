@@ -97,4 +97,10 @@ abstract class BaseCuenta extends GxActiveRecord {
 			$this->addError('codigocta', 'Ya existe una cuenta con este código');
 		}
 	}
+	private $codNombre;
+	
+	public function getcodNombre()
+	{
+	    return $this->codigocta." - ".$this->nombre;
+	}
 }
