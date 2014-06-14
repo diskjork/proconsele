@@ -1,6 +1,6 @@
 <?php
 
-class AsientoController extends Controller
+class CtabancariaController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -28,11 +28,11 @@ class AsientoController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','grilla'),
+				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','habilitar','activar'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -62,39 +62,22 @@ class AsientoController extends Controller
 	 */
 	public function actionCreate()
 	{
-		Yii::import('ext.multimodelform.MultiModelForm');
-
-		$model=new Asiento;
-		 $member = new Detalleasiento;
-        $validatedMembers = array();  //ensure an empty array
+		$model=new Ctabancaria;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if (isset($_POST['Asiento'])) {
-			$model->attributes=$_POST['Asiento'];
-			$model->validate('totaldebe,totalhaber');
-
-			if( //validate detail before saving the master
-                MultiModelForm::validate($member,$validatedMembers,$deleteItems) &&
-                $model->save()
-               )
-              
-               {
-                 //the value for the foreign key 'groupid'
-                 $masterValues = array ('asiento_idasiento'=>$model->idasiento);
-                 if (MultiModelForm::save($member,$validatedMembers,$deleteMembers,$masterValues))
-				$this->redirect(array('view','id'=>$model->idasiento));
+		if (isset($_POST['Ctabancaria'])) {
+			$model->attributes=$_POST['Ctabancaria'];
+			
+			if ($model->save()) {
+				$this->redirect(array('admin','id'=>$model->idctabancaria));
 			}
 		}
 
 		$this->render('create',array(
 			'model'=>$model,
-			//submit the member and validatedItems to the widget in the edit form
-            'member'=>$member,
-            'validatedMembers' => $validatedMembers,
 		));
-
 	}
 
 	/**
@@ -104,33 +87,20 @@ class AsientoController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		Yii::import('ext.multimodelform.MultiModelForm');
-
 		$model=$this->loadModel($id);
 
-		$member = new Detalleasiento;
-        $validatedMembers = array(); //ensure an empty array
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if (isset($_POST['Asiento'])) {
-			$model->attributes=$_POST['Asiento'];
-			//the value for the foreign key 'groupid'
-            $masterValues = array ('asiento_idasiento'=>$model->idasiento);
-
-            if( //Save the master model after saving valid members
-                MultiModelForm::save($member,$validatedMembers,$deleteMembers,$masterValues) &&
-                $model->save()
-               )
-				$this->redirect(array('view','id'=>$model->idasiento));
-
+		if (isset($_POST['Ctabancaria'])) {
+			$model->attributes=$_POST['Ctabancaria'];
+			if ($model->save()) {
+				$this->redirect(array('view','id'=>$model->idctabancaria));
+			}
 		}
 
 		$this->render('update',array(
 			'model'=>$model,
-			//submit the member and validatedItems to the widget in the edit form
-            'member'=>$member,
-            'validatedMembers' => $validatedMembers,
 		));
 	}
 
@@ -159,7 +129,7 @@ class AsientoController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Asiento');
+		$dataProvider=new CActiveDataProvider('Ctabancaria');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -170,10 +140,10 @@ class AsientoController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Asiento('search');
+		$model=new Ctabancaria('search');
 		$model->unsetAttributes();  // clear any default values
-		if (isset($_GET['Asiento'])) {
-			$model->attributes=$_GET['Asiento'];
+		if (isset($_GET['Ctabancaria'])) {
+			$model->attributes=$_GET['Ctabancaria'];
 		}
 
 		$this->render('admin',array(
@@ -185,42 +155,59 @@ class AsientoController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return Asiento the loaded model
+	 * @return Ctabancaria the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=Asiento::model()->findByPk($id);
+		$model=Ctabancaria::model()->findByPk($id);
 		if ($model===null) {
 			throw new CHttpException(404,'The requested page does not exist.');
 		}
 		return $model;
-	}	
+	}
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param Asiento $model the model to be validated
+	 * @param Ctabancaria $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if (isset($_POST['ajax']) && $_POST['ajax']==='asiento-form') {
+		if (isset($_POST['ajax']) && $_POST['ajax']==='ctabancaria-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}
-	public function actionGrilla($id){
-		$model=Detalleasiento::model()->findAll('asiento_idasiento=:id',array('id'=>$id));
+	public function actionActivar($id, $estado){
+        	if($estado == 1){
+        		$estadofinal=0;
+        	}else {
+        		$estadofinal=1;
+        	}
+        	$command = Yii::app()->db->createCommand();
+				$command->update('ctabancaria', array(
+				    'ctabancaria.estado'=>new CDbExpression($estadofinal),
+				), 'idctabancaria='.$id);
+			//$this->redirect(array("admin"));
+        }
+	public function actionHabilitar(){
+		$model=new Ctabancaria;
 
-		$this->renderPartial('gridasiento',array(
+		// Uncomment the following line if AJAX validation is needed
+		 $this->performAjaxValidation($model);
+
+		if (isset($_POST['Ctabancaria'])) {
+			$modelhabilitar=$this->loadModel($_POST['Ctabancaria']['nombre']);
+			$modelhabilitar->estado=1;
+			if ($modelhabilitar->save()) {
+					Yii::app()->user->setFlash('success', "<strong>Cuenta bancaria habilitada correctamente.</strong>");
+					$this->redirect(array('admin'));
+			}
+		}
+
+		$this->render('habilitar',array(
 			'model'=>$model,
 		));
 	}
-
-/*	public function actionGrilla($id)
-	{
-		$model=Detalleasiento::model()->findAll('asiento_idasiento=:idasiento',array(':idasiento'=>$id));
-		$this->render('gridasiento',array(
-			'model'=>$model,
-		));
-	}*/
+	
 }

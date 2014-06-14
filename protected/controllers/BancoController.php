@@ -1,12 +1,12 @@
 <?php
 
-class AsientoController extends Controller
+class BancoController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/column3';
+	public $layout='//layouts/column2';
 
 	/**
 	 * @return array action filters
@@ -28,7 +28,7 @@ class AsientoController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','grilla'),
+				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -62,39 +62,21 @@ class AsientoController extends Controller
 	 */
 	public function actionCreate()
 	{
-		Yii::import('ext.multimodelform.MultiModelForm');
-
-		$model=new Asiento;
-		 $member = new Detalleasiento;
-        $validatedMembers = array();  //ensure an empty array
+		$model=new Banco;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if (isset($_POST['Asiento'])) {
-			$model->attributes=$_POST['Asiento'];
-			$model->validate('totaldebe,totalhaber');
-
-			if( //validate detail before saving the master
-                MultiModelForm::validate($member,$validatedMembers,$deleteItems) &&
-                $model->save()
-               )
-              
-               {
-                 //the value for the foreign key 'groupid'
-                 $masterValues = array ('asiento_idasiento'=>$model->idasiento);
-                 if (MultiModelForm::save($member,$validatedMembers,$deleteMembers,$masterValues))
-				$this->redirect(array('view','id'=>$model->idasiento));
+		if (isset($_POST['Banco'])) {
+			$model->attributes=$_POST['Banco'];
+			if ($model->save()) {
+				$this->redirect(array('view','id'=>$model->idBanco));
 			}
 		}
 
 		$this->render('create',array(
 			'model'=>$model,
-			//submit the member and validatedItems to the widget in the edit form
-            'member'=>$member,
-            'validatedMembers' => $validatedMembers,
 		));
-
 	}
 
 	/**
@@ -104,33 +86,20 @@ class AsientoController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		Yii::import('ext.multimodelform.MultiModelForm');
-
 		$model=$this->loadModel($id);
 
-		$member = new Detalleasiento;
-        $validatedMembers = array(); //ensure an empty array
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if (isset($_POST['Asiento'])) {
-			$model->attributes=$_POST['Asiento'];
-			//the value for the foreign key 'groupid'
-            $masterValues = array ('asiento_idasiento'=>$model->idasiento);
-
-            if( //Save the master model after saving valid members
-                MultiModelForm::save($member,$validatedMembers,$deleteMembers,$masterValues) &&
-                $model->save()
-               )
-				$this->redirect(array('view','id'=>$model->idasiento));
-
+		if (isset($_POST['Banco'])) {
+			$model->attributes=$_POST['Banco'];
+			if ($model->save()) {
+				$this->redirect(array('view','id'=>$model->idBanco));
+			}
 		}
 
 		$this->render('update',array(
 			'model'=>$model,
-			//submit the member and validatedItems to the widget in the edit form
-            'member'=>$member,
-            'validatedMembers' => $validatedMembers,
 		));
 	}
 
@@ -159,7 +128,7 @@ class AsientoController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Asiento');
+		$dataProvider=new CActiveDataProvider('Banco');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -170,10 +139,10 @@ class AsientoController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Asiento('search');
+		$model=new Banco('search');
 		$model->unsetAttributes();  // clear any default values
-		if (isset($_GET['Asiento'])) {
-			$model->attributes=$_GET['Asiento'];
+		if (isset($_GET['Banco'])) {
+			$model->attributes=$_GET['Banco'];
 		}
 
 		$this->render('admin',array(
@@ -185,42 +154,27 @@ class AsientoController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return Asiento the loaded model
+	 * @return Banco the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=Asiento::model()->findByPk($id);
+		$model=Banco::model()->findByPk($id);
 		if ($model===null) {
 			throw new CHttpException(404,'The requested page does not exist.');
 		}
 		return $model;
-	}	
+	}
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param Asiento $model the model to be validated
+	 * @param Banco $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if (isset($_POST['ajax']) && $_POST['ajax']==='asiento-form') {
+		if (isset($_POST['ajax']) && $_POST['ajax']==='banco-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}
-	public function actionGrilla($id){
-		$model=Detalleasiento::model()->findAll('asiento_idasiento=:id',array('id'=>$id));
-
-		$this->renderPartial('gridasiento',array(
-			'model'=>$model,
-		));
-	}
-
-/*	public function actionGrilla($id)
-	{
-		$model=Detalleasiento::model()->findAll('asiento_idasiento=:idasiento',array(':idasiento'=>$id));
-		$this->render('gridasiento',array(
-			'model'=>$model,
-		));
-	}*/
 }

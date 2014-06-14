@@ -58,12 +58,21 @@
 							array('label'=>'Administrar','url'=>Yii::app()->request->baseUrl.'/index.php/cliente/admin'),
 							array('label'=>'Cuentas Corrientes', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctactecliente/admin'),
 						)),
+						array('label'=>'VALORES','icon'=>'icon-briefcase', 'url'=>'#',
+								'items'=>array(
+									array('label'=>'Caja', 'url'=>Yii::app()->request->baseUrl.'/index.php/movimientocaja/admin'),
+									array('label'=>'Banco', 'url'=>Yii::app()->request->baseUrl.'/movimientobanco/admin'),
+									array('label'=>'Cheques', 'url'=>Yii::app()->request->baseUrl.'/cheque/admin'),
+								)),
 						array('label'=>'CONFIGURACION','icon'=>'icon-wrench','url'=>'#',
 								'items'=>array(
 									array('label'=>'Usuarios', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/admin'),
 									array('label'=>'Contraseña', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/updateClave'),
 									array('label'=>'Datos Empresa', 'url'=>Yii::app()->request->baseUrl.'/index.php/empresa/index'),
+									array('label'=>'Cuentas bancarias', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctabancaria/admin'),
+									array('label'=>'Contribuyente', 'url'=>Yii::app()->request->baseUrl.'/index.php/tipodecontribuyente/admin'),
 								)),	
+						
 						
 					array('label'=>'Acceder', 'icon'=>'icon-check','url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
 					array('label'=>'Salir ('.Yii::app()->user->name.')', 'icon'=>'icon-lock','url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest),
