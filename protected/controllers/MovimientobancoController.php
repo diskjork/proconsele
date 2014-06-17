@@ -87,7 +87,49 @@ class MovimientobancoController extends Controller
 					
 					$model->haber= $this->cargaImporte($_POST['Movimientobanco']['importe']);
 				}
-			if ($model->save()) {
+				
+			if ($model->validate()) {
+					$asiento=new Asiento;
+					$asiento->fecha=$model->fecha;
+					$asiento->descripcion="Mov.Bco. ".$model->ctabancariaIdctabancaria." - ".$model->descripcion;
+					if($asiento->save()){
+						if($model->debeohaber == 0){
+							$detAs=new Detalleasiento;
+							$detAs->debe=$model->debe;
+							$detAs->cuenta_idcuenta=$model->ctabancariaIdctabancaria->cuenta_idcuenta;
+							$detAs->asiento_idasiento=$asiento->idasiento;
+							$detAs->save();
+							$detAs2=new Detalleasiento;
+							$detAs2->haber=$model->debe;
+							$detAs2->cuenta_idcuenta=$model->cuenta_idcuenta;
+							$detAs2->asiento_idasiento=$asiento->idasiento;
+							$detAs2->save();
+							$model->asiento_idasiento=$asiento->idasiento;
+							$model->save();
+							$detAs->movimientobanco_idmovimientobanco=$model->idmovimientobanco;
+							$detAs->save();
+						
+						} elseif($model->debeohaber == 1){
+							$detAs=new Detalleasiento;
+							$detAs->debe=$model->haber;
+							$detAs->cuenta_idcuenta=$model->cuenta_idcuenta;
+							$detAs->asiento_idasiento=$asiento->idasiento;
+							$detAs->save();
+							$detAs2=new Detalleasiento;
+							$detAs2->haber=$model->haber;
+							$detAs2->cuenta_idcuenta=$model->ctabancariaIdctabancaria->cuenta_idcuenta;
+							$detAs2->asiento_idasiento=$asiento->idasiento;
+							$detAs2->movimientobanco_idmovimientobanco=$model->idmovimientobanco;
+							$detAs2->save();
+							$model->asiento_idasiento=$asiento->idasiento;
+							$model->save();
+							$detAs2->movimientobanco_idmovimientobanco=$model->idmovimientobanco;
+							$detAs2->save();
+						}
+						$asiento2=Asiento::model()->findByPk($asiento->idasiento);
+						$asiento2->movimientobanco_idmovimientobanco=$model->idmovimientobanco;
+						$asiento2->save();
+					}
 				$this->redirect(array('admin'));
 			}
 		}
@@ -105,6 +147,7 @@ class MovimientobancoController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+		$model2=$this->loadModel($id);
 		if($model->debeohaber == 0){
 			$model->importe=$model->debe;
 		} elseif($model->debeohaber == 1){
@@ -124,14 +167,13 @@ class MovimientobancoController extends Controller
 					//$_POST['Cheque']['proveedor_idproveedor']=NULL;
 					}
 			}
-			
-			
 			$model->attributes=$_POST['Movimientobanco'];
 			if($model->debeohaber == 0){
 					$model->debe= $this->cargaImporte($_POST['Movimientobanco']['importe']);
 				} elseif($model->debeohaber == 1){
 					$model->haber= $this->cargaImporte($_POST['Movimientobanco']['importe']);
 				}
+			$this->checkUpdateAsiento($model2, $model);
 			if ($model->save()) {
 				//$this->redirect(array('view','id'=>$model->idmovimientobanco));
 				$this->redirect(Yii::app()->request->baseUrl.'/movimientobanco/admin');
@@ -258,6 +300,82 @@ class MovimientobancoController extends Controller
 				return $temp;	
 		
 	}
+	public function cargaAsiento($model){
+		
+	}
+	public function checkUpdateAsiento($datosGuardados, $datosPOST){
+		if($datosGuardados->descripcion != $datosPOST->descripcion ||
+		   $datosGuardados->fecha != $datosPOST->fecha ||
+		   $datosGuardados->debeohaber != $datosPOST->debeohaber ||
+		   $datosGuardados->debe != $datosPOST->debe ||
+		   $datosGuardados->haber != $datosPOST->haber || 
+		   $datosGuardados->ctabancaria_idctabancaria != $datosPOST->ctabancaria_idctabancaria ||
+		   $datosGuardados->cuenta_idcuenta != $datosPOST->cuenta_idcuenta ){
+		   //ASIENTO
+		   	$asientoGuardado=Asiento::model()->findByPk($datosGuardados->asiento_idasiento);
+		   $asientoGuardado->descripcion="Mov.Bco. ".$datosPOST->ctabancaria_idctabancaria." - ".$datosPOST->descripcion;
+		   $asientoGuardado->fecha=$datosPOST->fecha;
+		   $asientoGuardado->save();
+		   //DETALLE ASIENTO
+		   $detals=Detalleasiento::model()->findAll('asiento_idasiento=:idasiento ORDER BY iddetalleasiento ASC',array(':idasiento'=>$asientoGuardado->idasiento));
+		   //$cuentaBanco=$datosGuardados->ctabancariaIdctabancaria->cuenta_idcuenta;
+		   
+		   if($datosGuardados->debe!= $datosPOST->debe){
+		   		$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
+		   		$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
+		   		$nuevoDasiento->debe=$datosPOST->debe;
+		   		$nuevoDasiento2->haber=$datosPOST->debe;
+		   		$nuevoDasiento->save();
+		   		$nuevoDasiento2->save();
+		   		
+		   }
+		   if($datosGuardados->haber != $datosPOST->haber){
+		   		$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
+		   		$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
+		   		$nuevoDasiento->debe=$datosPOST->haber;
+		   		$nuevoDasiento2->haber=$datosPOST->haber;
+		   		$nuevoDasiento->save();
+		   		$nuevoDasiento2->save();
+		   }
+		   
+		   if($datosGuardados->debeohaber != $datosPOST->debeohaber){
+		   		if($datosGuardados->debeohaber == 0 ){
+		   			$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
+		   			$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
+		   			if($datosGuardados->debe != $datosPOST->haber){
+		   				$nuevoDasiento->debe=$datosPOST->haber;
+		   				$nuevoDasiento2->haber=$datosPOST->haber;
+		   			}	
+		   			$nuevoDasiento->cuenta_idcuenta=$datosPOST->cuenta_idcuenta;
+		   			$nuevoDasiento->movimientobanco_idmovimientobanco=NULL;
+		   			
+		   			$nuevoDasiento2->cuenta_idcuenta=$datosPOST->ctabancariaIdctabancaria->cuenta_idcuenta;
+		   			$nuevoDasiento2->movimientobanco_idmovimientobanco=$datosGuardados->idmovimientobanco;
+		   			//$datosPOST->detalleasiento_iddetalleasiento=$nuevoDasiento2->iddetalleasiento;
+		   			$nuevoDasiento->save();
+		   			$nuevoDasiento2->save();
+		   		} elseif($datosGuardados->debeohaber == 1){
+		   			$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
+		   			$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
+		   			if($datosGuardados->haber != $datosPOST->debe){
+		   				$nuevoDasiento->debe=$datosPOST->debe;
+		   				$nuevoDasiento2->haber=$datosPOST->debe;
+		   			}
+		   			$nuevoDasiento->cuenta_idcuenta=$datosPOST->ctabancariaIdctabancaria->cuenta_idcuenta;
+		   			$nuevoDasiento->movimientobanco_idmovimientobanco=$datosGuardados->idmovimientobanco;
+		   			
+		   			$nuevoDasiento2->cuenta_idcuenta=$datosPOST->cuenta_idcuenta;
+		   			$nuevoDasiento2->movimientobanco_idmovimientobanco=NULL;
+		   			//para el registro movimientobanco 
+		   			//$datosPOST->detalleasiento_iddetalleasiento=$nuevoDasiento->iddetalleasiento;
+		   			$nuevoDasiento->save();
+		   			$nuevoDasiento2->save();
+		   		}
+		   } 
+		 }	
+		
+	}
+	
 
 	public function actionExcel(){
                 $mes_tab=$_GET['mesTab'];

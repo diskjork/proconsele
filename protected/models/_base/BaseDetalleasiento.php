@@ -17,11 +17,20 @@
  * @property integer $proveedor_idproveedor
  * @property integer $cliente_idcliente
  * @property string $iddocumento
+ * @property integer $movimientobanco_idmovimientobanco
+ * @property integer $movimientocaja_idmovimientocaja
+ * @property integer $cheque_idcheque
  *
+ * @property Cheque[] $cheques
  * @property Asiento $asientoIdasiento
  * @property Cliente $clienteIdcliente
  * @property Cuenta $cuentaIdcuenta
+ * @property Movimientobanco $movimientobancoIdmovimientobanco
+ * @property Movimientocaja $movimientocajaIdmovimientocaja
  * @property Proveedor $proveedorIdproveedor
+ * @property Cheque $chequeIdcheque
+ * @property Movimientobanco[] $movimientobancos
+ * @property Movimientocaja[] $movimientocajas
  */
 abstract class BaseDetalleasiento extends GxActiveRecord {
 
@@ -43,21 +52,27 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('cuenta_idcuenta', 'required'),
-			array('cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente', 'numerical', 'integerOnly'=>true),
+			array('cuenta_idcuenta, asiento_idasiento', 'required'),
+			array('cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('iddocumento', 'length', 'max'=>20),
-			array('debe, haber, proveedor_idproveedor, cliente_idcliente, iddocumento', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('iddetalleasiento, debe, haber, cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente, iddocumento', 'safe', 'on'=>'search'),
+			array('debe, haber, proveedor_idproveedor, cliente_idcliente, iddocumento, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('iddetalleasiento, debe, haber, cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente, iddocumento, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
+			'cheques' => array(self::HAS_MANY, 'Cheque', 'detalleasiento_iddetalleasiento'),
 			'asientoIdasiento' => array(self::BELONGS_TO, 'Asiento', 'asiento_idasiento'),
 			'clienteIdcliente' => array(self::BELONGS_TO, 'Cliente', 'cliente_idcliente'),
 			'cuentaIdcuenta' => array(self::BELONGS_TO, 'Cuenta', 'cuenta_idcuenta'),
+			'movimientobancoIdmovimientobanco' => array(self::BELONGS_TO, 'Movimientobanco', 'movimientobanco_idmovimientobanco'),
+			'movimientocajaIdmovimientocaja' => array(self::BELONGS_TO, 'Movimientocaja', 'movimientocaja_idmovimientocaja'),
 			'proveedorIdproveedor' => array(self::BELONGS_TO, 'Proveedor', 'proveedor_idproveedor'),
+			'chequeIdcheque' => array(self::BELONGS_TO, 'Cheque', 'cheque_idcheque'),
+			'movimientobancos' => array(self::HAS_MANY, 'Movimientobanco', 'detalleasiento_iddetalleasiento'),
+			'movimientocajas' => array(self::HAS_MANY, 'Movimientocaja', 'detalleasiento_iddetalleasiento'),
 		);
 	}
 
@@ -76,10 +91,19 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			'proveedor_idproveedor' => null,
 			'cliente_idcliente' => null,
 			'iddocumento' => Yii::t('app', 'Iddocumento'),
+			'movimientobanco_idmovimientobanco' => null,
+			'movimientocaja_idmovimientocaja' => null,
+			'cheque_idcheque' => null,
+			'cheques' => null,
 			'asientoIdasiento' => null,
 			'clienteIdcliente' => null,
 			'cuentaIdcuenta' => null,
+			'movimientobancoIdmovimientobanco' => null,
+			'movimientocajaIdmovimientocaja' => null,
 			'proveedorIdproveedor' => null,
+			'chequeIdcheque' => null,
+			'movimientobancos' => null,
+			'movimientocajas' => null,
 		);
 	}
 
@@ -94,10 +118,12 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 		$criteria->compare('proveedor_idproveedor', $this->proveedor_idproveedor);
 		$criteria->compare('cliente_idcliente', $this->cliente_idcliente);
 		$criteria->compare('iddocumento', $this->iddocumento, true);
+		$criteria->compare('movimientobanco_idmovimientobanco', $this->movimientobanco_idmovimientobanco);
+		$criteria->compare('movimientocaja_idmovimientocaja', $this->movimientocaja_idmovimientocaja);
+		$criteria->compare('cheque_idcheque', $this->cheque_idcheque);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 		));
 	}
-	
 }

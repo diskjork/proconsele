@@ -106,12 +106,14 @@ $this->nav=$this->checkCtabancaria($model);
 	
 	
 	$nomVarMes='modoActive';
+	
 	for($i=0;$i<12;$i++){
 		$varTempMes=$nomVarMes.$meses[$i][1];
 		$$varTempMes=false;
 		if (date('m')==$meses[$i][0]){
 			$$varTempMes=true;
 		}
+		
 		$arregloTabsMeses[]=array('label'=>$meses[$i][1],'content'=>$this->renderPartial('gridmovimientobanco', array('model'=>$model,'bancoid'=>$bancoid,'anioTab'=>$anioTab,'mesTab'=>$meses[$i][0],), true),'active'=>$$varTempMes);
 		}
 	//print_r($arregloTabsMeses);
@@ -134,4 +136,5 @@ $this->nav=$this->checkCtabancaria($model);
     'fade'=>false,	
     'content' => '<div class="modal-body"><p></p></div>', //--> lo modificado 
     ));
+    
 ?>

@@ -29,9 +29,7 @@
 	<?php echo CHtml::encode($data->numerooperacion); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('rubro_idrubro')); ?>:</b>
-	<?php echo CHtml::encode($data->rubro_idrubro); ?>
-	<br />
+	
 
 	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('Banco_idBanco')); ?>:</b>

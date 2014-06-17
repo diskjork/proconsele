@@ -67,37 +67,37 @@
             
 			
             <?php // echo $form->textFieldControlGroup($model,'Banco_idBanco',array('span'=>5)); ?>
-			<?php //echo $form->label($model, 'ctabancaria_idctabancaria');?>
-            <?php /*
-			    $this->widget('yiiwheels.widgets.select2.WhSelect2', array(
-				    'asDropDownList' => true,
-				    'model'=>$model,
-	    			'attribute' => 'ctabancaria_idctabancaria',
-		    		'data' => GxHtml::listDataEx(Banco::model()->findAllAttributes(array('nombre'),true,array('condition'=>'propio=1','order'=>'nombre ASC')),'idBanco','nombre'),
-				    'pluginOptions' => array(
-			    		'placeholder' => 'Banco',
-				    	'width' => '50%',
-			    		'minimumResultsForSearch' => '3',
-			    	),
-			    )); */
-			?>
+			<?php echo $form->label($model, 'ctabancaria_idctabancaria');?>
+       		<?php $this->widget('ext.select2.ESelect2',array(
+				  //'name'=>'cuenta_idcuenta',
+				 'model'=>$model,
+				 'attribute'=>'ctabancaria_idctabancaria',
+				  'data' => GxHtml::listDataEx(Ctabancaria::model()->findAllAttributes(array('nombre'),true,array('condition'=>'estado=1','order'=>'nombre ASC')),'idctabancaria','nombre'),
+				  'options'=>array(
+					   'placeholder'=>'Seleccione una cuenta',
+					   'allowClear'=>true,
+						'width'=> '60%',
+					  ),
+				)); ?>
+				<?php  echo $form->error($model,'cuenta_idcuenta',array('style'=>'color:#b94a48')); ?>
             <?php //echo  $form->textFieldControlGroup($model,'formadepago_idformadepago',array('span'=>5)); ?>
 			 <?php //echo $form->label($model, 'formadepago_idformadepago');?>
             <?php //echo $form->hiddenField($model,'formadepago_idformadepago', array('value'=>'3')); ?>
-			 <?php //echo $form->label($model, 'formadepago_idformadepago');?>
-			 <?php /*
-			    $this->widget('yiiwheels.widgets.select2.WhSelect2', array(
-				    'asDropDownList' => true,
-				    'model'=>$model,
-	    			'attribute' => 'formadepago_idformadepago',
-		    		'data' => GxHtml::listDataEx(Formadepago::model()->findAllAttributes(array('nombre'),true,array('order'=>'nombre ASC')),'idformadepago','nombre'),
-				    'pluginOptions' => array(
-			    		'placeholder' => 'Forma de Pago',
-				    	'width' => '50%',
-			    		'minimumResultsForSearch' => '3',
-			    	),
-			    )); */
-			?>
+			 <div>
+			 <br>
+            <?php echo $form->label($model, 'cuenta_idcuenta');?>
+       		<?php $this->widget('ext.select2.ESelect2',array(
+				  //'name'=>'cuenta_idcuenta',
+				 'model'=>$model,
+				 'attribute'=>'cuenta_idcuenta',
+				  'data' => GxHtml::listDataEx(Cuenta::model()->findAllAttributes(array('codigocta,nombre'),true,array('condition'=>'asentable=1','order'=>'codigocta ASC')),'idcuenta','codNombre'),
+				  'options'=>array(
+					   'placeholder'=>'Seleccione una cuenta',
+					   'allowClear'=>true,
+						'width'=> '60%',
+					  ),
+				)); ?>
+				<?php  echo $form->error($model,'cuenta_idcuenta',array('style'=>'color:#b94a48')); ?>
             <?php //echo $form->textFieldControlGroup($model,'cheque_idcheque',array('span'=>5)); ?>
 
         <div class="form-actions" align="center">
@@ -107,12 +107,16 @@
 		)); ?>
 		
 		<?php 
-			if($model->isNewRecord){
+			
 				echo CHtml::link('Cancelar', Yii::app()->request->baseUrl.'/movimientobanco/admin',array ('class'=>'btn btn-primary'));
 				//echo TbHtml::button('Primary',Yii::app()->request->baseUrl.'/movimientobanco/admin', array('color' => TbHtml::BUTTON_COLOR_PRIMARY));
-			}?>
+			?>
     </div>
-
+</div>
     <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+<?php /*Yii::app()->clientScript->registerScript('test',"
+				$('div .modal-footer').remove();
+				$('div .form-actions').css('background-color','transparent');
+				"); */?> 	

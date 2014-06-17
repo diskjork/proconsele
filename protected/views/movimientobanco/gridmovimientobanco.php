@@ -1,3 +1,5 @@
+
+
 <?php 
 	$dataProvider= $model->search($model->fecha=$anioTab."-".$mesTab,$model->ctabancaria_idctabancaria);
 	$dataProvider->setPagination(array('pageSize'=>$model->count()));
@@ -5,7 +7,9 @@
 	
 	//Obtener total debe y haber;
 	$dataProviderDH=$model->obtenerDebeHaber($mesTab,$anioTab,$bancoid);
+	
 	$dataProviderDebeHaber=$dataProviderDH->getData();
+	
 ?>
 <div id="iconoExportar" align="right">
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'idbanco'=>$model->ctabancaria_idctabancaria),'Exportar',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
@@ -36,7 +40,8 @@
 				'cssClassExpression' => '$data["debe"] > 0 ? "colorDebe": ""',
 				'htmlOptions' => array('width' =>'100px'),
 				'value'=>'($data->debe !== null && $data->debe > 0)?number_format($data->debe, 2, ".", ","): "-"',
-				'footer'=>"$ ".number_format($dataProviderDebeHaber[0]['total_debe']-$dataProviderDebeHaber[0]['total_haber'],2,".",","),
+				'footer'=>"(T.D:$".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",").")  (T.H:$".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",").")",
+				//'footer'=>"$ ".number_format($dataProviderDebeHaber[0]['total_debe']-$dataProviderDebeHaber[0]['total_haber'],2,".",","),
 				'footerHtmlOptions'=>array('colspan'=>2 ,'style'=>'text-align:center;font-weight:bold;'),
 			),
 						
@@ -54,14 +59,15 @@
 				'buttons'=>array(
 					 'view'=>
 	                    array(
-	                        'url'=>'Yii::app()->createUrl("movimientobanco/view", array("id"=>$data->idmovimientobanco))',
-	                        'options'=>array(
+	                    	'label'=>'Ver asiento contable',
+	                        'url'=>'Yii::app()->createUrl("asiento/update", array("id"=>$data->asiento_idasiento,"vista"=>1))',
+	                       /* 'options'=>array(
 	                            'ajax'=>array(
 	                                'type'=>'POST',
 	                                'url'=>"js:$(this).attr('href')",
 	                                'success'=>'function(data) { $("#viewModal .modal-body p").html(data); $("#viewModal").modal(); }'
 	                            ),
-	                        ),
+	                        ),*/
 	                    ),
 					),
 				'headerHtmlOptions'=>array('colspan'=>2),
@@ -75,13 +81,10 @@
 		'filter'=>$model,
 		'template' => "{items}{pager}",
 		'columns'=>$colum,
+		'id'=>$bancoid."-".$anioTab."-".$mesTab,
 		
 )); 
-?>
-<script type="text/javascript">
-<!--
-var $table = $("<?php echo "#yw".(date("n",strtotime($anioTab."-".$mesTab))+5);?>").children('table');
-var $tbody = $table.children('tbody');
-$tbody.append('<tr> <td></td> <td></td> <td></td> <td><?php echo "$ ".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",");?></td><td><?php echo "$ ".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",");?></td><td colspan=2></td>  </tr>');
-//-->
-</script>	
+
+
+</script>
+	

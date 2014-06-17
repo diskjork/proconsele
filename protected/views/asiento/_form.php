@@ -10,7 +10,10 @@
 	//$cs->registerScriptFile($baseUrl.'js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js');
 	$cs->registerCssFile($baseUrl.'/js_plugin/select2/select2.css');
 	Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/asiento.js', CClientScript::POS_HEAD);
-	
+	if(isset($_GET['vista'])){
+		$vista=$_GET['vista'];
+		
+	}
 ?>
 <div class="form">
 
@@ -109,13 +112,19 @@
         ));
     ?>
         <div class="form-actions" align="center">
-        <?php echo TbHtml::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar',array(
+        <?php 
+        if(!isset($vista)){
+        echo TbHtml::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar',array(
 		    'class'=>'btn btn-primary',
         	'id'=>'boton-submit',
-		)); ?>
-		<?php 
+		)); 
+		 
 		    	echo CHtml::link('Cancelar',Yii::app()->createUrl("asiento/admin"),
 				array('class'=>'btn btn-primary'));
+        } else {
+        	echo CHtml::link('Volver',Yii::app()->createUrl("movimientobanco/admin"),
+				array('class'=>'btn btn-primary'));
+        }
 			?>
     </div>
 

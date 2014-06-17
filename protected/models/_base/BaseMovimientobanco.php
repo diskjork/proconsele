@@ -12,19 +12,25 @@
  * @property integer $idmovimientobanco
  * @property string $descripcion
  * @property string $fecha
- 
+ * @property integer $debeohaber
  * @property double $debe
  * @property double $haber
  * @property string $numerooperacion
- * @property integer $rubro_idrubro
  * @property integer $ctabancaria_idctabancaria
- * @property integer $formadepago_idformadepago
  * @property integer $cheque_idcheque
+ * @property string $id_de_trabajo
+ * @property integer $cuenta_idcuenta
+ * @property integer $asiento_idasiento
  *
- * @property Rubro $rubroIdrubro
- * @property Ctabancaria $ctabancariaIdctabancaria
- * @property Formadepago $formadepagoIdformadepago
+ * @property Detalleasiento[] $detalleasientos
+ * @property Detallecobranza[] $detallecobranzas
+ * @property Detallecompra[] $detallecompras
+ * @property Detalleordendepago[] $detalleordendepagos
+ * @property Detallepagos[] $detallepagoses
  * @property Cheque $chequeIdcheque
+ * @property Ctabancaria $ctabancariaIdctabancaria
+ * @property Cuenta $cuentaIdcuenta
+ * @property Detalleasiento $detalleasientoIddetalleasiento
  */
 abstract class BaseMovimientobanco extends GxActiveRecord {
 	public $importe;
@@ -48,26 +54,27 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('fecha, debeohaber,ctabancaria_idctabancaria', 'required'),
-			array('ctabancaria_idctabancaria, cheque_idcheque', 'numerical', 'integerOnly'=>true),
+			array('fecha, debeohaber, ctabancaria_idctabancaria, cuenta_idcuenta', 'required'),
+			array('debeohaber, ctabancaria_idctabancaria, cheque_idcheque, cuenta_idcuenta, asiento_idasiento', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
-			array('descripcion', 'length', 'max'=>255),
+			array('descripcion', 'length', 'max'=>100),
 			array('numerooperacion, id_de_trabajo', 'length', 'max'=>20),
-			array('descripcion, debe, haber, numerooperacion, cheque_idcheque, id_de_trabajo', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idmovimientobanco, descripcion, fecha, debeohaber, debe, haber, numerooperacion,ctabancaria_idctabancaria, cheque_idcheque', 'safe', 'on'=>'search'),
-			array('fechacobro','safe'),
-			array('fechacobro', 'length', 'max'=>20),
-			array('fechacobro','compararFechas'),
-			
-			
-			
+			array('descripcion, debe, haber, numerooperacion, cheque_idcheque, id_de_trabajo, asiento_idasiento', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idmovimientobanco, descripcion, fecha, debeohaber, debe, haber, numerooperacion, ctabancaria_idctabancaria, cheque_idcheque, id_de_trabajo, cuenta_idcuenta, asiento_idasiento', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
-			'ctabancariaIdctabancaria' => array(self::BELONGS_TO, 'Ctabancaria', 'ctabancaria_idctabancaria'),
+			'detalleasientos' => array(self::HAS_MANY, 'Detalleasiento', 'movimientobanco_idmovimientobanco'),
+			'detallecobranzas' => array(self::HAS_MANY, 'Detallecobranza', 'movimientobanco_idmovimientobanco'),
+			'detallecompras' => array(self::HAS_MANY, 'Detallecompra', 'movimientobanco_idmovimientobanco'),
+			'detalleordendepagos' => array(self::HAS_MANY, 'Detalleordendepago', 'movimientobanco_idmovimientobanco'),
+			'detallepagoses' => array(self::HAS_MANY, 'Detallepagos', 'movimientobanco_idmovimientobanco'),
 			'chequeIdcheque' => array(self::BELONGS_TO, 'Cheque', 'cheque_idcheque'),
+			'ctabancariaIdctabancaria' => array(self::BELONGS_TO, 'Ctabancaria', 'ctabancaria_idctabancaria'),
+			'cuentaIdcuenta' => array(self::BELONGS_TO, 'Cuenta', 'cuenta_idcuenta'),
+			'asientoIdasiento' => array(self::BELONGS_TO, 'Asiento', 'asiento_idasiento'),
 		);
 	}
 
@@ -81,15 +88,24 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 			'idmovimientobanco' => Yii::t('app', 'Idmovimientobanco'),
 			'descripcion' => Yii::t('app', 'Descripcion'),
 			'fecha' => Yii::t('app', 'Fecha'),
+			'debeohaber' => Yii::t('app', 'Debeohaber'),
 			'debe' => Yii::t('app', 'Debe'),
 			'haber' => Yii::t('app', 'Haber'),
-			'debeohaber' => Yii::t('app', 'Tipo de Movimiento'),
 			'numerooperacion' => Yii::t('app', 'Numerooperacion'),
-			'ctabancaria_idctabancaria' => Yii::t('app', 'Cta.bancaria'),
+			'ctabancaria_idctabancaria' => null,
 			'cheque_idcheque' => null,
-			'ctabancariaIdctabancaria' => Yii::t('app', 'Banco'),
+			'id_de_trabajo' => Yii::t('app', 'Id De Trabajo'),
+			'cuenta_idcuenta' => null,
+			'asiento_idasiento' => null,
+			'detalleasientos' => null,
+			'detallecobranzas' => null,
+			'detallecompras' => null,
+			'detalleordendepagos' => null,
+			'detallepagoses' => null,
 			'chequeIdcheque' => null,
-			'id_de_trabajo' => null,
+			'ctabancariaIdctabancaria' => null,
+			'cuentaIdcuenta' => null,
+			'asientoIdasiento' => null,
 		);
 	}
 
@@ -99,12 +115,15 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 		$criteria->compare('idmovimientobanco', $this->idmovimientobanco);
 		$criteria->compare('descripcion', $this->descripcion, true);
 		$criteria->compare('fecha', $this->fecha, true);
+		$criteria->compare('debeohaber', $this->debeohaber);
 		$criteria->compare('debe', $this->debe);
 		$criteria->compare('haber', $this->haber);
-		$criteria->compare('debeohaber', $this->debeohaber);
 		$criteria->compare('numerooperacion', $this->numerooperacion, true);
 		$criteria->compare('ctabancaria_idctabancaria', $this->ctabancaria_idctabancaria);
 		$criteria->compare('cheque_idcheque', $this->cheque_idcheque);
+		$criteria->compare('id_de_trabajo', $this->id_de_trabajo, true);
+		$criteria->compare('cuenta_idcuenta', $this->cuenta_idcuenta);
+		$criteria->compare('asiento_idasiento', $this->asiento_idasiento);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
@@ -177,4 +196,5 @@ public function compararFechas($attribute,$params)
                         'criteria'=>$criteria,
                 ));
         }	
+
 }
