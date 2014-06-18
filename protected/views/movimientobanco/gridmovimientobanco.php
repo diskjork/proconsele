@@ -1,7 +1,7 @@
 
 
 <?php 
-	$dataProvider= $model->search($model->fecha=$anioTab."-".$mesTab,$model->ctabancaria_idctabancaria);
+	$dataProvider= $model->search($model->fecha=$anioTab."-".$mesTab,$model->ctabancaria_idctabancaria=$bancoid);
 	$dataProvider->setPagination(array('pageSize'=>$model->count()));
 	$datosArray=$dataProvider->getData();
 	
@@ -40,7 +40,7 @@
 				'cssClassExpression' => '$data["debe"] > 0 ? "colorDebe": ""',
 				'htmlOptions' => array('width' =>'100px'),
 				'value'=>'($data->debe !== null && $data->debe > 0)?number_format($data->debe, 2, ".", ","): "-"',
-				'footer'=>"(T.D:$".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",").")  (T.H:$".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",").")",
+				//'footer'=>"(T.D:$".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",").")  (T.H:$".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",").")",
 				//'footer'=>"$ ".number_format($dataProviderDebeHaber[0]['total_debe']-$dataProviderDebeHaber[0]['total_haber'],2,".",","),
 				'footerHtmlOptions'=>array('colspan'=>2 ,'style'=>'text-align:center;font-weight:bold;'),
 			),
@@ -77,11 +77,11 @@
 ));
 	$this->widget('yiiwheels.widgets.grid.WhGridView',array(
 		'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
-		'dataProvider'=>$dataProvider,
+		'dataProvider'=>$model->search(),
 		'filter'=>$model,
 		'template' => "{items}{pager}",
 		'columns'=>$colum,
-		'id'=>$bancoid."-".$anioTab."-".$mesTab,
+		//'id'=>$bancoid."-".$anioTab."-".$mesTab,
 		
 )); 
 

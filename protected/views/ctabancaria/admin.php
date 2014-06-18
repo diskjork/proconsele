@@ -31,7 +31,7 @@ $this->menu=array(
 <h5 class="well well-small">CUENTAS BANCARIAS</h5>
 
 
-</div><!-- search-form -->
+
 
 <?php 
 	$dataProvider=$model->search($model->estado='1');

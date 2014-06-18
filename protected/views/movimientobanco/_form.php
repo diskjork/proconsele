@@ -2,6 +2,10 @@
 /* @var $this MovimientobancoController */
 /* @var $model Movimientobanco */
 /* @var $form TbActiveForm */
+if(isset($_GET['vista'])){
+		$vista=$_GET['vista'];
+		
+	}
 ?>
 
 <div class="form">
@@ -17,7 +21,9 @@
         'clientOptions' => array(
         'validateOnSubmit' => true,
         ),
-)); ?>
+)); 
+
+?>
 
     <p class="help-block">Los campos con <span class="required">*</span> son requeridos.</p>
 
@@ -98,10 +104,12 @@
 					  ),
 				)); ?>
 				<?php  echo $form->error($model,'cuenta_idcuenta',array('style'=>'color:#b94a48')); ?>
-            <?php //echo $form->textFieldControlGroup($model,'cheque_idcheque',array('span'=>5)); ?>
-
+            <?php echo $form->hiddenField($model, 'vista', array());?>
+		
         <div class="form-actions" align="center">
-        <?php echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
+        <?php 
+        
+        echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
 		    
 		)); ?>
@@ -116,7 +124,12 @@
     <?php $this->endWidget(); ?>
 
 </div><!-- form -->
-<?php /*Yii::app()->clientScript->registerScript('test',"
+<?php if(isset($vista)){
+	 Yii::app()->clientScript->registerScript('vista',"
+$('#Movimientobanco_vista').val('".$vista."');");
+}?>
+<?php Yii::app()->clientScript->registerScript('test',"
 				$('div .modal-footer').remove();
 				$('div .form-actions').css('background-color','transparent');
-				"); */?> 	
+				
+				"); ?> 	

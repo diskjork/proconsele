@@ -5,16 +5,18 @@
 
 <?php
 $this->breadcrumbs=array(
-	'Cajas'=>array('index'),
+	'Bancos'=>array('index'),
 	'Create',
 );
-
-$this->menu=array(
-	array('label'=>'List Caja', 'url'=>array('index')),
-	array('label'=>'Manage Caja', 'url'=>array('admin')),
-);
 ?>
-
-<h1>Create Caja</h1>
-
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php  $this->widget('bootstrap.widgets.TbModal', array(
+    		'id' => 'modalup',
+    		'header' => '<h4>Carga de nueva caja</h4>',
+			'content' => $this->renderPartial('_form',array('model'=>$model), true),
+			'show'=>true,
+			'backdrop'=> 'static',
+			'fade'=>false,
+			'keyboard'=> false,
+			'buttonOptions'=> false,
+			'closeText'=>"",
+)); ?>

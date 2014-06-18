@@ -1,12 +1,13 @@
 <?php
-/* @var $this CajaController */
-/* @var $model Caja */
+/* @var $this BancoController */
+/* @var $model Banco */
 ?>
+
 
 <?php  $this->widget('bootstrap.widgets.TbModal', array(
     		'id' => 'modalup',
-    		'header' => '<h4>Actualización caja</h4>',
-			'content' => $this->renderPartial('_form',array('model'=>$model), true),
+    		'header' => '<h4>Habilitar caja desactivada</h4>',
+			'content' => $this->renderPartial('propio',array('model'=>$model), true),
 			'show'=>true,
 			'backdrop'=> 'static',
 			'fade'=>false,
@@ -14,4 +15,5 @@
 			'buttonOptions'=> false,
 			'closeText'=>"",
 )); 
+
 ?>

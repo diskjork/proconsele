@@ -37,8 +37,8 @@ abstract class BaseAsiento extends GxActiveRecord {
 		return array(
 			array('fecha, descripcion', 'required'),
 			array('descripcion', 'length', 'max'=>255),
-			array('descripcion, movimientobanco_idmovimientobanco', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idasiento, fecha, descripcion, movimientobanco_idmovimientobanco', 'safe', 'on'=>'search'),
+			array('descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idasiento, fecha, descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja', 'safe', 'on'=>'search'),
 			array('totaldebe, totalhaber','safe'),
 			array('totaldebe, totalhaber','validarPartidaDoble'),
 		);
@@ -48,6 +48,7 @@ abstract class BaseAsiento extends GxActiveRecord {
 		return array(
 			'detalleasientos' => array(self::HAS_MANY, 'Detalleasiento', 'asiento_idasiento'),
 			'movimientobancoIdmovimientobanco' => array(self::BELONGS_TO, 'Movimientobanco', 'movimientobanco_idmovimientobanco'),
+			'movimientocajaIdmovimientocaja'=> array(self::BELONGS_TO, 'Movimientocaja', 'movimientocaja_idmovimientocaja'),
 		);
 	}
 

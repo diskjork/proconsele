@@ -7,7 +7,7 @@
  * property or method in class "Movimientocaja".
  *
  * Columns in table "movimientocaja" available as properties of the model,
- * and there are no model relations.
+ * followed by relations of table "movimientocaja" available as properties of the model.
  *
  * @property integer $idmovimientocaja
  * @property string $descripcion
@@ -15,49 +15,23 @@
  * @property integer $debeohaber
  * @property double $debe
  * @property double $haber
- * @property string $numerooperacion
- * @property integer $caja_idcaja
- * @property integer $rubro_idrubro
- * @property integer $formadepago_idformadepago
  * @property integer $id_de_trabajo
+ * @property integer $caja_idcaja
+ * @property integer $asiento_idasiento
+ * @property integer $cuenta_idcuenta
  *
+ * @property Asiento[] $asientos
+ * @property Detallecobranza[] $detallecobranzas
+ * @property Detallecompra[] $detallecompras
+ * @property Detalleordendepago[] $detalleordendepagos
+ * @property Detallepagos[] $detallepagoses
+ * @property Caja $cajaIdcaja
+ * @property Asiento $asientoIdasiento
  */
 abstract class BaseMovimientocaja extends GxActiveRecord {
-public $importe;
-	public $total, $totaldebe,$fechacobro;
+	public $importe, $vista;
+	public $fechacobro;
 	public $total_debe,$total_haber;
-	
-	public function SumTotal($case,$mesTab,$anioTab){
-		$sql='SELECT SUM(debe) AS total_debe,SUM(haber) AS total_haber, (SUM(debe)-SUM(haber)) AS resta  from movimientocaja WHERE year(fecha)='.$anioTab.' and month(fecha)='.$mesTab.' LIMIT 1';
-		//$sql2="SELECT  from movimientocaja";
-		$dbCommand = Yii::app()->db->createCommand($sql);
-		//$dbCommand2 = Yii::app()->db->createCommand($sql2);
-		$results = $dbCommand->queryAll();
-		//$results2 = $dbCommand2->queryAll();
-		$totaldebe = $results[0]['total_debe'];
-		$totalhaber = $results[0]['total_haber'];
-		$total=number_format($results[0]['resta'],2,".",",");
-		
-		//return $total;
-	switch ($case) {
-    case 0:
-        return $totaldebe;
-        break;
-    case 1:
-    	return $totalhaber;
-        break;
-    case 2:
-    	return $total;
-        break;
-    case 3:
-		    	if($total > 0){
-		    		return true;
-		    	} else {
-		    		return false;
-		    	}
-        break;
-}
-	}
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -71,28 +45,29 @@ public $importe;
 	}
 
 	public static function representingColumn() {
-		return 'descripcion';
+		return 'fecha';
 	}
 
 	public function rules() {
 		return array(
-			array('descripcion, fecha, debeohaber, caja_idcaja, rubro_idrubro, formadepago_idformadepago', 'required'),
-			array('debeohaber, caja_idcaja, rubro_idrubro, formadepago_idformadepago', 'numerical', 'integerOnly'=>true),
+			array('descripcion, fecha, debeohaber, caja_idcaja, cuenta_idcuenta', 'required'),
+			array('debeohaber, id_de_trabajo, caja_idcaja, asiento_idasiento, cuenta_idcuenta', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
-			array('debe,haber', 'default','setOnEmpty'=>true, 'value'=>0),
 			array('descripcion', 'length', 'max'=>150),
-			array('numerooperacion, id_de_trabajo', 'length', 'max'=>20),
-			array('debe, haber, numerooperacion, id_de_trabajo', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idmovimientocaja, descripcion, fecha, debeohaber, debe, haber, numerooperacion, caja_idcaja, rubro_idrubro, formadepago_idformadepago, id_de_trabajo', 'safe', 'on'=>'search'),
-			array('fechacobro','safe'),
-			array('fechacobro', 'length', 'max'=>20),
-			array('fechacobro','compararFechas'),
-			);
+			array('debe, haber, id_de_trabajo, asiento_idasiento', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idmovimientocaja, descripcion, fecha, debeohaber, debe, haber, id_de_trabajo, caja_idcaja, asiento_idasiento, cuenta_idcuenta', 'safe', 'on'=>'search'),
+		);
 	}
 
 	public function relations() {
 		return array(
-			'rubroIdrubro' => array(self::BELONGS_TO, 'Rubro', 'rubro_idrubro'),
+			'asientos' => array(self::HAS_MANY, 'Asiento', 'movimientocaja_idmovimientocaja'),
+			'detallecobranzas' => array(self::HAS_MANY, 'Detallecobranza', 'movimientocaja_idmovimientocaja'),
+			'detallecompras' => array(self::HAS_MANY, 'Detallecompra', 'movimientocaja_idmovimientocaja'),
+			'detalleordendepagos' => array(self::HAS_MANY, 'Detalleordendepago', 'movimientocaja_idmovimientocaja'),
+			'detallepagoses' => array(self::HAS_MANY, 'Detallepagos', 'movimientocaja_idmovimientocaja'),
+			'cajaIdcaja' => array(self::BELONGS_TO, 'Caja', 'caja_idcaja'),
+			'asientoIdasiento' => array(self::BELONGS_TO, 'Asiento', 'asiento_idasiento'),
 		);
 	}
 
@@ -106,15 +81,20 @@ public $importe;
 			'idmovimientocaja' => Yii::t('app', 'Idmovimientocaja'),
 			'descripcion' => Yii::t('app', 'Descripcion'),
 			'fecha' => Yii::t('app', 'Fecha'),
-			'debeohaber' => Yii::t('app', 'Tipo de Movimiento'),
+			'debeohaber' => Yii::t('app', 'Debeohaber'),
 			'debe' => Yii::t('app', 'Debe'),
 			'haber' => Yii::t('app', 'Haber'),
-			'numerooperacion' => Yii::t('app', 'Numerooperacion'),
-			'caja_idcaja' => Yii::t('app', 'Caja'),
-			'rubro_idrubro' => Yii::t('app', 'Rubro'),
-			'rubroIdrubro' => Yii::t('app', 'Rubro'),
-			'formadepago_idformadepago' => Yii::t('app', 'Forma de pago'),
-			'id_de_trabajo' => null,
+			'id_de_trabajo' => Yii::t('app', 'Id De Trabajo'),
+			'caja_idcaja' => null,
+			'asiento_idasiento' => null,
+			'cuenta_idcuenta' => Yii::t('app', 'Cuenta Idcuenta'),
+			'asientos' => null,
+			'detallecobranzas' => null,
+			'detallecompras' => null,
+			'detalleordendepagos' => null,
+			'detallepagoses' => null,
+			'cajaIdcaja' => null,
+			'asientoIdasiento' => null,
 		);
 	}
 
@@ -123,37 +103,38 @@ public $importe;
 
 		$criteria->compare('idmovimientocaja', $this->idmovimientocaja);
 		$criteria->compare('descripcion', $this->descripcion, true);
-		//para poder buscar deacuerdo al formato de myql
-		$criteria->compare("DATE_FORMAT(fecha,'%d/%m/%Y')",$this->fecha,true); 
-		//$criteria->compare('fecha', $this->fecha, true);
+		$criteria->compare('fecha', $this->fecha, true);
 		$criteria->compare('debeohaber', $this->debeohaber);
 		$criteria->compare('debe', $this->debe);
 		$criteria->compare('haber', $this->haber);
-		$criteria->compare('numerooperacion', $this->numerooperacion, true);
-		$criteria->compare('caja_idcaja', $this->caja_idcaja);
-		$criteria->compare('rubro_idrubro', $this->rubro_idrubro);
-		$criteria->compare('formadepago_idformadepago', $this->formadepago_idformadepago);
 		$criteria->compare('id_de_trabajo', $this->id_de_trabajo);
+		$criteria->compare('caja_idcaja', $this->caja_idcaja);
+		$criteria->compare('asiento_idasiento', $this->asiento_idasiento);
+		$criteria->compare('cuenta_idcuenta', $this->cuenta_idcuenta);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'sort' => array(
-				'defaultOrder' => array('fecha' => true),
-			),
 		));
 	}
-	public function behaviors()
-	{
-	    return array(
-	    	'datetimeI18NBehavior' => array('class' => 'ext.DateTimeI18NBehavior.DateTimeI18NBehavior'),
-	    	'ERememberFiltersBehavior' => array(
-            	'class' => 'application.components.ERememberFiltersBehavior',
-               	'defaults'=>array(),           /* optional line */
-               	'defaultStickOnClear'=>false   /* optional line */
-           	),
-	    
-	   ); // 'ext' is in Yii 1.0.8 version. For early versions, use 'application.extensions' instead.
+//para listar los caja cargadas en solapas	
+	public function listCajas(){
+		$sql= "SELECT idcaja,nombre FROM  caja WHERE estado=1 LIMIT 10";
+		$dbCommand = Yii::app()->db->createCommand($sql);
+		$resultado = $dbCommand->queryAll();
+		return $resultado;
 	}
+public function behaviors()
+		{
+			 return array(
+		    	'datetimeI18NBehavior' => array('class' => 'ext.DateTimeI18NBehavior.DateTimeI18NBehavior'),
+		    	'ERememberFiltersBehavior' => array(
+	            	'class' => 'application.components.ERememberFiltersBehavior',
+	               	'defaults'=>array(),           /* optional line */
+	               	'defaultStickOnClear'=>false   /* optional line */
+	           	),
+		    
+		   ); // 'ext' is in Yii 1.0.8 version. For early versions, use 'application.extensions' instead.
+		}
 public function compararFechas($attribute,$params)
 	 {
 	 	
@@ -185,8 +166,8 @@ public function compararFechas($attribute,$params)
 	    }
 	  } 
 	}
-	
-	public function obtenerDebeHaber($mes,$anio)
+		
+	public function obtenerDebeHaber($mes,$anio,$banco)
         {
                 $criteria=new CDbCriteria;
                 
@@ -194,7 +175,7 @@ public function compararFechas($attribute,$params)
                 	'SUM(debe) AS total_debe, SUM(haber) AS total_haber',
                 );
 
-                $criteria->condition = 'YEAR(fecha)='.$anio.' and MONTH(fecha)='.$mes;
+                $criteria->condition = 'YEAR(fecha)='.$anio.' and MONTH(fecha)='.$mes.' and caja_idcaja='.$banco;
                 $result = Movimientocaja::model()->find($criteria); 
                 return new CActiveDataProvider($this, array(
                         'criteria'=>$criteria,

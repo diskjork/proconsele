@@ -11,7 +11,11 @@
  *
  * @property integer $idcaja
  * @property string $nombre
+ * @property string $descripcion
+ * @property integer $estado
+ * @property integer $cuenta_idcuenta
  *
+ * @property Cuenta $cuentaIdcuenta
  * @property Movimientocaja[] $movimientocajas
  */
 abstract class BaseCaja extends GxActiveRecord {
@@ -34,14 +38,18 @@ abstract class BaseCaja extends GxActiveRecord {
 
 	public function rules() {
 		return array(
+			array('estado, cuenta_idcuenta', 'required'),
+			array('estado, cuenta_idcuenta', 'numerical', 'integerOnly'=>true),
 			array('nombre', 'length', 'max'=>45),
-			array('nombre', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idcaja, nombre', 'safe', 'on'=>'search'),
+			array('descripcion', 'length', 'max'=>255),
+			array('nombre, descripcion', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idcaja, nombre, descripcion, estado, cuenta_idcuenta', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
+			'cuentaIdcuenta' => array(self::BELONGS_TO, 'Cuenta', 'cuenta_idcuenta'),
 			'movimientocajas' => array(self::HAS_MANY, 'Movimientocaja', 'caja_idcaja'),
 		);
 	}
@@ -55,6 +63,10 @@ abstract class BaseCaja extends GxActiveRecord {
 		return array(
 			'idcaja' => Yii::t('app', 'Idcaja'),
 			'nombre' => Yii::t('app', 'Nombre'),
+			'descripcion' => Yii::t('app', 'Descripcion'),
+			'estado' => Yii::t('app', 'Estado'),
+			'cuenta_idcuenta' => Yii::t('app', 'Cuenta contable relacionada'),
+			'cuentaIdcuenta' => null,
 			'movimientocajas' => null,
 		);
 	}
@@ -64,9 +76,18 @@ abstract class BaseCaja extends GxActiveRecord {
 
 		$criteria->compare('idcaja', $this->idcaja);
 		$criteria->compare('nombre', $this->nombre, true);
+		$criteria->compare('descripcion', $this->descripcion, true);
+		$criteria->compare('estado', $this->estado);
+		$criteria->compare('cuenta_idcuenta', $this->cuenta_idcuenta);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 		));
 	}
+	private $desactivadas;
+	public function getdesactivadas(){
+		$var=$this->find("estado=:estado",array(':estado'=>0));
+		return $var;
+	}
+	
 }

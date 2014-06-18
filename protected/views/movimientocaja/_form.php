@@ -2,6 +2,10 @@
 /* @var $this MovimientocajaController */
 /* @var $model Movimientocaja */
 /* @var $form TbActiveForm */
+if(isset($_GET['vista'])){
+		$vista=$_GET['vista'];
+		
+	}
 ?>
 <script type="text/javascript">
 function justNumbers(e)
@@ -73,29 +77,44 @@ return /\d/.test(String.fromCharCode(keynum));
     				</div>
             </div>
            
-            <?php echo $form->textFieldControlGroup($model,'descripcion',array('span'=>5,'maxlength'=>45)); ?>
+           <?php echo $form->textFieldControlGroup($model,'descripcion',array('span'=>5,'maxlength'=>45)); ?>
 			
-			<?php echo $form->hiddenField($model,'caja_idcaja', array('value'=>'1')); ?>
-			
-            <?php echo $form->label($model, 'rubro_idrubro');?>
-            <?php
-			    $this->widget('yiiwheels.widgets.select2.WhSelect2', array(
-				    'asDropDownList' => true,
-				    'model'=>$model,
-	    			'attribute' => 'rubro_idrubro',
-		    		'data' => GxHtml::listDataEx(Rubro::model()->findAllAttributes(null,true)),
-				    'pluginOptions' => array(
-			    		'placeholder' => 'Rubro',
-				    	'width' => '50%',
-			    		'minimumResultsForSearch' => '3',
-			    	),
-			    ));
-			?>
-			
-         <?php echo $form->hiddenField($model,'formadepago_idformadepago', array('value'=>'1')); ?>
+			<div>
+			<?php echo $form->label($model, 'caja_idcaja');?>
+       		<?php $this->widget('ext.select2.ESelect2',array(
+				  //'name'=>'cuenta_idcuenta',
+				 'model'=>$model,
+				 'attribute'=>'caja_idcaja',
+				  'data' => GxHtml::listDataEx(Caja::model()->findAllAttributes(array('nombre'),true,array('condition'=>'estado=1','order'=>'nombre ASC')),'idcaja','nombre'),
+				  'options'=>array(
+					   'placeholder'=>'Seleccione una caja',
+					   'allowClear'=>true,
+						'width'=> '60%',
+					  ),
+				)); ?>
+				<?php  echo $form->error($model,'caja_idcaja',array('style'=>'color:#b94a48')); ?>
+				</div><br>
+			<div>
+            <?php echo $form->label($model, 'cuenta_idcuenta');?>
+       		<?php $this->widget('ext.select2.ESelect2',array(
+				  //'name'=>'cuenta_idcuenta',
+				 'model'=>$model,
+				 'attribute'=>'cuenta_idcuenta',
+				  'data' => GxHtml::listDataEx(Cuenta::model()->findAllAttributes(array('codigocta,nombre'),true,array('condition'=>'asentable=1','order'=>'codigocta ASC')),'idcuenta','codNombre'),
+				  'options'=>array(
+					   'placeholder'=>'Seleccione una cuenta',
+					   'allowClear'=>true,
+						'width'=> '60%',
+					  ),
+				)); ?>
+				<?php  echo $form->error($model,'cuenta_idcuenta',array('style'=>'color:#b94a48')); ?>
+			</div>
+       
           
 		<?php echo $form->errorSummary($model); ?>
-        <div class="form-actions" align="center">
+   		<?php echo $form->hiddenField($model, 'vista', array());?>     
+        
+   <div class="form-actions" align="center">
         <?php echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
 		    
@@ -106,5 +125,12 @@ return /\d/.test(String.fromCharCode(keynum));
     </div>
 
     <?php $this->endWidget(); ?>
-
+<?php if(isset($vista)){
+	 Yii::app()->clientScript->registerScript('vista',"
+$('#Movimientocaja_vista').val('".$vista."');");
+}?>
 </div><!-- form -->
+<?php Yii::app()->clientScript->registerScript('test',"
+				$('div .modal-footer').remove();
+				$('div .form-actions').css('background-color','transparent');
+				"); ?> 	

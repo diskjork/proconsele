@@ -21,7 +21,7 @@ $this->breadcrumbs=array(
 		'fecha',
 		'debe',
 		'haber',
-		'rubroIdrubro',
+		
 
 	),
 )); ?>

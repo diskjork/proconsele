@@ -174,8 +174,12 @@ class MovimientobancoController extends Controller
 					$model->haber= $this->cargaImporte($_POST['Movimientobanco']['importe']);
 				}
 			$this->checkUpdateAsiento($model2, $model);
+			
 			if ($model->save()) {
 				//$this->redirect(array('view','id'=>$model->idmovimientobanco));
+				if($_POST['Movimientobanco']['vista'] == 2){
+					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
+				}
 				$this->redirect(Yii::app()->request->baseUrl.'/movimientobanco/admin');
 				
 			}

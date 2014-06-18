@@ -28,5 +28,8 @@ $this->menu=array(
     'attributes'=>array(
 		'idcaja',
 		'nombre',
+		'descripcion',
+		'estado',
+		'cuenta_idcuenta',
 	),
 )); ?>

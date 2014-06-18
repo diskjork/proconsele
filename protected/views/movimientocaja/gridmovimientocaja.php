@@ -1,12 +1,20 @@
 
 <?php 
-$n=04;
-$dataProvider= $model->search($model->fecha=$mesTab."/".$anioTab);
-$dataProvider->setPagination(array('pageSize'=>200)); 
-$dataProviderRel=$dataProvider->getData();
-//Obtener total debe y haber;
-$dataProviderDH=$model->obtenerDebeHaber($mesTab,$anioTab);
-$dataProviderDebeHaber=$dataProviderDH->getData();
+$dataProvider= $model->search(array($model->fecha=$anioTab."-".$mesTab,$model->caja_idcaja=$bancoid));
+/*$dataProvider=$model->findAll('year(fecha)=:ano and month(fecha)=:mes and caja_idcaja=:caja',
+							array(':ano'=>$anioTab,
+								  ':mes'=>$mesTab,
+								  ':caja'=>$bancoid)); */
+							
+
+
+	$dataProvider->setPagination(array('pageSize'=>$model->count()));
+	$datosArray=$dataProvider->getData();
+	
+	//Obtener total debe y haber;
+	$dataProviderDH=$model->obtenerDebeHaber($mesTab,$anioTab,$bancoid);
+	
+	$dataProviderDebeHaber=$dataProviderDH->getData();
 ?>
 <div id="iconoExportar" align="right">
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab),'Exportar',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
@@ -35,7 +43,8 @@ $columnas=array_merge(array(
 					'htmlOptions' => array('width' =>'75px'),
               		'cssClassExpression' => '$data["debe"] > 0 ? "colorDebe": ""',
 					'value'=>'($data->debe !== null && $data->debe > 0)?number_format($data->debe, 2, ".", ","): "-"',
-              		'footer'=>"$ ".number_format($dataProviderDebeHaber[0]['total_debe']-$dataProviderDebeHaber[0]['total_haber'],2,".",","),
+              		//'footer'=>"$ ".number_format($dataProviderDebeHaber[0]['total_debe']-$dataProviderDebeHaber[0]['total_haber'],2,".",","),
+              		'footer'=>"(T.D:$".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",").")  (T.H:$".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",").")",
               		'footerHtmlOptions'=>array('colspan'=>2 ,'style'=>'text-align:center;font-weight:bold;'),
               ),
 			  array(
@@ -48,9 +57,9 @@ $columnas=array_merge(array(
 			 array(
 	            'header'=>'Opciones',
 	            'class'=>'bootstrap.widgets.TbButtonColumn',
-			 	'template' => '{Factura compra} {Factura venta} {Cobranza} {view} {update} {delete}',
+			 	'template' => ' {view} {update} {delete}',
 	            'buttons'=>array(
-	                'Factura compra'=>
+	               /* 'Factura compra'=>
 	                    array(
 	                    	'icon'=>TbHtml::ICON_PLUS_SIGN,
 	                        'url'=>'$data["debeohaber"] == 0 ? Yii::app()->createUrl("factura/view", array("id"=>$data->id_de_trabajo)):Yii::app()->createUrl("compras/view", array("id"=>$data->id_de_trabajo))',
@@ -88,17 +97,18 @@ $columnas=array_merge(array(
 	                                'success'=>'function(data) { $("#viewModal .modal-body p").html(data); $("#viewModal").modal(); }'
 	                            ),
 	                        ),
-	                    ),
+	                    ),*/
 	                 'view'=>
 	                    array(
-	                        'url'=>'Yii::app()->createUrl("movimientocaja/view", array("id"=>$data->idmovimientocaja))',
-	                        'options'=>array(
+	                    	'label'=>'Ver asiento contable',
+	                        'url'=>'Yii::app()->createUrl("asiento/update", array("id"=>$data->asiento_idasiento,"vista"=>2))',
+	                       /* 'options'=>array(
 	                            'ajax'=>array(
 	                                'type'=>'POST',
 	                                'url'=>"js:$(this).attr('href')",
 	                                'success'=>'function(data) { $("#viewModal .modal-body p").html(data); $("#viewModal").modal(); }'
 	                            ),
-	                        ),
+	                        ),*/
 	                    ),
 	                    
 	            ),
@@ -111,7 +121,7 @@ $columnas=array_merge(array(
 
 	<?php 
 	$this->widget('yiiwheels.widgets.grid.WhGridView', array(
-	    'filter'=>$model,
+	    //'filter'=>$model,
 	    //'fixedHeader' => false,
 	    //'headerOffset' => 20, // height of the main navigation at bootstrap
 	    'dataProvider' => $dataProvider,
@@ -122,11 +132,4 @@ $columnas=array_merge(array(
 	));
 
 ?>
-<script type="text/javascript">
-<!--
 
-var $table = $("<?php echo "#yw".date("n",strtotime($anioTab."-".$mesTab));?>").children('table');
-var $tbody = $table.children('tbody');
-$tbody.append('<tr> <td></td> <td></td> <td></td> <td><?php echo "$ ".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",");?></td><td><?php echo "$ ".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",");?></td><td colspan=2></td>  </tr>');
-//-->
-</script>	

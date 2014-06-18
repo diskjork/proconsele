@@ -54,7 +54,7 @@ $this->nav=$this->checkCtabancaria($model);
 		};
 		 
 		 
-//--------------------------BARRA DE BANCOS CARGADOS-------------------
+//--------------------------BARRA DE CTABANCARIAS CARGADOS-------------------
 		$this->widget('bootstrap.widgets.TbNav', array(
 	    'type' => TbHtml::NAV_TYPE_TABS,
 	    'items' => $bancoNav,
@@ -124,7 +124,7 @@ $this->nav=$this->checkCtabancaria($model);
 	));
 	
 	} else {
-		echo "<h1> Debe Cargar al menos un Banco para comenzar a operar </h1>";
+		echo "<h1> Debe Cargar al menos una cuenta bancaria para comenzar a operar </h1>";
 		}
 	}
 ?>

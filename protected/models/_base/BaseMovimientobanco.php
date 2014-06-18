@@ -34,6 +34,7 @@
  */
 abstract class BaseMovimientobanco extends GxActiveRecord {
 	public $importe;
+	public $vista;
 	public $fechacobro;
 	public $total_debe,$total_haber;
 	public static function model($className=__CLASS__) {
@@ -54,7 +55,7 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('fecha, debeohaber, ctabancaria_idctabancaria, cuenta_idcuenta', 'required'),
+			array('fecha, debeohaber, ctabancaria_idctabancaria, cuenta_idcuenta, descripcion', 'required'),
 			array('debeohaber, ctabancaria_idctabancaria, cheque_idcheque, cuenta_idcuenta, asiento_idasiento', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('descripcion', 'length', 'max'=>100),
@@ -92,10 +93,11 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 			'debe' => Yii::t('app', 'Debe'),
 			'haber' => Yii::t('app', 'Haber'),
 			'numerooperacion' => Yii::t('app', 'Numerooperacion'),
-			'ctabancaria_idctabancaria' => null,
+			'ctabancaria_idctabancaria' => Yii::t('app', 'Cta. bancaria'),
+			'cuenta_idcuenta' => Yii::t('app', 'Cuenta contable relacionada'),
 			'cheque_idcheque' => null,
 			'id_de_trabajo' => Yii::t('app', 'Id De Trabajo'),
-			'cuenta_idcuenta' => null,
+			//'cuenta_idcuenta' => null,
 			'asiento_idasiento' => null,
 			'detalleasientos' => null,
 			'detallecobranzas' => null,
@@ -129,7 +131,7 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
-//para listar los bancos cargados en solapas	
+//para listar los ctasbancarias cargadas en solapas	
 	public function listCtasbancarias(){
 		$sql= "SELECT idctabancaria,nombre FROM  ctabancaria WHERE estado=1 LIMIT 10";
 		$dbCommand = Yii::app()->db->createCommand($sql);

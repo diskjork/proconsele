@@ -118,12 +118,20 @@
 		    'class'=>'btn btn-primary',
         	'id'=>'boton-submit',
 		)); 
-		 
+		 		echo " ";
 		    	echo CHtml::link('Cancelar',Yii::app()->createUrl("asiento/admin"),
 				array('class'=>'btn btn-primary'));
         } else {
-        	echo CHtml::link('Volver',Yii::app()->createUrl("movimientobanco/admin"),
-				array('class'=>'btn btn-primary'));
+        	switch ($vista){
+        		case 1:
+	        		echo CHtml::link('Volver',Yii::app()->createUrl("movimientobanco/admin"),
+					array('class'=>'btn btn-primary'));
+        		break;
+        		case 2:
+        			echo CHtml::link('Volver',Yii::app()->createUrl("movimientocaja/admin"),
+					array('class'=>'btn btn-primary'));
+        	}
+        	
         }
 			?>
     </div>

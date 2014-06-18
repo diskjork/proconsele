@@ -1,7 +1,8 @@
 <?php
 
 class MovimientocajaController extends Controller
-{
+{	
+	public $nav;
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -87,7 +88,48 @@ class MovimientocajaController extends Controller
 					$model->haber= $this->cargaImporte($_POST['Movimientocaja']['importe']);
 				}
 			
-			if ($model->save()) {
+		if ($model->validate()) {
+					$asiento=new Asiento;
+					$asiento->fecha=$model->fecha;
+					$asiento->descripcion="Mov.Caja. ".$model->cajaIdcaja." - ".$model->descripcion;
+					if($asiento->save()){
+						if($model->debeohaber == 0){
+							$detAs=new Detalleasiento;
+							$detAs->debe=$model->debe;
+							$detAs->cuenta_idcuenta=$model->cajaIdcaja->cuenta_idcuenta;
+							$detAs->asiento_idasiento=$asiento->idasiento;
+							$detAs->save();
+							$detAs2=new Detalleasiento;
+							$detAs2->haber=$model->debe;
+							$detAs2->cuenta_idcuenta=$model->cuenta_idcuenta;
+							$detAs2->asiento_idasiento=$asiento->idasiento;
+							$detAs2->save();
+							$model->asiento_idasiento=$asiento->idasiento;
+							$model->save();
+							$detAs->movimientocaja_idmovimientocaja=$model->idmovimientocaja;
+							$detAs->save();
+						
+						} elseif($model->debeohaber == 1){
+							$detAs=new Detalleasiento;
+							$detAs->debe=$model->haber;
+							$detAs->cuenta_idcuenta=$model->cuenta_idcuenta;
+							$detAs->asiento_idasiento=$asiento->idasiento;
+							$detAs->save();
+							$detAs2=new Detalleasiento;
+							$detAs2->haber=$model->haber;
+							$detAs2->cuenta_idcuenta=$model->cajaIdcaja->cuenta_idcuenta;
+							$detAs2->asiento_idasiento=$asiento->idasiento;
+							$detAs2->movimientocaja_idmovimientocaja=$model->idmovimientocaja;
+							$detAs2->save();
+							$model->asiento_idasiento=$asiento->idasiento;
+							$model->save();
+							$detAs2->movimientocaja_idmovimientocaja=$model->idmovimientocaja;
+							$detAs2->save();
+						}
+						$asiento2=Asiento::model()->findByPk($asiento->idasiento);
+						$asiento2->movimientocaja_idmovimientocaja=$model->idmovimientocaja;
+						$asiento2->save();
+					}
 				Yii::app()->user->setFlash('success', "<strong>Movimiento cargado correctamente.</strong>");
 				$this->redirect(array('admin'));
 			}
@@ -106,6 +148,7 @@ class MovimientocajaController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+		$model2=$this->loadModel($id);
 		
 		if($model->debeohaber == 0){
 			$model->importe=$model->debe;
@@ -135,8 +178,11 @@ class MovimientocajaController extends Controller
 				} elseif($model->debeohaber == 1){
 					$model->haber= $this->cargaImporte($_POST['Movimientocaja']['importe']);
 				}
-			
+				$this->checkUpdateAsiento($model2, $model);
 				if ($model->save()) {
+				if($_POST['Movimientocaja']['vista'] == 2){
+					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
+				}
 				Yii::app()->user->setFlash('success', "<strong>Movimiento actualizado correctamente.</strong>");
 				$this->redirect(array('admin'));
 			}
@@ -244,11 +290,91 @@ class MovimientocajaController extends Controller
 			Yii::app()->end();
 			}
 		}
+	public function checkCajas($model){
+			$lista=$model->listCajas();
+			if(empty($lista)){
+				return $e=0;
+			}else {
+				return $lista;
+			}
+		}
 	public function cargaImporte($arr){
 			$temp=$arr;
 			$temp = str_replace(",","",$temp); //borro los separadores de miles, si hay
 	 		if(settype($temp,"double"))
 				return $temp;	
+		
+	}
+public function checkUpdateAsiento($datosGuardados, $datosPOST){
+		if($datosGuardados->descripcion != $datosPOST->descripcion ||
+		   $datosGuardados->fecha != $datosPOST->fecha ||
+		   $datosGuardados->debeohaber != $datosPOST->debeohaber ||
+		   $datosGuardados->debe != $datosPOST->debe ||
+		   $datosGuardados->haber != $datosPOST->haber || 
+		   $datosGuardados->caja_idcaja != $datosPOST->caja_idcaja ||
+		   $datosGuardados->cuenta_idcuenta != $datosPOST->cuenta_idcuenta ){
+		   //ASIENTO
+		   	$asientoGuardado=Asiento::model()->findByPk($datosGuardados->asiento_idasiento);
+		   $asientoGuardado->descripcion="Mov.Caja. ".$datosPOST->caja_idcaja." - ".$datosPOST->descripcion;
+		   $asientoGuardado->fecha=$datosPOST->fecha;
+		   $asientoGuardado->save();
+		   //DETALLE ASIENTO
+		   $detals=Detalleasiento::model()->findAll('asiento_idasiento=:idasiento ORDER BY iddetalleasiento ASC',array(':idasiento'=>$asientoGuardado->idasiento));
+		   //$cuentaBanco=$datosGuardados->ctabancariaIdctabancaria->cuenta_idcuenta;
+		   
+		   if($datosGuardados->debe!= $datosPOST->debe){
+		   		$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
+		   		$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
+		   		$nuevoDasiento->debe=$datosPOST->debe;
+		   		$nuevoDasiento2->haber=$datosPOST->debe;
+		   		$nuevoDasiento->save();
+		   		$nuevoDasiento2->save();
+		   		
+		   }
+		   if($datosGuardados->haber != $datosPOST->haber){
+		   		$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
+		   		$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
+		   		$nuevoDasiento->debe=$datosPOST->haber;
+		   		$nuevoDasiento2->haber=$datosPOST->haber;
+		   		$nuevoDasiento->save();
+		   		$nuevoDasiento2->save();
+		   }
+		   
+		   if($datosGuardados->debeohaber != $datosPOST->debeohaber){
+		   		if($datosGuardados->debeohaber == 0 ){
+		   			$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
+		   			$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
+		   			if($datosGuardados->debe != $datosPOST->haber){
+		   				$nuevoDasiento->debe=$datosPOST->haber;
+		   				$nuevoDasiento2->haber=$datosPOST->haber;
+		   			}	
+		   			$nuevoDasiento->cuenta_idcuenta=$datosPOST->cuenta_idcuenta;
+		   			$nuevoDasiento->movimientocaja_idmovimientocaja=NULL;
+		   			
+		   			$nuevoDasiento2->cuenta_idcuenta=$datosPOST->cajaIdcaja->cuenta_idcuenta;
+		   			$nuevoDasiento2->movimientocaja_idmovimientocaja=$datosGuardados->idmovimientocaja;
+		   			//$datosPOST->detalleasiento_iddetalleasiento=$nuevoDasiento2->iddetalleasiento;
+		   			$nuevoDasiento->save();
+		   			$nuevoDasiento2->save();
+		   		} elseif($datosGuardados->debeohaber == 1){
+		   			$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
+		   			$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
+		   			if($datosGuardados->haber != $datosPOST->debe){
+		   				$nuevoDasiento->debe=$datosPOST->debe;
+		   				$nuevoDasiento2->haber=$datosPOST->debe;
+		   			}
+		   			$nuevoDasiento->cuenta_idcuenta=$datosPOST->cajaIdcaja->cuenta_idcuenta;
+		   			$nuevoDasiento->movimientocaja_idmovimientocaja=$datosGuardados->idmovimientocaja;
+		   			
+		   			$nuevoDasiento2->cuenta_idcuenta=$datosPOST->cuenta_idcuenta;
+		   			$nuevoDasiento2->movimientocaja_idmovimientocaja=NULL;
+		   			//para el registro movimientobanco 
+		   			//$datosPOST->detalleasiento_iddetalleasiento=$nuevoDasiento->iddetalleasiento;
+		   			$nuevoDasiento->save();
+		   			$nuevoDasiento2->save();
+		   		}
+		   } 
+		 }	
 		
 	}
 	

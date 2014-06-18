@@ -23,12 +23,19 @@
 	            <?php echo $form->textFieldControlGroup($model,'nombre',array('span'=>13,'maxlength'=>100)); ?>
 				</div>
 				<div class="span5">
-	            <?php echo $form->dropDownListControlGroup(
-				 		$model, 
-				 		'banco_idBanco',
-				 		GxHtml::listDataEx(Banco::model()->findAllAttributes(array('nombre'),true,array('order'=>'nombre ASC')),'idBanco','nombre'),
-				 		array('empty' => 'Seleccione un Banco')
-				 		); ?>
+	            <?php echo $form->label($model, 'banco_idBanco');?>
+       		<?php $this->widget('ext.select2.ESelect2',array(
+				  //'name'=>'cuenta_idcuenta',
+				 'model'=>$model,
+				 'attribute'=>'banco_idBanco',
+				  'data' => GxHtml::listDataEx(Banco::model()->findAllAttributes(array('nombre'),true,array('order'=>'nombre ASC')),'idBanco','nombre'),
+				  'options'=>array(
+					   'placeholder'=>'Seleccione un Banco',
+					   'allowClear'=>true,
+						'width'=> '100%',
+					  ),
+				)); ?>
+				<?php  echo $form->error($model,'cuenta_idcuenta',array('style'=>'color:#b94a48')); ?>
 				 
 			 	</div>
 			 </div>

@@ -21,7 +21,7 @@ $gridColumns= array(
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
-			'template'=>'{update}{delete}',
+			'template'=>'{update}{actmovbanco}{actmovcaja}{delete}',
             'buttons'=>array(
              /*   'view'=>
                     array(
@@ -37,10 +37,32 @@ $gridColumns= array(
                  'update'=>array(
 					'label'=>'Modificar asiento',
 	                    //'icon'=>TbHtml::ICON_MINUS_SIGN,
-	                    
+	                    'visible'=>'$data->movimientobanco_idmovimientobanco == NULL AND $data->movimientocaja_idmovimientocaja == NULL',
 						'url'=> 'Yii::app()->createUrl("asiento/update",
 								 array(	"id"=>$data->idasiento,
-								 		//"idctacte"=>$data->ctacteprov_idctacteprov,
+								 		
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+	              'actmovbanco'=>array(
+					'label'=>'Modificar Mov.Banco',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->movimientobanco_idmovimientobanco != NULL',
+						'url'=> 'Yii::app()->createUrl("movimientobanco/update",
+								 array(	"id"=>$data->movimientobanco_idmovimientobanco,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+	              'actmovcaja'=>array(
+					'label'=>'Modificar Mov.Caja',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->movimientocaja_idmovimientocaja != NULL',
+						'url'=> 'Yii::app()->createUrl("movimientocaja/update",
+								 array(	"id"=>$data->movimientocaja_idmovimientocaja,
+								 		"vista"=>2,
 								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',
 						

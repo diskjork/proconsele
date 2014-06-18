@@ -13,5 +13,17 @@
 	<?php echo CHtml::encode($data->nombre); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('descripcion')); ?>:</b>
+	<?php echo CHtml::encode($data->descripcion); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('estado')); ?>:</b>
+	<?php echo CHtml::encode($data->estado); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cuenta_idcuenta')); ?>:</b>
+	<?php echo CHtml::encode($data->cuenta_idcuenta); ?>
+	<br />
+
 
 </div>
