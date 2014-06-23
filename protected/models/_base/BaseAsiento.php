@@ -37,8 +37,8 @@ abstract class BaseAsiento extends GxActiveRecord {
 		return array(
 			array('fecha, descripcion', 'required'),
 			array('descripcion', 'length', 'max'=>255),
-			array('descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idasiento, fecha, descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja', 'safe', 'on'=>'search'),
+			array('descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, factura_idfactura', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idasiento, fecha, descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, factura_idfactura', 'safe', 'on'=>'search'),
 			array('totaldebe, totalhaber','safe'),
 			array('totaldebe, totalhaber','validarPartidaDoble'),
 		);
@@ -49,6 +49,7 @@ abstract class BaseAsiento extends GxActiveRecord {
 			'detalleasientos' => array(self::HAS_MANY, 'Detalleasiento', 'asiento_idasiento'),
 			'movimientobancoIdmovimientobanco' => array(self::BELONGS_TO, 'Movimientobanco', 'movimientobanco_idmovimientobanco'),
 			'movimientocajaIdmovimientocaja'=> array(self::BELONGS_TO, 'Movimientocaja', 'movimientocaja_idmovimientocaja'),
+			'facturaIdfactura'=> array(self::BELONGS_TO, 'Factura', 'factura_idfactura'),
 		);
 	}
 
@@ -63,6 +64,7 @@ abstract class BaseAsiento extends GxActiveRecord {
 			'fecha' => Yii::t('app', 'Fecha'),
 			'descripcion' => Yii::t('app', 'Descripcion'),
 			'detalleasientos' => null,
+			'factura_idfactura' => null,
 		);
 	}
 	
@@ -80,6 +82,9 @@ abstract class BaseAsiento extends GxActiveRecord {
 		$criteria->compare('fecha', $this->fecha, true);
 		//$criteria->compare("DATE_FORMAT(fecha,'%d/%m/%Y')",$this->fecha);
 		$criteria->compare('descripcion', $this->descripcion, true);
+		$criteria->compare('movimientobanco_idmovimientobanco', $this->movimientobanco_idmovimientobanco);
+		$criteria->compare('movimientocaja_idmovimientocaja', $this->movimientocaja_idmovimientocaja);
+		$criteria->compare('factura_idfactura', $this->factura_idfactura);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
