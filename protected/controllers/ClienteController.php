@@ -85,9 +85,14 @@ class ClienteController extends Controller
 				$modelctacte->haber=0;
 				$modelctacte->saldo=0;
 				$modelctacte->cliente_idcliente= $model->idcliente;
+				
 				if($modelctacte->save()){
-					Yii::app()->user->setFlash('success', "<strong>Cliente creado correctamente.</strong>");
+					$model->ctactecliente_idctactecliente=$model->idcliente;
+					if($model->save()){
+						Yii::app()->user->setFlash('success', "<strong>Cliente creado correctamente.</strong>");
 					$this->redirect('admin');
+					}
+					
 				}
 			}
 		}

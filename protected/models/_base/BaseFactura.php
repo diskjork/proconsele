@@ -41,6 +41,7 @@
  */
 abstract class BaseFactura extends GxActiveRecord {
 	public $desRec, $iibb, $impInt;
+	
 	public $ene,$feb,$mar,$abr,$may,$jun,$jul,$ago,$sep,$oct,$nov,$dic,$nombreproducto,$maxnropresupuesto;
 	public $importeTotal;
 	public static function model($className=__CLASS__) {
@@ -61,13 +62,13 @@ abstract class BaseFactura extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('nrodefactura, tipofactura, nroremito, fecha, formadepago, cliente_idcliente, presupuesto, nropresupuesto, importebruto, ivatotal, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, asiento_idasiento, importeneto', 'required'),
+			array('nrodefactura, tipofactura,  fecha, formadepago, cliente_idcliente, presupuesto, nropresupuesto, importebruto, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto,  importeneto', 'required'),
 			array('tipofactura, nroremito, formadepago, cliente_idcliente, estado, tipodescrecar, presupuesto, nropresupuesto, producto_idproducto, asiento_idasiento', 'numerical', 'integerOnly'=>true),
-			array('descrecar, iva, retencionIIBB, importebruto, ivatotal, cantidadproducto, precioproducto, stbruto_producto, impuestointerno, importeneto', 'numerical'),
+			array('descrecar, iva, retencionIIBB, importebruto, ivatotal, cantidadproducto, precioproducto, stbruto_producto, impuestointerno, importeneto, importeIIBB, importeImpInt,movimientocaja_idmovimientocaja', 'numerical'),
 			array('nrodefactura', 'length', 'max'=>45),
 			array('nombreproducto, desc_imp_interno', 'length', 'max'=>100),
-			array('estado, descrecar, tipodescrecar, iva, retencionIIBB, impuestointerno, desc_imp_interno', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idfactura, nrodefactura, tipofactura, nroremito, fecha, formadepago, cliente_idcliente, estado, descrecar, tipodescrecar, iva, retencionIIBB, presupuesto, nropresupuesto, importebruto, ivatotal, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, asiento_idasiento, impuestointerno, desc_imp_interno, importeneto', 'safe', 'on'=>'search'),
+			array('estado, descrecar, tipodescrecar, iva, retencionIIBB, impuestointerno, desc_imp_interno,ivatotal, importeIIBB, importeImpInt', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idfactura, nrodefactura, tipofactura, nroremito, fecha, formadepago, cliente_idcliente, estado, descrecar, tipodescrecar, iva, retencionIIBB, presupuesto, nropresupuesto, importebruto, ivatotal, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, asiento_idasiento, impuestointerno, desc_imp_interno, importeneto,importeIIBB, importeImpInt, movimientocaja_idmovimientocaja', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -77,6 +78,9 @@ abstract class BaseFactura extends GxActiveRecord {
 			'detallectacteclientes' => array(self::HAS_MANY, 'Detallectactecliente', 'factura_idfactura'),
 			'asientoIdasiento' => array(self::BELONGS_TO, 'Asiento', 'asiento_idasiento'),
 			'clienteIdcliente' => array(self::BELONGS_TO, 'Cliente', 'cliente_idcliente'),
+			'productoIdproducto' => array(self::BELONGS_TO, 'Producto', 'producto_idproducto'),
+			'cajaIdcaja' => array(self::BELONGS_TO, 'Caja', 'formadepago'),
+			'movimientocajaIdmovimientocaja'=> array(self::BELONGS_TO, 'Movimientocaja', 'movimientocaja_idmovimientocaja'),
 		);
 	}
 
@@ -95,7 +99,7 @@ abstract class BaseFactura extends GxActiveRecord {
 			'formadepago' => Yii::t('app', 'Forma de pago'),
 			'cliente_idcliente' => Yii::t('app', 'Cliente'),
 			'estado' => Yii::t('app', 'Estado'),
-			'descrecar' => Yii::t('app', '%'),
+			'descrecar' => Yii::t('app', 'Porcentaje'),
 			'tipodescrecar' => Yii::t('app', 'Descuento - Recargo'),
 			'iva' => Yii::t('app', 'IVA'),
 			'retencionIIBB' => Yii::t('app', 'Percepción IIBB'),
@@ -147,13 +151,15 @@ abstract class BaseFactura extends GxActiveRecord {
 		$criteria->compare('impuestointerno', $this->impuestointerno);
 		$criteria->compare('desc_imp_interno', $this->desc_imp_interno, true);
 		$criteria->compare('importeneto', $this->importeneto);
+		$criteria->compare('importeIIBB', $this->importeIIBB);
+		$criteria->compare('importeImpInt', $this->importeImpInt);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 		));
 	}
 	public function ultimaFactura(){
-		$sql="select MAX(nrodefactura) as max from factura ";
+		$sql="SELECT MAX(nrodefactura) FROM factura;";
 			$nrofactura=Yii::app()->db->createCommand($sql)->queryScalar();
 			return $nrofactura;
 	}
@@ -163,10 +169,9 @@ abstract class BaseFactura extends GxActiveRecord {
                 
                 $criteria->select = array(
                 	'idfactura','nrodefactura','fecha',
-                	'SUM(importeneto) as importeTotal',
+                	//'SUM(importeneto) as importeTotal',
                 	//'SUM(detallefactura.subtotal*t.iva-detallecompra.precio) as ivaTotal',
-                	'cliente_idcliente','estado',
-                );
+                	'cliente_idcliente','estado','importeneto');
 				//$criteria->join = ',detallefactura';
                 $criteria->condition = 'YEAR(fecha)='.$anio.' AND MONTH(fecha)='.$mes.' AND presupuesto=0';
                 //$criteria->group = 'detallefactura.factura_idfactura';
@@ -177,4 +182,16 @@ abstract class BaseFactura extends GxActiveRecord {
                         'criteria'=>$criteria,
                 ));
         }
+	public function behaviors()
+		{
+			 return array(
+		    	'datetimeI18NBehavior' => array('class' => 'ext.DateTimeI18NBehavior.DateTimeI18NBehavior'),
+		    	'ERememberFiltersBehavior' => array(
+	            	'class' => 'application.components.ERememberFiltersBehavior',
+	               	'defaults'=>array(),           /* optional line */
+	               	'defaultStickOnClear'=>false   /* optional line */
+	           	),
+		    
+		   ); // 'ext' is in Yii 1.0.8 version. For early versions, use 'application.extensions' instead.
+		}
 }

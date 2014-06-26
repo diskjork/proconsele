@@ -64,6 +64,16 @@
 									array('label'=>'Banco', 'url'=>Yii::app()->request->baseUrl.'/movimientobanco/admin'),
 									array('label'=>'Cheques', 'url'=>Yii::app()->request->baseUrl.'/cheque/admin'),
 								)),
+						array('label'=>'FACTURACION','icon'=>'icon-briefcase', 'url'=>'#',
+								'items'=>array(
+									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/factura/admin'),
+									
+								)),
+						array('label'=>'PRODUCTOS','icon'=>'icon-briefcase', 'url'=>'#',
+								'items'=>array(
+									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/producto/admin'),
+									
+								)),
 						array('label'=>'CONFIGURACION','icon'=>'icon-wrench','url'=>'#',
 								'items'=>array(
 									array('label'=>'Usuarios', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/admin'),

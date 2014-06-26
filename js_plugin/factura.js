@@ -23,14 +23,16 @@ $("#Factura_desRec").click(function() {
         if($("#Factura_desRec").is(':checked')) {  
           $("#radiobutton-descRec").show();
           //$("#totaldiv-iibb").show();
-          $("#Factura_descrecar").val("");
+          $("#Factura_descrecar").val();
           //$("#total-iibb").text("");
           $("#Factura_descrecar").parent().append("<span> %</span>");
           sumatotal();
         } else {  
             $("#radiobutton-descRec").css('display','none');
+            $("#Factura_descrecar").val(null);
+            $("#Factura_tipodescrecar_0").attr('checked',false);
+            $("#Factura_tipodescrecar_1").attr('checked',false);
 
-            //$("#totaldiv-iibb").css('display','none');
 
             $("#Factura_descrecar").parent().find("span").remove();
             sumatotal();
@@ -46,7 +48,8 @@ $("#Factura_iibb").click(function() {
           sumatotal();
         } else {  
             $("#Factura_retencionIIBB").css('display','none');
-
+            $("#Factura_retencionIIBB").val("");
+            //$("#Factura_importeIIBB").val();
             $("#totaldiv-iibb").css('display','none');
 
             $("#Factura_retencionIIBB").parent().find("span").remove();
@@ -59,13 +62,16 @@ $("#Factura_impInt").click(function() {
           $("#totaldiv-impint").show();
           $("#Factura_impuestointerno").val("");
           $("#total-impint").text("");
+          $("#descripcionimpint").show();
           $("#Factura_impuestointerno").parent().append("<span> %</span>");
           sumatotal();
         } else {  
             $("#Factura_impuestointerno").css('display','none');
-
+            $("#Factura_impuestointerno").val("");
+            $("#descripcionimpint").css('display','none');
             $("#totaldiv-impint").css('display','none');
-
+            $("#Factura_desc_imp_interno").val(null);
+           // $("#Factura_importeImpInt").val();
             $("#Factura_impuestointerno").parent().find("span").remove();
             sumatotal();
         }  
@@ -110,8 +116,6 @@ function sumatotal(){
 			var desc = subtotalbruto * descRecar;			
 			subtotalbruto= subtotalbruto * tem;
 			
-			
-			
 			var desc_impor= $.number( desc, 2 ); 
 			$("#descuento_recargo_importe").text(desc_impor);
 			$("#descuento_recargo").text("Descuento");
@@ -145,19 +149,22 @@ function sumatotal(){
 	
 //----------------------IIBB---------------------------
 //console.log("checkiibb="+checkiibb+" coficienteiibb="+coficienteiibb);
+	importeRetenIIBBpars=null;
 	if((checkiibb == 1) && (!isNaN(coficienteiibb)))
 	{
 		coficienteiibb= coficienteiibb/100;
 		var temCoif= coficienteiibb + 1;
 		importeRetenIIBB=coficienteiibb * totalneto;
 		totalneto=totalneto * temCoif;
-		
+		importeRetenIIBBpars=importeRetenIIBB.toFixed(2);
 		importeRetenIIBB=$.number(importeRetenIIBB, 2);
 		$("#total-iibb").text(importeRetenIIBB);
+		$("#Factura_importeIIBB").val(importeRetenIIBBpars);
 
 	}
 //----------------------IMPUESTO INTERNO---------------------------
-console.log("checkimpint="+checkiibb+" coficienteimpint="+coficienteiibb);
+//console.log("checkimpint="+checkiibb+" coficienteimpint="+coficienteiibb);
+	var importeIMPINTpars=null;
 	if((checkimpint == 1) && (!isNaN(coficienteimpint)))
 	{
 		coficienteimpint= coficienteimpint/100;
@@ -165,8 +172,11 @@ console.log("checkimpint="+checkiibb+" coficienteimpint="+coficienteiibb);
 		importeIMPINT=coficienteimpint * totalneto;
 		totalneto=totalneto * temCofimpint;
 		
+		importeIMPINTpars=importeIMPINT.toFixed(2);
 		importeIMPINT=$.number(importeIMPINT, 2);
+
 		$("#total-impint").text(importeIMPINT);
+		$("#Factura_importeImpInt").val(importeIMPINTpars);
 
 	}
 	
@@ -177,9 +187,20 @@ console.log("checkimpint="+checkiibb+" coficienteimpint="+coficienteiibb);
 	totalnetotransfor = $.number( totalneto, 2 );
 	totalIvaTrasfor = $.number(totaliva, 2);
 	$("#subtotalblock").text(totaltransfor);
+	$("#Factura_importebruto").val(subtotalbruto.toFixed(2));
 	$("#totalnetoblock").text(totalnetotransfor);
+	$("#Factura_importeneto").val(totalneto.toFixed(2));
 	$("#ivablock").text(totalIvaTrasfor);
-
+	$("#Factura_ivatotal").val(totaliva.toFixed(2));
+	$("#Factura_importeImpInt").val(importeIMPINTpars);
+	$("#Factura_importeIIBB").val(importeRetenIIBBpars);
+	if(importeIMPINTpars == null){
+		$("#Factura_impuestointerno").val(importeIMPINTpars);
+	}
+	if(importeRetenIIBBpars == null){
+		$("#Factura_impuestoIIBB").val(importeRetenIIBBpars);
+	}
+	console.log("iva: "+totalIvaTrasfor+" tbruto: "+totaltransfor+" neto: "+totalnetotransfor);
 	}
 
 

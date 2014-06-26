@@ -67,7 +67,7 @@ abstract class BaseProducto extends GxActiveRecord {
 			'estado' => Yii::t('app', 'Estado'),
 			'unidad' => Yii::t('app', 'Unidad de venta'),
 			'cantidadventa' => Yii::t('app', 'Cantidad para la venta (Kg)'),
-			'cuenta_idcuenta' => Yii::t('app', 'Cuenta contable relacionada al producto'),
+			'cuenta_idcuenta' => Yii::t('app', 'Cuenta contable relacionada al producto (venta)'),
 		);
 	}
 

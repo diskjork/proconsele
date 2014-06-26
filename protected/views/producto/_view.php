@@ -17,16 +17,27 @@
 	<?php echo CHtml::encode($data->descripcion); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('costoproduccion')); ?>:</b>
-	<?php echo CHtml::encode($data->costoproduccion); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('precio')); ?>:</b>
+	<?php echo CHtml::encode($data->precio); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('costomateriaprima')); ?>:</b>
-	<?php echo CHtml::encode($data->costomateriaprima); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('estado')); ?>:</b>
+	<?php echo CHtml::encode($data->estado); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('modified')); ?>:</b>
-	<?php echo CHtml::encode($data->modified); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('unidad')); ?>:</b>
+	<?php echo CHtml::encode($data->unidad); ?>
 	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cantidadventa')); ?>:</b>
+	<?php echo CHtml::encode($data->cantidadventa); ?>
+	<br />
+
+	<?php /*
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cuenta_idcuenta')); ?>:</b>
+	<?php echo CHtml::encode($data->cuenta_idcuenta); ?>
+	<br />
+
+	*/ ?>
 
 </div>

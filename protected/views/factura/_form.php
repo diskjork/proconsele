@@ -6,6 +6,34 @@
 <?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js', CClientScript::POS_HEAD);?>
 
 <?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/factura.js', CClientScript::POS_HEAD);?>
+<?php 
+//print_r($model->attributes);
+	if(isset($model->descrecar)){
+		Yii::app()->clientScript->registerScript('descuento',"
+				$('#Factura_desRec').prop('checked',true);
+				$('#radiobutton-descRec').show();
+				
+				");
+	}
+	if(isset($model->retencionIIBB)){
+		Yii::app()->clientScript->registerScript('IIBB',"
+				$('#Factura_iibb').prop('checked',true);
+				 $('#Factura_retencionIIBB').show();
+          $('#totaldiv-iibb').show();
+				//$('div .form-actions').css('background-color','transparent');
+				
+				");
+	}
+	if(isset($model->impuestointerno)){
+		Yii::app()->clientScript->registerScript('impint',"
+				$('#Factura_impInt').prop('checked',true);
+				 $('#Factura_impuestointerno').show();
+          $('#totaldiv-impint').show();
+				//$('div .form-actions').css('background-color','transparent');
+				
+				");
+	}
+?>
 <div class="form">
 
     <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
@@ -59,14 +87,14 @@
 			  //'name'=>'cuenta_idcuenta',
 			 'model'=>$model,
 			 'attribute'=>'tipofactura',
-			  'data' =>array('1'=>'A','2'=>'B','3'=>'C'),
+			  'data' =>array('1'=>'A','2'=>'B'),
 			  'options'=>array(
 				   //'placeholder'=>'Forma de pago',
 				   'allowClear'=>true,
 					'width'=>'80%'
 				  ),
 			)); ?>
-		<?php  echo $form->error($model,'formadepago',array('style'=>'color:#b94a48')); ?>
+		<?php  echo $form->error($model,'tipofactura',array('style'=>'color:#b94a48')); ?>
 		</div>
 		</td>
 		<td style="width:34%;">
@@ -101,11 +129,16 @@
 		<td style="width:33%;">
 		
 		<?php echo $form->label($model, 'formadepago');?>
-		<?php $this->widget('ext.select2.ESelect2',array(
+		<?php 
+			$formPago=GxHtml::listDataEx(Caja::model()->
+					   				findAll('estado = :estado', array(':estado' => 1)),'idcaja','nombre');
+			$formPago['99999']='Cta Cte (Cheque, Trans. bancaria)';	
+			//print_r($formPago);	   				
+			$this->widget('ext.select2.ESelect2',array(
 			  //'name'=>'cuenta_idcuenta',
 			 'model'=>$model,
 			 'attribute'=>'formadepago',
-			  'data' =>array('1'=>'Efectivo','4'=>'Cta Cte (Cheque, Trans. bancaria)'),
+			  'data' =>$formPago,//array('1'=>'Efectivo','4'=>'Cta Cte (Cheque, Trans. bancaria)'),
 			  'options'=>array(
 				   'placeholder'=>'Forma de pago',
 				   'allowClear'=>true,
@@ -188,7 +221,15 @@
 	<?php echo $form->textFieldControlGroup($model,'nombreproducto',array('label'=>false,'style'=>'width:98%;','maxlength'=>100)); ?>
 	</td>
 	<td style="width:15%; text-align: center;"> 
-	<?php echo $form->textFieldControlGroup($model,'precioproducto',array('label'=>false,'style'=>'width:70px;')); ?>
+	<?php echo $form->textFieldControlGroup($model,'precioproducto',array('label'=>false,'style'=>'width:70px;',
+							'onkeydown'=> 'if((event.keyCode == 9) || (event.keyCode == 13 )  ){
+            					var obj={
+	        						id:this.id,
+	        						val:this.value};sumaSubtotal(obj);sumatotal();}',
+            				'onblur'=>'var obj={
+	        						id:this.id,
+	        						val:this.value};sumaSubtotal(obj);sumatotal();')); ?>
+											
 	</td>
 	<td style="width:15%; text-align: center;">
 	<?php echo $form->textFieldControlGroup($model,'stbruto_producto',array('label'=>false,'style'=>'width:70px;','readonly' => true,)); ?>
@@ -219,8 +260,7 @@
 	</div>
 	
 	</div>
-		<?php echo $form->hiddenField($model,'importeneto',array('span'=>4,)); ?>
-		<?php echo $form->hiddenField($model,'ivatotal',array('span'=>4,)); ?>
+		
 	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="desc_recar">
 	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-15%;" id="descuento_recargo"></h5>
@@ -228,12 +268,16 @@
 	</div>	
 	</div>		
 </div>		
-</div>	
-	
+</div>		
+				<?php echo $form->hiddenField($model,'importeneto',array('span'=>4,)); ?>
+				<?php echo $form->hiddenField($model,'ivatotal',array('span'=>4,)); ?>
+				<?php echo $form->hiddenField($model,'importeIIBB',array('span'=>4,)); ?>
+				<?php echo $form->hiddenField($model,'importeImpInt',array('span'=>4,)); ?>
+				<?php echo $form->hiddenField($model,'importebruto',array('span'=>5)); ?>
 				<?php //echo $form->textFieldControlGroup($model,'descrecar',array('span'=>5)); ?>
 
            		 <?php // echo $form->textFieldControlGroup($model,'tipodescrecar',array('span'=>5)); ?>
-				<?php //echo $form->textFieldControlGroup($model,'importebruto',array('span'=>5)); ?>
+				
 
 <br>
 <div class="row-fluid">
@@ -288,7 +332,7 @@
 					'width'=> '60%',
 				  ),
 			)); ?>
-		<?php  echo $form->error($model,'formadepago',array('style'=>'color:#b94a48')); ?>
+		<?php  echo $form->error($model,'iva',array('style'=>'color:#b94a48')); ?>
 	</div>		
 	</td>
 	<td style="width:25%; vertical-align: top;"  class="well" >
@@ -309,7 +353,7 @@
 	</td>
 	<td style="width:25%; vertical-align: top;"  class="well" >
 	
-	<div >	
+	<div class="row-fluid">	
 	<?php echo $form->label($model, 'impuestointerno');?>
 	<?php echo $form->checkBox($model, 'impInt',array('value'=>1));echo " Imp. Interno";?>
 	<?php echo $form->textFieldControlGroup($model,'impuestointerno',array('style'=>'width:20%;','label'=>false,
@@ -321,6 +365,10 @@
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-impint"></h6>
 	</div>	
 	</div>
+	
+	</div>
+	<div class="row-fluid" id="descripcionimpint" style="display:none;"> 
+	<?php echo $form->textFieldControlGroup($model,'desc_imp_interno',array('maxlength'=>100)); ?>
 	</div>
 	</td>
 	</tr>

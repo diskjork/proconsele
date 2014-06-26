@@ -1,12 +1,16 @@
 <?php 
 	//$dataProvider=$model->search($model->fecha=$mesTab."/".$anioTab,$model->presupuesto=0);
 	$dataProvider= $model->generarGrid($anioTab,$mesTab);
+	
 	$dataProvider->setPagination(array('pageSize'=>$model->count())); 
 	
 	$dataArray=$dataProvider->getData();
 	$importeFinalTotal=0;
+	
+	//print_r($dataArray); die();
 	for ($i=0;$i<$dataProvider->totalItemCount;$i++){
-		$importeFinalTotal+=$dataArray[$i]['importeTotal'];
+		//echo $dataArray[$i]['importeTotal'];
+		$importeFinalTotal+=$dataArray[$i]['importeneto'];
 	}
 ?>
 <div id="iconoExportar" align="right">
@@ -37,7 +41,7 @@
 		array(
 			'header'=>'IMPORTE',
 			//'name'=>'importe',
-			'value'=>'number_format($data->importeTotal,2,".","")',
+			'value'=>'number_format($data->importeneto,2,".","")',
 			'footer'=>'bootstrap.widgets.TbTotalSumColumn',
 			'footer'=>"$ ".number_format($importeFinalTotal,2,".",","),
 		),

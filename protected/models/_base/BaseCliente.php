@@ -48,14 +48,14 @@ abstract class BaseCliente extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('nombre, cuit, localidad_idlocalidad, tipodecontribuyente_idtipocontribuyente', 'required'),
-			array('localidad_idlocalidad, tipodecontribuyente_idtipocontribuyente, estado', 'numerical', 'integerOnly'=>true),
+			array('localidad_idlocalidad, tipodecontribuyente_idtipocontribuyente, estado, ctactecliente_idctactecliente', 'numerical', 'integerOnly'=>true),
 			array('nombre, direccion, telefono, nombrecontacto, email, web', 'length', 'max'=>45),
 			array('cuit', 'length', 'max'=>13,'min'=>13),
 			array('created, modified', 'safe'),
 			array('email','email'),
 			array('web','url'),
-			array('direccion, telefono, nombrecontacto, email, web, created, modified', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idcliente, nombre, cuit, direccion, telefono, nombrecontacto, email, web, localidad_idlocalidad, tipodecontribuyente_idtipocontribuyente, created, modified, estado', 'safe', 'on'=>'search'),
+			array('direccion, telefono, nombrecontacto, email, web, created, modified, ctactecliente_idctactecliente', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idcliente, nombre, cuit, direccion, telefono, nombrecontacto, email, web, localidad_idlocalidad, tipodecontribuyente_idtipocontribuyente, created, modified, estado, ctactecliente_idctactecliente', 'safe', 'on'=>'search'),
 			array('modified','default',
             	'value'=>new CDbExpression('NOW()'),
                 'setOnEmpty'=>false,'on'=>'update'),
@@ -69,8 +69,9 @@ abstract class BaseCliente extends GxActiveRecord {
 		return array(
 			'localidadIdlocalidad' => array(self::BELONGS_TO, 'Localidad', 'localidad_idlocalidad'),
 			'tipodecontribuyenteIdtipocontribuyente' => array(self::BELONGS_TO, 'Tipodecontribuyente', 'tipodecontribuyente_idtipocontribuyente'),
-			'ctactes' => array(self::HAS_MANY, 'Ctacte', 'cliente_idcliente'),
+			'ctacteclienteIdctactecliente' => array(self::BELONGS_TO, 'Ctactecliente', 'ctactecliente_idctactecliente'),
 			'facturas' => array(self::HAS_MANY, 'Factura', 'cliente_idcliente'),
+			
 		);
 	}
 
