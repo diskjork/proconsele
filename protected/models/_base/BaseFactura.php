@@ -40,7 +40,7 @@
  * @property Asiento $asientoIdasiento
  */
 abstract class BaseFactura extends GxActiveRecord {
-	public $desRec, $iibb, $impInt;
+	public $desRec, $iibb, $impInt, $vista;
 	
 	public $ene,$feb,$mar,$abr,$may,$jun,$jul,$ago,$sep,$oct,$nov,$dic,$nombreproducto,$maxnropresupuesto;
 	public $importeTotal;
@@ -156,6 +156,9 @@ abstract class BaseFactura extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort' => array(
+					'defaultOrder' => array('fecha' => true),
+		),
 		));
 	}
 	public function ultimaFactura(){

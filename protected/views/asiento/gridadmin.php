@@ -21,7 +21,7 @@ $gridColumns= array(
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
-			'template'=>'{update}{actmovbanco}{actmovcaja}{delete}',
+			'template'=>'{update}{actmovbanco}{actmovcaja}{actcompra}{actfactura}{delete}',
             'buttons'=>array(
              /*   'view'=>
                     array(
@@ -37,7 +37,10 @@ $gridColumns= array(
                  'update'=>array(
 					'label'=>'Modificar asiento',
 	                    //'icon'=>TbHtml::ICON_MINUS_SIGN,
-	                    'visible'=>'$data->movimientobanco_idmovimientobanco == NULL AND $data->movimientocaja_idmovimientocaja == NULL',
+	                    'visible'=>'$data->movimientobanco_idmovimientobanco == NULL AND
+	                    		    $data->movimientocaja_idmovimientocaja == NULL AND 
+	                    		    $data->compra_idcompra == NULL AND
+	                    		    $data->factura_idfactura == NULL ',
 						'url'=> 'Yii::app()->createUrl("asiento/update",
 								 array(	"id"=>$data->idasiento,
 								 		
@@ -67,6 +70,28 @@ $gridColumns= array(
 								 		))',
 						
 	                  ),
+	              'actcompra'=>array(
+					'label'=>'Modificar Compra',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->compra_idcompra != NULL',
+						'url'=> 'Yii::app()->createUrl("compras/update",
+								 array(	"id"=>$data->compra_idcompra,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+	              'actfactura'=>array(
+					'label'=>'Modificar Factura',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->factura_idfactura != NULL',
+						'url'=> 'Yii::app()->createUrl("factura/update",
+								 array(	"id"=>$data->factura_idfactura,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),    
             ),
            
         ),

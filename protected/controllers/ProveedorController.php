@@ -87,8 +87,11 @@ class ProveedorController extends Controller
 				$modelctacte->saldo=0;
 				$modelctacte->proveedor_idproveedor= $model->idproveedor;
 				if($modelctacte->save()){
-					Yii::app()->user->setFlash('success', "<strong>Proveedor creado correctamente.</strong>");
-				$this->redirect(array('admin'));
+					$model->ctacteprov_idctacteprov=$model->idproveedor;
+					if($model->save()){
+						Yii::app()->user->setFlash('success', "<strong>Cliente creado correctamente.</strong>");
+						$this->redirect(array('admin'));
+					}
 				}
 			}
 		}

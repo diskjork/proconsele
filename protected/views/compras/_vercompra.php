@@ -1,5 +1,6 @@
 <?php 
 	$dataProvider=$model->search($model->fecha=$anioTab."-".$mesTab);
+	//$model->fecha=$anioTab."-".$mesTab,$model->ctabancaria_idctabancaria=$bancoid);
 	//$dataProvider= $model->generarGrid($anioTab,$mesTab);
 	
 	$dataProvider->setPagination(array('pageSize'=>$model->count())); 
@@ -30,18 +31,23 @@
 			'filter'=>false,
 		),
 		array(
+			'header'=>'PROVEEDOR',
+			'name'=>'proveedor_idproveedor',
+			'value'=>'GxHtml::valueEx($data->proveedorIdproveedor)',
+			'filter'=>GxHtml::listDataEx(Proveedor::model()->findAllAttributes(array('idproveedor','nombre'),true,array('order'=>'nombre ASC')),'idproveedor','nombre'),
+		),
+		array(
+			'header'=>'DESCRIPCION',
+			'name'=>'descripcion',
+			//'filter'=>false,
+		),
+		array(
 			'header'=>'IMPORTE',
-			//'name'=>'importe',
 			'value'=>'number_format($data->importeneto,2,".","")',
 			'footer'=>'bootstrap.widgets.TbTotalSumColumn',
 			'footer'=>"$ ".number_format($importeFinalTotal,2,".",","),
 		),
-		array(
-			'header'=>'CLIENTE',
-			'name'=>'cliente_idcliente',
-			'value'=>'GxHtml::valueEx($data->clienteIdcliente)',
-			'filter'=>GxHtml::listDataEx(Cliente::model()->findAllAttributes(null, true)),
-		),
+		
 		/*array(
 			'header'=>'ESTADO',
 			'name'=>'estado',
@@ -52,11 +58,11 @@
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('width' =>'70px'),
-			'template'=>'{view} {update} {delete} {remito} {imprimir}',
+			'template'=>'{view} {update} {delete} ',
             'buttons'=>array(
                 'view'=>
                     array(
-                        'url'=>'Yii::app()->createUrl("factura/view", array("id"=>$data->idfactura))',
+                        'url'=>'Yii::app()->createUrl("factura/view", array("id"=>$data->idcompra))',
                         'options'=>array(
                             'ajax'=>array(
                                 'type'=>'POST',
@@ -65,23 +71,7 @@
                             ),
                         ),
                     ),
-              	'remito'=>
-                    array(
-						'label'=>'Imprimir remito',
-		            	'icon'=>TbHtml::ICON_TAG,
-		            	'url'=>'Yii::app()->createUrl("factura/imprimirremito", array("id"=>$data->idfactura))',
-                    	'options'=>array('target'=>'_blank'),
-                    ),
-                'imprimir'=>
-                    array(
-						'label'=>'Imprimir factura',
-		            	'icon'=>TbHtml::ICON_PRINT,
-		            	'url'=>'Yii::app()->createUrl("factura/imprimirfactura", array("id"=>$data->idfactura))',
-                    	'options'=>array('target'=>'_blank'),
-	           	
-                    )
-                    
-            ),
+               ),
         ),
 	);
 	$this->widget('yiiwheels.widgets.grid.WhGridView', array(

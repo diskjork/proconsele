@@ -159,7 +159,7 @@ class FacturaController extends Controller
 							$asientoFact=Asiento::model()->findByPk($asiento->idasiento);
 							$asientoFact->factura_idfactura=$model->idfactura;
 							$asientoFact->save();
-						
+							$this->ivamovimiento($model, $_POST['Factura']);
 					}
 				$this->redirect(array('admin','id'=>$model->idfactura));
 			}
@@ -192,9 +192,15 @@ class FacturaController extends Controller
 				
 				if($model->formadepago != $modeloviejo->formadepago){
 					$this->updateCambioFormadepago($modeloviejo, $model, $_POST['Factura']);
+					if($_POST['Factura']['vista'] == 2){
+					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
+					}
 					$this->redirect(array('admin','id'=>$model->idfactura));
 				}else {
 					$this->updateFacAsiento($modeloviejo,$model,$_POST['Factura']);
+					if($_POST['Factura']['vista'] == 2){
+					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
+					}
 					$this->redirect(array('admin','id'=>$model->idfactura));
 				}
 				
@@ -218,7 +224,7 @@ class FacturaController extends Controller
 		if (Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
 			$model=$this->loadModel($id);
-			if($this->borrado($model)){
+			if($this->borrado($model) && $this->borradoIvaMov($model)){
 			$this->loadModel($id)->delete();
 			}
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -584,5 +590,25 @@ class FacturaController extends Controller
 				return $Dctacte->delete();
 			}
 			
+		}
+		public function ivamovimiento($model,$datoPOST){
+			$nuevo=new Ivamovimiento;
+			$nuevo->fecha=$datoPOST['fecha'];
+			$nuevo->tipomoviento=0; //venta
+			$nuevo->nrocomprobante=$model->nrodefactura;
+			$nuevo->cliente_idcliente=$model->cliente_idcliente;
+			$nuevo->cuitentidad=$model->clienteIdcliente->cuit;
+			$nuevo->tipofactura=$model->tipofactura;
+			$nuevo->tipoiva=$model->iva;
+			$nuevo->importeiibb=$model->importeIIBB;
+			$nuevo->importeiva=$model->ivatotal;
+			$nuevo->importeneto=$model->importeneto;
+			$nuevo->factura_idfactura=$model->idfactura;
+			$nuevo->save();
+			
 		} 
+		public function borradoIvaMov($model){
+			$ivamov=Ivamovimiento::model()->find("factura_idfactura=:factura",array(':factura'=>$model->idfactura));
+			return $ivamov->delete();
+		}
 }

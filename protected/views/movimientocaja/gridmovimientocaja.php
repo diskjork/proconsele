@@ -59,48 +59,11 @@ $columnas=array_merge(array(
 	            'class'=>'bootstrap.widgets.TbButtonColumn',
 			 	'template' => ' {view} {update} {delete}',
 	            'buttons'=>array(
-	               /* 'Factura compra'=>
-	                    array(
-	                    	'icon'=>TbHtml::ICON_PLUS_SIGN,
-	                        'url'=>'$data["debeohaber"] == 0 ? Yii::app()->createUrl("factura/view", array("id"=>$data->id_de_trabajo)):Yii::app()->createUrl("compras/view", array("id"=>$data->id_de_trabajo))',
-	                        'visible'=>'$data["rubro_idrubro"] == 2 ',
-	                        'options'=>array(
-	                            'ajax'=>array(
-	                                'type'=>'POST',
-	                                'url'=>"js:$(this).attr('href')",
-	                                'success'=>'function(data) { $("#viewModal .modal-body p").html(data); $("#viewModal").modal(); }'
-	                            ),
-	                        ),
-	                    ),
-	                'Factura venta'=>
-	                    array(
-	                    	'icon'=>TbHtml::ICON_PLUS_SIGN,
-	                        'url'=>'$data["debeohaber"] == 0 ? Yii::app()->createUrl("factura/view", array("id"=>$data->id_de_trabajo)):Yii::app()->createUrl("compras/view", array("id"=>$data->id_de_trabajo))',
-	                        'visible'=>'$data["rubro_idrubro"] == 4 ',
-	                        'options'=>array(
-	                            'ajax'=>array(
-	                                'type'=>'POST',
-	                                'url'=>"js:$(this).attr('href')",
-	                                'success'=>'function(data) { $("#viewModal .modal-body p").html(data); $("#viewModal").modal(); }'
-	                            ),
-	                        ),
-	                    ),
-	                'Cobranza'=>
-	                    array(
-	                    	'icon'=>TbHtml::ICON_PLUS_SIGN,
-	                        'url'=>'Yii::app()->createUrl("cobranza/view", array("id"=>$data->id_de_trabajo))',
-	                    	'visible'=>'$data["rubro_idrubro"]==5',
-	                        'options'=>array(
-	                            'ajax'=>array(
-	                                'type'=>'POST',
-	                                'url'=>"js:$(this).attr('href')",
-	                                'success'=>'function(data) { $("#viewModal .modal-body p").html(data); $("#viewModal").modal(); }'
-	                            ),
-	                        ),
-	                    ),*/
+	               
 	                 'view'=>
 	                    array(
 	                    	'label'=>'Ver asiento contable',
+	                    	'visible'=>'$data->idcompra == NULL AND $data->idfactura == NULL',
 	                        'url'=>'Yii::app()->createUrl("asiento/update", array("id"=>$data->asiento_idasiento,"vista"=>2))',
 	                       /* 'options'=>array(
 	                            'ajax'=>array(

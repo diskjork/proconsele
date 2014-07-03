@@ -39,9 +39,9 @@
 					    	),
 					    ));
 					?>
-				
+			<br><br>	
             <?php // echo $form->textFieldControlGroup($model,'asentable',array('span'=>5)); ?>
-            <?php echo $form->label($model, 'asentable');?>
+            <?php echo $form->labelEx($model, 'asentable');?>
 					<?php
 					    $this->widget('yiiwheels.widgets.select2.WhSelect2', array(
 						    'asDropDownList' => true,
@@ -57,14 +57,25 @@
 					?>
 
         <div class="form-actions" align="center">
-        <?php echo TbHtml::submitButton($model->isNewRecord ? 'Create' : 'Save',array(
-		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY
+        <?php 
+        
+        echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
+		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
+		    
 		)); ?>
+		
 		<?php 
+			
 				echo CHtml::link('Cancelar', Yii::app()->request->baseUrl.'/cuenta/admin',array ('class'=>'btn btn-primary'));
-		?>
+				//echo TbHtml::button('Primary',Yii::app()->request->baseUrl.'/movimientobanco/admin', array('color' => TbHtml::BUTTON_COLOR_PRIMARY));
+			?>
     </div>
 
     <?php $this->endWidget(); ?>
 
 </div><!-- form -->
+<?php Yii::app()->clientScript->registerScript('test',"
+				$('div .modal-footer').remove();
+				$('div .form-actions').css('background-color','transparent');
+				
+				"); ?> 	

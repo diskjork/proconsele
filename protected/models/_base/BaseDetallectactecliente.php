@@ -42,11 +42,11 @@ abstract class BaseDetallectactecliente extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('fecha, tipo, ctactecliente_idctactecliente', 'required'),
-			array('iddetallectactecliente, tipo, ctactecliente_idctactecliente, iddocumento', 'numerical', 'integerOnly'=>true),
+			array('iddetallectactecliente, tipo, ctactecliente_idctactecliente, iddocumento, factura_idfactura', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('descripcion', 'length', 'max'=>100),
-			array('descripcion, iddocumento, debe, haber', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('iddetallectactecliente, fecha, descripcion, tipo, iddocumento, debe, haber, ctactecliente_idctactecliente', 'safe', 'on'=>'search'),
+			array('descripcion, iddocumento, debe, haber, factura_idfactura', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('iddetallectactecliente, fecha, descripcion, tipo, iddocumento, debe, haber, ctactecliente_idctactecliente, factura_idfactura', 'safe', 'on'=>'search'),
 		);
 	}
 

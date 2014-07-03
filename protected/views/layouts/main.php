@@ -69,6 +69,11 @@
 									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/factura/admin'),
 									
 								)),
+						array('label'=>'COMPRAS','icon'=>'icon-briefcase', 'url'=>'#',
+								'items'=>array(
+									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/compras/admin'),
+									
+								)),
 						array('label'=>'PRODUCTOS','icon'=>'icon-briefcase', 'url'=>'#',
 								'items'=>array(
 									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/producto/admin'),

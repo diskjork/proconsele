@@ -65,7 +65,7 @@ abstract class BaseCuenta extends GxActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'idcuenta' => Yii::t('app', 'Idcuenta'),
-			'codigocta' => Yii::t('app', 'Codigocta'),
+			'codigocta' => Yii::t('app', 'Codigo cuenta'),
 			'nombre' => Yii::t('app', 'Nombre'),
 			'tipocuenta_idtipocuenta' => null,
 			'asentable' => Yii::t('app', 'Asentable'),

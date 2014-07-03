@@ -6,6 +6,10 @@ if(isset($_GET['vista'])){
 		$vista=$_GET['vista'];
 		
 	}
+	if(isset($vista)){
+		Yii::app()->clientScript->registerScript('vista',"
+		$('#Movimientobanco_vista').val('".$vista."');");
+	}
 ?>
 
 <div class="form">
@@ -124,10 +128,7 @@ if(isset($_GET['vista'])){
     <?php $this->endWidget(); ?>
 
 </div><!-- form -->
-<?php if(isset($vista)){
-	 Yii::app()->clientScript->registerScript('vista',"
-$('#Movimientobanco_vista').val('".$vista."');");
-}?>
+
 <?php Yii::app()->clientScript->registerScript('test',"
 				$('div .modal-footer').remove();
 				$('div .form-actions').css('background-color','transparent');

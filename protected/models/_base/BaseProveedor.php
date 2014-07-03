@@ -51,12 +51,12 @@ abstract class BaseProveedor extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('nombre, cuit, estado, localidad_idlocalidad, tipodecontribuyente_idtipocontribuyente', 'required'),
-			array('estado, localidad_idlocalidad, tipodecontribuyente_idtipocontribuyente', 'numerical', 'integerOnly'=>true),
+			array('estado, localidad_idlocalidad, tipodecontribuyente_idtipocontribuyente, ctacteprov_idctacteprov', 'numerical', 'integerOnly'=>true),
 			array('nombre, direccion, telefono, nombrecontacto, email, web', 'length', 'max'=>45),
 			array('cuit', 'length', 'max'=>13,'min'=>13),
 			array('created, modified', 'safe'),
-			array('direccion, telefono, nombrecontacto, email, web, created, modified', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idproveedor, nombre, cuit, direccion, telefono, nombrecontacto, email, web, created, modified, estado, localidad_idlocalidad, tipodecontribuyente_idtipocontribuyente', 'safe', 'on'=>'search'),
+			array('direccion, telefono, nombrecontacto, email, web, created, modified, ctacteprov_idctacteprov', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idproveedor, nombre, cuit, direccion, telefono, nombrecontacto, email, web, created, modified, estado, localidad_idlocalidad, tipodecontribuyente_idtipocontribuyente, ctacteprov_idctacteprov', 'safe', 'on'=>'search'),
 			array('modified','default',
             	'value'=>new CDbExpression('NOW()'),
                 'setOnEmpty'=>false,'on'=>'update'),
@@ -74,6 +74,7 @@ abstract class BaseProveedor extends GxActiveRecord {
 			'ivamovimientos' => array(self::HAS_MANY, 'Ivamovimiento', 'proveedor_idproveedor'),
 			'localidadIdlocalidad' => array(self::BELONGS_TO, 'Localidad', 'localidad_idlocalidad'),
 			'tipodecontribuyenteIdtipocontribuyente' => array(self::BELONGS_TO, 'Tipodecontribuyente', 'tipodecontribuyente_idtipocontribuyente'),
+			'ctacteprovIdctacteprov' => array(self::BELONGS_TO, 'Ctacteprov', 'ctacteprov_idctacteprov'),
 		);
 	}
 

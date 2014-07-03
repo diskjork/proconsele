@@ -19,6 +19,7 @@ $("#Factura_impuestointerno").keydown(function(event){
 		solonumeromod(event);});
 sumatotal();
 botonsubmit();
+
 $("#Factura_desRec").click(function() {  
         if($("#Factura_desRec").is(':checked')) {  
           $("#radiobutton-descRec").show();

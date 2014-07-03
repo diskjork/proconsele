@@ -2,10 +2,15 @@
 /* @var $this FacturaController */
 /* @var $model Factura */
 /* @var $form TbActiveForm */
+if(isset($_GET['vista'])){
+		$vista=$_GET['vista'];
+		
+	}
 ?>
 <?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js', CClientScript::POS_HEAD);?>
 
 <?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/factura.js', CClientScript::POS_HEAD);?>
+
 <?php 
 //print_r($model->attributes);
 	if(isset($model->descrecar)){
@@ -99,7 +104,11 @@
 		</td>
 		<td style="width:34%;">
 		<div id="nrofactura" >
-			<?php echo $form->textFieldControlGroup($model,'nrodefactura',array('width'=>'10%')); ?>
+		
+							
+			
+		
+			<?php echo $form->textFieldControlGroup($model,'nrodefactura',array('width'=>'10%','class'=>'mascara')); ?>
 			</div>
 			<div id="nroremito" style="display:none;">
 			<?php echo $form->textFieldControlGroup($model,'nroremito',array('width'=>'10%','style'=>'display:none;')); ?>
@@ -384,7 +393,7 @@
 	<?php // echo $form->hiddenField($model,'estado',array('span'=>5)); ?>
 	<?php // echo $form->hiddenField($model,'presupuesto',array('span'=>5)); ?>
 	<?php echo $form->hiddenField($model,'asiento_idasiento',array('span'=>5)); ?>
-        
+    <?php echo $form->hiddenField($model, 'vista', array());?>    
 
         <div class="form-actions" align="center">
         <?php 
@@ -402,7 +411,10 @@
    		</div>
 
     <?php $this->endWidget(); ?>
-
+<?php if(isset($vista)){
+	 Yii::app()->clientScript->registerScript('vista',"
+$('#Factura_vista').val('".$vista."');");
+}?>
 </div><!-- form -->
  <?php Yii::app()->clientScript->registerScript('test',"
 				$('div .modal-footer').remove();

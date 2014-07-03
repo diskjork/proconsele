@@ -41,11 +41,11 @@ abstract class BaseDetallectacteprov extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('fecha, tipo, ctacteprov_idctacteprov', 'required'),
-			array('tipo, iddocumento, ctacteprov_idctacteprov', 'numerical', 'integerOnly'=>true),
+			array('tipo, iddocumento, ctacteprov_idctacteprov, compra_idcompra', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('descripcion', 'length', 'max'=>100),
-			array('descripcion, iddocumento, debe, haber', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('iddetallectacteprov, fecha, descripcion, tipo, iddocumento, debe, haber, ctacteprov_idctacteprov', 'safe', 'on'=>'search'),
+			array('descripcion, iddocumento, debe, haber, compra_idcompra', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('iddetallectacteprov, fecha, descripcion, tipo, iddocumento, debe, haber, ctacteprov_idctacteprov, compra_idcompra', 'safe', 'on'=>'search'),
 		);
 	}
 
