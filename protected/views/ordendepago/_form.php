@@ -1,7 +1,7 @@
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugins/teamdf-jquery-number-c19aa59/jquery.number.js">
 </script>
-<?php Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugins/ordendepago.js', CClientScript::POS_HEAD);?>
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugins/teamdf-jquery-number-c19aa59/jquery.number.js">
+<?php Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/ordendepago.js', CClientScript::POS_HEAD);?>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js">
 </script>
 
 <?php

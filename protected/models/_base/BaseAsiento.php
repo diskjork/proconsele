@@ -37,8 +37,8 @@ abstract class BaseAsiento extends GxActiveRecord {
 		return array(
 			array('fecha, descripcion', 'required'),
 			array('descripcion', 'length', 'max'=>255),
-			array('descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, factura_idfactura', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idasiento, fecha, descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, factura_idfactura', 'safe', 'on'=>'search'),
+			array('descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, factura_idfactura, cobranza_idcobranza', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idasiento, fecha, descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, factura_idfactura, cobranza_idcobranza', 'safe', 'on'=>'search'),
 			array('totaldebe, totalhaber','safe'),
 			array('totaldebe, totalhaber','validarPartidaDoble'),
 		);
@@ -50,6 +50,7 @@ abstract class BaseAsiento extends GxActiveRecord {
 			'movimientobancoIdmovimientobanco' => array(self::BELONGS_TO, 'Movimientobanco', 'movimientobanco_idmovimientobanco'),
 			'movimientocajaIdmovimientocaja'=> array(self::BELONGS_TO, 'Movimientocaja', 'movimientocaja_idmovimientocaja'),
 			'facturaIdfactura'=> array(self::BELONGS_TO, 'Factura', 'factura_idfactura'),
+			'cobranzaIdcobranza'=> array(self::BELONGS_TO, 'Cobranza', 'cobranza_idcobranza'),
 		);
 	}
 

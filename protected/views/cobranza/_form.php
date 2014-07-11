@@ -1,7 +1,7 @@
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugins/teamdf-jquery-number-c19aa59/jquery.number.js">
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js">
 </script>
-<?php Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugins/cobranza.js', CClientScript::POS_HEAD);?>
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugins/teamdf-jquery-number-c19aa59/jquery.number.js">
+<?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/cobranza.js', CClientScript::POS_HEAD);?>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js">
 </script>
 
 <?php
@@ -76,11 +76,13 @@
             <?php echo $form->hiddenField($model,'importe',array('span'=>5,'maxlength'=>45)); ?>
 
             <?php //echo $form->textFieldControlGroup($model,'detallectactecliente_iddetallectactecliente',array('span'=>5)); ?>
-            
+           
 		<div>
         <?php  
 		$arrayBancos=GxHtml::listDataEx(Banco::model()->findAllAttributes(array('nombre'),true,array('order'=>'nombre ASC')),'idBanco','nombre');
-		$arrayBancosCargados=GxHtml::listDataEx(Banco::model()->findAllAttributes(array('nombre'),true,array('condition'=>'propio=1','order'=>'nombre ASC')),'idBanco','nombre');
+		$arrayCtasCargados=GxHtml::listDataEx(Ctabancaria::model()->findAllAttributes(array('nombre'),true,array('condition'=>'estado=1','order'=>'nombre ASC')),'idctabancaria','nombre');
+		$arrayCajas=GxHtml::listDataEx(Caja::model()->findAllAttributes(array('nombre'),true,array('condition'=>'estado=1','order'=>'nombre ASC')),'idcaja','nombre');
+		
 		$memberFormConfig = array(
 					      'elements'=>array(
 					        'tipocobranza'=>array(
@@ -88,7 +90,8 @@
 					            'type'=>'dropdownlist',
 								'items'=>array('0'=>'Efectivo',
 											   '1'=>'Cheque',
-											   '2'=>'Transferencia'),
+											   '2'=>'Transferencia',
+											   '3'=>'Cert. Retención IIBB'),
 								'prompt'=>'Seleccione tipo de cobro..',
 					            'class'=>'span2',
 								
@@ -97,11 +100,12 @@
 										        var obj={ id:idselect, val:valor};
 										        seleccion(obj);',
 					        ),
+					        
 					        'transferenciabanco'=>array(
 								
 					            'type'=>'dropdownlist',
-								'items'=>$arrayBancosCargados,
-								'prompt'=>'Seleccione un Banco..',
+								'items'=>$arrayCtasCargados,
+								'prompt'=>'Seleccione un Cuenta..',
 					            'class'=>'span2',
 					        	
 					        ),
@@ -130,24 +134,55 @@
 					        'chequefechacobro'=>array(              
                					 'type'=>'zii.widgets.jui.CJuiDatePicker',
                 				 'language'=>'es',
-			                'options'=>array(
-			                    'showAnim'=>'fold',
-					            ),
+					                'options'=>array(
+					                    'showAnim'=>'fold',
+							            ),
 			                ),
 					        'nrocheque'=>array(
 					            'type'=>'text',
 					            'class'=>'span1',
 					        ),
+					        'caja_idcaja'=>array(
+								
+					            'type'=>'dropdownlist',
+								'items'=>$arrayCajas,
+								'prompt'=>'Seleccione Caja..',
+					            'class'=>'span2',
+					        	
+					        ),
+					        
+					         'iibbnrocomp'=>array(
+					            'type'=>'text',
+					            'class'=>'span2',
+					        	'onkeydown'=>'solonumeromod(event);',
+					        ),
+					        'iibbfecha'=>array(              
+               					 'type'=>'zii.widgets.jui.CJuiDatePicker',
+                				 'language'=>'es',
+					                'options'=>array(
+					                    'showAnim'=>'fold',
+							            ),
+			                ),
+			                 'iibbcomprelac'=>array(
+					            'type'=>'text',
+					            'class'=>'span2',
+					        ),
+					        'iibbtasa'=>array(
+					            'type'=>'text',
+					            'class'=>'span1',
+					        	'onkeydown'=>'solonumeromod(event);',
+					        ),
+					        	
 					        'importe'=>array(
 					            'type'=>'text',
 					            'class'=>'span1',
 					        	'onblur'=>'sumatotal();',
 					        	'onkeydown'=>'solonumeromod(event);
 					        				  this.val().toFixed(2);',
-					        ),
-					         
+					        ),		
+					        			    		         
 					    ));
-		
+	
 		$this->widget('ext.multimodelform.MultiModelForm',array(
         'id' => 'id_member', //the unique widget id
         'formConfig' => $memberFormConfig, //the form configuration array
@@ -184,6 +219,7 @@
         <?php echo TbHtml::submitButton($model->isNewRecord ? 'Cargar' : 'Guardar',array(
 		    'class'=>'btn btn-primary',
         	'id'=>'boton-submit',
+        	'onClick'=>'sumatotal();',
 		     )); ?>
 	    <?php 
 	    	echo CHtml::link('Cancelar',Yii::app()->createUrl("ctactecliente/admin"),

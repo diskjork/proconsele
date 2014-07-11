@@ -83,149 +83,47 @@ class CobranzaController extends Controller
 		if (isset($_POST['Cobranza'])) {
 			$model->attributes=$_POST['Cobranza'];
 			//$nuevos=$this->nuevosElementosValidados($_POST['Cobranza']);
-			/*
-			if (isset($_POST['Detallecobranza']['tipocobranza'])){
-   				$cantidadElementos=count($_POST['Detallecobranza']['tipocobranza']); 
-				
-   				for($i=0;$i<$cantidadElementos;$i++){
-					
-   					//para efectivo
-					if($_POST['Detallecobranza']['tipocobranza'][$i] == 0){ 
-						$itemEfectivo[$i]['importe']=$_POST['Detallecobranza']['importe'][$i];
-					}
-					 //para cheque
-					if($_POST['Detallecobranza']['tipocobranza'][$i] == 1){
-						$itemCheque[$i]['chequebanco']=$_POST['Detallecobranza']['chequebanco'][$i];
-						$itemCheque[$i]['chequefechaingreso']=$_POST['Detallecobranza']['chequefechaingreso'][$i];
-						$itemCheque[$i]['chequefechacobro']=$_POST['Detallecobranza']['chequefechacobro'][$i];
-						$itemCheque[$i]['chequetitular']=$_POST['Detallecobranza']['chequetitular'][$i];
-						$itemCheque[$i]['chequecuittitular']=$_POST['Detallecobranza']['chequecuittitular'][$i];
-						$itemCheque[$i]['chequenumero']=$_POST['Detallecobranza']['nrocheque'][$i];
-						$itemCheque[$i]['importe']=$_POST['Detallecobranza']['importe'][$i];
-					}
-					//para transferencia
-					if($_POST['Detallecobranza']['tipocobranza'][$i] == 2){ 
-						$itemTransf[$i]['transferenciabanco']=$_POST['Detallecobranza']['transferenciabanco'][$i];
-						$itemTransf[$i]['importe']=$_POST['Detallecobranza']['importe'][$i];
-						
-					}
-				}
-   			} 
-   			//elementos nuevos despues de una validación
-   			if (isset($_POST['Detallecobranza']['n__'])){
-   				//$nuevos= $this->nuevosElementosNoValidados($_POST['Detallecobranza']['n__']);
-   				$cantidadElementos=count($_POST['Detallecobranza']['n__']); 
-				
-   				for($i=0;$i<$cantidadElementos;$i++){
-					//para efectivo
-					if($_POST['Detallecobranza']['n__'][$i]['tipocobranza'] == 0){ 
-						$itemEfectivo[$i]['importe']=$_POST['Detallecobranza']['n__'][$i]['importe'];
-					}
-					 //para cheque
-					if($_POST['Detallecobranza']['n__'][$i]['tipocobranza'] == 1){
-						$itemCheque[$i]['chequebanco']=$_POST['Detallecobranza']['n__'][$i]['chequebanco'];
-						$itemCheque[$i]['chequefechaingreso']=$_POST['Detallecobranza']['n__'][$i]['chequefechaingreso'];
-						$itemCheque[$i]['chequefechacobro']=$_POST['Detallecobranza']['n__'][$i]['chequefechacobro'];
-						$itemCheque[$i]['chequetitular']=$_POST['Detallecobranza']['n__'][$i]['chequetitular'];
-						$itemCheque[$i]['chequecuittitular']=$_POST['Detallecobranza']['n__'][$i]['chequecuittitular'];
-						$itemCheque[$i]['chequenumero']=$_POST['Detallecobranza']['n__'][$i]['nrocheque'];
-						$itemCheque[$i]['importe']=$_POST['Detallecobranza']['n__'][$i]['importe'];
-					}
-					//para transferencia
-					if($_POST['Detallecobranza']['n__'][$i]['tipocobranza'] == 2){ 
-						$itemTransf[$i]['transferenciabanco']=$_POST['Detallecobranza']['n__'][$i]['transferenciabanco'];
-						$itemTransf[$i]['importe']=$_POST['Detallecobranza']['n__'][$i]['importe'];
-						
-					}
-				}
-   			} */
+		
 			if( //validate detail before saving the master
             MultiModelForm::validate($member,$validatedMembers,$deleteItems) &&
             $model->save())
            {
-         
-     
+  
+    
              //the value for the foreign key 'groupid'
              $masterValues = array ('cobranza_idcobranza'=>$model->idcobranza);
             
             
              if (MultiModelForm::save($member,$validatedMembers,$deleteMembers,$masterValues))
              {
-             	/*
-             //PARA GENERAR EL MOVIMIENTO CAJA	
-             	$datos=null;
-				if(isset($itemEfectivo)){
-					foreach ($itemEfectivo as $array){
-						foreach ($array as $key => $valor){
-							if($key == "importe"){
-								$datos['idcobranza']=$model->idcobranza;
-								$cliente=$this->idCliente($model->ctactecliente_idctactecliente);
-								$datos['nombrecliente']=$cliente[0]['nombrecliente'];
-								$datos['fecha']=$_POST['Cobranza']['fecha'];
-								$datos['importe']=$valor;
-								$this->nuevoMovCaja($datos);
-							}
-						}
-					}
-				}
-			//PARA GENERAR LOS CHEQUES DE COBRANZA
-				$datos=null;
-				if(isset($itemCheque)){
-					foreach ($itemCheque as $array){
-						foreach ($array as $key=>$valor){
-							$datos['idcobranza']=$model->idcobranza;
-							$cliente=$this->idCliente($model->ctactecliente_idctactecliente);
-							$datos['idcliente']=$cliente[0]['idcliente'];
-							$datos['nombrecliente']=$cliente[0]['nombrecliente'];
-							
-							switch ($key){
-								case "chequebanco":
-									$datos['banco']=$valor;
-									break;
-								case "chequefechaingreso":
-									$datos['fechaingreso']=$valor;
-									break;
-								case "chequefechacobro":
-									$datos['fechacobro']=$valor;
-									break;
-								case "chequetitular":
-									$datos['titular']=$valor;
-									break;
-								case "chequecuittitular":
-									$datos['cuittitular']=$valor;
-									break;
-								case "chequenumero":
-									$datos['chequenumero']=$valor;
-									break;
-								case "importe":
-									$datos['importe']=$valor;
-									break;
-							}
-						}
-						$this->nuevoCheque($datos);
-					}
-				}
-			//PARA GENERAR LAS TRANSFERENCIAS
-				$datos=null;
-				if(isset($itemTransf)){
-					foreach ($itemTransf as $array){
-						foreach ($array as $key=>$valor){
-							$datos['idcobranza']=$model->idcobranza;
-							$cliente=$this->idCliente($model->ctactecliente_idctactecliente);
-							$datos['nombrecliente']=$cliente[0]['nombrecliente'];
-							$datos['fecha']=$_POST['Cobranza']['fecha'];
-							switch ($key){
-								case "transferenciabanco":
-									$datos['transbanco']=$valor;
-									break;
-								case "importe":
-									$datos['importe']=$valor;
-									break;
-							}
-						}
-						$this->nuevaTransf($datos);
-					}	
-				} */
+             	$cliente=Cliente::model()->find("ctactecliente_idctactecliente=:idctacte",
+             					array(":idctacte"=>$_POST['Cobranza']['ctactecliente_idctactecliente']));
+             	
+             	
+             	//ASIENTO PARA LA COBRANZA
+             	$asiento=new Asiento;
+             	$asiento->fecha=$_POST['Cobranza']['fecha'];
+             	$asiento->descripcion="Cobranza N°".$masterValues['cobranza_idcobranza']." ".$cliente->nombre;
+             	$asiento->cobranza_idcobranza=$masterValues['cobranza_idcobranza'];
+             	if($asiento->save()){
+             		$nroasiento=$asiento->idasiento;
+             		//Detalle asiento para la contra parte del asiento "HABER"
+             		$DeAsCTACTE=new Detalleasiento;
+             		$DeAsCTACTE->haber=$_POST['Cobranza']['importe'];
+             		$DeAsCTACTE->cuenta_idcuenta=11; //112100 deudores por venta
+             		$DeAsCTACTE->asiento_idasiento=$nroasiento;
+             		$DeAsCTACTE->cliente_idcliente=$cliente->idcliente;
+             		//$DeAsCTACTE->iddetallecobranza =$validatedMembers[$a]['iddetallecobranza'];
+             		if($DeAsCTACTE->save()){
+             			$post=$_POST;
+             			$this->nuevoElem($validatedMembers, $_POST['Cobranza']['fecha'], $nroasiento,$masterValues,$cliente);
+		             	
+             		}
+             	}
+             	
+             	
+             	
+             	
 //para  sumar en el haber de cta cte del cliente----------
 			$idctactecliente=$model->ctactecliente_idctactecliente;
 			$importeDetalle=$_POST['Cobranza']['importe'];
@@ -240,6 +138,7 @@ class CobranzaController extends Controller
            	$modelDeCCcliente->iddocumento=$model->idcobranza;
            	$modelDeCCcliente->haber=$model->importe;
            	$modelDeCCcliente->ctactecliente_idctactecliente=$model->ctactecliente_idctactecliente;
+           	$modelDeCCcliente->cobranza_idcobranza=$model->idcobranza;
            	$modelDeCCcliente->save();
            	
            	Yii::app()->user->setFlash('success', "<strong>Cobranza creada correctamente.</strong>");
@@ -275,38 +174,28 @@ class CobranzaController extends Controller
 
 		if (isset($_POST['Cobranza'])) {
 			$model->attributes=$_POST['Cobranza'];
-		
-		//elementos ya guardados y que pueden ser modificados		
+			
+		//elementos ya guardados y que pueden ser modificados	
 			if (isset($_POST['Detallecobranza']['pk__'])){
 				$cantidadElementos=count($_POST['Detallecobranza']['pk__']); 
+				
 				for($i=0;$i<$cantidadElementos;$i++){
 				
 					$iddetalle_nuevo=$_POST['Detallecobranza']['pk__'][$i]['iddetallecobranza'];
 					$cliente=$this->idCliente($model->ctactecliente_idctactecliente);
+					
 					$DC_trabajo=Detallecobranza::model()->findByPk($iddetalle_nuevo);
 					if (isset($_POST['Detallecobranza']['u__'][$i]['tipocobranza'])){
 											
 						//datos nuevos traidos por POST
+						$itemUpdate[$i]['totalcobranza']=$_POST['Cobranza']['importe'];
 						$itemUpdate[$i]['iddetallecobranza']=$iddetalle_nuevo;
 						$itemUpdate[$i]['tipocobranza']=$_POST['Detallecobranza']['u__'][$i]['tipocobranza'];
 						$itemUpdate[$i]['transbanco']=$_POST['Detallecobranza']['u__'][$i]['transferenciabanco'];
 						$itemUpdate[$i]['banco']=$_POST['Detallecobranza']['u__'][$i]['chequebanco'];
-						$itemUpdate[$i]['fecha']=$model->fecha;
-						
-						//$itemUpdate[$i]['fechaingreso']=$_POST['Detallecobranza']['u__'][$i]['chequefechaingreso'];
-						if($_POST['Detallecobranza']['u__'][$i]['chequefechaingreso'] != null){
-							$fechaingreso = DateTime::createFromFormat('d/m/Y', $_POST['Detallecobranza']['u__'][$i]['chequefechaingreso']);
-							$itemUpdate[$i]['fechaingreso']=$fechaingreso->format('Y-m-d');
-						}else {
-							$itemUpdate[$i]['fechaingreso']=$_POST['Detallecobranza']['u__'][$i]['chequefechaingreso'];
-						}
-						//$itemUpdate[$i]['fechacobro']=$_POST['Detallecobranza']['u__'][$i]['chequefechacobro'];
-						if($_POST['Detallecobranza']['u__'][$i]['chequefechacobro'] != null){
-							$fechacobro = DateTime::createFromFormat('d/m/Y', $_POST['Detallecobranza']['u__'][$i]['chequefechacobro']);
-							$itemUpdate[$i]['fechacobro']=$fechacobro->format('Y-m-d');
-						}else {
-							$itemUpdate[$i]['fechacobro']=$_POST['Detallecobranza']['u__'][$i]['chequefechacobro'];
-						}
+						$itemUpdate[$i]['fecha']=$_POST['Cobranza']['fecha'];//ej 10/07/2014
+						$itemUpdate[$i]['fechaingreso']=$_POST['Detallecobranza']['u__'][$i]['chequefechaingreso'];
+						$itemUpdate[$i]['fechacobro']=$_POST['Detallecobranza']['u__'][$i]['chequefechacobro'];
 						$itemUpdate[$i]['titular']=$_POST['Detallecobranza']['u__'][$i]['chequetitular'];
 						$itemUpdate[$i]['cuittitular']=$_POST['Detallecobranza']['u__'][$i]['chequecuittitular'];
 						$itemUpdate[$i]['chequenumero']=$_POST['Detallecobranza']['u__'][$i]['nrocheque'];
@@ -314,42 +203,45 @@ class CobranzaController extends Controller
 						$itemUpdate[$i]['nombrecliente']=$cliente[0]['nombrecliente'];
 						$itemUpdate[$i]['idcliente']=$cliente[0]['idcliente'];
 						$itemUpdate[$i]['idcobranza']=$DC_trabajo->cobranza_idcobranza;
-						
+						$itemUpdate[$i]['caja_idcaja']=$_POST['Detallecobranza']['u__'][$i]['caja_idcaja'];
+						$itemUpdate[$i]['iibbnrocomp']=$_POST['Detallecobranza']['u__'][$i]['iibbnrocomp'];
+						$itemUpdate[$i]['iibbfecha']=$_POST['Detallecobranza']['u__'][$i]['iibbfecha'];
+						$itemUpdate[$i]['iibbcomprelac']=$_POST['Detallecobranza']['u__'][$i]['iibbcomprelac'];
+						$itemUpdate[$i]['iibbtasa']=$_POST['Detallecobranza']['u__'][$i]['iibbtasa'];
+
 						//Datos del detalle ya guardado-----------------------------------
+						
 						$datos[$i]['iddetallecobranza']=$DC_trabajo->iddetallecobranza;
 						$datos[$i]['idcobranza']=$DC_trabajo->cobranza_idcobranza;
 						$datos[$i]['tipocobranza']=$DC_trabajo->tipocobranza;
 						$datos[$i]['nombrecliente']=$cliente[0]['nombrecliente'];
-						$fecha = DateTime::createFromFormat('d/m/Y', $model->fecha);
-						$datos[$i]['fecha']=$fecha->format('Y-m-d');
+						$datos[$i]['fecha']=$model->fecha;  //ej 2014/07/10
+						
 						$datos[$i]['importe']=doubleval($DC_trabajo->importe);
-						$datos[$i]['chequenumero']=(int) $DC_trabajo->nrocheque;
-						if($DC_trabajo->chequefechaingreso != null){
-							$fechaingreso = DateTime::createFromFormat('d/m/Y', $DC_trabajo->chequefechaingreso);
-							$datos[$i]['fechaingreso']=$fechaingreso->format('Y-m-d');
-						}else {
-							$datos[$i]['fechaingreso']=$DC_trabajo->chequefechaingreso;
-						}
-						if($DC_trabajo->chequefechacobro != null){
-							$fechacobro = DateTime::createFromFormat('d/m/Y', $DC_trabajo->chequefechacobro);
-							$datos[$i]['fechacobro']=$fechacobro->format('Y-m-d');
-						}else {
-							$datos[$i]['fechacobro']=$DC_trabajo->chequefechaingreso;
-						}
+						$datos[$i]['chequenumero']=$DC_trabajo->nrocheque;
+						$datos[$i]['fechaingreso']=$DC_trabajo->chequefechaingreso;
+						$datos[$i]['fechacobro']=$DC_trabajo->chequefechaingreso;
+						
 						$datos[$i]['titular']=$DC_trabajo->chequetitular;
 						$datos[$i]['cuittitular']=$DC_trabajo->chequecuittitular;
 						$datos[$i]['banco']=$DC_trabajo->chequebanco;
 						$datos[$i]['idcliente']=$cliente[0]['idcliente'];
 						$datos[$i]['transbanco']=$DC_trabajo->transferenciabanco;
-							
-					}else {
+						$datos[$i]['caja_idcaja']=$DC_trabajo->caja_idcaja;
+						$datos[$i]['iibbnrocomp']=$DC_trabajo->iibbnrocomp;
+						$datos[$i]['iibbfecha']=$DC_trabajo->iibbfecha;
+						$datos[$i]['iibbcomprelac']=$DC_trabajo->iibbcomprelac;
+						$datos[$i]['iibbtasa']=$DC_trabajo->iibbtasa;
+						
+					} else {
 						//elementos borrados
 						$elem_borrados_DCob[$i]['iddetallecobranza']=$iddetalle_nuevo;
 						$elem_borrados_DCob[$i]['idcobranza']=$DC_trabajo->cobranza_idcobranza;
+						$elem_borrados_DCob[$i]['totalcobranza']=$_POST['Cobranza']['importe'];
 						$elem_borrados_DCob[$i]['tipocobranza']=$DC_trabajo->tipocobranza;
 						$elem_borrados_DCob[$i]['nombrecliente']=$cliente[0]['nombrecliente'];
-						$fecha = DateTime::createFromFormat('d/m/Y', $model->fecha);
-						$elem_borrados_DCob[$i]['fecha']=$fecha->format('Y-m-d');
+						//$fecha = DateTime::createFromFormat('d/m/Y', $model->fecha);
+						$elem_borrados_DCob[$i]['fecha']=$model->fecha;
 						$elem_borrados_DCob[$i]['importe']=doubleval($DC_trabajo->importe);
 						$elem_borrados_DCob[$i]['chequenumero']=$DC_trabajo->nrocheque;
 						$elem_borrados_DCob[$i]['fechaingreso']=$DC_trabajo->chequefechaingreso;
@@ -359,65 +251,16 @@ class CobranzaController extends Controller
 						$elem_borrados_DCob[$i]['banco']=$DC_trabajo->chequebanco;
 						$elem_borrados_DCob[$i]['idcliente']=$cliente[0]['idcliente'];
 						$elem_borrados_DCob[$i]['transbanco']=$DC_trabajo->transferenciabanco;
+						$elem_borrados_DCob[$i]['fecha2']=$model->fecha;
 					}
 				}
 			}
 			
-/*			
-//elementos nuevos ----------------------------------------------------------
-		if (isset($_POST['Detallecobranza']['tipocobranza'])){
-   				$cantidadElemNuevos=count($_POST['Detallecobranza']['tipocobranza']); 
-				
-   				for($i=0;$i<$cantidadElemNuevos;$i++){
-					//para efectivo
-					if(($_POST['Detallecobranza']['tipocobranza'][$i] == 0) && ($_POST['Detallecobranza']['importe'][$i]!= null)){ 
-						
-						$itemEfectivo[$i]['importe']=$_POST['Detallecobranza']['importe'][$i];
-					}
-					 //para cheque
-					if($_POST['Detallecobranza']['tipocobranza'][$i] == 1){
-						$itemCheque[$i]['chequebanco']=$_POST['Detallecobranza']['chequebanco'][$i];
-						$itemCheque[$i]['chequefechaingreso']=$_POST['Detallecobranza']['chequefechaingreso'][$i];
-						$itemCheque[$i]['chequefechacobro']=$_POST['Detallecobranza']['chequefechacobro'][$i];
-						$itemCheque[$i]['chequenumero']=$_POST['Detallecobranza']['nrocheque'][$i];
-						$itemCheque[$i]['importe']=$_POST['Detallecobranza']['importe'][$i];
-					}
-					//para transferencia
-					if($_POST['Detallecobranza']['tipocobranza'][$i] == 2){ 
-						$itemTransf[$i]['transferenciabanco']=$_POST['Detallecobranza']['transferenciabanco'][$i];
-						$itemTransf[$i]['importe']=$_POST['Detallecobranza']['importe'][$i];
-						
-					}
-				}
-   			}
-// elementos nuevos despues de un error de validación
-   			if (isset($_POST['Detallecobranza']['n__'])){
-   				//$nuevos= $this->nuevosElementosNoValidados($_POST['Detallecobranza']['n__']);
-   				$cantidadElementos=count($_POST['Detallecobranza']['n__']); 
-				
-   				for($i=0;$i<$cantidadElementos;$i++){
-					//para efectivo
-					if($_POST['Detallecobranza']['n__'][$i]['tipocobranza'] == 0){ 
-						$itemEfectivo[$i]['importe']=$_POST['Detallecobranza']['n__'][$i]['importe'];
-					}
-					 //para cheque
-					if($_POST['Detallecobranza']['n__'][$i]['tipocobranza'] == 1){
-						$itemCheque[$i]['chequebanco']=$_POST['Detallecobranza']['n__'][$i]['chequebanco'];
-						$itemCheque[$i]['chequefechaingreso']=$_POST['Detallecobranza']['n__'][$i]['chequefechaingreso'];
-						$itemCheque[$i]['chequefechacobro']=$_POST['Detallecobranza']['n__'][$i]['chequefechacobro'];
-						$itemCheque[$i]['chequetitular']=$_POST['Detallecobranza']['n__'][$i]['chequetitular'];
-						$itemCheque[$i]['chequecuittitular']=$_POST['Detallecobranza']['n__'][$i]['chequecuittitular'];
-						$itemCheque[$i]['importe']=$_POST['Detallecobranza']['n__'][$i]['importe'];
-					}
-					//para transferencia
-					if($_POST['Detallecobranza']['n__'][$i]['tipocobranza'] == 2){ 
-						$itemTransf[$i]['transferenciabanco']=$_POST['Detallecobranza']['n__'][$i]['transferenciabanco'];
-						$itemTransf[$i]['importe']=$_POST['Detallecobranza']['n__'][$i]['importe'];
-						
-					}
-				}
-   			} 
-	*/		
+			
+			 if( //validate detail before saving the master
+                MultiModelForm::validate($member,$validatedMembers,$deleteItems) &&
+                $model->validate() )
+               {
 				$masterValues = array ('cobranza_idcobranza'=>$model->idcobranza);
 				//para comprobar si el importe ha sido modificado
 				$llave=null;
@@ -430,8 +273,9 @@ class CobranzaController extends Controller
             $model->save()
            ){
            
+           	//print_r($validatedMembers);echo "<br>";//print_r($deleteMembers);echo "<br>"; die();
            	// se verifica si se ha modificado el importe de la cobranza
-           	
+                   
            	if($llave != null){
            		$importeviejo=$llave;
            		$importenuevo=$model->importe;
@@ -442,19 +286,23 @@ class CobranzaController extends Controller
            	
           //Si se ha modificado un detalle de cobranza..
           	if(isset($itemUpdate) && isset($datos)){
+          		
           		foreach ($itemUpdate as $key_uno=>$valor_uno){
           			foreach($valor_uno as $key_dos=>$valor_dos){
           				if($key_dos == "tipocobranza"){
+          					//para cambiar importe asiento y detalle asiento 11
+          					$this->cambioAsiento($valor_uno);
           					//compara si el tipo de cobranza se ha modificado o no en un item
           					if($valor_dos != $datos[$key_uno]['tipocobranza']){
           						$tipoguardado=$datos[$key_uno]['tipocobranza'];
           						$this->cambioTipoBorrado($tipoguardado, $datos[$key_uno]);
           						$this->resetDetalle($datos[$key_uno]['iddetallecobranza']);
           						$this->cambioTipoNuevoDetalle($valor_uno);
+          						$this->cambioDetalleAsiento($tipoguardado, $valor_uno);
           					
           					} else { // cuando el tipo de cobranza se mantuvo
           						       						 
-          						$this->modDeActulizacionDeItems($datos[$key_uno], $valor_uno);
+          						$this->modUpdateItemsDetAsiento($datos[$key_uno], $valor_uno);
           					}
           				}
           			}
@@ -464,99 +312,41 @@ class CobranzaController extends Controller
           	
           	//si existe un elemento detallecobranza borrado 
           	if(isset($elem_borrados_DCob)){
+          		
           		foreach($elem_borrados_DCob as $keyBorr_uno=>$valorBorr_uno){
           			foreach ($valorBorr_uno as $keyborr_dos=>$valorborr_dos){
+          				$this->cambioAsiento($valorBorr_uno);
           				if($keyborr_dos == "tipocobranza"){
+          					
           					$tipoguardadoBorr=$valorborr_dos;
           					$this->cambioTipoBorrado($tipoguardadoBorr, $valorBorr_uno);
           				}
-          				
+          				if($keyborr_dos== "iddetallecobranza"){
+          					$this->borradoDetAsiento($valorborr_dos);
+          				}
           			}
           		}
-          		
+          	
           	}
-           /*
+           
            	//para el caso de elementos nuevos despues de actualizar la cobranza
-           //PARA GENERAR EL MOVIMIENTO CAJA	
-             	$datos=null;
-				if(isset($itemEfectivo)){
-					foreach ($itemEfectivo as $array){
-						foreach ($array as $key => $valor){
-							if($key == "importe"){
-								$datos['idcobranza']=$model->idcobranza;
-								$cliente=$this->idCliente($model->ctactecliente_idctactecliente);
-								$datos['nombrecliente']=$cliente[0]['nombrecliente'];
-								$datos['fecha']=$_POST['Cobranza']['fecha'];
-								$datos['importe']=$valor;
-								$this->nuevoMovCaja($datos);
-							}
-						}
-					}
+           
+				if(isset($itemNuevoNuevo)){
+					$asiento=Asiento::model()->find("cobranza_idcobranza=:id",
+					array(':id'=>$id));
+					$cliente=Cliente::model()->find("ctactecliente_idctactecliente=:idctacte",
+             		array(":idctacte"=>$_POST['Cobranza']['ctactecliente_idctactecliente']));
+					$this->nuevoElem($validatedMembers, $_POST['Cobranza']['fecha'], $asiento->idasiento, $masterValues, $cliente);
+				
 				}
-			//PARA GENERAR LOS CHEQUES DE COBRANZA
-				$datos=null;
-				if(isset($itemCheque)){
-					foreach ($itemCheque as $array){
-						foreach ($array as $key=>$valor){
-							$datos['idcobranza']=$model->idcobranza;
-							$cliente=$this->idCliente($model->ctactecliente_idctactecliente);
-							$datos['idcliente']=$cliente[0]['idcliente'];
-							$datos['nombrecliente']=$cliente[0]['nombrecliente'];
-							
-							switch ($key){
-								case "chequebanco":
-									$datos['banco']=$valor;
-									break;
-								case "chequefechaingreso":
-									$datos['fechaingreso']=$valor;
-									break;
-								case "chequefechacobro":
-									$datos['fechacobro']=$valor;
-									break;
-								case "chequetitular":
-									$datos['titular']=$valor;
-									break;
-								case "chequecuittitular":
-									$datos['cuittitular']=$valor;
-									break;
-								case "chequenumero":
-									$datos['chequenumero']=$valor;
-									break;
-								case "importe":
-									$datos['importe']=$valor;
-									break;
-							}
-						}
-						$this->nuevoCheque($datos);
-					}
-				}
-			//PARA GENERAR LAS TRANSFERENCIAS
-				$datos=null;
-				if(isset($itemTransf)){
-					foreach ($itemTransf as $array){
-						foreach ($array as $key=>$valor){
-							$datos['idcobranza']=$model->idcobranza;
-							$cliente=$this->idCliente($model->ctactecliente_idctactecliente);
-							$datos['nombrecliente']=$cliente[0]['nombrecliente'];
-							$datos['fecha']=$_POST['Cobranza']['fecha'];
-							switch ($key){
-								case "transferenciabanco":
-									$datos['transbanco']=$valor;
-									break;
-								case "importe":
-									$datos['importe']=$valor;
-									break;
-							}
-						}
-						$this->nuevaTransf($datos);
-					}	
-				}  */
+	
+			
           		Yii::app()->user->setFlash('success', "<strong>Cobranza actualizada correctamente.</strong>");
 				$this->redirect(array('admin'));
 				//$this->redirect(array('view','id'=>$model->idcobranza));
            }
 		}
-
+		}
 		$this->render('update',array(
 			'model'=>$model,
 			'member'=>$member,
@@ -625,8 +415,11 @@ class CobranzaController extends Controller
 			$this->borrarDetCtaCte($cobranza->idcobranza, $cobranza->importe, $cobranza->ctactecliente_idctactecliente);
 			
 			// we only allow deletion via POST request
+			$Asiento=Asiento::model()->find("cobranza_idcobranza=:id",
+					array(':id'=>$id));
+			if($Asiento->delete()){
 			$this->loadModel($id)->delete();
-
+			}
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			/*if (!isset($_GET['ajax'])) {
 				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
@@ -705,11 +498,9 @@ class CobranzaController extends Controller
 		$modelmovcaja->descripcion= "Cobranza N°".(string)$datos['idcobranza']." - ".(string)$datos['nombrecliente']."-";
 		$modelmovcaja->fecha=$datos['fecha'];
 		$modelmovcaja->debeohaber=0;
-		$modelmovcaja->caja_idcaja=1;
-		$modelmovcaja->rubro_idrubro=5;
-		$modelmovcaja->formadepago_idformadepago=1;
+		$modelmovcaja->caja_idcaja=$datos['caja_idcaja'];
 		$modelmovcaja->debe=$datos['importe'];
-		$modelmovcaja->id_de_trabajo=$datos['iddetallecobranza'];
+		$modelmovcaja->iddetallecobranza=$datos['iddetallecobranza'];
 		$modelmovcaja->save();
 			}
 	public function nuevoCheque($datos){
@@ -727,7 +518,7 @@ class CobranzaController extends Controller
 		$modelCheque->Banco_idBanco=$datos['banco'];
 		$modelCheque->cliente_idcliente=$datos['idcliente'];
 		$modelCheque->estado=2;
-		$modelCheque->id_trabajo_cobranza=$datos['iddetallecobranza'];
+		$modelCheque->iddetallecobranza=$datos['iddetallecobranza'];
 		$modelCheque->save();
 		
 	}
@@ -738,12 +529,23 @@ class CobranzaController extends Controller
 		$modelTransf->fecha=$datos['fecha'];
 		$modelTransf->debeohaber=0;
 		$modelTransf->debe=$datos['importe'];
-		$modelTransf->rubro_idrubro=5;
-		$modelTransf->Banco_idBanco=$datos['transbanco'];
-		$modelTransf->formadepago_idformadepago=3;
-		$modelTransf->id_de_trabajo=$datos['iddetallecobranza'];
+		//$modelTransf->rubro_idrubro=5;
+		$modelTransf->ctabancaria_idctabancaria=$datos['transbanco'];
+		
+		$modelTransf->id_de_trabajo=$datos['iddetallecobranza']; //para identificar el detalle
 		$modelTransf->save();
 		
+	}
+	public function nuevoIIBB($datos){
+		$modelIIBB=new Retencioniibb;
+		$modelIIBB->nrocomprobante=$datos['iibbnrocomp'];
+		$modelIIBB->fecha=$datos['fecha'];
+		$modelIIBB->cliente_idcliente=$datos['idcliente'];
+		$modelIIBB->comp_relacionado=$datos['iibbcomprelac'];
+		$modelIIBB->tasa=$datos['iibbtasa'];
+		$modelIIBB->importe=$datos['importe'];
+		$modelIIBB->detallecobranza_iddetallecobranza=$datos['iddetallecobranza'];
+		$modelIIBB->save();
 	}
 	public function idCliente($idctacte){
 		$sql="SELECT cliente.idcliente as idcliente, cliente.nombre AS nombrecliente  FROM cliente,ctactecliente,cobranza 
@@ -754,24 +556,122 @@ class CobranzaController extends Controller
 		
 		return $resultado;
 	}
- 	public function cambioTipoBorrado($tipoguardado,$datos){
+	public function fechadmY($dato){
+		$fechaingreso = DateTime::createFromFormat('Y-m-d', $dato);
+	return $fechaingreso->format('d/m/Y');
+	}
+	public function fechaYmd($dato){
+		$fechaingreso = DateTime::createFromFormat('d/m/Y', $dato);
+	return $fechaingreso->format('Y-m-d');
+	}
+ 	public function nuevoElem($validatedMembers,$fecha,$nroasiento,$masterValues,$cliente){
+ 		// Contraparte del asiento "DEBE"
+             $cantElm=count($validatedMembers);
+             for($a=0;$a<$cantElm;$a++){
+             	 $Deta=Detalleasiento::model()->find("iddetallecobranza=:id",array(':id'=>$validatedMembers[$a]['iddetallecobranza']));
+	             if($validatedMembers[$a]['tipocobranza'] == 0 && (!isset($Deta))){ //efectivo
+		             $MovCaja=new Movimientocaja;
+		             $MovCaja->descripcion="Entrega de Cobranza N°".$masterValues['cobranza_idcobranza']." ".$cliente->nombre;
+		             $MovCaja->fecha=$fecha;
+		             $MovCaja->debeohaber=0;
+		             $MovCaja->debe=$validatedMembers[$a]['importe'];
+		             $MovCaja->iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+		             $MovCaja->cuenta_idcuenta=11;
+		             $MovCaja->caja_idcaja=$validatedMembers[$a]['caja_idcaja'];
+		             if($MovCaja->save()){
+			             $DeAsCaja=new Detalleasiento;
+			             $DeAsCaja->debe=$validatedMembers[$a]['importe'];
+			             $cuentaCAJA=Caja::model()->findByPk($validatedMembers[$a]['caja_idcaja']);
+			             $DeAsCaja->cuenta_idcuenta=$cuentaCAJA->cuenta_idcuenta;
+			             $DeAsCaja->asiento_idasiento=$nroasiento;
+			             $DeAsCaja->iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+			             $DeAsCaja->save();
+			             }
+		             //print_r($MovCaja->getErrors());die();
+	             } elseif($validatedMembers[$a]['tipocobranza'] == 1 && (!isset($Deta))){ //cheque
+		             //Nuevo cheque
+		             $Cheque=new Cheque;
+		             $Cheque->nrocheque=$validatedMembers[$a]['nrocheque'];
+		             $Cheque->titular=$validatedMembers[$a]['chequetitular'];
+		             $Cheque->cuittitular=$validatedMembers[$a]['chequecuittitular'];
+		             $Cheque->fechaingreso=$this->fechadmY($validatedMembers[$a]['chequefechaingreso']);
+		             $Cheque->fechacobro=$this->fechadmY($validatedMembers[$a]['chequefechacobro']);
+		             $Cheque->debe=$validatedMembers[$a]['importe'];
+		             $Cheque->debeohaber=0;
+		             $Cheque->Banco_idBanco=$validatedMembers[$a]['chequebanco'];
+		             $Cheque->estado=2;// estado a cobrar
+		             $Cheque->cliente_idcliente=$cliente->idcliente;
+		             $Cheque->iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+		             if($Cheque->save()){
+			             $DeAsCheque=new Detalleasiento;
+			             $DeAsCheque->debe=$validatedMembers[$a]['importe'];
+			             $DeAsCheque->cuenta_idcuenta=5; //cuenta cheque de 3ros a cobrar
+			             $DeAsCheque->asiento_idasiento=$nroasiento;
+			             $DeAsCheque->iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+			             $DeAsCheque->save();
+	             	}
+	             
+	             } elseif($validatedMembers[$a]['tipocobranza'] == 2 && (!isset($Deta))){ //cheque
+		             // Nuevo movimientobanco
+		             $MovBanco=new Movimientobanco;
+		             $MovBanco->descripcion="Entrega de Cobranza N°".$masterValues['cobranza_idcobranza']." ".$cliente->nombre;
+		             $MovBanco->fecha=$fecha;
+		             $MovBanco->debeohaber=0;
+		             $MovBanco->debe=$validatedMembers[$a]['importe'];
+		             $MovBanco->ctabancaria_idctabancaria=$validatedMembers[$a]['transferenciabanco'];
+		             $MovBanco->cuenta_idcuenta=5;
+		             $MovBanco->id_de_trabajo=$validatedMembers[$a]['iddetallecobranza'];
+		             if($MovBanco->save()){
+			             $cuentaCtabancaria=Ctabancaria::model()->findByPk($validatedMembers[$a]['transferenciabanco']);
+			             $DeAsTrasfer=new Detalleasiento;
+			             $DeAsTrasfer->debe=$validatedMembers[$a]['importe'];
+			             $DeAsTrasfer->cuenta_idcuenta=$cuentaCtabancaria->cuenta_idcuenta;
+			             $DeAsTrasfer->asiento_idasiento=$nroasiento;
+			             $DeAsTrasfer->iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+			             $DeAsTrasfer->save();
+		             }
+	             
+	             } elseif($validatedMembers[$a]['tipocobranza'] == 3 && (!isset($Deta))
+	             ){ //IIBB
+	              //nuevo comprobante de retención de IIBB
+		              $MovIIBB=new Retencioniibb;
+		              $MovIIBB->nrocomprobante=$validatedMembers[$a]['iibbnrocomp'];
+		              $MovIIBB->cliente_idcliente=$cliente->idcliente;
+		              $MovIIBB->fecha=$fecha;
+		              $MovIIBB->comp_relacionado=$validatedMembers[$a]['iibbcomprelac'];
+		              $MovIIBB->importe=$validatedMembers[$a]['importe'];
+		              $MovIIBB->tasa=$validatedMembers[$a]['iibbtasa'];
+		              $MovIIBB->detallecobranza_iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+		              if($MovIIBB->save()){
+			              $DeAsIIBB=new Detalleasiento;
+			              $DeAsIIBB->debe=$validatedMembers[$a]['importe'];
+			              $DeAsIIBB->cuenta_idcuenta=20;// cuenta 113700 Ret. Imp. Ingresos Brutos
+			              $DeAsIIBB->asiento_idasiento=$nroasiento;
+			              $DeAsIIBB->iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+			              $DeAsIIBB->save();
+		              }
+	              
+	             }
+             } //for
+ 	}
+	public function cambioTipoBorrado($tipoguardado,$datos){
    		switch ($tipoguardado){
    			case 0 :
    				//$this->resetDetalle($datos['iddetallecobranza']);			
    				$commandmovi= Yii::app()->db->createCommand();
-				$commandmovi->delete('movimientocaja','id_de_trabajo=:id_de_trabajo',
+				$commandmovi->delete('movimientocaja','iddetallecobranza=:id',
 								array(
-								':id_de_trabajo'=>$datos['iddetallecobranza']
+								':id'=>$datos['iddetallecobranza']
    								)
 								);
-					
-   				break;
+				
+   				
    			case 1 :
    				//$this->resetDetalle($datos['iddetallecobranza']);	
    				$commandmovi= Yii::app()->db->createCommand();
-   				$commandmovi->delete('cheque','id_trabajo_cobranza=:id_de_trabajo',
+   				$commandmovi->delete('cheque','iddetallecobranza=:id',
 								array(
-								':id_de_trabajo'=>$datos['iddetallecobranza']
+								':id'=>$datos['iddetallecobranza']
    								)
 								);
 				
@@ -779,12 +679,18 @@ class CobranzaController extends Controller
    			case 2 :
    				//$this->resetDetalle($datos['iddetallecobranza']);	
    				$commandmovi= Yii::app()->db->createCommand();
-   				$commandmovi->delete('movimientobanco','id_de_trabajo=:id_de_trabajo',
+   				$commandmovi->delete('movimientobanco','id_de_trabajo=:id',
 								array(
-								':id_de_trabajo'=>$datos['iddetallecobranza']
+								':id'=>$datos['iddetallecobranza']
    								)
 								);
 				
+   				break;
+   			case 3 :
+   				//$this->resetDetalle($datos['iddetallecobranza']);	
+   				$RetIIB=Retencioniibb::model()->find("detallecobranza_iddetallecobranza=:id",
+   									array(':id'=>$datos['iddetallecobranza']));
+				$RetIIB->delete();   									
    				break;
    		}
    	}
@@ -793,39 +699,44 @@ class CobranzaController extends Controller
 		$datos['tipocobranza']= (int)$datos['tipocobranza'];
 		switch ($datos['tipocobranza']){
 			case 0:
-				
 				$this->nuevoMovCaja($datos);
+				
 				break;
 			case 1:
-				
+				/*
 				$fechaingreso= DateTime::createFromFormat('Y-m-d', $datos['fechaingreso']);
 				$datos['fechaingreso']=$fechaingreso->format('d/m/Y');
 				$fechacobro= DateTime::createFromFormat('Y-m-d', $datos['fechacobro']);
-				$datos['fechacobro']=$fechacobro->format('d/m/Y');
+				$datos['fechacobro']=$fechacobro->format('d/m/Y'); */
 				$this->nuevoCheque($datos);
 				break;
 			case 2:
 				
 				$this->nuevaTransf($datos);
 				break;
+			case 3:
+				
+				$this->nuevoIIBB($datos);
+				break;
 		}
 	}
-	public function modDeActulizacionDeItems($datosviejos, $nuevosdatos){
+	public function modUpdateItemsDetAsiento($datosviejos, $nuevosdatos){
 		
 		$datosviejos['tipocobranza']=(int)$datosviejos['tipocobranza'];
-		
+		//detalle asiento relacionado al detallecobranza
+		$DeAs=Detalleasiento::model()->find("iddetallecobranza=:id",
+				array(':id'=>$datosviejos['iddetallecobranza']));
 		switch ($datosviejos['tipocobranza']){
 			
 			case 0:  // para un detalle del tipo efectivo
-				if($datosviejos['importe'] != $nuevosdatos['importe']){
-						$commandmovi= Yii::app()->db->createCommand();
-			   			$commandmovi->update('movimientocaja',array('debe'=>(double)$nuevosdatos['importe']),
-			   									'id_de_trabajo=:id_de_trabajo',
-								array(
-								':id_de_trabajo'=>$datosviejos['iddetallecobranza'],
-								)
-   								);
-					}
+				$MovCaja=Movimientocaja::model()->find("iddetallecobranza=:id",
+						array(':id'=>$datosviejos['iddetallecobranza']));
+				$MovCaja->debe=$nuevosdatos['importe'];
+				$MovCaja->caja_idcaja=$nuevosdatos['caja_idcaja'];
+				$MovCaja->update();
+				$DeAs->debe=$nuevosdatos['importe'];
+				$DeAs->cuenta_idcuenta=$MovCaja->cajaIdcaja->cuenta_idcuenta;
+				$DeAs->update();
 				break;
 			
 			case 1: // para un detalle del cheque
@@ -837,20 +748,20 @@ class CobranzaController extends Controller
 				    ($datosviejos['chequenumero'] != $nuevosdatos['chequenumero']) ||
 				    ($datosviejos['importe'] != $nuevosdatos['importe']) )
 				{
-					$sql="UPDATE `cheque`
-							 SET 
-								`nrocheque`=".$nuevosdatos['chequenumero'].",
-								`fechaingreso`=\"".$nuevosdatos['fechaingreso']."\",
-								`fechacobro`=\"".$nuevosdatos['fechacobro']."\",
-								`titular`=\"".$nuevosdatos['titular']."\",
-								`cuittitular`=\"".$nuevodatos['cuittitular']."\",
-								`debe`=".$nuevosdatos['importe'].",
-								`Banco_idBanco`=".$nuevosdatos['banco']."
-							 WHERE  
-							 	id_trabajo_cobranza=\"".$datosviejos['iddetallecobranza']."\";";
-					$dbCommand = Yii::app()->db->createCommand($sql);
-					$dbCommand->execute();
 					
+					$cheque=Cheque::model()->find("iddetallecobranza=:id",
+							array(':id'=>$datosviejos['iddetallecobranza']));
+					$cheque->nrocheque=$nuevosdatos['chequenumero'];
+					$cheque->fechaingreso=$nuevosdatos['fechaingreso'];
+					$cheque->fechacobro=$nuevosdatos['fechacobro'];
+					$cheque->titular=$nuevosdatos['titular'];
+					$cheque->cuittitular=$nuevosdatos['cuittitular'];
+					$cheque->debe=$nuevosdatos['importe'];
+					$cheque->Banco_idBanco=$nuevosdatos['banco'];
+					$cheque->update();
+					
+					$DeAs->debe=$nuevosdatos['importe'];
+					$DeAs->update();
 									 
 				    }	
 				break;
@@ -859,18 +770,39 @@ class CobranzaController extends Controller
 				if(	($datosviejos['transbanco'] != $nuevosdatos['transbanco']) || 
 					($datosviejos['importe'] != $nuevosdatos['importe']))
 					{
-						$sql="UPDATE `movimientobanco`
-							 SET 
-								`debe`=".$nuevosdatos['importe'].",
-								`Banco_idBanco`=".$nuevosdatos['transbanco']."
-							 WHERE  
-							 	id_de_trabajo=\"".$datosviejos['iddetallecobranza']."\";";
-					$dbCommand = Yii::app()->db->createCommand($sql);
-					$dbCommand->execute();
-					/*echo $dbCommand->getText();
-					print_r($dbCommand->params);die();*/
+						$trans=Movimientobanco::model()->find("id_de_trabajo=:id",
+								array(':id'=>$datosviejos['iddetallecobranza']));
+						$trans->debe=$nuevosdatos['importe'];
+						$trans->ctabancaria_idctabancaria=$nuevosdatos['transbanco'];
+						$trans->update();	
+						
+						$DeAs->debe=$nuevosdatos['importe'];
+						$CtaBancaria=Ctabancaria::model()->findByPk($nuevosdatos['transbanco']);
+						$DeAs->cuenta_idcuenta=$CtaBancaria->cuenta_idcuenta;
+						$DeAs->update();
 					}
-				break;
+			break;
+			
+			case 3: //para IIBB
+				$MovIIBB=Retencioniibb::model()->find("detallecobranza_iddetallecobranza=:id",
+						array(':id'=>$datosviejos['iddetallecobranza']));
+						
+				if(	($datosviejos['iibbnrocomp'] != $nuevosdatos['iibbnrocomp']) || 
+					($datosviejos['iibbfecha'] != $nuevosdatos['iibbfecha']) ||
+					($datosviejos['iibbcomprelac'] != $nuevosdatos['iibbcomprelac']) ||
+					($datosviejos['iibbtasa'] != $nuevosdatos['iibbtasa']) ||
+					($datosviejos['importe'] != $nuevosdatos['importe']) ) 	{
+						
+						$MovIIBB->iibbnrocomp=$nuevosdatos['iibbnrocomp'];
+						$MovIIBB->iibbfecha=$nuevosdatos['iibbfecha'];
+						$MovIIBB->iibbcomprelac=$nuevosdatos['iibbcomprelac'];
+						$MovIIBB->iibbtasa=$nuevosdatos['iibbtasa'];
+						$MovIIBB->importe=$nuevosdatos['importe'];
+						$MovIIBB->save();
+						$DeAs->debe=$nuevosdatos['importe'];
+						$DeAs->update();
+					}
+			break;		
 			}
 		}
 	
@@ -931,6 +863,53 @@ class CobranzaController extends Controller
 				    'detallectactecliente.haber'=>new CDbExpression($impnuevo),
 				), 'iddocumento='.$idcobranza.' AND ctactecliente_idctactecliente='.$idctacte);
 	}
+	
+	public function cambioDetalleAsiento($tipoguardado, $nuevo){
+		
+		$DeAsiento=Detalleasiento::model()->find("iddetallecobranza=:id", 
+					array(':id'=>$tipoguardado));
+		
+		switch ($nuevo['tipocobranza']) {
+			case 0:
+				$cuentacaja=Caja::model()->findByPk($nuevo['caja_idcaja']);
+				$DeAsiento->cuenta_idcuenta=$cuentacaja->cuenta_idcuenta;
+				$DeAsiento->debe=$nuevo['importe'];
+				$DeAsiento->update();
+			break;
+			case 1:
+				$DeAsiento->cuenta_idcuenta=5; //cheque 3ros
+				$DeAsiento->debe=$nuevo['importe'];
+				$DeAsiento->update();
+			break;
+			case 3:
+				$DeAsiento->cuenta_idcuenta=20;// cuenta 113700 Ret. Imp. Ingresos Brutos
+				$DeAsieto->debe=$nuevo['importe'];
+				$DeAsiento->update();
+			break;
+		}
+		
+	}
+	public function borradoDetAsiento($borrado){
+		$DeAs=Detalleasiento::model()->find("iddetallecobranza=:id",
+			array(':id'=>$borrado));
+		$DeAs->delete();
+	}
+	
+	public function cambioAsiento($nuevo){
+		$Asiento=Asiento::model()->find("cobranza_idcobranza=:id",
+					array(':id'=>$nuevo['idcobranza']));
+		$DeAs=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:cuenta",
+						array(':idasiento'=>$Asiento->idasiento,
+							  ':cuenta'=>11));
+		$DeAs->haber=$nuevo['totalcobranza'];
+		$DeAs->save();
+		$Asiento->fecha=$nuevo['fecha'];
+		$Asiento->save();
+	}
+	
+	
+	
+	
 	
 	public function actionExcel(){
                 $mes_tab=$_GET['mesTab'];
@@ -1007,6 +986,11 @@ class CobranzaController extends Controller
 		$detalle->chequecuittitular=null;
 		$detalle->nrocheque=null;
 		$detalle->chequebanco=null;
+		$detalle->caja_idcaja=null;
+		$detalle->iibbnrocomp=null;
+		$detalle->iibbfecha=null;
+		$detalle->iibbcomprelac=null;
+		$detalle->iibbtasa=null;
 		$detalle->save();
 	}
 }

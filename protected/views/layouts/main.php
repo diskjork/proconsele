@@ -62,7 +62,11 @@
 								'items'=>array(
 									array('label'=>'Caja', 'url'=>Yii::app()->request->baseUrl.'/index.php/movimientocaja/admin'),
 									array('label'=>'Banco', 'url'=>Yii::app()->request->baseUrl.'/movimientobanco/admin'),
-									array('label'=>'Cheques', 'url'=>Yii::app()->request->baseUrl.'/cheque/admin'),
+									array('label'=>'Cheques', 'url'=>'#',
+										 'items'=>array(
+												array('label'=>'Cheques emitidos', 'url'=>Yii::app()->request->baseUrl.'/cheque/emitido'),
+												array('label'=>'Cheques recibidos', 'url'=>Yii::app()->request->baseUrl.'/cheque/recibido'),
+									)),
 								)),
 						array('label'=>'FACTURACION','icon'=>'icon-briefcase', 'url'=>'#',
 								'items'=>array(

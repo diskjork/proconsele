@@ -53,11 +53,11 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('cuenta_idcuenta, asiento_idasiento', 'required'),
-			array('cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque', 'numerical', 'integerOnly'=>true),
+			array('cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque, iddetallecobranza, iddetalleordendepago', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('iddocumento', 'length', 'max'=>20),
-			array('debe, haber, proveedor_idproveedor, cliente_idcliente, iddocumento, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('iddetalleasiento, debe, haber, cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente, iddocumento, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque', 'safe', 'on'=>'search'),
+			array('debe, haber, proveedor_idproveedor, cliente_idcliente, iddocumento, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque, iddetallecobranza, iddetalleordendepago', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('iddetalleasiento, debe, haber, cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente, iddocumento, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque, iddetallecobranza, iddetalleordendepago', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -121,6 +121,8 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 		$criteria->compare('movimientobanco_idmovimientobanco', $this->movimientobanco_idmovimientobanco);
 		$criteria->compare('movimientocaja_idmovimientocaja', $this->movimientocaja_idmovimientocaja);
 		$criteria->compare('cheque_idcheque', $this->cheque_idcheque);
+		$criteria->compare('iddetallecobranza', $this->iddetallecobranza);
+		$criteria->compare('iddetalleordendepago', $this->iddetalleordendepago);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

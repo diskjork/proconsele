@@ -14,7 +14,7 @@
  * @property double $importe
  * @property string $transferenciabanco
  * @property string $chequefechacobro
- * @property string $chequefechaemision
+ * @property string $chequefechaingreso
  * @property string $nrocheque
  * @property integer $chequebanco
  * @property string $chequetitular
@@ -50,24 +50,25 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('tipocobranza, importe', 'required'),
-			array('tipocobranza, chequebanco, cobranza_idcobranza, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque', 'numerical', 'integerOnly'=>true),
-			array('importe', 'numerical'),
-			array('transferenciabanco, chequetitular, chequecuittitular', 'length', 'max'=>100),
+			array('tipocobranza, chequebanco, cobranza_idcobranza,  caja_idcaja, iibbnrocomp ', 'numerical', 'integerOnly'=>true),
+			array('importe, iibbtasa', 'numerical'),
+			array('transferenciabanco, chequetitular, chequecuittitular, iibbcomprelac', 'length', 'max'=>100),
 			array('nrocheque', 'length', 'max'=>20),
-			array('chequefechacobro, chequefechaemision', 'safe'),
-			array('transferenciabanco, chequefechacobro, chequefechaemision, nrocheque, chequebanco, chequetitular, chequecuittitular, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('iddetallecobranza, tipocobranza, importe, transferenciabanco, chequefechacobro, chequefechaemision, nrocheque, chequebanco, chequetitular, chequecuittitular, cobranza_idcobranza, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque', 'safe', 'on'=>'search'),
+			array('chequefechacobro, chequefechaingreso, iibbfecha', 'safe'),
+			array('transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, caja_idcaja', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('iddetallecobranza, tipocobranza, importe, transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, cobranza_idcobranza, caja_idcaja, iibbfecha, iibbnrocomp, iibbcomprelac, iibbtasa', 'safe', 'on'=>'search'),
 			array('tipocobranza','validarDatosCheque'),
 			array('tipocobranza','validarDatosTransfe'),
+			array('tipocobranza','validarDatosEfectivo'),
+			array('tipocobranza','validarDatosIIBB'),
 		);
 	}
 
 	public function relations() {
 		return array(
-			'chequeIdcheque' => array(self::BELONGS_TO, 'Cheque', 'cheque_idcheque'),
 			'cobranzaIdcobranza' => array(self::BELONGS_TO, 'Cobranza', 'cobranza_idcobranza'),
-			'movimientobancoIdmovimientobanco' => array(self::BELONGS_TO, 'Movimientobanco', 'movimientobanco_idmovimientobanco'),
-			'movimientocajaIdmovimientocaja' => array(self::BELONGS_TO, 'Movimientocaja', 'movimientocaja_idmovimientocaja'),
+			'cajaIdcaja' => array(self::BELONGS_TO, 'Caja', 'caja_idcaja'),
+			
 		);
 	}
 
@@ -83,19 +84,18 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
 			'importe' => Yii::t('app', 'Importe'),
 			'transferenciabanco' => Yii::t('app', 'Banco'),
 			'chequefechacobro' => Yii::t('app', 'Fecha cobro'),
-			'chequefechaemision' => Yii::t('app', 'Fecha Imision'),
+			'chequefechaingreso' => Yii::t('app', 'Fecha Imision'),
 			'nrocheque' => Yii::t('app', 'Nro.cheque'),
 			'chequebanco' => Yii::t('app', 'Banco'),
 			'chequetitular' => Yii::t('app', 'Titular'),
 			'chequecuittitular' => Yii::t('app', 'CUIT titular'),
+			'iibbnrocomp' => Yii::t('app', 'Nro.Compr'),
+			'iibbfecha' => Yii::t('app', 'Fecha'),
+			'iibbcomprelac'=> Yii::t('app', 'Compr.Relacionado'),
+			'iibbtasa'=>Yii::t('app', 'Tasa %'),
 			'cobranza_idcobranza' => null,
-			'movimientobanco_idmovimientobanco' => null,
-			'movimientocaja_idmovimientocaja' => null,
-			'cheque_idcheque' => null,
-			'chequeIdcheque' => null,
 			'cobranzaIdcobranza' => null,
-			'movimientobancoIdmovimientobanco' => null,
-			'movimientocajaIdmovimientocaja' => null,
+			'cajaIdcaja'=> null,
 		);
 	}
 
@@ -107,15 +107,16 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
 		$criteria->compare('importe', $this->importe);
 		$criteria->compare('transferenciabanco', $this->transferenciabanco, true);
 		$criteria->compare('chequefechacobro', $this->chequefechacobro, true);
-		$criteria->compare('chequefechaemision', $this->chequefechaemision, true);
+		$criteria->compare('chequefechaingreso', $this->chequefechaingreso, true);
 		$criteria->compare('nrocheque', $this->nrocheque, true);
 		$criteria->compare('chequebanco', $this->chequebanco);
 		$criteria->compare('chequetitular', $this->chequetitular, true);
 		$criteria->compare('chequecuittitular', $this->chequecuittitular, true);
 		$criteria->compare('cobranza_idcobranza', $this->cobranza_idcobranza);
-		$criteria->compare('movimientobanco_idmovimientobanco', $this->movimientobanco_idmovimientobanco);
-		$criteria->compare('movimientocaja_idmovimientocaja', $this->movimientocaja_idmovimientocaja);
-		$criteria->compare('cheque_idcheque', $this->cheque_idcheque);
+		$criteria->compare('iibbnrocomp', $this->iibbnrocomp);
+		$criteria->compare('iibbfecha', $this->iibbfecha);
+		$criteria->compare('iibbcomprelac', $this->iibbcomprelac);
+		$criteria->compare('iibbtasa', $this->iibbtasa);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
@@ -165,5 +166,26 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
     	if( $this->tipocobranza == 2 && $this->transferenciabanco == null){
    				$this->addError('transferenciabanco', 'No puede ser nulo');
   			}
+    }
+	public function validarDatosEfectivo($attribute,$params){
+      	
+    	if( $this->tipocobranza == 0 && $this->caja_idcaja == null){
+   				$this->addError('caja_idcaja', 'No puede ser nulo');
+  			}
+    }
+	public function validarDatosIIBB($attribute,$params){
+      	
+    	if( $this->tipocobranza == 3){
+    		
+    		switch (true){
+    			case ($this->iibbnrocomp == null):
+    				$this->addError('iibbnrocomp', 'No puede ser nulo');
+    				break;
+    			case ($this->iibbfecha == null):
+    				$this->addError('iibbfecha', 'Fecha No puede ser nula');
+    				break;
+    						
+    		}
+    	}
     }
 }
