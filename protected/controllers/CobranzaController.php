@@ -168,6 +168,7 @@ class CobranzaController extends Controller
 		$model=$this->loadModel($id);
 		
 		 $member = new Detallecobranza;
+		 
     	 $validatedMembers = array(); //ensure an empty array
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -257,10 +258,8 @@ class CobranzaController extends Controller
 			}
 			
 			
-			 if( //validate detail before saving the master
-                MultiModelForm::validate($member,$validatedMembers,$deleteItems) &&
-                $model->validate() )
-               {
+			 
+                
 				$masterValues = array ('cobranza_idcobranza'=>$model->idcobranza);
 				//para comprobar si el importe ha sido modificado
 				$llave=null;
@@ -272,7 +271,7 @@ class CobranzaController extends Controller
             MultiModelForm::save($member,$validatedMembers,$deleteMembers,$masterValues) &&
             $model->save()
            ){
-           
+          
            	//print_r($validatedMembers);echo "<br>";//print_r($deleteMembers);echo "<br>"; die();
            	// se verifica si se ha modificado el importe de la cobranza
                    
@@ -331,14 +330,14 @@ class CobranzaController extends Controller
            
            	//para el caso de elementos nuevos despues de actualizar la cobranza
            
-				if(isset($itemNuevoNuevo)){
+				
 					$asiento=Asiento::model()->find("cobranza_idcobranza=:id",
 					array(':id'=>$id));
 					$cliente=Cliente::model()->find("ctactecliente_idctactecliente=:idctacte",
              		array(":idctacte"=>$_POST['Cobranza']['ctactecliente_idctactecliente']));
 					$this->nuevoElem($validatedMembers, $_POST['Cobranza']['fecha'], $asiento->idasiento, $masterValues, $cliente);
 				
-				}
+				
 	
 			
           		Yii::app()->user->setFlash('success', "<strong>Cobranza actualizada correctamente.</strong>");
@@ -346,7 +345,7 @@ class CobranzaController extends Controller
 				//$this->redirect(array('view','id'=>$model->idcobranza));
            }
 		}
-		}
+		
 		$this->render('update',array(
 			'model'=>$model,
 			'member'=>$member,
