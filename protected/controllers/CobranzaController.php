@@ -297,6 +297,7 @@ class CobranzaController extends Controller
           						$this->cambioTipoBorrado($tipoguardado, $datos[$key_uno]);
           						$this->resetDetalle($datos[$key_uno]['iddetallecobranza']);
           						$this->cambioTipoNuevoDetalle($valor_uno);
+          						//echo $valor_uno['iddetallecobranza'];die();
           						$this->cambioDetalleAsiento($tipoguardado, $valor_uno);
           					
           					} else { // cuando el tipo de cobranza se mantuvo
@@ -866,24 +867,30 @@ class CobranzaController extends Controller
 	public function cambioDetalleAsiento($tipoguardado, $nuevo){
 		
 		$DeAsiento=Detalleasiento::model()->find("iddetallecobranza=:id", 
-					array(':id'=>$tipoguardado));
-		
+					array(':id'=>$nuevo['iddetallecobranza']));
+		//print_r($nuevo);die();
 		switch ($nuevo['tipocobranza']) {
 			case 0:
-				$cuentacaja=Caja::model()->findByPk($nuevo['caja_idcaja']);
+				$cuentacaja= Caja::model()->findByPk($nuevo['caja_idcaja']);
 				$DeAsiento->cuenta_idcuenta=$cuentacaja->cuenta_idcuenta;
 				$DeAsiento->debe=$nuevo['importe'];
-				$DeAsiento->update();
+				$DeAsiento->save();
 			break;
 			case 1:
 				$DeAsiento->cuenta_idcuenta=5; //cheque 3ros
 				$DeAsiento->debe=$nuevo['importe'];
-				$DeAsiento->update();
+				$DeAsiento->save();
+			break;
+			case 2:
+				$ctabancaria=Ctabancaria::model()->findByPk($nuevo['transbanco']);
+				$DeAsiento->cuenta_idcuenta=$ctabancaria->cuenta_idcuenta; //cheque 3ros
+				$DeAsiento->debe=$nuevo['importe'];
+				$DeAsiento->save();
 			break;
 			case 3:
-				$DeAsiento->cuenta_idcuenta=20;// cuenta 113700 Ret. Imp. Ingresos Brutos
+				$DeAsiento->cuenta_idcuenta = 20;// cuenta 113700 Ret. Imp. Ingresos Brutos
 				$DeAsieto->debe=$nuevo['importe'];
-				$DeAsiento->update();
+				$DeAsiento->save();
 			break;
 		}
 		
