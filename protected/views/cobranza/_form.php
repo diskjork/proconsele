@@ -52,7 +52,7 @@
 					            //'placeholder' => 'Seleccionar fecha',
 					        	'class' => 'input-medium',
 					        	
-					            'value'=>date('d/m/Y'),
+					            //'value'=>date('d/m/Y'),
 					        )
 					    ));
 					    ?>

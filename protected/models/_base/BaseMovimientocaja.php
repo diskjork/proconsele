@@ -56,6 +56,9 @@ abstract class BaseMovimientocaja extends GxActiveRecord {
 			array('descripcion', 'length', 'max'=>150),
 			array('debe, haber, id_de_trabajo, asiento_idasiento,  idfactura , idcompra, iddetallecobranza, iddetalleordendepago', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('idmovimientocaja, descripcion, fecha, debeohaber, debe, haber, id_de_trabajo, caja_idcaja, asiento_idasiento, cuenta_idcuenta,  idfactura , idcompra, iddetallecobranza, iddetalleordendepago', 'safe', 'on'=>'search'),
+			array('fechacobro','safe'),
+			array('fechacobro', 'length', 'max'=>20),
+			array('fechacobro','compararFechas'),
 		);
 	}
 
@@ -87,7 +90,7 @@ abstract class BaseMovimientocaja extends GxActiveRecord {
 			'id_de_trabajo' => Yii::t('app', 'Id De Trabajo'),
 			'caja_idcaja' => null,
 			'asiento_idasiento' => null,
-			'cuenta_idcuenta' => Yii::t('app', 'Cuenta Idcuenta'),
+			'cuenta_idcuenta' => Yii::t('app', 'Cuenta contable relacionada al movimiento'),
 			'asientos' => null,
 			'detallecobranzas' => null,
 			'detallecompras' => null,

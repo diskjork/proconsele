@@ -13,20 +13,12 @@
  * @property integer $tipoordendepago
  * @property double $importe
  * @property string $transferenciabanco
- * @property string $chequetitular
- * @property string $chequecuittitular
  * @property string $chequefechacobro
- * @property string $chequefechaingreso
+ * @property string $chequefechaemision
  * @property string $nrocheque
  * @property integer $chequebanco
  * @property integer $ordendepago_idordendepago
- * @property integer $movimientocaja_idmovimientocaja
- * @property integer $cheque_idcheque
- * @property integer $movimientobanco_idmovimientobanco
  *
- * @property Cheque $chequeIdcheque
- * @property Movimientobanco $movimientobancoIdmovimientobanco
- * @property Movimientocaja $movimientocajaIdmovimientocaja
  * @property Ordendepago $ordendepagoIdordendepago
  */
 abstract class BaseDetalleordendepago extends GxActiveRecord {
@@ -50,23 +42,22 @@ abstract class BaseDetalleordendepago extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('tipoordendepago, importe', 'required'),
-			array('tipoordendepago, chequebanco, ordendepago_idordendepago, movimientocaja_idmovimientocaja, cheque_idcheque, movimientobanco_idmovimientobanco', 'numerical', 'integerOnly'=>true),
+			array('tipoordendepago, idcheque, chequebanco, ordendepago_idordendepago, caja_idcaja, chequera', 'numerical', 'integerOnly'=>true),
 			array('importe', 'numerical'),
-			array('transferenciabanco, chequetitular, chequecuittitular', 'length', 'max'=>100),
+			array('transferenciabanco,chequetitular,chequecuittitular', 'length', 'max'=>100),
 			array('nrocheque', 'length', 'max'=>20),
 			array('chequefechacobro, chequefechaingreso', 'safe'),
-			array('tipoordendepago, importe, transferenciabanco, chequetitular, chequecuittitular, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, movimientocaja_idmovimientocaja, cheque_idcheque, movimientobanco_idmovimientobanco', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('iddetalleordendepago, tipoordendepago, importe, transferenciabanco, chequetitular, chequecuittitular, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, ordendepago_idordendepago, movimientocaja_idmovimientocaja, cheque_idcheque, movimientobanco_idmovimientobanco', 'safe', 'on'=>'search'),
+			array('tipoordendepago, importe, transferenciabanco, idcheque, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, caja_idcaja, chequera', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('iddetalleordendepago, tipoordendepago, importe, idcheque, transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, ordendepago_idordendepago,chequetitular,chequecuittitular, caja_idcaja, chequera', 'safe', 'on'=>'search'),
 			array('tipoordendepago','validarDatosCheque'),
 			array('tipoordendepago','validarDatosTransfe'),
+			array('idcheque','validarChequeEstado'),
+			//array('idcheque','validarEstadoCheque'), esto para ver si estaba en estado de cobro el cheque pero no se va a usar
 		);
 	}
 
 	public function relations() {
 		return array(
-			'chequeIdcheque' => array(self::BELONGS_TO, 'Cheque', 'cheque_idcheque'),
-			'movimientobancoIdmovimientobanco' => array(self::BELONGS_TO, 'Movimientobanco', 'movimientobanco_idmovimientobanco'),
-			'movimientocajaIdmovimientocaja' => array(self::BELONGS_TO, 'Movimientocaja', 'movimientocaja_idmovimientocaja'),
 			'ordendepagoIdordendepago' => array(self::BELONGS_TO, 'Ordendepago', 'ordendepago_idordendepago'),
 		);
 	}
@@ -81,20 +72,15 @@ abstract class BaseDetalleordendepago extends GxActiveRecord {
 			'iddetalleordendepago' => Yii::t('app', 'Iddetalleordendepago'),
 			'tipoordendepago' => Yii::t('app', 'Tipoordendepago'),
 			'importe' => Yii::t('app', 'Importe'),
-			'transferenciabanco' => Yii::t('app', 'Banco'),
-			'chequetitular' => Yii::t('app', 'Chequetitular'),
-			'chequecuittitular' => Yii::t('app', 'Titular'),
+			'transferenciabanco' => Yii::t('app', 'Cta.Bancaria'),
 			'chequefechacobro' => Yii::t('app', 'Fecha cobro'),
-			'chequefechaingreso' => Yii::t('app', 'Fecha ingreso'),
+			'chequefechaingreso' => Yii::t('app', 'Fecha Recepción'),
+			'idcheque' => Yii::t('app', 'Id. Cheque'),
+			'chequetitular' => Yii::t('app', 'Titular'),
+			'chequecuittitular' => Yii::t('app', 'CUIT Titular'),
 			'nrocheque' => Yii::t('app', 'Nro. cheque'),
 			'chequebanco' => Yii::t('app', 'Banco'),
 			'ordendepago_idordendepago' => null,
-			'movimientocaja_idmovimientocaja' => null,
-			'cheque_idcheque' => null,
-			'movimientobanco_idmovimientobanco' => null,
-			'chequeIdcheque' => null,
-			'movimientobancoIdmovimientobanco' => null,
-			'movimientocajaIdmovimientocaja' => null,
 			'ordendepagoIdordendepago' => null,
 		);
 	}
@@ -106,16 +92,17 @@ abstract class BaseDetalleordendepago extends GxActiveRecord {
 		$criteria->compare('tipoordendepago', $this->tipoordendepago);
 		$criteria->compare('importe', $this->importe);
 		$criteria->compare('transferenciabanco', $this->transferenciabanco, true);
-		$criteria->compare('chequetitular', $this->chequetitular, true);
-		$criteria->compare('chequecuittitular', $this->chequecuittitular, true);
+		$criteria->compare('idcheque', $this->idcheque, true);
 		$criteria->compare('chequefechacobro', $this->chequefechacobro, true);
 		$criteria->compare('chequefechaingreso', $this->chequefechaingreso, true);
+		$criteria->compare('chequetitular', $this->chequetitular, true);
+		$criteria->compare('chequecuittitular', $this->chequecuittitular, true);
 		$criteria->compare('nrocheque', $this->nrocheque, true);
 		$criteria->compare('chequebanco', $this->chequebanco);
+		
+		$criteria->compare('caja_idcaja', $this->caja_idcaja);
+		$criteria->compare('chequera', $this->chequera);
 		$criteria->compare('ordendepago_idordendepago', $this->ordendepago_idordendepago);
-		$criteria->compare('movimientocaja_idmovimientocaja', $this->movimientocaja_idmovimientocaja);
-		$criteria->compare('cheque_idcheque', $this->cheque_idcheque);
-		$criteria->compare('movimientobanco_idmovimientobanco', $this->movimientobanco_idmovimientobanco);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
@@ -138,8 +125,8 @@ abstract class BaseDetalleordendepago extends GxActiveRecord {
     	if( $this->tipoordendepago == 1){
     		
     		switch (true){
-    			case ($this->chequebanco == null):
-    				$this->addError('chequebanco', 'Banco No puede ser nulo');
+    			case ($this->chequera == null):
+    				$this->addError('chequera', 'Chequera No puede ser nula');
     				break;
     			case ($this->chequefechaingreso == null):
     				$this->addError('chequefechaingreso', 'Fecha recepción No puede ser nulo');
@@ -166,4 +153,18 @@ abstract class BaseDetalleordendepago extends GxActiveRecord {
    				$this->addError('transferenciabanco', 'No puede ser nulo');
   			}
     }
+	public function validarChequeEstado($attribute,$params){
+      	if($this->tipoordendepago == 3){  // es un endosaje?
+		$modelcheque=Cheque::model()->findByPk($this->idcheque);
+      	
+    	if( $modelcheque->estado != 2){
+    		if($modelcheque->estado == 3){
+    		$this->addError('idcheque', 'Cheque cobrado por caja.');
+		}
+    	if($modelcheque->estado == 4){
+    		$this->addError('idcheque', 'Cheque endozado.');
+		}
+   	  }
+	 }
+	}
 }

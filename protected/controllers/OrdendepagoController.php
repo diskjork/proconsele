@@ -76,195 +76,55 @@ class OrdendepagoController extends Controller
 		if (isset($_POST['Ordendepago'])) {
 			$model->attributes=$_POST['Ordendepago'];
 			//$nuevos=$this->nuevosElementosValidados($_POST['Ordendepago']);
+ 			
 			
-		if (isset($_POST['Detalleordendepago']['tipoordendepago'])){
-   				$cantidadElementos=count($_POST['Detalleordendepago']['tipoordendepago']); 
-				
-   				for($i=0;$i<$cantidadElementos;$i++){
-				/*	
-   					//para efectivo
-					if($_POST['Detalleordendepago']['tipoordendepago'][$i] == 0){ 
-						$itemEfectivo[$i]['importe']=$_POST['Detalleordendepago']['importe'][$i];
-					}
-					 //para cheque
-					if($_POST['Detalleordendepago']['tipoordendepago'][$i] == 1){
-						$itemCheque[$i]['chequebanco']=$_POST['Detalleordendepago']['chequebanco'][$i];
-						$itemCheque[$i]['chequefechaingreso']=$_POST['Detalleordendepago']['chequefechaingreso'][$i];
-						$itemCheque[$i]['chequetitular']=$_POST['Detalleordendepago']['chequetitular'][$i];
-						$itemCheque[$i]['chequecuittitular']=$_POST['Detalleordendepago']['chequecuittitular'][$i];
-						$itemCheque[$i]['chequefechacobro']=$_POST['Detalleordendepago']['chequefechacobro'][$i];
-						$itemCheque[$i]['chequenumero']=$_POST['Detalleordendepago']['nrocheque'][$i];
-						$itemCheque[$i]['importe']=$_POST['Detalleordendepago']['importe'][$i];
-					}
-					//para transferencia
-					if($_POST['Detalleordendepago']['tipoordendepago'][$i] == 2){ 
-						$itemTransf[$i]['transferenciabanco']=$_POST['Detalleordendepago']['transferenciabanco'][$i];
-						$itemTransf[$i]['importe']=$_POST['Detalleordendepago']['importe'][$i];
-						
-					}*/
-					//para cheque de terceros para endozar
-					if($_POST['Detalleordendepago']['tipoordendepago'][$i] == 3){
-						$itemCheque_terc[$i]['chequebanco']=$_POST['Detalleordendepago']['chequebanco'][$i];
-						$itemCheque_terc[$i]['chequefechaingreso']=$_POST['Detalleordendepago']['chequefechaingreso'][$i];
-						$itemCheque_terc[$i]['chequetitular']=$_POST['Detalleordendepago']['chequetitular'][$i];
-						$itemCheque_terc[$i]['chequecuittitular']=$_POST['Detalleordendepago']['chequecuittitular'][$i];
-						$itemCheque_terc[$i]['chequefechacobro']=$_POST['Detalleordendepago']['chequefechacobro'][$i];
-						$itemCheque_terc[$i]['chequenumero']=$_POST['Detalleordendepago']['nrocheque'][$i];
-						$itemCheque_terc[$i]['importe']=$_POST['Detalleordendepago']['importe'][$i];
-						$itemCheque_terc[$i]['idcheque']=$_POST['Detalleordendepago']['idcheque'][$i];
-					}
-   					
-				}
-   			}  
 			
-   			//elementos nuevos despues de una validación
-   			if (isset($_POST['Detalleordendepago']['n__'])){
-   				//$nuevos= $this->nuevosElementosNoValidados($_POST['Detalleordendepago']['n__']);
-   				$cantidadElementos=count($_POST['Detalleordendepago']['n__']); 
-				
-   				for($i=0;$i<$cantidadElementos;$i++){
-					/*
-   					//para efectivo
-					if($_POST['Detalleordendepago']['n__'][$i]['tipoordendepago'] == 0){ 
-						$itemEfectivo[$i]['importe']=$_POST['Detalleordendepago']['n__'][$i]['importe'];
-					}
-					 //para cheque
-					if($_POST['Detalleordendepago']['n__'][$i]['tipoordendepago'] == 1){
-						$itemCheque[$i]['chequebanco']=$_POST['Detalleordendepago']['n__'][$i]['chequebanco'];
-						$itemCheque[$i]['chequefechaingreso']=$_POST['Detalleordendepago']['n__'][$i]['chequefechaingreso'];
-						$itemCheque[$i]['chequetitular']=$_POST['Detalleordendepago']['n__'][$i]['chequetitular'];
-						$itemCheque[$i]['chequecuittitular']=$_POST['Detalleordendepago']['n__'][$i]['chequecuittitular'];
-						$itemCheque[$i]['chequefechacobro']=$_POST['Detalleordendepago']['n__'][$i]['chequefechacobro'];
-						$itemCheque[$i]['chequenumero']=$_POST['Detalleordendepago']['n__'][$i]['nrocheque'];
-						$itemCheque[$i]['importe']=$_POST['Detalleordendepago']['n__'][$i]['importe'];
-					}
-					//para transferencia
-					if($_POST['Detalleordendepago']['n__'][$i]['tipoordendepago'] == 2){ 
-						$itemTransf[$i]['transferenciabanco']=$_POST['Detalleordendepago']['n__'][$i]['transferenciabanco'];
-						$itemTransf[$i]['importe']=$_POST['Detalleordendepago']['n__'][$i]['importe'];
-						
-					}
-					
-					*/
-   				 //para cheque de terceros para endozar
-					if($_POST['Detalleordendepago']['n__'][$i]['tipoordendepago'] == 3){
-						$itemCheque_terc[$i]['chequebanco']=$_POST['Detalleordendepago']['n__'][$i]['chequebanco'];
-						$itemCheque_terc[$i]['chequefechaingreso']=$_POST['Detalleordendepago']['n__'][$i]['chequefechaingreso'];
-						$itemCheque_terc[$i]['chequetitular']=$_POST['Detalleordendepago']['n__'][$i]['chequetitular'];
-						$itemCheque_terc[$i]['chequecuittitular']=$_POST['Detalleordendepago']['n__'][$i]['chequecuittitular'];
-						$itemCheque_terc[$i]['chequefechacobro']=$_POST['Detalleordendepago']['n__'][$i]['chequefechacobro'];
-						$itemCheque_terc[$i]['chequenumero']=$_POST['Detalleordendepago']['n__'][$i]['nrocheque'];
-						$itemCheque_terc[$i]['importe']=$_POST['Detalleordendepago']['n__'][$i]['importe'];
-						$itemCheque_terc[$i]['idcheque']=$_POST['Detalleordendepago']['n__'][$i]['idcheque'];
-					}
-				}
-   			} 
+			
 			if( //validate detail before saving the master
             MultiModelForm::validate($member,$validatedMembers,$deleteItems) &&
             $model->save())
            {
-   
+          	 /*if(isset($_POST['Detalleordendepago']['tipoordendepago'])){
+				$cantidadElementos=count($_POST['Detalleordendepago']['tipoordendepago']);
+				for($i=0;$i<$cantidadElementos;$i++){
+					if($_POST['Detalleordendepago']['tipoordendepago'][$i] == 3){
+							$idcheque=$_POST['Detalleordendepago']['idcheque'][$i];
+							$member[$i]->validate('idcheque');
+						}
+				}
+          	 }*/
              //the value for the foreign key 'groupid'
              $masterValues = array ('ordendepago_idordendepago'=>$model->idordendepago);
             
             
              if (MultiModelForm::save($member,$validatedMembers,$deleteMembers,$masterValues))
              {
-             	/*
-             //PARA GENERAR EL MOVIMIENTO CAJA	
-             	$datos=null;
-				if(isset($itemEfectivo)){
-					foreach ($itemEfectivo as $array){
-						foreach ($array as $key => $valor){
-							if($key == "importe"){
-								$datos['idordendepago']=$model->idordendepago;
-								$proveedor=$this->idProveedor($model->ctacteprov_idctacteprov);
-								$datos['nombreprov']=$proveedor[0]['nombreprov'];
-								$datos['fecha']=$_POST['Ordendepago']['fecha'];
-								$datos['importe']=$valor;
-								$this->nuevoMovCaja($datos);
-							}
-						}
-					}
-				}
-			//PARA GENERAR LOS CHEQUES DE ORDENDEPAGO
-				$datos=null;
-				if(isset($itemCheque)){
-					foreach ($itemCheque as $array){
-						foreach ($array as $key=>$valor){
-							$datos['idordendepago']=$model->idordendepago;
-							$proveedor=$this->idProveedor($model->ctacteprov_idctacteprov);
-							$datos['idprov']=$proveedor[0]['idprov'];
-							$datos['nombreprov']=$proveedor[0]['nombreprov'];
-							
-							switch ($key){
-								case "chequebanco":
-									$datos['banco']=$valor;
-									break;
-								case "chequefechaingreso":
-									$datos['fechaingreso']=$valor;
-									break;
-								case "chequetitular":
-									$datos['titular']=$valor;
-									break;
-								case "chequecuittitular":
-									$datos['cuittitular']=$valor;
-									break;
-								case "chequefechacobro":
-									$datos['fechacobro']=$valor;
-									break;
-								case "chequenumero":
-									$datos['chequenumero']=$valor;
-									break;
-								case "importe":
-									$datos['importe']=$valor;
-									break;
-							}
-						}
-						$this->nuevoCheque($datos);
-					}
-				}
-			//PARA GENERAR LAS TRANSFERENCIAS
-				$datos=null;
-				if(isset($itemTransf)){
-					foreach ($itemTransf as $array){
-						foreach ($array as $key=>$valor){
-							$datos['idordendepago']=$model->idordendepago;
-							$proveedor=$this->idProveedor($model->ctacteprov_idctacteprov);
-							$datos['nombreprov']=$proveedor[0]['nombreprov'];
-							$datos['fecha']=$_POST['Ordendepago']['fecha'];
-							switch ($key){
-								case "transferenciabanco":
-									$datos['transbanco']=$valor;
-									break;
-								case "importe":
-									$datos['importe']=$valor;
-									break;
-							}
-						}
-						$this->nuevaTransf($datos);
-					}	
-				} */
-		//PARA CARGAR Y MODIFICAR EL ESTADO DEL  LOS CHEQUES DE TERCEROS
-				$datos=null;
-				if(isset($itemCheque_terc)){
-					
-					foreach ($itemCheque_terc as $array){
-						foreach ($array as $key=>$valor){
-							$datos['idordendepago']=$model->idordendepago;
-							$proveedor=$this->idProveedor($model->ctacteprov_idctacteprov);
-							$datos['idprov']=$proveedor[0]['idprov'];
-							$datos['nombreprov']=$proveedor[0]['nombreprov'];
-							
-							if($key == "idcheque"){
-								$datos['idcheque']=$valor;
-							}
-						}
-						$this->cargarChequeTercero($datos);
-					}
-				}	
-							
-							
+             	
+             $prov=Proveedor::model()->find("ctacteprov_idctacteprov=:idctacte",
+             					array(":idctacte"=>$_POST['Ordendepago']['ctacteprov_idctacteprov']));
+             	
+             	
+             	//ASIENTO PARA LA ORDEN DE PAGO
+             	$asiento=new Asiento;
+             	$asiento->fecha=$_POST['Ordendepago']['fecha'];
+             	$asiento->descripcion="Orden de pago N°".$masterValues['ordendepago_idordendepago']." ".$prov->nombre;
+             	$asiento->ordendepago_idordendepago=$masterValues['ordendepago_idordendepago'];
+             	if($asiento->save()){
+             		$nroasiento=$asiento->idasiento;
+             		//Detalle asiento para la contra parte del asiento "DEBE"
+             		$DeAsCTACTE=new Detalleasiento;
+             		$DeAsCTACTE->debe=$_POST['Ordendepago']['importe'];
+             		$DeAsCTACTE->cuenta_idcuenta=48; //211100 Proveedores compras varias
+             		$DeAsCTACTE->asiento_idasiento=$nroasiento;
+             		$DeAsCTACTE->proveedor_idproveedor=$prov->idproveedor;
+             		
+             		if($DeAsCTACTE->save()){
+             			$post=$_POST;
+             			$this->nuevoElem($validatedMembers, $_POST['Ordendepago']['fecha'], $nroasiento,$masterValues,$prov);
+		             	
+             		}
+             	}
+             	
 //para  sumar en el haber de cta cte del PROVEEDOR----------
 			$idctacteprov=$model->ctacteprov_idctacteprov;
 			$importeDetalle=$_POST['Ordendepago']['importe'];
@@ -276,15 +136,14 @@ class OrdendepagoController extends Controller
            	$modelDeCCprov->fecha=$_POST['Ordendepago']['fecha'];
            	$modelDeCCprov->descripcion="ORDEN DE PAGO Nro:".$model->idordendepago."";
            	$modelDeCCprov->tipo= 1; //tipo ordendepago,0 para compra
-           	$modelDeCCprov->iddocumento=$model->idordendepago;
+           	$modelDeCCprov->ordendepago_idordendepago=$model->idordendepago;
            	$modelDeCCprov->haber=$model->importe;
            	$modelDeCCprov->ctacteprov_idctacteprov=$model->ctacteprov_idctacteprov;
            	$modelDeCCprov->save();
            	
            	Yii::app()->user->setFlash('success', "<strong>Orden de pago creada correctamente.</strong>");
 			$this->redirect(array('admin'));			
-            
-			//$this->redirect(array('view','id'=>$model->idordendepago));
+           
              }
 			}
 		}
@@ -326,26 +185,14 @@ public function actionUpdate($id)
 					if (isset($_POST['Detalleordendepago']['u__'][$i]['tipoordendepago'])){
 											
 						//datos nuevos traidos por POST
+						$itemUpdate[$i]['totalordendepago']=$_POST['Detalleordendepago']['importe'];
 						$itemUpdate[$i]['iddetalleordendepago']=$iddetalle_nuevo;
 						$itemUpdate[$i]['tipoordendepago']=$_POST['Detalleordendepago']['u__'][$i]['tipoordendepago'];
 						$itemUpdate[$i]['transbanco']=$_POST['Detalleordendepago']['u__'][$i]['transferenciabanco'];
 						$itemUpdate[$i]['banco']=$_POST['Detalleordendepago']['u__'][$i]['chequebanco'];
 						$itemUpdate[$i]['fecha']=$model->fecha;
-						
-						//$itemUpdate[$i]['fechaingreso']=$_POST['Detalleordendepago']['u__'][$i]['chequefechaingreso'];
-						if($_POST['Detalleordendepago']['u__'][$i]['chequefechaingreso'] != null){
-							$fechaingreso = DateTime::createFromFormat('d/m/Y', $_POST['Detalleordendepago']['u__'][$i]['chequefechaingreso']);
-							$itemUpdate[$i]['fechaingreso']=$fechaingreso->format('Y-m-d');
-						}else {
-							$itemUpdate[$i]['fechaingreso']=$_POST['Detalleordendepago']['u__'][$i]['chequefechaingreso'];
-						}
-						//$itemUpdate[$i]['fechacobro']=$_POST['Detalleordendepago']['u__'][$i]['chequefechacobro'];
-						if($_POST['Detalleordendepago']['u__'][$i]['chequefechacobro'] != null){
-							$fechacobro = DateTime::createFromFormat('d/m/Y', $_POST['Detalleordendepago']['u__'][$i]['chequefechacobro']);
-							$itemUpdate[$i]['fechacobro']=$fechacobro->format('Y-m-d');
-						}else {
-							$itemUpdate[$i]['fechacobro']=$_POST['Detalleordendepago']['u__'][$i]['chequefechacobro'];
-						}
+						$itemUpdate[$i]['fechaingreso']=$_POST['Detalleordendepago']['u__'][$i]['chequefechaingreso'];
+						$itemUpdate[$i]['fechacobro']=$_POST['Detalleordendepago']['u__'][$i]['chequefechacobro'];
 						$itemUpdate[$i]['idcheque']=$_POST['Detalleordendepago']['u__'][$i]['idcheque'];
 						$itemUpdate[$i]['titular']=$_POST['Detalleordendepago']['u__'][$i]['chequetitular'];
 						$itemUpdate[$i]['cuittitular']=$_POST['Detalleordendepago']['u__'][$i]['chequecuittitular'];
@@ -354,34 +201,29 @@ public function actionUpdate($id)
 						$itemUpdate[$i]['nombreprov']=$proveedor[0]['nombreprov'];
 						$itemUpdate[$i]['idprov']=$proveedor[0]['idprov'];
 						$itemUpdate[$i]['idordendepago']=$DC_trabajo->ordendepago_idordendepago;
+						$itemUpdate[$i]['caja_idcaja']=$_POST['Detalleordendepago']['u__'][$i]['caja_idcaja'];
+						$itemUpdate[$i]['chequera']=$_POST['Detalleordendepago']['u__'][$i]['chequera'];
+						
 						
 						//Datos del detalle ya guardado-----------------------------------
 						$datos[$i]['iddetalleordendepago']=$iddetalle_nuevo;
 						$datos[$i]['idordendepago']=$DC_trabajo->ordendepago_idordendepago;
 						$datos[$i]['tipoordendepago']=$DC_trabajo->tipoordendepago;
 						$datos[$i]['nombreprov']=$proveedor[0]['nombreprov'];
-						$fecha = DateTime::createFromFormat('d/m/Y', $model->fecha);
-						$datos[$i]['fecha']=$fecha->format('Y-m-d');
+						$datos[$i]['fecha']=$model->fecha;
 						$datos[$i]['importe']=doubleval($DC_trabajo->importe);
-						$datos[$i]['chequenumero']=(int) $DC_trabajo->nrocheque;
-						if($DC_trabajo->chequefechaingreso != null){
-							$fechaingreso = DateTime::createFromFormat('d/m/Y', $DC_trabajo->chequefechaingreso);
-							$datos[$i]['fechaingreso']=$fechaingreso->format('Y-m-d');
-						}else {
-							$datos[$i]['fechaingreso']=$DC_trabajo->chequefechaingreso;
-						}
-						if($DC_trabajo->chequefechacobro != null){
-							$fechacobro = DateTime::createFromFormat('d/m/Y', $DC_trabajo->chequefechacobro);
-							$datos[$i]['fechacobro']=$fechacobro->format('Y-m-d');
-						}else {
-							$datos[$i]['fechacobro']=$DC_trabajo->chequefechaingreso;
-						}
+						$datos[$i]['chequenumero']=$DC_trabajo->nrocheque;
+						$datos[$i]['fechaingreso']=$DC_trabajo->chequefechaingreso;
+						$datos[$i]['fechacobro']=$DC_trabajo->chequefechaingreso;
 						$datos[$i]['idcheque']=$DC_trabajo->idcheque;
 						$datos[$i]['titular']=$DC_trabajo->chequetitular;
 						$datos[$i]['cuittitular']=$DC_trabajo->chequecuittitular;
 						$datos[$i]['banco']=$DC_trabajo->chequebanco;
 						$datos[$i]['idprov']=$proveedor[0]['idprov'];
 						$datos[$i]['transbanco']=$DC_trabajo->transferenciabanco;
+						$datos[$i]['chequera']=$DC_trabajo->chequera;
+						$datos[$i]['caja_idcaja']=$DC_trabajo->caja_idcaja;
+						
 							
 					}else {
 						//elementos borrados
@@ -389,8 +231,6 @@ public function actionUpdate($id)
 						$elem_borrados_DCob[$i]['idordendepago']=$DC_trabajo->ordendepago_idordendepago;
 						$elem_borrados_DCob[$i]['tipoordendepago']=$DC_trabajo->tipoordendepago;
 						$elem_borrados_DCob[$i]['nombreprov']=$proveedor[0]['nombreprov'];
-						$fecha = DateTime::createFromFormat('d/m/Y', $model->fecha);
-						$elem_borrados_DCob[$i]['fecha']=$fecha->format('Y-m-d');
 						$elem_borrados_DCob[$i]['importe']=doubleval($DC_trabajo->importe);
 						$elem_borrados_DCob[$i]['chequenumero']=$DC_trabajo->nrocheque;
 						$elem_borrados_DCob[$i]['fechaingreso']=$DC_trabajo->chequefechaingreso;
@@ -406,79 +246,11 @@ public function actionUpdate($id)
 			}
 			
 			
-//elementos nuevos ----------------------------------------------------------
-		if (isset($_POST['Detalleordendepago']['tipoordendepago'])){
-   				$cantidadElemNuevos=count($_POST['Detalleordendepago']['tipoordendepago']); 
-				
-   				for($i=0;$i<$cantidadElemNuevos;$i++){
-					/*
-   					//para efectivo
-					if(($_POST['Detalleordendepago']['tipoordendepago'][$i] == 0) && ($_POST['Detalleordendepago']['importe'][$i]!= null)){ 
-						
-						$itemEfectivo[$i]['importe']=$_POST['Detalleordendepago']['importe'][$i];
-					}
-					 //para cheque
-					if($_POST['Detalleordendepago']['tipoordendepago'][$i] == 1){
-						$itemCheque[$i]['chequebanco']=$_POST['Detalleordendepago']['chequebanco'][$i];
-						$itemCheque[$i]['chequefechaingreso']=$_POST['Detalleordendepago']['chequefechaingreso'][$i];
-						$itemCheque[$i]['chequefechacobro']=$_POST['Detalleordendepago']['chequefechacobro'][$i];
-						$itemCheque[$i]['chequetitular']=$_POST['Detalleordendepago']['chequetitular'][$i];
-						$itemCheque[$i]['chequecuittitular']=$_POST['Detalleordendepago']['chequecuittitular'][$i];
-						$itemCheque[$i]['chequenumero']=$_POST['Detalleordendepago']['nrocheque'][$i];
-						$itemCheque[$i]['importe']=$_POST['Detalleordendepago']['importe'][$i];
-					}
-					//para transferencia
-					if($_POST['Detalleordendepago']['tipoordendepago'][$i] == 2){ 
-						$itemTransf[$i]['transferenciabanco']=$_POST['Detalleordendepago']['transferenciabanco'][$i];
-						$itemTransf[$i]['importe']=$_POST['Detalleordendepago']['importe'][$i];
-					}
-					*/
-   				//para cheque de terceros para endozar
-					if($_POST['Detalleordendepago']['tipoordendepago'][$i] == 3){
-						$itemCheque_terc[$i]['idcheque']=$_POST['Detalleordendepago']['idcheque'][$i];
-					}
-				}
-   			}
-// elementos nuevos despues de un error de validación
-   			if (isset($_POST['Detalleordendepago']['n__'])){
-   				//$nuevos= $this->nuevosElementosNoValidados($_POST['Detalleordendepago']['n__']);
-   				$cantidadElementos=count($_POST['Detalleordendepago']['n__']); 
-				
-   				for($i=0;$i<$cantidadElementos;$i++){
-					/*
-   					//para efectivo
-					if($_POST['Detalleordendepago']['n__'][$i]['tipoordendepago'] == 0){ 
-						$itemEfectivo[$i]['importe']=$_POST['Detalleordendepago']['n__'][$i]['importe'];
-					}
-					 //para cheque
-					if($_POST['Detalleordendepago']['n__'][$i]['tipoordendepago'] == 1){
-						$itemCheque[$i]['chequebanco']=$_POST['Detalleordendepago']['n__'][$i]['chequebanco'];
-						$itemCheque[$i]['chequefechaingreso']=$_POST['Detalleordendepago']['n__'][$i]['chequefechaingreso'];
-						$itemCheque[$i]['chequefechacobro']=$_POST['Detalleordendepago']['n__'][$i]['chequefechacobro'];
-						$itemCheque[$i]['chequetitular']=$_POST['Detalleordendepago']['n__'][$i]['chequetitular'];
-						$itemCheque[$i]['chequecuittitular']=$_POST['Detalleordendepago']['n__'][$i]['chequecuittitular'];
-						$itemCheque[$i]['chequenumero']=$_POST['Detalleordendepago']['n__'][$i]['nrocheque'];
-						$itemCheque[$i]['importe']=$_POST['Detalleordendepago']['n__'][$i]['importe'];
-					}
-					//para transferencia
-					if($_POST['Detalleordendepago']['n__'][$i]['tipoordendepago'] == 2){ 
-						$itemTransf[$i]['transferenciabanco']=$_POST['Detalleordendepago']['n__'][$i]['transferenciabanco'];
-						$itemTransf[$i]['importe']=$_POST['Detalleordendepago']['n__'][$i]['importe'];
-						
-					}
-					*/
-   				//para cheque de terceros para endozar
-					if($_POST['Detalleordendepago']['n__'][$i]['tipoordendepago'] == 3){
-						$itemCheque_terc[$i]['idcheque']=$_POST['Detalleordendepago']['n__'][$i]['idcheque'];
-					}
-				}
-   			} 
-			
 				$masterValues = array ('ordendepago_idordendepago'=>$model->idordendepago);
 				//para comprobar si el importe ha sido modificado
 				$llave=null;
 				$ordendepagoguardada=Ordendepago::model()->findByPk($model->idordendepago);//modelo ordendepago guardado
-				if($ordendepagoguardada->importe != $_POST['Ordendepago']['importe']){
+				if(($ordendepagoguardada->importe != $_POST['Ordendepago']['importe']) || ($ordendepagoguardada->fecha != $_POST['Ordendepago']['fecha'])){
 					$llave=$ordendepagoguardada->importe;
 				}
 			if( //Save the master model after saving valid members
@@ -491,9 +263,10 @@ public function actionUpdate($id)
            	if($llave != null){
            		$importeviejo=$llave;
            		$importenuevo=$model->importe;
+           		$fecha=$model->fecha;
            		$idctacte=$model->ctacteprov_idctacteprov;
            		$this->modificarImporteCtaCte($importeviejo, $importenuevo, $idctacte);
-           		$this->modImpDetalleCtacte($idctacte, $id, $importenuevo);
+           		$this->modImpDetalleCtacte($idctacte, $id, $importenuevo,$fecha);
            	}
            	
           //Si se ha modificado un detalle de ordendepago..
@@ -501,16 +274,19 @@ public function actionUpdate($id)
           		foreach ($itemUpdate as $key_uno=>$valor_uno){
           			foreach($valor_uno as $key_dos=>$valor_dos){
           				if($key_dos == "tipoordendepago"){
+          					//para cambiar importe asiento y detalle asiento 11
+          					$this->cambioAsiento($valor_uno);
           					//compara si el tipo de ordendepago se ha modificado o no en un item
           					if($valor_dos != $datos[$key_uno]['tipoordendepago']){
           						$tipoguardado=$datos[$key_uno]['tipoordendepago'];
           						$this->cambioTipoBorrado($tipoguardado, $datos[$key_uno]);
           						$this->resetDetalle($datos[$key_uno]['iddetalleordendepago']);
           						$this->cambioTipoNuevoDetalle($valor_uno);
-          					
+          						$this->cambioDetalleAsiento($tipoguardado, $valor_uno);
+          						
           					} else { // cuando el tipo de ordendepago se mantuvo
           						       						 
-          						$this->modDeActulizacionDeItems($datos[$key_uno], $valor_uno);
+          						$this->modUpdateItemsDetAsiento($datos[$key_uno], $valor_uno);
           					}
           				}
           			}
@@ -520,110 +296,27 @@ public function actionUpdate($id)
           	
           	//si existe un elemento detalleordendepago borrado 
           	if(isset($elem_borrados_DCob)){
-          		foreach($elem_borrados_DCob as $keyBorr_uno=>$valorBorr_uno){
-          			foreach ($valorBorr_uno as $keyborr_dos=>$valorborr_dos){
-          				if($keyborr_dos == "tipoordendepago"){
-          					$tipoguardadoBorr=$valorborr_dos;
-          					$this->cambioTipoBorrado($tipoguardadoBorr, $valorBorr_uno);
-          				}
-          				
-          			}
-          		}
-          		
+	          	foreach($elem_borrados_DCob as $keyBorr_uno=>$valorBorr_uno){
+	          			foreach ($valorBorr_uno as $keyborr_dos=>$valorborr_dos){
+	          				$this->cambioAsiento($valorBorr_uno);
+	          				if($keyborr_dos == "tipoordendepago"){
+	          					
+	          					$tipoguardadoBorr=$valorborr_dos;
+	          					$this->cambioTipoBorrado($tipoguardadoBorr, $valorBorr_uno);
+	          				}
+	          				if($keyborr_dos == "iddetalleordendepago"){
+	          					$this->borradoDetAsiento($valorborr_dos);
+	          				}
+	          			}
+	          		}
           	}
-        /*   
-           	//para el caso de elementos nuevos despues de actualizar la ordendepago
-           //PARA GENERAR EL MOVIMIENTO CAJA	
-             	$datos=null;
-				if(isset($itemEfectivo)){
-					foreach ($itemEfectivo as $array){
-						foreach ($array as $key => $valor){
-							if($key == "importe"){
-								$datos['idordendepago']=$model->idordendepago;
-								$proveedor=$this->idProveedor($model->ctacteprov_idctacteprov);
-								$datos['nombreprov']=$proveedor[0]['nombreprov'];
-								$datos['fecha']=$_POST['ordendepago']['fecha'];
-								$datos['importe']=$valor;
-								$this->nuevoMovCaja($datos);
-							}
-						}
-					}
-				}
-			//PARA GENERAR LOS CHEQUES DE ordendepago
-				$datos=null;
-				if(isset($itemCheque)){
-					foreach ($itemCheque as $array){
-						foreach ($array as $key=>$valor){
-							$datos['idordendepago']=$model->idordendepago;
-							$proveedor=$this->idProveedor($model->ctacteprov_idctacteprov);
-							$datos['idprov']=$proveedor[0]['idprov'];
-							$datos['nombreprov']=$proveedor[0]['nombreprov'];
-							
-							switch ($key){
-								case "chequebanco":
-									$datos['banco']=$valor;
-									break;
-								case "chequefechaingreso":
-									$datos['fechaingreso']=$valor;
-									break;
-								case "chequefechacobro":
-									$datos['fechacobro']=$valor;
-									break;
-								case "chequetitular":
-									$datos['titular']=$valor;
-									break;
-								case "chequecuittitular":
-									$datos['cuittitular']=$valor;
-									break;
-								case "chequenumero":
-									$datos['chequenumero']=$valor;
-									break;
-								case "importe":
-									$datos['importe']=$valor;
-									break;
-							}
-						}
-						$this->nuevoCheque($datos);
-					}
-				}
-			//PARA GENERAR LAS TRANSFERENCIAS
-				$datos=null;
-				if(isset($itemTransf)){
-					foreach ($itemTransf as $array){
-						foreach ($array as $key=>$valor){
-							$datos['idordendepago']=$model->idordendepago;
-							$proveedor=$this->idProveedor($model->ctacteprov_idctacteprov);
-							$datos['nombreprov']=$proveedor[0]['nombreprov'];
-							$datos['fecha']=$_POST['Ordendepago']['fecha'];
-							switch ($key){
-								case "transferenciabanco":
-									$datos['transbanco']=$valor;
-									break;
-								case "importe":
-									$datos['importe']=$valor;
-									break;
-							}
-						}
-						$this->nuevaTransf($datos);
-					}	
-				} */
-			//PARA CARGAR Y MODIFICAR EL ESTADO DEL  LOS CHEQUES DE TERCEROS
-				$datos=null;
-				if(isset($itemCheque_ter)){
-					foreach ($itemCheque_ter as $array){
-						foreach ($array as $key=>$valor){
-							$datos['idordendepago']=$model->idordendepago;
-							$proveedor=$this->idProveedor($model->ctacteprov_idctacteprov);
-							$datos['idprov']=$proveedor[0]['idprov'];
-							$datos['nombreprov']=$proveedor[0]['nombreprov'];
-							
-							if($key == "idcheque"){
-								$datos['idcheque']=$valor;
-							}
-						}
-						$this->cargarChequeTercero($datos);
-					}
-				}	
+        //para el caso de elementos nuevos despues de actualizar la cobranza
+	           	$asiento=Asiento::model()->find("ordendepago_idordendepago=:id",
+								array(':id'=>$id));
+				$prov=Proveedor::model()->find("ctacteprov_idctacteprov=:idctacte",
+	            	 array(":idctacte"=>$_POST['Ordendepago']['ctacteprov_idctacteprov']));
+				$this->nuevoElem($validatedMembers, $_POST['Ordendepago']['fecha'], $asiento->idasiento, $masterValues, $prov);
+				
           		Yii::app()->user->setFlash('success', "<strong>Orden de pago actualizada correctamente.</strong>");
 				$this->redirect(array('admin'));
 				//$this->redirect(array('view','id'=>$model->idordendepago));
@@ -765,19 +458,107 @@ public function actionDelete($id)
 			Yii::app()->end();
 		}
 	}
-	
+public function nuevoElem($validatedMembers,$fecha,$nroasiento,$masterValues,$prov){
+ 		// Contraparte del asiento "HABER"
+             $cantElm=count($validatedMembers);
+             for($a=0;$a<$cantElm;$a++){
+             	 $Deta=Detalleasiento::model()->find("iddetalleordendepago=:id",array(':id'=>$validatedMembers[$a]['iddetalleordendepago']));
+	             if($validatedMembers[$a]['tipoordendepago'] == 0 && (!isset($Deta))){ //efectivo
+		             $MovCaja=new Movimientocaja;
+		             $MovCaja->descripcion="Pago N°".$masterValues['ordendepago_idordendepago']." a ".$prov->nombre;
+		             $MovCaja->fecha=$fecha;
+		             $MovCaja->debeohaber=1;
+		             $MovCaja->haber=$validatedMembers[$a]['importe'];
+		             $MovCaja->iddetalleordendepago=$validatedMembers[$a]['iddetalleordendepago'];
+		             $MovCaja->cuenta_idcuenta=48; //211100 Proveedores compras varias
+		             $MovCaja->caja_idcaja=$validatedMembers[$a]['caja_idcaja'];
+		             if($MovCaja->save()){
+			             $DeAsCaja=new Detalleasiento;
+			             $DeAsCaja->haber=$validatedMembers[$a]['importe'];
+			             $cuentaCAJA=Caja::model()->findByPk($validatedMembers[$a]['caja_idcaja']);
+			             $DeAsCaja->cuenta_idcuenta=$cuentaCAJA->cuenta_idcuenta;
+			             $DeAsCaja->asiento_idasiento=$nroasiento;
+			             $DeAsCaja->iddetalleordendepago=$validatedMembers[$a]['iddetalleordendepago'];
+			             $DeAsCaja->save();
+			             }
+		             //print_r($MovCaja->getErrors());die();
+	             } elseif($validatedMembers[$a]['tipoordendepago'] == 1 && (!isset($Deta))){ //cheque
+		             //Nuevo cheque propio
+		             $Cheque=new Cheque;
+		             $Cheque->nrocheque=$validatedMembers[$a]['nrocheque'];
+		             $Cheque->titular=$validatedMembers[$a]['chequetitular'];
+		             $Cheque->cuittitular=$validatedMembers[$a]['chequecuittitular'];
+		             $Cheque->fechaingreso=$this->fechadmY($validatedMembers[$a]['chequefechaingreso']);
+		             $Cheque->fechacobro=$this->fechadmY($validatedMembers[$a]['chequefechacobro']);
+		             $Cheque->haber=$validatedMembers[$a]['importe'];
+		             $Cheque->debeohaber=1;
+		             $Cheque->chequera_idchequera=$validatedMembers[$a]['chequera'];
+		             $Cheque->estado=0;// estado a cobrar
+		             $Cheque->proveedor_idproveedor=$prov->idproveedor;
+		             $Cheque->iddetalleordendepago=$validatedMembers[$a]['iddetalleordendepago'];
+		             if($Cheque->save()){
+			             $DeAsCheque=new Detalleasiento;
+			             $DeAsCheque->haber=$validatedMembers[$a]['importe'];
+			             $cuentaChequera=Chequera::model()->findByPk($validatedMembers[$a]['chequera']);
+			             $DeAsCheque->cuenta_idcuenta=$cuentaChequera->cuenta_idcuenta;
+			             $DeAsCheque->asiento_idasiento=$nroasiento;
+			             $DeAsCheque->iddetalleordendepago=$validatedMembers[$a]['iddetalleordendepago'];
+			             $DeAsCheque->save();
+	             	}
+	             
+	             } elseif($validatedMembers[$a]['tipoordendepago'] == 2 && (!isset($Deta))){ 
+		             // Nuevo movimientobanco
+		             $MovBanco=new Movimientobanco;
+		             $MovBanco->descripcion="Pago N°".$masterValues['ordendepago_idordendepago']." ".$prov->nombre;
+		             $MovBanco->fecha=$fecha;
+		             $MovBanco->debeohaber=1;
+		             $MovBanco->haber=$validatedMembers[$a]['importe'];
+		             $MovBanco->ctabancaria_idctabancaria=$validatedMembers[$a]['transferenciabanco'];
+		             $MovBanco->cuenta_idcuenta=48;//211100 Proveedores compras varias
+		             $MovBanco->iddetalleordendepago=$validatedMembers[$a]['iddetalleordendepago'];
+		             if($MovBanco->save()){
+			             $cuentaCtabancaria=Ctabancaria::model()->findByPk($validatedMembers[$a]['transferenciabanco']);
+			             $DeAsTrasfer=new Detalleasiento;
+			             $DeAsTrasfer->haber=$validatedMembers[$a]['importe'];
+			             $DeAsTrasfer->cuenta_idcuenta=$cuentaCtabancaria->cuenta_idcuenta;
+			             $DeAsTrasfer->asiento_idasiento=$nroasiento;
+			             $DeAsTrasfer->iddetalleordendepago=$validatedMembers[$a]['iddetalleordendepago'];
+			             $DeAsTrasfer->save();
+		             }
+	             
+	             } 
+	             elseif($validatedMembers[$a]['tipoordendepago'] == 3 && (!isset($Deta))){ 
+		             // Cheque endozado
+		            $modelchequetercero=Cheque::model()->findByPk($validatedMembers[$a]['idcheque']);
+					    
+							$modelchequetercero->estado=4; //para que pase a estado endozado
+							$modelchequetercero->proveedor_idproveedor=$prov->idproveedor;
+							$modelchequetercero->iddetalleordendepago=$validatedMembers[$a]['iddetalleordendepago'];
+							if($modelchequetercero->save()){
+								 $DeAs=new Detalleasiento;
+					             $DeAs->haber=$validatedMembers[$a]['importe'];
+					             $DeAs->cuenta_idcuenta=5; //cuenta cheque de 3ros a cobrar
+					             $DeAs->asiento_idasiento=$nroasiento;
+					             $DeAs->iddetalleordendepago=$validatedMembers[$a]['iddetalleordendepago'];
+					             $DeAs->save();
+							}
+	             }    	          
+             } //for
+ 	}
+public function fechadmY($dato){
+		$fechaingreso = DateTime::createFromFormat('Y-m-d', $dato);
+	return $fechaingreso->format('d/m/Y');
+	}	
 public function nuevoMovCaja($datos){
-		
 							
 		$modelmovcaja=new Movimientocaja;
 		$modelmovcaja->descripcion= "Orden de pago N°".(string)$datos['idordendepago']." - ".(string)$datos['nombreprov']."-";
 		$modelmovcaja->fecha=$datos['fecha'];
 		$modelmovcaja->debeohaber=1;
 		$modelmovcaja->caja_idcaja=1;
-		$modelmovcaja->rubro_idrubro=6;
-		$modelmovcaja->formadepago_idformadepago=1;
 		$modelmovcaja->haber=$datos['importe'];
-		$modelmovcaja->id_de_trabajo=$datos['iddetalleordendepago'];
+		$modelmovcaja->caja_idcaja=$datos['caja_idcaja'];
+		$modelmovcaja->iddetalleordendepago=$datos['iddetalleordendepago'];
 		$modelmovcaja->save();
 			}
 	public function nuevoCheque($datos){
@@ -785,17 +566,16 @@ public function nuevoMovCaja($datos){
 		
 		$modelCheque= new Cheque;
 		$modelCheque->nrocheque=$datos['chequenumero'];
-		//$modelCheque->concepto="Orden de pago Nro.: ".(string)$datos['idordendepago']."-".(string)$datos['nombreprov']."-";
 		$modelCheque->fechaingreso=$datos['fechaingreso'];
 		$modelCheque->fechacobro=$datos['fechacobro'];
 		$modelCheque->titular=$datos['titular'];
 		$modelCheque->cuittitular=$datos['cuittitular'];
 		$modelCheque->haber=$datos['importe'];
 		$modelCheque->debeohaber=1;
-		$modelCheque->Banco_idBanco=$datos['banco'];
+		$modelCheque->chequera_idchequera=$datos['chequera'];
 		$modelCheque->proveedor_idproveedor=$datos['idprov'];
 		$modelCheque->estado=0;
-		$modelCheque->id_trabajo_ordendepago=$datos['iddetalleordendepago'];
+		$modelCheque->iddetalleordendepago=$datos['iddetalleordendepago'];
 		$modelCheque->save();
 		
 		
@@ -803,37 +583,35 @@ public function nuevoMovCaja($datos){
 	public function nuevaTransf($datos){
 		
 		$modelTransf= new Movimientobanco;
-		$modelTransf->descripcion="Orden de Pago N°:".(string)$datos['idordendepago']."-".(string)$datos['nombreprov']."-";
+		$modelTransf->descripcion="Pago N°:".(string)$datos['idordendepago']." a: ".(string)$datos['nombreprov'];
 		$modelTransf->fecha=$datos['fecha'];
 		$modelTransf->debeohaber=1;
 		$modelTransf->haber=$datos['importe'];
-		$modelTransf->rubro_idrubro=6;
-		$modelTransf->Banco_idBanco=$datos['transbanco'];
-		$modelTransf->formadepago_idformadepago=3;
-		$modelTransf->id_de_trabajo=$datos['iddetalleordendepago'];
+		$modelTransf->ctabancaria_idctabancaria=$datos['transbanco'];
+		$modelTransf->iddetalleordendepago=$datos['iddetalleordendepago'];
 		$modelTransf->save();
 			
 	}
 	public function cargarChequeTercero($datos){
 		$modelchequetercero=Cheque::model()->findByPk($datos['idcheque']);
-		if($modelchequetercero->estado == 2){ // está para cobrar?
-			$modelchequetercero->estado=4; //para que pase a estado endozado
-			$modelchequetercero->proveedor_idproveedor=$datos['idprov'];
-			if(isset($datos['iddetalleordendepago'])){
-				if($datos['iddetalleordendepago'] != null){
-					$modelchequetercero->id_trabajo_ordendepago=$datos['iddetalleordendepago'];
-				}
-			}
-			$modelchequetercero->save();
-		}else { 
-			if($modelcheque->estado == 3){
-    			$this->addError('chequetitular', 'Cheque cobrado por caja.');
-			}
-    		if($modelcheque->estado == 4){
-    			$this->addError('chequetitular', 'Cheque endozado.');
-			}
-		}
+		$modelchequetercero->estado=4; //para que pase a estado endozado
+		$modelchequetercero->proveedor_idproveedor=$datos['idprov'];
+		$modelchequetercero->iddetalleordendepago=$datos['iddetalleordendepago'];
+		$modelchequetercero->save();
 	}
+	
+	public function cambioAsiento($nuevo){
+		$Asiento=Asiento::model()->find("ordendepago_idordendepago=:id",
+					array(':id'=>$nuevo['idordendepago']));
+		$DeAs=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:cuenta",
+						array(':idasiento'=>$Asiento->idasiento,
+							  ':cuenta'=>48)); //211100 Proveedores compras varias
+		$DeAs->debe=$nuevo['totalordendepago'];
+		$DeAs->save();
+		$Asiento->fecha=$nuevo['fecha'];
+		$Asiento->save();
+	}
+	
 	public function idProveedor($idctacte){
 		$sql="SELECT proveedor.idproveedor as idprov, proveedor.nombre AS nombreprov  FROM proveedor,ctacteprov,ordendepago 
 				WHERE proveedor.idproveedor =ctacteprov.proveedor_idproveedor and  ctacteprov.idctacteprov = ".$idctacte." LIMIT 1;";
@@ -848,7 +626,7 @@ public function nuevoMovCaja($datos){
    		switch ($tipoguardado){
    			case 0 :
    				$commandmovi= Yii::app()->db->createCommand();
-				$commandmovi->delete('movimientocaja','id_de_trabajo=:id_de_trabajo',
+				$commandmovi->delete('movimientocaja','iddetalleordendepago=:id_de_trabajo',
 									array(
 									':id_de_trabajo'=>$datos['iddetalleordendepago'],
 								    )
@@ -857,7 +635,7 @@ public function nuevoMovCaja($datos){
    				break;
    			case 1 :
    				$commandmovi= Yii::app()->db->createCommand();
-   				$commandmovi->delete('cheque','id_trabajo_ordendepago=:id_de_trabajo',
+   				$commandmovi->delete('cheque','iddetalleordendepago=:id_de_trabajo',
 								array(
 								':id_de_trabajo'=>$datos['iddetalleordendepago'],
 								)
@@ -866,7 +644,7 @@ public function nuevoMovCaja($datos){
    				break;
    			case 2 :
    				$commandmovi= Yii::app()->db->createCommand();
-   				$commandmovi->delete('movimientobanco','id_de_trabajo=:id_de_trabajo',
+   				$commandmovi->delete('movimientobanco','iddetalleordendepago=:id_de_trabajo',
 								array(
 								':id_de_trabajo'=>$datos['iddetalleordendepago'],
 								)
@@ -878,14 +656,12 @@ public function nuevoMovCaja($datos){
 								 SET 								
 									`estado`=2,
 									`proveedor_idproveedor`= NULL,
-									`id_trabajo_ordendepago`= NULL
+									`iddetalleordendepago`= NULL
 								 WHERE  
 								 	idcheque=\"".$datos['idcheque']."\"  LIMIT 1;";
 						$dbCommand = Yii::app()->db->createCommand($sql);
 						$dbCommand->execute();
-	   				//$commandmovi= Yii::app()->db->createCommand();
-   				//$commandmovi->update('cheque',array('estado'=>'2','proveedor_idproveedor'=>null),'idcheque=:idcheque',
-					//			array(':idcheque'=>$datos['idcheque']));
+	   				
    				break;
    		}
    	}
@@ -898,10 +674,10 @@ public function nuevoMovCaja($datos){
 				break;
 			case 1:
 				
-				$fechaingreso= DateTime::createFromFormat('Y-m-d', $datos['fechaingreso']);
+				/*$fechaingreso= DateTime::createFromFormat('Y-m-d', $datos['fechaingreso']);
 				$datos['fechaingreso']=$fechaingreso->format('d/m/Y');
 				$fechacobro= DateTime::createFromFormat('Y-m-d', $datos['fechacobro']);
-				$datos['fechacobro']=$fechacobro->format('d/m/Y');
+				$datos['fechacobro']=$fechacobro->format('d/m/Y');*/
 				$this->nuevoCheque($datos);
 				break;
 			case 2:
@@ -913,26 +689,27 @@ public function nuevoMovCaja($datos){
 				break;
 		}
 	}
-	public function modDeActulizacionDeItems($datosviejos, $nuevosdatos){
+	public function modUpdateItemsDetAsiento($datosviejos, $nuevosdatos){
 		
-		$datosviejos['tipoordendepago']=(int)$datosviejos['tipoordendepago'];
+		//detalle asiento relacionado al detalleordendepago
+		$DeAs=Detalleasiento::model()->find("iddetalleordendepago=:id",
+				array(':id'=>$datosviejos['iddetalleordendepago']));
 		
 		switch ($datosviejos['tipoordendepago']){
 			
-			case 0:  // para un detalle del tipo efectivo
-				if($datosviejos['importe'] != $nuevosdatos['importe']){
-						$commandmovi= Yii::app()->db->createCommand();
-			   			$commandmovi->update('movimientocaja',array('debe'=>(double)$nuevosdatos['importe']),
-			   									
-			   									 'id_de_trabajo=:id_de_trabajo LIMIT 1',
-								array(
-								':id_de_trabajo'=>$datosviejos['iddetalleordendepago'],)
-   								);
-					}
+				case 0:  // para un detalle del tipo efectivo
+				$MovCaja=Movimientocaja::model()->find("iddetalleordendepago=:id",
+						array(':id'=>$datosviejos['iddetalleordendepago']));
+				$MovCaja->haber=$nuevosdatos['importe'];
+				$MovCaja->caja_idcaja=$nuevosdatos['caja_idcaja'];
+				$MovCaja->update();
+				$DeAs->haber=$nuevosdatos['importe'];
+				$DeAs->cuenta_idcuenta=$MovCaja->cajaIdcaja->cuenta_idcuenta;
+				$DeAs->update();
 				break;
 			
 			case 1: // para un detalle del cheque
-					if( ($datosviejos['banco'] != $nuevosdatos['banco']) || 
+					if( ($datosviejos['chequera'] != $nuevosdatos['chequera']) || 
 				    ($datosviejos['fechaingreso'] != $nuevosdatos['fechaingreso']) ||
 				    ($datosviejos['fechacobro'] != $nuevosdatos['fechacobro']) ||
 				    ($datosviejos['titular'] != $nuevosdatos['titular']) ||
@@ -940,21 +717,20 @@ public function nuevoMovCaja($datos){
 				    ($datosviejos['chequenumero'] != $nuevosdatos['chequenumero']) ||
 				    ($datosviejos['importe'] != $nuevosdatos['importe']) )
 				{
-					$sql="UPDATE `cheque`
-							 SET 
-								`nrocheque`=".$nuevosdatos['chequenumero'].",
-								`fechaingreso`=\"".$nuevosdatos['fechaingreso']."\",
-								`fechacobro`=\"".$nuevosdatos['fechacobro']."\",
-								`titular`=\"".$nuevosdatos['titular']."\",
-								`cuittitular`=\"".$nuevodatos['cuittitular']."\",
-								`haber`=".$nuevosdatos['importe'].",
-								`Banco_idBanco`=".$nuevosdatos['banco']."
-							 WHERE  
-							 	id_trabajo_ordendepago=\"".$datosviejos['iddetalleordendepago']."\" 
-							 	LIMIT 1;";
-					$dbCommand = Yii::app()->db->createCommand($sql);
-					$dbCommand->execute();
 					
+					$cheque=Cheque::model()->find("iddetalleordendepago=:id",
+							array(':id'=>$datosviejos['iddetalleordendepago']));
+					$cheque->nrocheque=$nuevosdatos['chequenumero'];
+					$cheque->fechaingreso=$nuevosdatos['fechaingreso'];
+					$cheque->fechacobro=$nuevosdatos['fechacobro'];
+					$cheque->titular=$nuevosdatos['titular'];
+					$cheque->cuittitular=$nuevosdatos['cuittitular'];
+					$cheque->haber=$nuevosdatos['importe'];
+					$cheque->chequera_idchequera=$nuevosdatos['chequera'];
+					$cheque->update();
+					
+					$DeAs->debe=$nuevosdatos['importe'];
+					$DeAs->update();
 									 
 				    }	
 				break;
@@ -963,34 +739,29 @@ public function nuevoMovCaja($datos){
 				if(	($datosviejos['transbanco'] != $nuevosdatos['transbanco']) || 
 					($datosviejos['importe'] != $nuevosdatos['importe']))
 					{
-						$sql="UPDATE `movimientobanco`
-							 SET 
-								`haber`=".$nuevosdatos['importe'].",
-								`Banco_idBanco`=".$nuevosdatos['transbanco']."
-							 WHERE  
-							 	id_de_trabajo=\"".$datosviejos['iddetalleordendepago']."\" 
-							 	LIMIT 1;";
-					$dbCommand = Yii::app()->db->createCommand($sql);
-					$dbCommand->execute();
-					/*echo $dbCommand->getText();
-					print_r($dbCommand->params);die();*/
+						$trans=Movimientobanco::model()->find("iddetalleordendepago=:id",
+								array(':id'=>$datosviejos['iddetalleordendepago']));
+						$trans->haber=$nuevosdatos['importe'];
+						$trans->ctabancaria_idctabancaria=$nuevosdatos['transbanco'];
+						$trans->update();	
+						
+						$DeAs->debe=$nuevosdatos['importe'];
+						$CtaBancaria=Ctabancaria::model()->findByPk($nuevosdatos['transbanco']);
+						$DeAs->cuenta_idcuenta=$CtaBancaria->cuenta_idcuenta;
+						$DeAs->update();
 					}
-				break;
+			break;
 			
 			case 3: //para un detalle tipo cheque endozado
 				//la 1° parte es para volver el cheque que se usó anteriormente al estado a cobrar
 				if($datosviejos['idcheque'] != $nuevosdatos['idcheque']){
-					$commandmovi= Yii::app()->db->createCommand();
-   					$commandmovi->update('cheque',array('estado'=>2, 
-   														'id_trabajo_ordendepago'=>null, 
-   														'proveedor_idproveedor'=>null),
-   												'idcheque=:idcheque',
-												array(':idcheque'=>$datosviejos['idcheque']));
-				$commandmovi->update('cheque',array('estado'=>4,
-													'id_trabajo_ordendepago'=>$datosviejos['iddetalleordendepago'],
-													'proveedor_idproveedor'=>$datosviejos['idprov']),
-											'idcheque=:idcheque',
-											array(':idcheque'=>$nuevosdatos['idcheque'])); 
+					$chequeViejo=Cheque::model()->findByPk($datosviejos['idcheque']);
+					$chequeViejo->iddetalleordendepago=null;
+					$chequeViejo->estado=2;
+					$chequeViejo->proveedor_idproveedor=null;
+					$chequeViejo->save();
+					
+					$this->cargarChequeTercero($nuevosdatos);
 				}
 			break; 
 		}
@@ -1026,7 +797,7 @@ public function nuevoMovCaja($datos){
 	public function borrarDetCtaCte($idordendepago,$importe,$idctacte){
  			$commandmovi= Yii::app()->db->createCommand();
 			$commandmovi->delete('detallectacteprov',
-						'iddocumento=:iddocument AND haber=:haber AND
+						'ordendepago_idordendepago=:iddocument AND haber=:haber AND
 						 ctacteprov_idctacteprov=:idctacteprov',
 						array(':iddocument'=>$idordendepago,
 							  ':haber'=>$importe,
@@ -1046,11 +817,57 @@ public function nuevoMovCaja($datos){
 		
 		return $nombre;
 	}
-	public function modImpDetalleCtacte($idctacte,$idordendepago,$impnuevo){
-		$command = Yii::app()->db->createCommand();
-		$command->update('detallectacteprov', array(
-				    'detallectacteprov.haber'=>new CDbExpression($impnuevo),
-				), 'iddocumento='.$idordendepago.' AND ctacteprov_idctacteprov='.$idctacte);
+	public function cambioDetalleAsiento($tipoguardado, $nuevo){
+		
+		$DeAsiento=Detalleasiento::model()->find("iddetalleordendepago=:id", 
+					array(':id'=>$nuevo['iddetalleordendepago']));
+		//print_r($nuevo);die();
+		switch ($nuevo['tipoordendepago']) {
+			case 0:
+				$cuentacaja= Caja::model()->findByPk($nuevo['caja_idcaja']);
+				$DeAsiento->cuenta_idcuenta=$cuentacaja->cuenta_idcuenta;
+				$DeAsiento->haber=$nuevo['importe'];
+				$DeAsiento->save();
+			break;
+			case 1:
+				$chequera=Chequera::model()->findByPk($nuevo['chequera']);
+				$DeAsiento->cuenta_idcuenta=$chequera->cuenta_idcuenta; //la cuenta según la chequera
+				$DeAsiento->haber=$nuevo['importe'];
+				$DeAsiento->save();
+			break;
+			case 2:
+				$ctabancaria=Ctabancaria::model()->findByPk($nuevo['transbanco']);
+				$DeAsiento->cuenta_idcuenta=$ctabancaria->cuenta_idcuenta; 
+				$DeAsiento->haber=$nuevo['importe'];
+				$DeAsiento->save();
+			break;
+			case 3:
+				//cheque endosados
+				$DeAsiento->cuenta_idcuenta = 5;// cheque 3ros
+				$DeAsieto->haber=$nuevo['importe'];
+				$DeAsiento->save();
+			break;
+		}
+		
+	}
+	
+	public function borradoDetAsiento($borrado){
+		$DeAs=Detalleasiento::model()->find("iddetalleordendepago=:id",
+			array(':id'=>$borrado));
+		$DeAs->delete();
+	}
+	
+	public function modImpDetalleCtacte($idctacte,$idordendepago,$impnuevo, $fecha){
+		$detalle=Detallectacteprov::model()->find("ordendepago_idordendepago=:id AND ctactecliente_idctactecliente=:ctacte",
+						array(':id'=>$idordendepago,
+							  ':ctacte'=>$idctacte));
+		$detalle->haber=$impnuevo;
+		$detalle->fecha=$fecha;
+		$detalle->save();
+		$asiento=Asiento::model()->find("cobranza_idcobranza=:id",
+					array(':id'=>$idcobranza));
+		$asiento->fecha=$fecha;
+		$asiento->save();
 	}
 	public function actionEnvio(){
 		$dato=$_POST['data'];
@@ -1078,6 +895,9 @@ public function nuevoMovCaja($datos){
 		$detalle->chequecuittitular=null;
 		$detalle->nrocheque=null;
 		$detalle->chequebanco=null;
+		$detalle->idcheque=null;
+		$detalle->chequera=null;
+		$detalle->caja_idcaja=null;
 		$detalle->save();
 	}
 }

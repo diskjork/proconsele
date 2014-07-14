@@ -37,17 +37,18 @@ abstract class BaseChequera extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('nombre, tipo, ctabancaria_idctabancaria', 'required'),
-			array('estado, ctabancaria_idctabancaria', 'numerical', 'integerOnly'=>true),
+			array('nombre, tipo, ctabancaria_idctabancaria, cuenta_idcuenta', 'required'),
+			array('estado, ctabancaria_idctabancaria, cuenta_idcuenta', 'numerical', 'integerOnly'=>true),
 			array('nombre, descripcion, tipo', 'length', 'max'=>100),
 			array('descripcion, estado', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idchequera, nombre, descripcion, estado, tipo, ctabancaria_idctabancaria', 'safe', 'on'=>'search'),
+			array('idchequera, nombre, descripcion, estado, tipo, ctabancaria_idctabancaria, cuenta_idcuenta', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
 		'ctabancariaIdctabancaria' => array(self::BELONGS_TO, 'Ctabancaria', 'ctabancaria_idctabancaria'),
+		'cuentaIdcuenta' => array(self::BELONGS_TO, 'Cuenta', 'cuenta_idcuenta'),
 		);
 	}
 
@@ -64,6 +65,7 @@ abstract class BaseChequera extends GxActiveRecord {
 			'estado' => Yii::t('app', 'Estado'),
 			'tipo' => Yii::t('app', 'Tipo de cheques'),
 			'ctabancaria_idctabancaria' => Yii::t('app', 'Cuenta Bancaria relacionada'),
+			'cuenta_idcuenta' => Yii::t('app', 'Cuenta Contable relacionada'),
 		);
 	}
 
@@ -76,6 +78,7 @@ abstract class BaseChequera extends GxActiveRecord {
 		$criteria->compare('estado', $this->estado);
 		$criteria->compare('tipo', $this->tipo, true);
 		$criteria->compare('ctabancaria_idctabancaria', $this->ctabancaria_idctabancaria);
+		$criteria->compare('cuenta_idcuenta', $this->cuenta_idcuenta);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

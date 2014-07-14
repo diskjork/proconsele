@@ -35,28 +35,27 @@
 			<?php echo "<strong>Relacionado a la Entidad: </strong>".$model->clienteIdcliente."<br>";?>
 			</div>
 			<!-- Definici�n de los valores para el nuevo movimiento de banco -->
-			<?php echo $form->hiddenField($modelBanco,'descripcion', array('value'=>'Cobro de cheque-'.$model->clienteIdcliente)); ?>
-			<?php echo $form->hiddenField($modelBanco,'debeohaber', array('value'=>$model->debeohaber)); ?>
+			<?php echo $form->hiddenField($modelBanco,'descripcion', array('value'=>'Cobro de cheque -'.$model->clienteIdcliente)); ?>
+			<?php echo $form->hiddenField($modelBanco,'debeohaber', array('value'=>0)); ?>
 			<?php echo $form->hiddenField($modelBanco,'debe', array('value'=>$model->debe)); ?>
-			<?php echo $form->hiddenField($modelBanco,'rubro_idrubro', array('value'=>'3')); ?>
-			
-			<?php echo $form->hiddenField($modelBanco,'formadepago_idformadepago', array('value'=>'3')); ?>
 			<?php echo $form->hiddenField($modelBanco,'cheque_idcheque', array('value'=>$model->idcheque)); ?>
-			<?php echo $form->hiddenField($modelBanco,'fechacobro', array('value'=>$model->fechacobro)); ?>
+			<?php echo $form->hiddenField($modelBanco, 'fechacobro',array('value'=>$model->fechacobro));?>
+			<?php echo $form->hiddenField($modelBanco, 'cuenta_idcuenta',array('value'=>5));?>
 			
 			<!--  Cambio de estado del cheque -->
 			<?php echo $form->hiddenField($model,'estado', array('value'=>'5')); ?>
 			<?php echo $form->hiddenField($model,'importe',array('value'=>$model->debe)); ?>
+			
 			<div>
-			<h5>Banco en que se deposita: </h5>
+			<h5>Cuenta Bancaria en que se deposita: </h5>
 			</div>
-			<?php echo $form->label($modelBanco, 'Banco_idBanco');?>
+			
             <?php
 			    $this->widget('yiiwheels.widgets.select2.WhSelect2', array(
 				    'asDropDownList' => true,
 				    'model'=>$modelBanco,
-	    			'attribute' => 'Banco_idBanco',
-		    		'data' => GxHtml::listDataEx(Banco::model()->findAllAttributes(array('nombre'),true,array('order'=>'nombre ASC')),'idBanco','nombre'),
+	    			'attribute' => 'ctabancaria_idctabancaria',
+		    		'data' => GxHtml::listDataEx(Ctabancaria::model()->findAllAttributes(array('nombre'),true,array('order'=>'nombre ASC')),'idctabancaria','nombre'),
 				    'pluginOptions' => array(
 			    		'placeholder' => 'Banco',
 				    	'width' => '50%',
@@ -64,6 +63,7 @@
 			    	),
 			    ));
 			?>
+			<br><br>
 			<p><b>Importe</b></p>
             <div class="input-prepend">
             
@@ -105,7 +105,7 @@
 			
             <?php 
 			if(!$model->isNewRecord){
-				echo CHtml::link('Volver', Yii::app()->request->baseUrl.'/cheque/admin',array ('class'=>'btn btn-primary'));
+				echo CHtml::link('Volver', Yii::app()->request->baseUrl.'/cheque/recibido',array ('class'=>'btn btn-primary'));
 				//echo TbHtml::button('Primary',Yii::app()->request->baseUrl.'/movimientobanco/admin', array('color' => TbHtml::BUTTON_COLOR_PRIMARY));
 			}?>
     </div>
@@ -129,7 +129,7 @@ function send()
   success:	function(data){
      var obj = $.parseJSON(data);
      if(obj.check=="success"){
-         window.location = "<?php echo Yii::app()->createUrl("cheque/admin"); ?>"; 
+         window.location = "<?php echo Yii::app()->createUrl("cheque/recibido"); ?>"; 
      }else{
          $("#error-div-Banco").show();
          $("#error-div-Banco").html("La <strong>fecha</strong> ingresada es menor a la <strong>fecha de cobro.");

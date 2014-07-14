@@ -341,7 +341,7 @@ public function movCaja($model,$datosPOST){
 	 		$modelDeCprov->fecha=$datosPOST['fecha'];
            	$modelDeCprov->descripcion="Factura ".$this->tipoFactura($model->tipofactura)." Compra N°: ".$model->nrodefactura." -  ".$model->proveedorIdproveedor;
            	$modelDeCprov->tipo= 0;
-           	//$modelDeCprov->iddocumento=$model->idfactura;
+           	//$modelDeCprov->compra_idcompra=$model->idfactura;
            	$modelDeCprov->debe=$model->importeneto;
            	$modelDeCprov->ctacteprov_idctacteprov=$ctacte->idctacteprov;
            	$modelDeCprov->save();

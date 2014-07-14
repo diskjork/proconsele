@@ -7,6 +7,7 @@ sumatotal();
 elementosnovalidados();
 $("#id_member").click(function(){
 	newElem();
+	botonsubmit();
 	
 });
 });
@@ -16,7 +17,7 @@ function newElem(idinput){
 		
 	var cTR=$("table.table.mmf_table > tbody > tr").size();
 	
-		var n=1+ 11*(cTR-1);
+		var n=1+ 13*(cTR-1);
 		var id_input=$("td.mmf_cell:eq("+n+") > select").attr("id");
 
 		if(id_input == null){
@@ -33,6 +34,8 @@ function newElem(idinput){
 		var idcheque=viewid(0,0,id,9);
 		var chequetitular=viewid(0,0,id,10);
 		var chequecuittitular=viewid(0,0,id,11);
+		var caja_idcaja=viewid(0,0,id,12);
+		var chequera=viewid(0,0,id,13);
 
 	} else {
 		var id_input=idinput;
@@ -48,12 +51,15 @@ function newElem(idinput){
 		var idcheque=viewid(1,1,id,9);
 		var chequetitular=viewid(1,1,id,10);
 		var chequecuittitular=viewid(1,1,id,11);
+		var caja_idcaja=viewid(1,1,id,12);
+		var chequera=viewid(1,1,id,13);
 	}
 		//alert(id_input);
 		
 		//console.log("Banco: "+banco+" BANCOT: "+bancoT+" FECHAE: "+fechaE+" FECHAC: "+fechaC+" NROC: "+nroC+" IMPORTE: "+id_impor);
 		$("#"+tipo).parent().find('label').html("Tipo de Pago").remove();
 		$("#"+tipo).parent().prepend("<label>Tipo de Pago</label>");
+		$("#"+tipo).parent().css("text-align","left");
 		
 		$("#"+bancoT).parent().removeAttr("style");
 		$("#"+bancoT).parent().css("display","none");
@@ -90,6 +96,15 @@ function newElem(idinput){
 		$("#"+chequecuittitular).parent().css("display","none");
 		$("#"+chequecuittitular).removeAttr('readonly','true');
 
+		$("#"+chequera).parent().removeAttr("style");
+		$("#"+chequera).parent().css("display","none");
+		$("#"+chequera).removeAttr('readonly','true');
+
+		$("#"+caja_idcaja).parent().removeAttr("style");
+		$("#"+caja_idcaja).parent().css("display","none");
+		$("#"+caja_idcaja).removeAttr('readonly','true');
+
+
 		$("#"+id_impor).removeAttr('readonly','true');
 
 }
@@ -106,6 +121,8 @@ function seleccion(obj){
 	var idcheque=viewid(1,1,id,9);
 	var chequetitular=viewid(1,1,id,10);
 	var chequecuittitular=viewid(1,1,id,11);
+	var caja_idcaja=viewid(1,1,id,12);
+	var chequera=viewid(1,1,id,13);
 	valor=parseInt(valor);
 	switch(valor){
 		case (0): //efectivo
@@ -116,17 +133,24 @@ function seleccion(obj){
 			
 			$("#"+fechaC).parent().find('label').html("Fecha Cobro").remove();
 			$("#"+nroC).parent().find('label').html("Nro Cheque").remove();
+			$("#"+caja_idcaja).parent().removeAttr("style");
+			$("#"+caja_idcaja).parent().find('label').html("Caja").remove();
+			$("#"+caja_idcaja).parent().prepend("<label>Caja</label>");
+			$("#"+caja_idcaja).parent().css("text-align","left");
+
 			$("#"+id_impor).parent().removeAttr("style");
 			$("#"+id_impor).parent().find('label').html("Importe").remove();
 			$("#"+id_impor).parent().prepend("<label>Importe</label>");
+			$("#"+id_impor).parent().css("text-align","left");
 			break;
-		case (1): //cheque
+		case (1): //cheque propio
 		newElem(id);
 			
-			$("#"+banco).parent().removeAttr("style");
-			$("#"+banco).parent().find('label').html("Banco").remove();
-			$("#"+banco).parent().find('input').css("width","90%");
-			$("#"+banco).parent().prepend("<label>Banco</label>");
+			$("#"+chequera).parent().removeAttr("style");
+			$("#"+chequera).parent().find('label').html("Chequera").remove();
+			$("#"+chequera).parent().find('input').css("width","90%");
+			$("#"+chequera).parent().prepend("<label>Chequera</label>");
+			$("#"+chequera).parent().css("text-align","left");
 			
 			$("#"+fechaI).parent().removeAttr("style");
 			$("#"+fechaI).parent().find('label').html("F.Ingreso").remove();
@@ -134,6 +158,7 @@ function seleccion(obj){
 			$("#"+fechaI).parent().find('input').css("width","90%");
 			$("#"+fechaI).parent().prepend("<label>F.Ingreso</label>");
 			$("#"+fechaI).parent().find('label').css("width","70px");
+			$("#"+fechaI).parent().css("text-align","left");
 
 			$("#"+fechaC).parent().removeAttr("style");
 			$("#"+fechaC).parent().find('label').html("F.Cobro").remove();
@@ -141,28 +166,35 @@ function seleccion(obj){
 			$("#"+fechaC).parent().find('input').css("width","90%");
 			$("#"+fechaC).parent().prepend("<label>F.Cobro</label>");
 			$("#"+fechaC).parent().find('label').css("width","70px");
+			$("#"+fechaC).parent().css("text-align","left");
 
 			$("#"+nroC).parent().removeAttr("style");
 			$("#"+nroC).parent().find('label').html("N°.Cheque").remove();
 			$("#"+nroC).parent().prepend("<label>N°.Cheque</label>");
+			$("#"+nroC).parent().css("text-align","left");
+
 			
 			$("#"+id_impor).parent().removeAttr("style");
 			$("#"+id_impor).parent().find('label').html("Importe").remove();
 			$("#"+id_impor).parent().prepend("<label>Importe</label>");
+			$("#"+nroC).parent().css("text-align","left");
 			$("#"+chequetitular).val("YVN S.R.L.");
 			$("#"+chequecuittitular).val("-");
 			break;
 		case (2): //transferencia
 			newElem(id);
 			$("#"+bancoT).parent().removeAttr("style");
-			$("#"+bancoT).parent().find('label').html("Banco Propio").remove();
-			$("#"+bancoT).parent().prepend("<label>Banco Propio</label>");
+			$("#"+bancoT).parent().find('label').html("Cta.Bancaria").remove();
+			$("#"+bancoT).parent().prepend("<label>Cta.Bancaria</label>");
+			$("#"+bancoT).parent().css("text-align","left");
+
 			$("#"+fechaI).parent().find('label').html("Fecha Ingreso").remove();
 			$("#"+fechaC).parent().find('label').html("Fecha Cobro").remove();
 			$("#"+nroC).parent().find('label').html("Nro Cheque").remove();
 			$("#"+id_impor).parent().removeAttr("style");
 			$("#"+id_impor).parent().find('label').html("Importe").remove();
 			$("#"+id_impor).parent().prepend("<label>Importe</label>");
+			$("#"+id_impor).parent().css("text-align","left");
 			break;
 
 		case(3): //cheque endozado	
@@ -174,6 +206,7 @@ function seleccion(obj){
 			$("#"+idcheque).parent().find('input').css("width","90%");
 			$("#"+idcheque).parent().prepend("<label>Id.Cheque</label>");
 			$("#"+idcheque).parent().find('label').css("width","70px");
+			$("#"+idcheque).parent().css("text-align","left");
 
 						
 			$("#"+fechaI).parent().removeAttr("style");
@@ -183,7 +216,8 @@ function seleccion(obj){
 			$("#"+fechaI).parent().find('input').css("width","90%");
 			$("#"+fechaI).parent().prepend("<label>F.Ingreso</label>");
 			$("#"+fechaI).parent().find('label').css("width","70px");
-
+			$("#"+fechaI).parent().css("text-align","left");
+			$("#"+fechaI).removeClass("hasDatepicker");
 			$("#"+fechaC).parent().removeAttr("style");
 			$("#"+fechaC).parent().find('label').html("F.Cobro").remove();
 			$("#"+fechaC).parent().css("width","90px");
@@ -191,6 +225,8 @@ function seleccion(obj){
 			$("#"+fechaC).parent().find('input').css("width","90%");
 			$("#"+fechaC).parent().prepend("<label>F.Cobro</label>");
 			$("#"+fechaC).parent().find('label').css("width","70px");
+			$("#"+fechaC).parent().css("text-align","left");
+			$("#"+fechaC).removeClass("hasDatepicker");
 
 			$("#"+chequetitular).parent().removeAttr("style");
 			$("#"+chequetitular).parent().find('label').html("Titular").remove();
@@ -199,6 +235,8 @@ function seleccion(obj){
 			$("#"+chequetitular).parent().find('input').css("width","90%");
 			$("#"+chequetitular).parent().prepend("<label>Titular</label>");
 			$("#"+chequetitular).parent().find('label').css("width","70px");
+			$("#"+chequetitular).parent().css("text-align","left");
+
 			
 			$("#"+chequecuittitular).parent().removeAttr("style");
 			$("#"+chequecuittitular).parent().find('label').html("CUIT").remove();
@@ -207,15 +245,19 @@ function seleccion(obj){
 			$("#"+chequecuittitular).parent().find('input').css("width","90%");
 			$("#"+chequecuittitular).parent().prepend("<label>CUIT</label>");
 			$("#"+chequecuittitular).parent().find('label').css("width","70px");
+			$("#"+chequecuittitular).parent().css("text-align","left");
+
 			
 			$("#"+nroC).parent().removeAttr("style");
 			$("#"+nroC).parent().find('label').html("N°.Cheque").remove();
 			$("#"+nroC).parent().prepend("<label>N°.Cheque</label>");
 			$("#"+nroC).attr("readonly","true");
+			$("#"+nroC).parent().css("text-align","left");
 			$("#"+id_impor).parent().removeAttr("style");
 			$("#"+id_impor).parent().find('label').html("Importe").remove();
 			$("#"+id_impor).parent().prepend("<label>Importe</label>");
 			$("#"+id_impor).attr("readonly","true");
+			$("#"+id_impor).parent().css("text-align","left");
 
 			
 			break;
@@ -229,8 +271,8 @@ function sumatotal(){
 	if(cTR != 0){
 	var total=0;
 	for(i=0;i < cTR;i++){
-		var n=9; // número de TR o celda donde se encuentra el importe
-		n=n+(11*i); //controlador para ubicarse sobre las celdas donde estan los importes
+		var n=11; // número de TR o celda donde se encuentra el importe
+		n=n+(13*i); //controlador para ubicarse sobre las celdas donde estan los importes
 		var subtotal=parseFloat($( "td.mmf_cell:eq("+n+") > input" ).val());
 		if($.isNumeric(subtotal))
 		total=total+subtotal;
@@ -239,6 +281,7 @@ function sumatotal(){
 	$("#Ordendepago_importe").val(total.toFixed(2));
 	$("#totalnetoblock").html(total.toFixed(2));
 	}
+	botonsubmit();
 }
 
 function elementosnovalidados(){
@@ -246,7 +289,7 @@ function elementosnovalidados(){
 		
 		for(i=0;i < cTR-1;i++){
 		var n=0;
-		n=n+(11*i);
+		n=n+(13*i);
 		var valor=parseFloat($( "td.mmf_cell:eq("+n+") > select" ).val());
 		var id=$( "td.mmf_cell:eq("+n+") > select" ).attr("id");
 		obj={id:id,val:valor};
@@ -343,6 +386,15 @@ function viewid(cantidad1,cantidad2, id , atributo){
 				var id_nombre_chequecuittitular="Detalleordendepago"+indexid+"chequecuittitular";
 				return id_nombre_chequecuittitular;
 				break;
+			case (12): //caja
+				var id_nombrecaja="Detalleordendepago"+indexid+"caja_idcaja";
+				return id_nombrecaja;
+				console.log(id_nombrecaja);
+				break;
+			case (13): //chequera
+				var id_chequera="Detalleordendepago"+indexid+"chequera";
+				return id_chequera;
+				break;
 			} 
 	}else {
 		indexid = id_input.substring(cant2,id_input.length);
@@ -390,6 +442,14 @@ function viewid(cantidad1,cantidad2, id , atributo){
 				var id_nombre_chequecuittitular="Detalleordendepago_chequecuittitular"+indexid;
 				return id_nombre_chequecuittitular;
 				break;
+		case (12): //caja
+				var id_nombre_caja="Detalleordendepago_caja_idcaja"+indexid;
+				return id_nombre_caja;
+				break;
+		case (13): //chequera
+				var id_chequera="Detalleordendepago_chequera"+indexid;
+				return id_chequera;
+				break;
 		}
 		
 	}
@@ -429,7 +489,7 @@ function validaciondecodigo(obj){
 	for(i=0;i < col;i++){
 		
 		var n=2;
-		n= n + (11*i);
+		n= n + (13*i);
 		var valor=$( "td.mmf_cell:eq("+n+") > input" ).val();
 		var idinput=$( "td.mmf_cell:eq("+n+") > input" ).attr('id');
 
@@ -444,4 +504,19 @@ function validaciondecodigo(obj){
 	  	newElem(obj.id); //para poner la fila en cero o empty
 
 	 }
+}
+function botonsubmit(){
+	var tr=$("table.table.mmf_table > tbody > tr:eq(0)").css('display');
+	
+	var columnas=$("table.table.mmf_table > tbody > tr").size();
+	
+	if(tr == "none" && columnas ==1) {
+		//alert("style:"+tr+"---columnas: "+columnas);
+		$("#boton-submit").attr("disabled","disabled");
+		//$("#boton-submit").removeAttr("disabled"); }
+	 }else {
+		//$("#boton-submit").attr("disabled","disabled");
+		$("#boton-submit").removeAttr("disabled");
+	}
+	
 }

@@ -335,7 +335,7 @@ public function labelEstado($data, $row){
 	}
 	public function actionAcreditar($id){
 		$model=$this->loadModel($id);
-	    $modelBanco= new Movimientobanco();
+	    $modelBanco= new Movimientobanco;
 		
 		if(isset($_POST['Cheque'],$_POST['Movimientobanco'])){
 						$modelBanco->attributes=$_POST['Movimientobanco'];
@@ -370,15 +370,21 @@ public function labelEstado($data, $row){
 						$modelCaja->attributes=$_POST['Movimientocaja'];
 						$modelCheque->attributes=$_POST['Cheque'];
 						$array = array('check' => 'success');
+						$array2 = array('check'=> 'caja');
+						
 						if($modelCaja->save()){
+							
 							if($modelCheque->save()){
+								$this->nuevoAsientoCaja($modelCheque, $_POST['Movimientocaja']['fecha'],$modelCaja);
 				            	$json = json_encode($array);
 				            	echo $json;
 				            	Yii::app()->end(); 
-								$this->redirect(Yii::app()->request->baseUrl.'/cheque/admin');
+								$this->redirect(Yii::app()->request->baseUrl.'/cheque/recibido');
 								}
 						}else {
+							
 							echo CActiveForm::validate($modelCaja);
+							
 				           	Yii::app()->end();
 							}	
 			} 
@@ -729,4 +735,38 @@ public function labelEstado($data, $row){
 		    }
 		}
 	}
+	
+	/**
+	 * Método para generar el asiento en el caso de acreditar un cheque de tercero por ventanilla
+	 * 
+	 */
+	public function nuevoAsientoCaja($cheque, $fecha, $movcaja){
+		$asiento=new Asiento;
+		$asiento->descripcion="Cobro de cheque N°: ".$cheque->nrocheque." de: ".$cheque->clienteIdcliente;
+		$asiento->fecha=$fecha;
+		$asiento->movimientocaja_idmovimientocaja=$movcaja->idmovimientocaja;
+		if($asiento->save()){
+			$DeAsCaja=new Detalleasiento;
+			$DeAsRel=new Detalleasiento;
+			$DeAsCaja->debe=$cheque->debe;
+			$DeAsCaja->cuenta_idcuenta=$movcaja->cajaIdcaja->cuenta_idcuenta;
+			$DeAsCaja->asiento_idasiento=$asiento->idasiento;
+			$DeAsRel->haber=$cheque->debe;
+			$DeAsRel->cuenta_idcuenta=5; //cuenta cheque de 3ros a cobrar
+			$DeAsRel->asiento_idasiento=$asiento->idasiento;
+			if($DeAsCaja->save()){
+				if($DeAsRel->save()){
+					return true;
+				} else {
+				print_r($DeAsRel->getErrors()); die();
+				}
+			} else {
+				print_r($DeAsCaja->getErrors()); die();
+			}
+		} else {
+			print_r($asiento->getErrors()); die();
+			return false;
+		}
+	}
+	
 }//end app

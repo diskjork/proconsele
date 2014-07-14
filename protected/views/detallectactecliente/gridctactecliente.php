@@ -57,6 +57,7 @@ $columnas=array_merge(array(
         	'htmlOptions' => array('colspan'=>2),
         	'footerHtmlOptions'=>array('colspan'=>2),
 			'class'=>'bootstrap.widgets.TbButtonColumn',
+        	'deleteConfirmation'=>'Seguro que quiere eliminar el elemento?',
 			'template'=>'{update}{updatefact}{delete}{deletecobranza}',
 			'buttons' => array(
 				'update'=>array(
@@ -64,7 +65,7 @@ $columnas=array_merge(array(
 	                    //'icon'=>TbHtml::ICON_MINUS_SIGN,
 	                    'visible'=>'$data->tipo == 1',
 						'url'=> 'Yii::app()->createUrl("cobranza/update",
-								 array(	"id"=>$data->iddocumento,
+								 array(	"id"=>$data->cobranza_idcobranza,
 								 		"idctacte"=>$data->ctactecliente_idctactecliente,
 								 		"nombre"=>$data->ctacteclienteIdctactecliente->clienteIdcliente,
 								 		))',
@@ -75,7 +76,7 @@ $columnas=array_merge(array(
 	                    'icon'=>TbHtml::ICON_PENCIL,
 	                    'visible'=>'$data->tipo == 0',
 						'url'=> 'Yii::app()->createUrl("factura/update",
-								 array(	"id"=>$data->iddocumento,
+								 array(	"id"=>$data->factura_idfactura,
 								 		
 								 		))',
 						
@@ -96,9 +97,7 @@ $columnas=array_merge(array(
 	                    'icon'=>TbHtml::ICON_TRASH,
 	                    'visible'=>'$data->tipo == 1',
 						'url'=> '$this->grid->controller->createUrl("cobranza/delete",
-								 array(	"id"=>$data->iddocumento,
-								 		
-								 		))',
+								 array("id"=>$data->cobranza_idcobranza))',
 	                   'options'=>array('class'=>'delete',
 	                  		/*	'ajax'=>array(
                                         'type'=>'GET',

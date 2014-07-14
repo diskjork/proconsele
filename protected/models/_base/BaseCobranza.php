@@ -44,6 +44,7 @@ abstract class BaseCobranza extends GxActiveRecord {
 			array('descripcioncobranza', 'length', 'max'=>45),
 			array('descripcioncobranza', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('idcobranza, fecha, descripcioncobranza, importe, ctactecliente_idctactecliente', 'safe', 'on'=>'search'),
+			
 		);
 	}
 
@@ -96,5 +97,15 @@ abstract class BaseCobranza extends GxActiveRecord {
 		    
 		   ); // 'ext' is in Yii 1.0.8 version. For early versions, use 'application.extensions' instead.
 		}
+	public function validarCant($attribute,$params){
+      	$sqlidcheque="SELECT count(*) as cant FROM detallecobranza 
+					  WHERE cobranza_idcobranza=".$this->idcobranza.";";
+		$dbCommand = Yii::app()->db->createCommand($sqlidcheque);
+		$resultado = $dbCommand->queryAll();
+		
+    	if((int) $resultado[0]['cant'] < 1){
+   				$this->addError('idcobranza', 'Tiene que haber al menos un Item cargado');
+  			}
+    }
 	
 }

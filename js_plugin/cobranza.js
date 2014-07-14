@@ -6,8 +6,10 @@ $("#cobranza-form").removeClass("well");
 $.datepicker.setDefaults( $.datepicker.regional[ "es" ] );
 sumatotal();
 elementosnovalidados();
+botonsubmit();
 $("#id_member").click(function(){
 	newElem();
+	botonsubmit();
 	
 });
 
@@ -75,7 +77,7 @@ function newElem(idinput){
 
 		$("#"+fechaI).parent().removeAttr("style");
 		$("#"+fechaI).parent().css("display","none");
-		console.log(fechaI);
+		//console.log(fechaI);
 
 		$("#"+fechaC).parent().removeAttr("style");
 		$("#"+fechaC).parent().css("display","none");
@@ -261,6 +263,7 @@ function sumatotal(){
 	
 	$("#Cobranza_importe").val(total.toFixed(2));
 	$("#totalnetoblock").html(total.toFixed(2));
+	botonsubmit();
 	}
 }
 
@@ -483,3 +486,18 @@ function borradoinputs(id){
 	$("#"+chequecuittitular).val("");
 }
 
+function botonsubmit(){
+	var tr=$("table.table.mmf_table > tbody > tr:eq(0)").css('display');
+	
+	var columnas=$("table.table.mmf_table > tbody > tr").size();
+	
+	if(tr == "none" && columnas ==1) {
+		//alert("style:"+tr+"---columnas: "+columnas);
+		$("#boton-submit").attr("disabled","disabled");
+		//$("#boton-submit").removeAttr("disabled"); }
+	 }else {
+		//$("#boton-submit").attr("disabled","disabled");
+		$("#boton-submit").removeAttr("disabled");
+	}
+	
+}

@@ -1,6 +1,6 @@
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugins/teamdf-jquery-number-c19aa59/jquery.number.js">
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js">
 </script>
-<?php Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/ordendepago.js', CClientScript::POS_HEAD);?>
+<?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/ordendepago.js', CClientScript::POS_HEAD);?>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js">
 </script>
 
@@ -89,7 +89,10 @@ if(isset($_GET['idctacte'])){
 		<div>
         <?php  
 		$arrayBancos=GxHtml::listDataEx(Banco::model()->findAllAttributes(array('nombre'),true,array('order'=>'nombre ASC')),'idBanco','nombre');
-		$arrayBancosCargados=GxHtml::listDataEx(Banco::model()->findAllAttributes(array('nombre'),true,array('condition'=>'propio=1','order'=>'nombre ASC')),'idBanco','nombre');
+		$arrayBancosCargados=GxHtml::listDataEx(Banco::model()->findAllAttributes(array('nombre'),true,array('order'=>'nombre ASC')),'idBanco','nombre');
+		$arrayCtasCargados=GxHtml::listDataEx(Ctabancaria::model()->findAllAttributes(array('nombre'),true,array('condition'=>'estado=1','order'=>'nombre ASC')),'idctabancaria','nombre');
+		$arrayCajas=GxHtml::listDataEx(Caja::model()->findAllAttributes(array('nombre'),true,array('condition'=>'estado=1','order'=>'nombre ASC')),'idcaja','nombre');
+		$arrayChequeras=GxHtml::listDataEx(Chequera::model()->findAllAttributes(array('nombre'),true,array('condition'=>'estado=1','order'=>'nombre ASC')),'idchequera','nombre');
 		$memberFormConfig = array(
 					      'elements'=>array(
 					        'tipoordendepago'=>array(
@@ -116,19 +119,20 @@ if(isset($_GET['idctacte'])){
 					        'transferenciabanco'=>array(
 								
 					            'type'=>'dropdownlist',
-								'items'=>$arrayBancosCargados,
-								'prompt'=>'Seleccione un Banco..',
+								'items'=>$arrayCtasCargados,
+								'prompt'=>'Seleccione un Cuenta..',
 					            'class'=>'span2',
 					        	
+					        ),
+					         'chequetitular'=>array(
+					        	'type'=>'text',
+					            'class'=>'span1',
 					        ),
 					        'idcheque'=>array(
 					            'type'=>'text',
 					            'class'=>'span1',
 					        ),
-					        'chequetitular'=>array(
-					        	'type'=>'text',
-					            'class'=>'span1',
-					        ),
+					       
 							'chequecuittitular'=>array(
 					        	'type'=>'text',
 					            'class'=>'span1',
@@ -137,6 +141,12 @@ if(isset($_GET['idctacte'])){
 					            'type'=>'dropdownlist',
 					           	'items'=>$arrayBancosCargados,
 								'prompt'=>'Seleccione un Banco..',
+					            'class'=>'span2',
+					        ),
+					        'chequera'=>array(
+					            'type'=>'dropdownlist',
+					           	'items'=>$arrayChequeras,
+								'prompt'=>'Chequera...',
 					            'class'=>'span2',
 					        ),
 					        'chequefechaingreso'=>array(              
@@ -157,6 +167,14 @@ if(isset($_GET['idctacte'])){
 					        'nrocheque'=>array(
 					            'type'=>'text',
 					            'class'=>'span1',
+					        ),
+					        'caja_idcaja'=>array(
+								
+					            'type'=>'dropdownlist',
+								'items'=>$arrayCajas,
+								'prompt'=>'Seleccione Caja..',
+					            'class'=>'span2',
+					        	
 					        ),
 					        'importe'=>array(
 					            'type'=>'text',

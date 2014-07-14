@@ -16,7 +16,7 @@ $this->menu=array(
 		'active' => true,
 	),
 	array(
-		'label'=>'Nueva cuenta', 
+		'label'=>'Nueva Chequera', 
 		'url'=>array('/chequera/create'),
 	),
 	array(
@@ -54,6 +54,11 @@ $this->menu=array(
 			'header'=>'TIPO ',
 			'name'=>'tipo',
 			'value'=>'$data->tipo == 1 ? "Pago diferido" : "Pago directo"',
+		),
+		array(
+			'header'=>'CTA CONTABLE ',
+			'name'=>'cuentaIdcuenta',
+			//'value'=>'$data->tipo == 1 ? "Pago diferido" : "Pago directo"',
 		),
 		array(
             'header'=>'Opciones',

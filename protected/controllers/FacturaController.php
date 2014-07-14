@@ -161,6 +161,7 @@ class FacturaController extends Controller
 							$asientoFact->save();
 							$this->ivamovimiento($model, $_POST['Factura']);
 					}
+						
 				$this->redirect(array('admin','id'=>$model->idfactura));
 			}
 		}
@@ -192,12 +193,14 @@ class FacturaController extends Controller
 				
 				if($model->formadepago != $modeloviejo->formadepago){
 					$this->updateCambioFormadepago($modeloviejo, $model, $_POST['Factura']);
+					
 					if($_POST['Factura']['vista'] == 2){
 					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 					}
 					$this->redirect(array('admin','id'=>$model->idfactura));
 				}else {
 					$this->updateFacAsiento($modeloviejo,$model,$_POST['Factura']);
+					
 					if($_POST['Factura']['vista'] == 2){
 					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 					}
@@ -325,7 +328,7 @@ class FacturaController extends Controller
 	 		$modelDeCCcliente->fecha=$datosPOST['fecha'];
            	$modelDeCCcliente->descripcion="Factura Venta N°: ".(string)$model->nrodefactura;
            	$modelDeCCcliente->tipo= 0;
-           	//$modelDeCCcliente->iddocumento=$model->idfactura;
+           	//$modelDeCCcliente->factura_idfactura=$model->idfactura;
            	$modelDeCCcliente->debe=$model->importeneto;
            	$modelDeCCcliente->ctactecliente_idctactecliente=$ctacte->idctactecliente;
            	$modelDeCCcliente->save();
@@ -566,6 +569,7 @@ class FacturaController extends Controller
 			
 		
 		}
+		
 		public function totalventa($model){
 			
 			$model->ivatotal == null ? $iva=0 : $iva=$model->ivatotal;	

@@ -9,11 +9,7 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'Nuevo Cheque','url'=>'create'),
-	array('label'=>'Nuevo Banco','url'=>'#',
-						'htmlOptions'=>array('data-toggle' => 'modal',
-    					'data-target' => '#ModalBanco'),
-	),
+	
 	array('label'=>'Cheques Emitidos','url'=>'emitido'),
 	//array('label'=>'Cheque Endosados','url'=>'endosados'),
 );
@@ -129,7 +125,7 @@ $columnas=array(
 			'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right'),
-			'template'=>'{debitar} {acreditar} {view} {update} {delete} ',
+			'template'=>' {acreditar} {view} {update} {delete} ',
 			'buttons' => array(
 				 'view'=>
                     array(

@@ -38,7 +38,7 @@
 				  'options'=>array(
 					   'placeholder'=>'Seleccione el tipo',
 					   'allowClear'=>true,
-						'width'=> '100%',
+						'width'=> '50%',
 					  ),
 				)); ?>
 				<?php  echo $form->error($model,'tipo',array('style'=>'color:#b94a48')); ?>
@@ -57,6 +57,21 @@
 					  ),
 				)); ?>
 		<?php  echo $form->error($model,'ctabancaria_idctabancaria',array('style'=>'color:#b94a48')); ?>
+		<br><br>
+        <?php echo $form->labelEx($model, 'cuenta_idcuenta');?>
+       		<?php $this->widget('ext.select2.ESelect2',array(
+				  //'name'=>'cuenta_idcuenta',
+				 'model'=>$model,
+				 'attribute'=>'cuenta_idcuenta',
+				 'data' => GxHtml::listDataEx(Cuenta::model()->findAllAttributes(array('codigocta,nombre'),true,
+       					array('condition'=>'asentable=1','order'=>'codigocta ASC')),'idcuenta','codNombre'),
+				  'options'=>array(
+					   'placeholder'=>'Seleccione una cuenta..',
+					   'allowClear'=>true,
+					   'width'=> '70%',
+					  ),
+				)); ?>
+		<?php  echo $form->error($model,'cuenta_idcuenta',array('style'=>'color:#b94a48')); ?>
              
 					
         <div class="form-actions" align="center">

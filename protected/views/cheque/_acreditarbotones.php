@@ -9,12 +9,6 @@
      
 
      <br>
-<?php 
-	echo TbHtml::link('Endozar cheque', Yii::app()->createUrl("cheque/acreditarendozar", array("id"=>$model->idcheque)),
-	array ('class'=>'btn btn-primary')
-	);
-	 
-    ?> 
      
 <?php 
 	echo TbHtml::link('Cobrar por Ventanilla ', Yii::app()->createUrl("cheque/acreditarcaja", array("id"=>$model->idcheque)),

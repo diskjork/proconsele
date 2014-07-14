@@ -3,20 +3,15 @@
 /* @var $model Chequera */
 ?>
 
-<?php
-$this->breadcrumbs=array(
-	'Chequeras'=>array('index'),
-	$model->idchequera=>array('view','id'=>$model->idchequera),
-	'Update',
-);
-
-$this->menu=array(
-	//array('label'=>'List Factura', 'url'=>array('index')),
-	array('label'=>'Administrar', 'url'=>array('admin')),
-);
+<?php  $this->widget('bootstrap.widgets.TbModal', array(
+    		'id' => 'modalcreate',
+    		'header' => '<h4>Actualizar chequera</h4>',
+			'content' => $this->renderPartial('_form',array('model'=>$model), true),
+			'show'=>true,
+			'backdrop'=> 'static',
+			'fade'=>false,
+			'keyboard'=> false,
+			'buttonOptions'=> false,
+			'closeText'=>"",
+)); 
 ?>
-
-<h5 class="well well-small">ACTUALIZACIÓN DE CHEQUERA (<?php echo $model->idchequera?>)</h5>
-<br><br>
-
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>

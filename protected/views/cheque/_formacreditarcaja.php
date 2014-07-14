@@ -16,7 +16,7 @@
 	//'enableAjaxValidation'=>true,
 	//'enableAjaxValidation'=>true,
 	//'enableAjaxValidation'=>true,
-	'enableClientValidation'=>false,
+	'enableClientValidation'=>true,
     'htmlOptions'=>array(
                                'onsubmit'=>"return false;",
                                'onkeypress'=>" if(event.keyCode == 13){ send(); } "
@@ -36,14 +36,27 @@
 			<?php echo "<strong>Relacionado a la Entidad: </strong>".$model->clienteIdcliente."<br>";?>
 			</div>
 			<!-- Definici�n de los valores para el nuevo movimiento de caja -->
-			<?php echo $form->hiddenField($modelCaja,'descripcion', array('value'=>'Cobro de cheque-'.$model->clienteIdcliente)); ?>
+			<?php echo $form->hiddenField($modelCaja,'descripcion', array('value'=>'Cobro de cheque- N°'.$model->nrocheque." de: ".$model->clienteIdcliente)); ?>
 			<?php echo $form->hiddenField($modelCaja,'debeohaber', array('value'=>$model->debeohaber)); ?>
 			<?php echo $form->hiddenField($modelCaja,'debe', array('value'=>$model->debe)); ?>
-			<?php echo $form->hiddenField($modelCaja,'rubro_idrubro', array('value'=>'3')); ?>
 			
-			<?php echo $form->hiddenField($modelCaja,'formadepago_idformadepago', array('value'=>'1')); ?>
-			<?php echo $form->hiddenField($modelCaja,'caja_idcaja', array('value'=>'1')); ?>
+			<div>
+			<h5>Caja : </h5>
+       		<?php $this->widget('ext.select2.ESelect2',array(
+				  //'name'=>'cuenta_idcuenta',
+				 'model'=>$modelCaja,
+				 'attribute'=>'caja_idcaja',
+				  'data' => GxHtml::listDataEx(Caja::model()->findAllAttributes(array('nombre'),true,array('condition'=>'estado=1','order'=>'nombre ASC')),'idcaja','nombre'),
+				  'options'=>array(
+					   'placeholder'=>'Seleccione una caja',
+					   'allowClear'=>true,
+						'width'=> '60%',
+					  ),
+				)); ?>
+				<?php  echo $form->error($modelCaja,'caja_idcaja',array('style'=>'background-color: rgb(253, 147, 147);color: #090808;')); ?>
+		</div><br>
 			<?php echo $form->hiddenField($modelCaja,'fechacobro', array('value'=>$model->fechacobro)); ?>
+			<?php echo $form->hiddenField($modelCaja,'cuenta_idcuenta', array('value'=>5)); ?>
 			
 			<!--  Cambio de estado del cheque -->
 			<?php echo $form->hiddenField($model,'estado', array('value'=>'3')); ?>
@@ -93,7 +106,7 @@
 			
             <?php 
 			if(!$model->isNewRecord){
-				echo CHtml::link('Volver', Yii::app()->request->baseUrl.'/cheque/admin',array ('class'=>'btn btn-primary'));
+				echo CHtml::link('Volver', Yii::app()->request->baseUrl.'/cheque/recibido',array ('class'=>'btn btn-primary'));
 				//echo TbHtml::button('Primary',Yii::app()->request->baseUrl.'/movimientobanco/admin', array('color' => TbHtml::BUTTON_COLOR_PRIMARY));
 			}?>
     </div>
@@ -116,11 +129,23 @@ function send()
    success:	function(data){
       var obj = $.parseJSON(data);
       if(obj.check=="success"){
-          window.location = "<?php echo Yii::app()->createUrl("cheque/admin"); ?>"; 
-      }else{
-          $("#error-div").show();
-          $("#error-div").html("La <strong>fecha</strong> ingresada es menor a la <strong>fecha de cobro.");
-          }
+          window.location = "<?php echo Yii::app()->createUrl("cheque/recibido"); ?>"; 
+      }
+      
+      if(obj.Movimientocaja_caja_idcaja == "Caja no puede ser nulo."){
+			$("#error-div").show();
+			$("#error-div").html("<strong>Caja</strong> no puede ser nulo.");
+      }
+      if(obj.Movimientocaja_fecha == "Fecha no puede ser nulo."){
+			$("#error-div").show();
+			$("#error-div").append("<br><strong>Fecha de cobro</strong> no puede ser nulo.");
+      }	
+      
+      if(obj.Movimientocaja_fechacobro == "La fecha ingresada debe ser mayor a la fecha de cobro"){
+			$("#error-div").show();
+			$("#error-div").append("<br>La <strong>fecha ingresada</strong> debe ser mayor a la fecha de cobro");
+ 	 }	
+          
     }
   });
  }

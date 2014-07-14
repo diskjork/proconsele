@@ -306,76 +306,68 @@ class MovimientocajaController extends Controller
 		
 	}
 public function checkUpdateAsiento($datosGuardados, $datosPOST){
-		if($datosGuardados->descripcion != $datosPOST->descripcion ||
-		   $datosGuardados->fecha != $datosPOST->fecha ||
-		   $datosGuardados->debeohaber != $datosPOST->debeohaber ||
-		   $datosGuardados->debe != $datosPOST->debe ||
-		   $datosGuardados->haber != $datosPOST->haber || 
-		   $datosGuardados->caja_idcaja != $datosPOST->caja_idcaja ||
-		   $datosGuardados->cuenta_idcuenta != $datosPOST->cuenta_idcuenta ){
-		   //ASIENTO
-		   	$asientoGuardado=Asiento::model()->findByPk($datosGuardados->asiento_idasiento);
-		   $asientoGuardado->descripcion="Mov.Caja. ".$datosPOST->caja_idcaja." - ".$datosPOST->descripcion;
-		   $asientoGuardado->fecha=$datosPOST->fecha;
-		   $asientoGuardado->save();
-		   //DETALLE ASIENTO
-		   $detals=Detalleasiento::model()->findAll('asiento_idasiento=:idasiento ORDER BY iddetalleasiento ASC',array(':idasiento'=>$asientoGuardado->idasiento));
-		   //$cuentaBanco=$datosGuardados->ctabancariaIdctabancaria->cuenta_idcuenta;
-		   
-		   if($datosGuardados->debe!= $datosPOST->debe){
-		   		$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
-		   		$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
-		   		$nuevoDasiento->debe=$datosPOST->debe;
-		   		$nuevoDasiento2->haber=$datosPOST->debe;
-		   		$nuevoDasiento->save();
-		   		$nuevoDasiento2->save();
-		   		
-		   }
-		   if($datosGuardados->haber != $datosPOST->haber){
-		   		$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
-		   		$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
-		   		$nuevoDasiento->debe=$datosPOST->haber;
-		   		$nuevoDasiento2->haber=$datosPOST->haber;
-		   		$nuevoDasiento->save();
-		   		$nuevoDasiento2->save();
-		   }
-		   
+	//ASIENTO
+	$asientoGuardado=Asiento::model()->findByPk($datosGuardados->asiento_idasiento);	
+//detalle asiento relacionado a la caja antes de modificar	
+	$DeAsCaja=Detalleasiento::model()->find("cuenta_idcuenta=:idcuenta AND asiento_idasiento=:idasiento",
+		   			array(':idcuenta'=>$datosGuardados->cajaIdcaja->cuenta_idcuenta,
+		   				  ':idasiento'=>$datosGuardados->asiento_idasiento));
+//detalle asiento relacionada a la cuenta contable relacionada antes de modificar
+   $DeAsCtaRel=Detalleasiento::model()->find("cuenta_idcuenta=:idcuenta AND asiento_idasiento=:idasiento",
+   			array(':idcuenta'=>$datosGuardados->cuenta_idcuenta,
+   				  ':idasiento'=>$datosGuardados->asiento_idasiento));
+	
+   if($datosGuardados->descripcion != $datosPOST->descripcion ||
+	   $datosGuardados->fecha != $datosPOST->fecha ||
+	   $datosGuardados->debe != $datosPOST->debe ||
+	   $datosGuardados->haber != $datosPOST->haber || 
+	   $datosGuardados->caja_idcaja != $datosPOST->caja_idcaja ||
+	   $datosGuardados->cuenta_idcuenta != $datosPOST->cuenta_idcuenta AND 
+	   $datosGuardados->debeohaber == $datosPOST->debeohaber){
+	   		  
+	   $asientoGuardado->descripcion="Mov.Caja. Caja: ".$datosPOST->caja_idcaja." - ".$datosPOST->descripcion;
+	   $asientoGuardado->fecha=$datosPOST->fecha;
+	   $asientoGuardado->save();
+	   if($datosPOST->debeohaber == 0){
+	   	 $DeAsCaja->debe=$datosPOST->debe;
+	   	 $DeAsCaja->haber=null;
+	   	 $DeAsCtaRel->haber=$datosPOST->debe;
+	   	 $DeAsCtaRel->debe=null;
+	   } else {
+	   	 $DeAsCaja->haber=$datosPOST->haber;
+	   	 $DeAsCaja->debe=null;
+	   	 $DeAsCtaRel->debe=$datosPOST->haber;
+	   	 $DeAsCtaRel->haber=null;
+	   }
+	  
+	   $DeAsCaja->cuenta_idcuenta=$datosPOST->cajaIdcaja->cuenta_idcuenta;
+	   $DeAsCaja->save();
+	  	  
+	   $DeAsCtaRel->cuenta_idcuenta=$datosPOST->cuenta_idcuenta;
+	   $DeAsCtaRel->save();
+	} 
 		   if($datosGuardados->debeohaber != $datosPOST->debeohaber){
-		   		if($datosGuardados->debeohaber == 0 ){
-		   			$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
-		   			$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
-		   			if($datosGuardados->debe != $datosPOST->haber){
-		   				$nuevoDasiento->debe=$datosPOST->haber;
-		   				$nuevoDasiento2->haber=$datosPOST->haber;
-		   			}	
-		   			$nuevoDasiento->cuenta_idcuenta=$datosPOST->cuenta_idcuenta;
-		   			$nuevoDasiento->movimientocaja_idmovimientocaja=NULL;
-		   			
-		   			$nuevoDasiento2->cuenta_idcuenta=$datosPOST->cajaIdcaja->cuenta_idcuenta;
-		   			$nuevoDasiento2->movimientocaja_idmovimientocaja=$datosGuardados->idmovimientocaja;
-		   			//$datosPOST->detalleasiento_iddetalleasiento=$nuevoDasiento2->iddetalleasiento;
-		   			$nuevoDasiento->save();
-		   			$nuevoDasiento2->save();
-		   		} elseif($datosGuardados->debeohaber == 1){
-		   			$nuevoDasiento=Detalleasiento::model()->findByPk($detals[0]['iddetalleasiento']);
-		   			$nuevoDasiento2=Detalleasiento::model()->findByPk($detals[1]['iddetalleasiento']);
-		   			if($datosGuardados->haber != $datosPOST->debe){
-		   				$nuevoDasiento->debe=$datosPOST->debe;
-		   				$nuevoDasiento2->haber=$datosPOST->debe;
-		   			}
-		   			$nuevoDasiento->cuenta_idcuenta=$datosPOST->cajaIdcaja->cuenta_idcuenta;
-		   			$nuevoDasiento->movimientocaja_idmovimientocaja=$datosGuardados->idmovimientocaja;
-		   			
-		   			$nuevoDasiento2->cuenta_idcuenta=$datosPOST->cuenta_idcuenta;
-		   			$nuevoDasiento2->movimientocaja_idmovimientocaja=NULL;
-		   			//para el registro movimientobanco 
-		   			//$datosPOST->detalleasiento_iddetalleasiento=$nuevoDasiento->iddetalleasiento;
-		   			$nuevoDasiento->save();
-		   			$nuevoDasiento2->save();
+		   		if($datosPOST->debeohaber == 0 ){
+		   		  $DeAsCaja->debe=$datosPOST->debe;
+		   		  $DeAsCaja->haber=null;
+		   		  $DeAsCaja->cuenta_idcuenta=$datosPOST->cajaIdcaja->cuenta_idcuenta;
+		   		  $DeAsCaja->save();
+		   		  $DeAsCtaRel->haber=$datosPOST->debe;
+		   		  $DeAsCtaRel->debe=null;
+		   		  $DeAsCtaRel->cuenta_idcuenta=$datosPOST->cuenta_idcuenta;
+		   		  $DeAsCtaRel->save();
+		   		  
+		   		} elseif($datosPOST->debeohaber == 1){
+		   		  $DeAsCaja->haber=$datosPOST->haber;
+		   		  $DeAsCaja->debe=null;
+		   		  $DeAsCaja->cuenta_idcuenta=$datosPOST->cajaIdcaja->cuenta_idcuenta;
+		   		  $DeAsCaja->save();
+		   		  $DeAsCtaRel->debe=$datosPOST->haber;
+		   		  $DeAsCtaRel->haber=null;
+		   		  $DeAsCtaRel->cuenta_idcuenta=$datosPOST->cuenta_idcuenta;
+		   		  $DeAsCtaRel->save();
 		   		}
-		   } 
-		 }	
-		
+		   }
 	}
 	
 	public function actionExcel(){

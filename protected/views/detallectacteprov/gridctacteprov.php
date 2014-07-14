@@ -67,7 +67,7 @@ $columnas=array_merge(array(
 	                    //'icon'=>TbHtml::ICON_MINUS_SIGN,
 	                    'visible'=>'$data->tipo == 1',
 						'url'=> 'Yii::app()->createUrl("ordendepago/update",
-								 array(	"id"=>$data->iddocumento,
+								 array(	"id"=>$data->ordendepago_idordendepago,
 								 		"idctacte"=>$data->ctacteprov_idctacteprov,
 								 		"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',
@@ -77,8 +77,8 @@ $columnas=array_merge(array(
 					'label'=>'Modificar compra',
 	                    'icon'=>TbHtml::ICON_PENCIL,
 	                    'visible'=>'$data->tipo == 0',
-						'url'=> 'Yii::app()->createUrl("compra/update",
-								 array(	"id"=>$data->iddocumento,
+						'url'=> 'Yii::app()->createUrl("compras/update",
+								 array(	"id"=>$data->compra_idcompra,
 								 		
 								 		))',
 						
@@ -88,7 +88,7 @@ $columnas=array_merge(array(
 	                    //'icon'=>TbHtml::ICON_PENCIL,
 	                    'visible'=>'$data->tipo == 0',
 						'url'=> 'Yii::app()->createUrl("compra/delete",
-								 array(	"id"=>$data->iddocumento,
+								 array(	"id"=>$data->compra_idcompra,
 								 		
 								 		))',
 	                  'options'=>array('class'=>'delete'),
@@ -99,7 +99,7 @@ $columnas=array_merge(array(
 	                    'icon'=>TbHtml::ICON_TRASH,
 	                    'visible'=>'$data->tipo == 1',
 						'url'=> '$this->grid->controller->createUrl("ordendepago/delete",
-								 array(	"id"=>$data->iddocumento,
+								 array(	"id"=>$data->ordendepago_idordendepago,
 								 		
 								 		))',
 	                   'options'=>array('class'=>'delete'),

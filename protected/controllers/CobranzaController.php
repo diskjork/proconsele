@@ -135,7 +135,7 @@ class CobranzaController extends Controller
            	$modelDeCCcliente->fecha=$_POST['Cobranza']['fecha'];
            	$modelDeCCcliente->descripcion="COBRANZA Nro:".$model->idcobranza."";
            	$modelDeCCcliente->tipo= 1; //tipo cobranza
-           	$modelDeCCcliente->iddocumento=$model->idcobranza;
+           	$modelDeCCcliente->cobranza_idcobranza=$model->idcobranza;
            	$modelDeCCcliente->haber=$model->importe;
            	$modelDeCCcliente->ctactecliente_idctactecliente=$model->ctactecliente_idctactecliente;
            	$modelDeCCcliente->cobranza_idcobranza=$model->idcobranza;
@@ -258,14 +258,16 @@ class CobranzaController extends Controller
 			}
 			
 			
-			 
+			
                 
 				$masterValues = array ('cobranza_idcobranza'=>$model->idcobranza);
 				//para comprobar si el importe ha sido modificado
 				$llave=null;
 				$cobranzaguardada=Cobranza::model()->findByPk($model->idcobranza);//modelo cobranza guardado
-				if($cobranzaguardada->importe != $_POST['Cobranza']['importe']){
+				
+				if(($cobranzaguardada->importe != $_POST['Cobranza']['importe']) || ($cobranzaguardada->fecha != $_POST['Cobranza']['fecha']) ){
 					$llave=$cobranzaguardada->importe;
+					//echo "si"; die();
 				}
 			if( //Save the master model after saving valid members
             MultiModelForm::save($member,$validatedMembers,$deleteMembers,$masterValues) &&
@@ -278,9 +280,10 @@ class CobranzaController extends Controller
            	if($llave != null){
            		$importeviejo=$llave;
            		$importenuevo=$model->importe;
+           		$fecha=$model->fecha;
            		$idctacte=$model->ctactecliente_idctactecliente;
            		$this->modificarImporteCtaCte($importeviejo, $importenuevo, $idctacte);
-           		$this->modImpDetalleCtacte($idctacte, $id, $importenuevo);
+           		$this->modImpDetalleCtacte($idctacte, $id, $importenuevo,$fecha);
            	}
            	
           //Si se ha modificado un detalle de cobranza..
@@ -321,7 +324,7 @@ class CobranzaController extends Controller
           					$tipoguardadoBorr=$valorborr_dos;
           					$this->cambioTipoBorrado($tipoguardadoBorr, $valorBorr_uno);
           				}
-          				if($keyborr_dos== "iddetallecobranza"){
+          				if($keyborr_dos == "iddetallecobranza"){
           					$this->borradoDetAsiento($valorborr_dos);
           				}
           			}
@@ -329,14 +332,12 @@ class CobranzaController extends Controller
           	
           	}
            
-           	//para el caso de elementos nuevos despues de actualizar la cobranza
-           
-				
-					$asiento=Asiento::model()->find("cobranza_idcobranza=:id",
-					array(':id'=>$id));
-					$cliente=Cliente::model()->find("ctactecliente_idctactecliente=:idctacte",
-             		array(":idctacte"=>$_POST['Cobranza']['ctactecliente_idctactecliente']));
-					$this->nuevoElem($validatedMembers, $_POST['Cobranza']['fecha'], $asiento->idasiento, $masterValues, $cliente);
+	           	//para el caso de elementos nuevos despues de actualizar la cobranza
+	           	$asiento=Asiento::model()->find("cobranza_idcobranza=:id",
+								array(':id'=>$id));
+				$cliente=Cliente::model()->find("ctactecliente_idctactecliente=:idctacte",
+	             array(":idctacte"=>$_POST['Cobranza']['ctactecliente_idctactecliente']));
+				$this->nuevoElem($validatedMembers, $_POST['Cobranza']['fecha'], $asiento->idasiento, $masterValues, $cliente);
 				
 				
 	
@@ -398,17 +399,19 @@ class CobranzaController extends Controller
 				$datos[$i]['transbanco']=$Detalle[$i]['transferenciabanco'];
 				//$this->cambioTipoBorrado($tipo, $datos[$i]);
 				if($tipo == 1){
-				$chek=$this->checkChequeBorrado($Detalle[$i]['iddetallecobranza']);
-				if($chek[0]['cant'] != 0 ){
-					$llaveChek="si";
+					$chek=$this->checkChequeBorrado($Detalle[$i]['iddetallecobranza']);
+					if($chek[0]['iddetalleordendepago'] != 0 ){
+						$llaveChek="si";
 					} 
 				}
 			}
+			
 			if($llaveChek == null){
 				for($i=0;$i < count($Detalle);$i++){
 					$this->cambioTipoBorrado($datos[$i]['tipo'], $datos[$i]);
 				}
-			}elseif ($llaveChek=="si"){
+			}elseif ($llaveChek == "si"){
+					//echo "failed";
                    throw new CHttpException(400, "Advertencia: Cheque de cobranza relacionado con una Orden de pago.");
                 }
 			$this->decrementarCtacteDelete($cobranza->ctactecliente_idctactecliente, $cobranza->importe);
@@ -430,9 +433,8 @@ class CobranzaController extends Controller
 		
 	}
 	public function checkChequeBorrado($id){
-		$sqlidcheque="SELECT COUNT(*) as cant FROM cheque 
-					  WHERE id_trabajo_cobranza=".$id." 
-					  		AND id_trabajo_ordendepago<>null;";
+		$sqlidcheque="SELECT iddetalleordendepago FROM cheque 
+					  WHERE iddetallecobranza=".$id.";";
 		$dbCommand = Yii::app()->db->createCommand($sqlidcheque);
 		$resultado = $dbCommand->queryAll();
 		return $resultado;
@@ -492,7 +494,6 @@ class CobranzaController extends Controller
 		}
 	}
 	public function nuevoMovCaja($datos){
-		
 							
 		$modelmovcaja=new Movimientocaja;
 		$modelmovcaja->descripcion= "Cobranza N°".(string)$datos['idcobranza']." - ".(string)$datos['nombrecliente']."-";
@@ -508,7 +509,6 @@ class CobranzaController extends Controller
 		
 		$modelCheque= new Cheque;
 		$modelCheque->nrocheque=$datos['chequenumero'];
-		//$modelCheque->concepto="Cobranza Nro.: ".(string)$datos['idcobranza']."-".(string)$datos['nombrecliente']."-";
 		$modelCheque->fechaingreso=$datos['fechaingreso'];
 		$modelCheque->fechacobro=$datos['fechacobro'];
 		$modelCheque->titular=$datos['titular'];
@@ -532,7 +532,7 @@ class CobranzaController extends Controller
 		//$modelTransf->rubro_idrubro=5;
 		$modelTransf->ctabancaria_idctabancaria=$datos['transbanco'];
 		
-		$modelTransf->id_de_trabajo=$datos['iddetallecobranza']; //para identificar el detalle
+		$modelTransf->iddetallecobranza=$datos['iddetallecobranza']; //para identificar el detalle
 		$modelTransf->save();
 		
 	}
@@ -620,7 +620,7 @@ class CobranzaController extends Controller
 		             $MovBanco->debe=$validatedMembers[$a]['importe'];
 		             $MovBanco->ctabancaria_idctabancaria=$validatedMembers[$a]['transferenciabanco'];
 		             $MovBanco->cuenta_idcuenta=5;
-		             $MovBanco->id_de_trabajo=$validatedMembers[$a]['iddetallecobranza'];
+		             $MovBanco->iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
 		             if($MovBanco->save()){
 			             $cuentaCtabancaria=Ctabancaria::model()->findByPk($validatedMembers[$a]['transferenciabanco']);
 			             $DeAsTrasfer=new Detalleasiento;
@@ -679,7 +679,7 @@ class CobranzaController extends Controller
    			case 2 :
    				//$this->resetDetalle($datos['iddetallecobranza']);	
    				$commandmovi= Yii::app()->db->createCommand();
-   				$commandmovi->delete('movimientobanco','id_de_trabajo=:id',
+   				$commandmovi->delete('movimientobanco','iddetallecobranza=:id',
 								array(
 								':id'=>$datos['iddetallecobranza']
    								)
@@ -723,6 +723,7 @@ class CobranzaController extends Controller
 	public function modUpdateItemsDetAsiento($datosviejos, $nuevosdatos){
 		
 		$datosviejos['tipocobranza']=(int)$datosviejos['tipocobranza'];
+		
 		//detalle asiento relacionado al detallecobranza
 		$DeAs=Detalleasiento::model()->find("iddetallecobranza=:id",
 				array(':id'=>$datosviejos['iddetallecobranza']));
@@ -770,7 +771,7 @@ class CobranzaController extends Controller
 				if(	($datosviejos['transbanco'] != $nuevosdatos['transbanco']) || 
 					($datosviejos['importe'] != $nuevosdatos['importe']))
 					{
-						$trans=Movimientobanco::model()->find("id_de_trabajo=:id",
+						$trans=Movimientobanco::model()->find("iddetallecobranza=:id",
 								array(':id'=>$datosviejos['iddetallecobranza']));
 						$trans->debe=$nuevosdatos['importe'];
 						$trans->ctabancaria_idctabancaria=$nuevosdatos['transbanco'];
@@ -792,11 +793,11 @@ class CobranzaController extends Controller
 					($datosviejos['iibbcomprelac'] != $nuevosdatos['iibbcomprelac']) ||
 					($datosviejos['iibbtasa'] != $nuevosdatos['iibbtasa']) ||
 					($datosviejos['importe'] != $nuevosdatos['importe']) ) 	{
-						
-						$MovIIBB->iibbnrocomp=$nuevosdatos['iibbnrocomp'];
-						$MovIIBB->iibbfecha=$nuevosdatos['iibbfecha'];
-						$MovIIBB->iibbcomprelac=$nuevosdatos['iibbcomprelac'];
-						$MovIIBB->iibbtasa=$nuevosdatos['iibbtasa'];
+						//print_r($nuevosdatos);die();
+						$MovIIBB->nrocomprobante=$nuevosdatos['iibbnrocomp'];
+						$MovIIBB->fecha=$nuevosdatos['iibbfecha'];
+						$MovIIBB->comp_relacionado=$nuevosdatos['iibbcomprelac'];
+						$MovIIBB->tasa=$nuevosdatos['iibbtasa'];
 						$MovIIBB->importe=$nuevosdatos['importe'];
 						$MovIIBB->save();
 						$DeAs->debe=$nuevosdatos['importe'];
@@ -837,7 +838,7 @@ class CobranzaController extends Controller
 	public function borrarDetCtaCte($idcobranza,$importe,$idctacte){
  			$commandmovi= Yii::app()->db->createCommand();
 			$commandmovi->delete('detallectactecliente',
-						'iddocumento=:iddocument AND haber=:haber AND
+						'cobranza_idcobranza=:iddocument AND haber=:haber AND
 						 ctactecliente_idctactecliente=:idctactecliente',
 						array(':iddocument'=>$idcobranza,
 							  ':haber'=>$importe,
@@ -857,11 +858,18 @@ class CobranzaController extends Controller
 		
 		return $nombre;
 	}
-	public function modImpDetalleCtacte($idctacte,$idcobranza,$impnuevo){
-		$command = Yii::app()->db->createCommand();
-		$command->update('detallectactecliente', array(
-				    'detallectactecliente.haber'=>new CDbExpression($impnuevo),
-				), 'iddocumento='.$idcobranza.' AND ctactecliente_idctactecliente='.$idctacte);
+	public function modImpDetalleCtacte($idctacte,$idcobranza,$impnuevo,$fecha){
+		$detalle=Detallectactecliente::model()->find("cobranza_idcobranza=:id AND ctactecliente_idctactecliente=:ctacte",
+						array(':id'=>$idcobranza,
+							  ':ctacte'=>$idctacte));
+		$detalle->haber=$impnuevo;
+		$detalle->fecha=$fecha;
+		$detalle->save();
+		$asiento=Asiento::model()->find("cobranza_idcobranza=:id",
+					array(':id'=>$idcobranza));
+		$asiento->fecha=$fecha;
+		$asiento->save();
+		
 	}
 	
 	public function cambioDetalleAsiento($tipoguardado, $nuevo){
