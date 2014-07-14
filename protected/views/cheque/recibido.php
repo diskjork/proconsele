@@ -127,7 +127,7 @@ $columnas=array(
 			'htmlOptions' => array('style' =>'text-align: right'),
 			'template'=>' {acreditar} {view} {update} {delete} ',
 			'buttons' => array(
-				 'view'=>
+				'view'=>
                     array(
                         'url'=>'Yii::app()->createUrl("cheque/view", array("id"=>$data->idcheque))',
                         'options'=>array(

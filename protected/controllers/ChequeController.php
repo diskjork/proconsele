@@ -344,11 +344,12 @@ public function labelEstado($data, $row){
 						$array = array('check' => 'success');
 						if($modelBanco->save()){
 							if($model->save()){
-					            	$json = json_encode($array);
-					            	echo $json;
-					            	Yii::app()->end(); 
-									$this->redirect(Yii::app()->request->baseUrl.'/cheque/admin');
-									}
+							    $this->nuevoAsientoBanco($model, $_POST['Movimientobanco']['fecha'], $modelBanco);
+				            	$json = json_encode($array);
+				            	echo $json;
+				            	Yii::app()->end(); 
+								$this->redirect(Yii::app()->request->baseUrl.'/cheque/admin');
+								}
 						}else {
 							echo CActiveForm::validate($modelBanco);
 				           	Yii::app()->end();
@@ -756,17 +757,35 @@ public function labelEstado($data, $row){
 			$DeAsRel->asiento_idasiento=$asiento->idasiento;
 			if($DeAsCaja->save()){
 				if($DeAsRel->save()){
-					return true;
-				} else {
-				print_r($DeAsRel->getErrors()); die();
-				}
-			} else {
-				print_r($DeAsCaja->getErrors()); die();
-			}
-		} else {
-			print_r($asiento->getErrors()); die();
-			return false;
-		}
+					
+			} 
+		} 
+	}
+	}
+	/**
+	 * Método para generar el asiento en el caso de acreditar un cheque de tercero depósito
+	 * 
+	 */
+	public function nuevoAsientoBanco($cheque, $fecha, $movbanco){
+		$asiento=new Asiento;
+		$asiento->descripcion="Cobro de cheque N°: ".$cheque->nrocheque." de: ".$cheque->clienteIdcliente;
+		$asiento->fecha=$fecha;
+		$asiento->movimientobanco_idmovimientobanco=$movbanco->idmovimientobanco;
+		if($asiento->save()){
+			$DeAsBanco=new Detalleasiento;
+			$DeAsRel=new Detalleasiento;
+			$DeAsBanco->debe=$cheque->debe;
+			$DeAsBanco->cuenta_idcuenta=$movBanco->ctabancaria_idctabancaria->cuenta_idcuenta;
+			$DeAsBanco->asiento_idasiento=$asiento->idasiento;
+			$DeAsRel->haber=$cheque->debe;
+			$DeAsRel->cuenta_idcuenta=5; //cuenta cheque de 3ros a cobrar
+			$DeAsRel->asiento_idasiento=$asiento->idasiento;
+			if($DeAsBanco->save()){
+				if($DeAsRel->save()){
+					
+			} 
+		} 
+	}
 	}
 	
 }//end app

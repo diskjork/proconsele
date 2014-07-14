@@ -15,7 +15,7 @@
 	//'enableAjaxValidation'=>true,
 	//'enableAjaxValidation'=>true,
 	//'enableAjaxValidation'=>true,
-	'enableClientValidation'=>false,
+	'enableClientValidation'=>true,
     'htmlOptions'=>array(
                                'onsubmit'=>"return false;",
                                'onkeypress'=>" if(event.keyCode == 13){ send(); } "
@@ -50,20 +50,22 @@
 			<h5>Cuenta Bancaria en que se deposita: </h5>
 			</div>
 			
-            <?php
-			    $this->widget('yiiwheels.widgets.select2.WhSelect2', array(
-				    'asDropDownList' => true,
-				    'model'=>$modelBanco,
-	    			'attribute' => 'ctabancaria_idctabancaria',
-		    		'data' => GxHtml::listDataEx(Ctabancaria::model()->findAllAttributes(array('nombre'),true,array('order'=>'nombre ASC')),'idctabancaria','nombre'),
-				    'pluginOptions' => array(
-			    		'placeholder' => 'Banco',
-				    	'width' => '50%',
-			    		'minimumResultsForSearch' => '3',
-			    	),
-			    ));
-			?>
-			<br><br>
+           <div>
+			
+       		<?php $this->widget('ext.select2.ESelect2',array(
+				  //'name'=>'cuenta_idcuenta',
+				 'model'=>$modelBanco,
+				 'attribute'=>'ctabancaria_idctabancaria',
+				  'data' => GxHtml::listDataEx(Ctabancaria::model()->findAllAttributes(array('nombre'),true,array('condition'=>'estado=1','order'=>'nombre ASC')),'idctabancaria','nombre'),
+				  'options'=>array(
+					   'placeholder'=>'Seleccione una Cta. Bancaria',
+					   'allowClear'=>true,
+						'width'=> '60%',
+					  ),
+				)); ?>
+				
+		</div><br>
+			
 			<p><b>Importe</b></p>
             <div class="input-prepend">
             
@@ -130,10 +132,20 @@ function send()
      var obj = $.parseJSON(data);
      if(obj.check=="success"){
          window.location = "<?php echo Yii::app()->createUrl("cheque/recibido"); ?>"; 
-     }else{
-         $("#error-div-Banco").show();
-         $("#error-div-Banco").html("La <strong>fecha</strong> ingresada es menor a la <strong>fecha de cobro.");
-         }
+     }
+     if(obj.Movimientobanco_ctabancaria_idctabancaria == "Cta. bancaria no puede ser nulo."){
+			$("#error-div-Banco").show();
+			$("#error-div-Banco").html("<strong>Cuenta Bancaria</strong> no puede ser nulo.");
+   }
+   if(obj.Movimientobanco_fecha == "Fecha no puede ser nulo."){
+			$("#error-div-Banco").show();
+			$("#error-div-Banco").append("<br><strong>Fecha de cobro</strong> no puede ser nulo.");
+   }	
+   
+   if(obj.Movimientobanco_fechacobro == "La fecha ingresada debe ser mayor a la fecha de cobro"){
+			$("#error-div-Banco").show();
+			$("#error-div-Banco").append("<br>La <strong>fecha ingresada</strong> debe ser mayor a la fecha de cobro");
+	 }
    }
  });
 }
