@@ -28,7 +28,8 @@ $columnas=array(
 		
 		array('name' => 'clienteIdcliente',
 					'header' => 'CLIENTE',
-					
+					'filter'=> CHtml::activeTextField($model->searchcliente, 'nombre'),
+					'value'=>'$data->clienteIdcliente->nombre',
 					'htmlOptions' => array('width' =>'200px')),	
 		array('name' => 'debe',
 					'header' => 'DEBE',

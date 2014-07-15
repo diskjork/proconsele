@@ -33,26 +33,32 @@ $columnas=array(
 		
 		array('name' => 'proveedorIdproveedor',
 					'header' => 'PROVEEDOR',
-					
-					'htmlOptions' => array('width' =>'200px')),	
+					'filter'=> CHtml::activeTextField($model->searchprov, 'nombre'),
+					'value'=>'$data->proveedorIdproveedor->nombre',
+					'htmlOptions' => array('width' =>'50%')
+		),	
 		array('name' => 'debe',
 					'header' => 'DEBE',
 					'filter'=> false,
-					'value'=>'($data->debe !== null)? "$".number_format($data->debe, 2, ".", ","): ""',			
+					'value'=>'($data->debe !== null)? "$".number_format($data->debe, 2, ".", ","): ""',
+					'htmlOptions' => array('width' =>'15%'),			
 					),
 		array('name' => 'haber',
 					'header' => 'HABER',
 					'filter'=> false,
-					'value'=>'($data->haber !== null)? "$".number_format($data->haber, 2, ".", ","): ""',			
+					'value'=>'($data->haber !== null)? "$".number_format($data->haber, 2, ".", ","): ""',
+					'htmlOptions' => array('width' =>'15%'),			
 					),
 		array('name' => 'saldo',
 					'header' => 'SALDO',
-					'value'=>'($data->saldo !== null)? "$".number_format($data->saldo, 2, ".", ","): ""',			
+					'value'=>'($data->saldo !== null)? "$".number_format($data->saldo, 2, ".", ","): ""',
+					'htmlOptions' => array('width' =>'15%'),
 					),
 		array(
 			'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'template'=>'{view}',
+			'htmlOptions' => array('width' =>'5%'),
 			'buttons' => array(
 				'view'=>array(
 					'label'=>'Ver Detalle Cta.Cte.',

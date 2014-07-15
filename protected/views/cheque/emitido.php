@@ -1,6 +1,7 @@
 <?php
 /* @var $this ChequeController */
 /* @var $model Cheque */
+
 $this->menu=array(
 	array('label'=>'Nuevo Cheque','url'=>'create'),
 	array('label'=>'Nuevo Banco','url'=>'#',
@@ -12,7 +13,7 @@ $this->menu=array(
 );
 	
 ?>
-
+<?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/cancelarDebito.js', CClientScript::POS_HEAD);?>
 <?php $this->widget('bootstrap.widgets.TbModal', array(
     'id' => 'ModalBanco',
     'header' => '<h4>Nuevo Banco</h4>',
@@ -51,7 +52,8 @@ $columnas=array(
                     'htmlOptions'=>array('style'=>'text-align:center'),
        				),
 		array('name' => 'nrocheque',
-					'header' => 'NRO. CHEQUE',
+					'header' => 'NRO.',
+					'htmlOptions' => array('width' =>'10%'),
 					),
 		array('name' => 'fechacobro',
 					'header' => 'F. COBRO',
@@ -104,7 +106,7 @@ $columnas=array(
 			'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right'),
-			'template'=>'{debitar} {view} {update} {delete} ',
+			'template'=>'{debitar} {view} {update} {delete} {canDebito}',
 			'buttons' => array(
 				 'view'=>
                     array(
@@ -124,16 +126,38 @@ $columnas=array(
                     ),
 				'debitar'=>array(
 					'label'=>'Debitar',
-	                    'icon'=>TbHtml::ICON_MINUS_SIGN,
+	                    'icon'=>TbHtml::ICON_MINUS_SIGN ,
 						'visible'=>'$data->haber != null and $data->debe == 0 and $data->estado == 0',
 	                   	'url'=> 'Yii::app()->createUrl("cheque/debitar", array("id"=>$data->idcheque))',
 						
 	                  ),
-	            
-	                )
-			),
-		
-	);
+	            'canDebito'=>array(
+	                  	'label'=>'Cancelar Debito',
+	                    'icon'=>TbHtml::ICON_ASTERISK,
+						'visible'=>'$data->estado == 1',
+	                  	'url'=>'Yii::app()->createUrl("cheque/cancelarDebito", array("id"=>$data->idcheque))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de cancelar el débito?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                  $.fn.yiiGridView.update("cheque-grid");
+		                                  alert("Fue cambiand con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		$.fn.yiiGridView.update("cheque-grid");
+	                                		alert("No pudo cambiarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		             ),
+		          ),
+		 );
 ?>
 <?php
 	

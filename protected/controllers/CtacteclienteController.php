@@ -141,6 +141,12 @@ class CtacteclienteController extends Controller
 	public function actionAdmin()
 	{
 		$model=new Ctactecliente('search');
+		$cliente=new Cliente('search');
+		$cliente->unsetAttributes();
+		$model->searchcliente=$cliente;
+		if (isset($_GET['Cliente'])) {
+	        $cliente->attributes = $_GET['Cliente'];
+	    }
 		$model->unsetAttributes();  // clear any default values
 		if (isset($_GET['Ctactecliente'])) {
 			$model->attributes=$_GET['Ctactecliente'];
@@ -148,6 +154,7 @@ class CtacteclienteController extends Controller
 
 		$this->render('admin',array(
 			'model'=>$model,
+			'cliente'=>$cliente,
 		));
 	}
 

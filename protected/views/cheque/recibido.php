@@ -125,7 +125,7 @@ $columnas=array(
 			'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right'),
-			'template'=>' {acreditar} {view} {update} {delete} ',
+			'template'=>'{view} {update} {delete} {acreditar} {canAcreditarCaja} {canAcreditaBanco}',
 			'buttons' => array(
 				'view'=>
                     array(
@@ -143,14 +143,62 @@ $columnas=array(
                         'url'=>'Yii::app()->createUrl("cheque/update", array("id"=>$data->idcheque))',
                         'visible'=>'$data->estado == 0 || $data->estado == 2 ',
                     ),
-				
-	            'acreditar'=>array(
+                 'acreditar'=>array(
 					'label'=>'Acreditar',
 	                    'icon'=>TbHtml::ICON_PLUS_SIGN,
 	                  	'visible'=>'$data->debe != null and $data->haber == 0 and $data->estado == 2',
 	                    'url'=>'Yii::app()->createUrl("cheque/acreditar", array("id"=>$data->idcheque))',
-	                   	)
-	                )
+	             ),
+				
+	             'canAcreditarCaja'=>array(
+	                  	'label'=>'Cancelar Acreditación por Caja',
+	                    'icon'=>TbHtml::ICON_ASTERISK,
+						'visible'=>'$data->estado == 3',
+	                  	'url'=>'Yii::app()->createUrl("cheque/cancelarAcreditaCaja", array("id"=>$data->idcheque))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de cancelar la acreditación?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                  $.fn.yiiGridView.update("cheque-grid");
+		                                  alert("Fue cambiando con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		$.fn.yiiGridView.update("cheque-grid");
+	                                		alert("No pudo cambiarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		          'canAcreditaBanco'=>array(
+	                  	'label'=>'Cancelar Acreditación por Banco',
+	                    'icon'=>TbHtml::ICON_ASTERISK,
+						'visible'=>'$data->estado == 5',
+	                  	'url'=>'Yii::app()->createUrl("cheque/cancelarAcreditaBanco", array("id"=>$data->idcheque))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de cancelar la acreditación?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                  $.fn.yiiGridView.update("cheque-grid");
+		                                  alert("Fue cambiando con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		$.fn.yiiGridView.update("cheque-grid");
+	                                		alert("No pudo cambiarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+	             )
 			),
 		
 	);

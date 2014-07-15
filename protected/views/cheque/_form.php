@@ -209,7 +209,7 @@
 		
 		<?php 
 			
-				echo CHtml::link('Cancelar', Yii::app()->request->baseUrl.'/cheque/admin',array ('class'=>'btn btn-primary'));
+				echo CHtml::link('Cancelar', ($model->debeohaber == 0) ? Yii::app()->request->baseUrl.'/cheque/recibido' : Yii::app()->request->baseUrl.'/cheque/emitido',array ('class'=>'btn btn-primary'));
 				//echo TbHtml::button('Primary',Yii::app()->request->baseUrl.'/movimientobanco/admin', array('color' => TbHtml::BUTTON_COLOR_PRIMARY));
 			?>
     </div>

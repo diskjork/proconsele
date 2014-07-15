@@ -19,7 +19,8 @@
  * @property Detallectactecliente[] $detallectacteclientes
  */
 abstract class BaseCtactecliente extends GxActiveRecord {
-
+	public $searchcliente;
+	
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -78,6 +79,10 @@ abstract class BaseCtactecliente extends GxActiveRecord {
 		$criteria->compare('debe', $this->debe);
 		$criteria->compare('haber', $this->haber);
 		$criteria->compare('saldo', $this->saldo);
+		
+		//para el filtro de clientes
+		$criteria->with = array('clienteIdcliente');
+		$criteria->compare('nombre', $this->searchcliente->nombre, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

@@ -20,7 +20,7 @@
  * @property Ordendepago[] $ordendepagos
  */
 abstract class BaseCtacteprov extends GxActiveRecord {
-
+	public $searchprov;
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -52,6 +52,7 @@ abstract class BaseCtacteprov extends GxActiveRecord {
 			'proveedorIdproveedor' => array(self::BELONGS_TO, 'Proveedor', 'proveedor_idproveedor'),
 			'detallectacteprovs' => array(self::HAS_MANY, 'Detallectacteprov', 'ctacteprov_idctacteprov'),
 			'ordendepagos' => array(self::HAS_MANY, 'Ordendepago', 'ctacteprov_idctacteprov'),
+			
 		);
 	}
 
@@ -81,6 +82,9 @@ abstract class BaseCtacteprov extends GxActiveRecord {
 		$criteria->compare('haber', $this->haber);
 		$criteria->compare('saldo', $this->saldo);
 		$criteria->compare('proveedor_idproveedor', $this->proveedor_idproveedor);
+		//para el filtro de clientes
+		$criteria->with = array('proveedorIdproveedor');
+		$criteria->compare('nombre', $this->searchprov->nombre, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

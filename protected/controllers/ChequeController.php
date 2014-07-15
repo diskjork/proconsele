@@ -290,6 +290,7 @@ public function actionDebitar($id){
 						
 						if($modelBanco->save()){
 							if($model->save()){
+								$this->nuevoAsientoDebitar($model, $_POST['Movimientobanco']['fecha'], $modelBanco);
 					            	$json = json_encode($array);
 					            	echo $json;
 					            	Yii::app()->end(); 
@@ -395,6 +396,50 @@ public function labelEstado($data, $row){
 			
 		));
 	}
+	
+	public function actionCancelarDebito($id){
+		$idcheque=$id;
+		$cheque=Cheque::model()->findByPk($idcheque);
+		$movbanco=Movimientobanco::model()->find("cheque_idcheque=:id",
+					array(':id'=>$idcheque));
+		
+		$movbanco->delete();
+			
+			$cheque->estado=0;
+			if($cheque->save()){
+				
+				echo "true";
+			}
+	}	
+	
+	public function actionCancelarAcreditaCaja($id){
+		$idcheque=$id;
+		$cheque=Cheque::model()->findByPk($idcheque);
+		$movcaja=Movimientocaja::model()->find("id_de_trabajo=:id",
+					array(':id'=>$idcheque));
+		$movcaja->delete();
+		$cheque->estado=2;
+		if($cheque->save()){
+			
+			echo "true";
+		}
+	}
+	public function actionCancelarAcreditaBanco($id){
+		$idcheque=$id;
+		$cheque=Cheque::model()->findByPk($idcheque);
+		$movbanco=Movimientobanco::model()->find("cheque_idcheque=:id",
+					array(':id'=>$idcheque));
+		
+		$movbanco->delete();
+			
+			$cheque->estado=2;
+			if($cheque->save()){
+				
+				echo "true";
+			}
+	}	
+	
+	
 	public function compararFechas($primera,$segunda)
 	 {
 	  $valoresPrimera = explode ("/", $primera);   
@@ -775,10 +820,37 @@ public function labelEstado($data, $row){
 			$DeAsBanco=new Detalleasiento;
 			$DeAsRel=new Detalleasiento;
 			$DeAsBanco->debe=$cheque->debe;
-			$DeAsBanco->cuenta_idcuenta=$movBanco->ctabancaria_idctabancaria->cuenta_idcuenta;
+			$DeAsBanco->cuenta_idcuenta=$movbanco->ctabancariaIdctabancaria->cuenta_idcuenta;
 			$DeAsBanco->asiento_idasiento=$asiento->idasiento;
 			$DeAsRel->haber=$cheque->debe;
 			$DeAsRel->cuenta_idcuenta=5; //cuenta cheque de 3ros a cobrar
+			$DeAsRel->asiento_idasiento=$asiento->idasiento;
+			if($DeAsBanco->save()){
+				if($DeAsRel->save()){
+					
+			} 
+		} 
+	}
+	}
+	/**
+	 * Método para generar el asiento en el caso de debitar un cheque 
+	 * 
+	 */
+	public function nuevoAsientoDebitar($cheque, $fecha, $movbanco){
+		$asiento=new Asiento;
+		$asiento->descripcion="Debito de cheque N°: ".$cheque->nrocheque." CHEQUERA: ".$cheque->chequeraIdchequera;
+		$asiento->fecha=$fecha;
+		$asiento->movimientobanco_idmovimientobanco=$movbanco->idmovimientobanco;
+		if($asiento->save()){
+			$DeAsBanco=new Detalleasiento;
+			$DeAsRel=new Detalleasiento;
+			$DeAsBanco->haber=$cheque->haber;
+			//cta a la q pertenece la chequera
+			$DeAsBanco->cuenta_idcuenta=$movbanco->ctabancariaIdctabancaria->cuenta_idcuenta;
+			$DeAsBanco->asiento_idasiento=$asiento->idasiento;
+			$DeAsRel->debe=$cheque->haber;
+			//cta relacionada a los cheques emitidos
+			$DeAsRel->cuenta_idcuenta=$cheque->chequeraIdchequera->cuenta_idcuenta;
 			$DeAsRel->asiento_idasiento=$asiento->idasiento;
 			if($DeAsBanco->save()){
 				if($DeAsRel->save()){

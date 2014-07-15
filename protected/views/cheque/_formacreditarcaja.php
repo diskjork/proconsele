@@ -57,7 +57,7 @@
 		</div><br>
 			<?php echo $form->hiddenField($modelCaja,'fechacobro', array('value'=>$model->fechacobro)); ?>
 			<?php echo $form->hiddenField($modelCaja,'cuenta_idcuenta', array('value'=>5)); ?>
-			
+			<?php echo $form->hiddenField($modelCaja,'id_de_trabajo', array('value'=>$model->idcheque)); ?>		
 			<!--  Cambio de estado del cheque -->
 			<?php echo $form->hiddenField($model,'estado', array('value'=>'3')); ?>
 			<?php echo $form->hiddenField($model,'importe',array('value'=>$model->debe)); ?>
