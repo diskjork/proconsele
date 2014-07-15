@@ -27,7 +27,7 @@ $this->menu=array(
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel'),'Exportar',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
 </div>
 <?php 
-$dataProvider=$model->search();
+$dataProvider=$model->search2();
 $dataProvider->setPagination(array('pageSize'=>20)); 
 $columnas=array(
 		

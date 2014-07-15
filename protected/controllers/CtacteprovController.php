@@ -141,7 +141,7 @@ class CtacteprovController extends Controller
 	public function actionAdmin()
 	{
 		$model=new Ctacteprov('search');
-		$prov=new Proveedor;
+		$prov=new Proveedor('search');
 		$prov->unsetAttributes();
 		$model->searchprov=$prov;
 		if (isset($_GET['Proveedor'])) {

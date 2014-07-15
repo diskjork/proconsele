@@ -83,6 +83,22 @@ abstract class BaseCtacteprov extends GxActiveRecord {
 		$criteria->compare('saldo', $this->saldo);
 		$criteria->compare('proveedor_idproveedor', $this->proveedor_idproveedor);
 		//para el filtro de clientes
+		//$criteria->with = array('proveedorIdproveedor');
+		//$criteria->compare('proveedorIdproveedor.nombre', $this->searchprov->nombre, true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
+	public function search2() {
+		$criteria = new CDbCriteria;
+
+		$criteria->compare('idctacteprov', $this->idctacteprov);
+		$criteria->compare('debe', $this->debe);
+		$criteria->compare('haber', $this->haber);
+		$criteria->compare('saldo', $this->saldo);
+		$criteria->compare('proveedor_idproveedor', $this->proveedor_idproveedor);
+		//para el filtro de clientes
 		$criteria->with = array('proveedorIdproveedor');
 		$criteria->compare('nombre', $this->searchprov->nombre, true);
 

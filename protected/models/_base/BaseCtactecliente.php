@@ -80,6 +80,19 @@ abstract class BaseCtactecliente extends GxActiveRecord {
 		$criteria->compare('haber', $this->haber);
 		$criteria->compare('saldo', $this->saldo);
 		
+		return new CActiveDataProvider($this, array(
+			'criteria' => $criteria,
+		));
+	}
+	public function search2() {
+		$criteria = new CDbCriteria;
+
+		$criteria->compare('idctactecliente', $this->idctactecliente);
+		$criteria->compare('cliente_idcliente', $this->cliente_idcliente);
+		$criteria->compare('debe', $this->debe);
+		$criteria->compare('haber', $this->haber);
+		$criteria->compare('saldo', $this->saldo);
+		
 		//para el filtro de clientes
 		$criteria->with = array('clienteIdcliente');
 		$criteria->compare('nombre', $this->searchcliente->nombre, true);

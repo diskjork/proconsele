@@ -22,7 +22,7 @@ $this->menu=array(
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel'),'Exportar',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
 </div>
 <?php 
-$dataProvider=$model->search();
+$dataProvider=$model->search2();//del nuevo criteria en el BaseCtactecliente
 $dataProvider->setPagination(array('pageSize'=>20)); 
 $columnas=array(
 		
@@ -69,7 +69,7 @@ $columnas=array(
 
 <?php $this->widget('yiiwheels.widgets.grid.WhGridView',array(
 	'id'=>'ctactecliente-grid',
-	'dataProvider'=>$model->search(),
+	'dataProvider'=>$dataProvider,
 	'filter'=>$model,
 	'columns'=>$columnas,
 	'fixedHeader' => false,
