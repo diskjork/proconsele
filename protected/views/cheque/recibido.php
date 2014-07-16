@@ -11,7 +11,7 @@ $this->breadcrumbs=array(
 $this->menu=array(
 	
 	array('label'=>'Cheques Emitidos','url'=>'emitido'),
-	//array('label'=>'Cheque Endosados','url'=>'endosados'),
+	array('label'=>'Cheque Endosados','url'=>'endosados'),
 );
 	
 ?>
@@ -45,7 +45,8 @@ $this->menu=array(
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel'),'Exportar',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
 </div>
 <?php	
-$valores=array('2'=>'A Cobrar', '3'=>'Cobrado');
+$valores=array('0'=>'A Cobrar', '3'=>'Cobrado-Caja','4'=>'Endozado','5'=>'Cobrado-Banco');
+
 $columnas=array(
 	array(
 					'header' => '#',
@@ -125,7 +126,7 @@ $columnas=array(
 			'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right'),
-			'template'=>'{view} {update} {delete} {acreditar} {canAcreditarCaja} {canAcreditaBanco}',
+			'template'=>'{view} {update}  {acreditar} {canAcreditarCaja} {canAcreditarBanco}',
 			'buttons' => array(
 				'view'=>
                     array(
@@ -140,8 +141,10 @@ $columnas=array(
                     ),
                 'update'=>
                     array(
-                        'url'=>'Yii::app()->createUrl("cheque/update", array("id"=>$data->idcheque))',
-                        'visible'=>'$data->estado == 0 || $data->estado == 2 ',
+                    	'label'=>'Modificar cheque desde cobranza',
+                    	'visible'=>'$data->estado == 2 AND $data->iddetallecobranza != null',
+                        'url'=>'Yii::app()->createUrl("cobranza/update", array("id"=>$data->detallecobranzaIddetallecobranza->cobranza_idcobranza))',
+                        //'visible'=>'$data->estado == 0 || $data->estado == 2 ',
                     ),
                  'acreditar'=>array(
 					'label'=>'Acreditar',
@@ -174,7 +177,7 @@ $columnas=array(
 	                  			),	
 		                  	),
 		              	),
-		          'canAcreditaBanco'=>array(
+		          'canAcreditarBanco'=>array(
 	                  	'label'=>'Cancelar Acreditación por Banco',
 	                    'icon'=>TbHtml::ICON_ASTERISK,
 						'visible'=>'$data->estado == 5',

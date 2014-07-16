@@ -63,6 +63,11 @@ $columnas=array(
 			'value'=>'$data->asentable == 1 ? "SI" : "NO"',
 			'htmlOptions' => array('width' =>'20px','style'=>'text-align:center'),
 		),
+		array(
+            'header'=>'Opciones',
+            'class'=>'bootstrap.widgets.TbButtonColumn',
+			'template'=>'{update} ',
+		),
 		
 	);
 ?>

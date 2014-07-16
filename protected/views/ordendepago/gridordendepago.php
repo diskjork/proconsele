@@ -39,18 +39,9 @@
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
+			'template'=>'{update} {delete}',   
             'buttons'=>array(
-                'view'=>
-                    array(
-                        'url'=>'Yii::app()->createUrl("ordendepago/view", array("id"=>$data->idordendepago))',
-                        'options'=>array(
-                            'ajax'=>array(
-                                'type'=>'POST',
-                                'url'=>"js:$(this).attr('href')",
-                                'success'=>'function(data) { $("#viewModal .modal-body p").html(data); $("#viewModal").modal(); }'
-                            ),
-                        ),
-                    ),
+            
                  'update'=>array(
 					'label'=>'Modificar Orden de pago',
 	                    //'icon'=>TbHtml::ICON_MINUS_SIGN,

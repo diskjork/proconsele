@@ -216,11 +216,70 @@ class AsientoController extends Controller
 		));
 	}
 
-/*	public function actionGrilla($id)
-	{
-		$model=Detalleasiento::model()->findAll('asiento_idasiento=:idasiento',array(':idasiento'=>$id));
-		$this->render('gridasiento',array(
-			'model'=>$model,
-		));
-	}*/
+	public function actionExcel(){
+                $model=new Detalleasiento('search');
+                	
+               	$this->widget('application.components.widgets.EExcelView', array(
+                	
+				    'id'                   => 'some-grid',
+				    'dataProvider'		   => $model->Search(),
+				    'grid_mode'            => 'export', // Same usage as EExcelView v0.33
+				    //'template'             => "{summary}\n{items}\n{exportbuttons}\n{pager}",
+				    'title'                => 'Libro diario ' . date('d-m-Y'),
+				    'creator'              => 'YVN',
+				    'subject'              => mb_convert_encoding('Something important with a date in French: ' . utf8_encode(strftime('%e %B %Y')), 'ISO-8859-1', 'UTF-8'),
+				    'description'          => mb_convert_encoding('Etat de production g�n�r� � la demande par l\'administrateur (some text in French).', 'ISO-8859-1', 'UTF-8'),
+				    'lastModifiedBy'       => 'YVN',
+				    'sheetTitle'           => 'CC Proveedores ' . date('m-d-Y H-i'),
+				    'keywords'             => '',
+				    'category'             => '',
+				    'landscapeDisplay'     => true, // Default: false
+				    'A4'                   => true, // Default: false - ie : Letter (PHPExcel default)
+				    'pageFooterText'       => '&RThis is page no. &P of &N pages', // Default: '&RPage &P of &N'
+				    'automaticSum'         => true, // Default: false
+				    'decimalSeparator'     => ',', // Default: '.'
+				    'thousandsSeparator'   => '.', // Default: ','
+				    //'displayZeros'       => false,
+				    'zeroPlaceholder'      => '-',
+				    //'sumLabel'             => 'TOTALES:', // Default: 'Totals'
+				    'borderColor'          => '000000', // Default: '000000'
+				    'bgColor'              => 'E0E0E0', // Default: 'FFFFFF'
+				    'textColor'            => '000000', // Default: '000000'
+				    'rowHeight'            => 15, // Default: 15
+				    'headerBorderColor'    => '000000', // Default: '000000'
+				    'headerBgColor'        => 'FF7F50', // Default: 'CCCCCC'
+				    'headerTextColor'      => '000000', // Default: '000000'
+				    'headerHeight'         => 25, // Default: 20
+				    'footerBorderColor'    => '000000', // Default: '000000'
+				    'footerBgColor'        => 'CCCCCC', // Default: 'FFFFCC'
+				    'footerTextColor'      => '000000', // Default: '0000FF'
+				    'footerHeight'         => 25, // Default: 20
+				    'exportType'		   => 'Excel2007',
+                	'enablePagination'		=> true,
+				    'columns'              => array( // an array of your CGridColumns
+
+               			array(
+               				'name' => 'proveedorIdproveedor',
+							'header' => 'PROVEEDOR',
+						),	
+						array(
+							'name' => 'debe',
+							'header' => 'DEBE',
+							'value'=>'($data->debe !== null)? "$".number_format($data->debe, 2, ".", ","): ""',			
+						),
+						array(
+							'name' => 'haber',
+							'header' => 'HABER',
+							'value'=>'($data->haber !== null)? "$".number_format($data->haber, 2, ".", ","): ""',			
+						),
+						array(
+							'name' => 'saldo',
+							'header' => 'SALDO',
+							'value'=>'($data->saldo !== null)? "$".number_format($data->saldo, 2, ".", ","): ""',			
+						),
+					), 
+				)); 
+               
+        	
+	}
 }

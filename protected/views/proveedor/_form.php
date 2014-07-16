@@ -39,7 +39,7 @@
 					);?>
 				</div>
 				<div class="span5">
-					<?php echo $form->label($model, 'tipodecontribuyente_idtipocontribuyente');?>
+					<?php  echo $form->labelEx($model, 'tipodecontribuyente_idtipocontribuyente');?>
 					<?php
 					    $this->widget('yiiwheels.widgets.select2.WhSelect2', array(
 						    'asDropDownList' => true,
@@ -49,6 +49,7 @@
 						    'pluginOptions' => array(
 						    	'width' => '100%',
 					    		'minimumResultsForSearch' => '3',
+					    		
 					    	),
 					    ));
 					?>
@@ -56,7 +57,7 @@
 			</div>	
             <?php echo $form->textFieldControlGroup($model,'direccion',array('span'=>5,'maxlength'=>45)); ?>
 			
-            <?php echo $form->label($model, 'localidad_idlocalidad');?>
+            <?php echo $form->labelEx($model, 'localidad_idlocalidad');?>
 			<?php
 			    $this->widget('yiiwheels.widgets.select2.WhSelect2', array(
 				    'asDropDownList' => true,

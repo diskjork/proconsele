@@ -185,7 +185,7 @@ public function actionUpdate($id)
 					if (isset($_POST['Detalleordendepago']['u__'][$i]['tipoordendepago'])){
 											
 						//datos nuevos traidos por POST
-						$itemUpdate[$i]['totalordendepago']=$_POST['Detalleordendepago']['importe'];
+						$itemUpdate[$i]['totalordendepago']=$_POST['Ordendepago']['importe'];
 						$itemUpdate[$i]['iddetalleordendepago']=$iddetalle_nuevo;
 						$itemUpdate[$i]['tipoordendepago']=$_POST['Detalleordendepago']['u__'][$i]['tipoordendepago'];
 						$itemUpdate[$i]['transbanco']=$_POST['Detalleordendepago']['u__'][$i]['transferenciabanco'];
@@ -228,11 +228,13 @@ public function actionUpdate($id)
 					}else {
 						//elementos borrados
 						$elem_borrados_DCob[$i]['iddetalleordendepago']=$iddetalle_nuevo;
+						$elem_borrados_DCob[$i]['totalordendepago']=$_POST['Ordendepago']['importe'];
 						$elem_borrados_DCob[$i]['idordendepago']=$DC_trabajo->ordendepago_idordendepago;
 						$elem_borrados_DCob[$i]['tipoordendepago']=$DC_trabajo->tipoordendepago;
 						$elem_borrados_DCob[$i]['nombreprov']=$proveedor[0]['nombreprov'];
 						$elem_borrados_DCob[$i]['importe']=doubleval($DC_trabajo->importe);
 						$elem_borrados_DCob[$i]['chequenumero']=$DC_trabajo->nrocheque;
+						$elem_borrados_DCob[$i]['fecha']=$model->fecha;
 						$elem_borrados_DCob[$i]['fechaingreso']=$DC_trabajo->chequefechaingreso;
 						$elem_borrados_DCob[$i]['fechacobro']=$DC_trabajo->chequefechacobro;
 						$elem_borrados_DCob[$i]['idcheque']=$DC_trabajo->idcheque;
@@ -313,6 +315,7 @@ public function actionUpdate($id)
         //para el caso de elementos nuevos despues de actualizar la cobranza
 	           	$asiento=Asiento::model()->find("ordendepago_idordendepago=:id",
 								array(':id'=>$id));
+			
 				$prov=Proveedor::model()->find("ctacteprov_idctacteprov=:idctacte",
 	            	 array(":idctacte"=>$_POST['Ordendepago']['ctacteprov_idctacteprov']));
 				$this->nuevoElem($validatedMembers, $_POST['Ordendepago']['fecha'], $asiento->idasiento, $masterValues, $prov);
@@ -458,6 +461,29 @@ public function actionDelete($id)
 			Yii::app()->end();
 		}
 	}
+/**
+ * Para borrar desde asiento la orden de pago con los detalles. Al borrar la orden de pago se borra 
+ * el asiento.
+ * 
+ * 
+ */
+public function actionBorrar($id){
+	$Detalles=Detalleordendepago::model()->findAll('ordendepago_idordendepago=:idordendepago',
+					 array(':idordendepago'=>$id));
+	$ord=Ordendepago::model()->findByPk($id);
+	$cant=count($Detalles);
+	$this->decrementarCtacteDelete($ord->ctacteprov_idctacteprov, $ord->importe);
+	$this->borrarDetCtaCte($ord->idordendepago, $ord->importe, $ord->ctacteprov_idctacteprov);
+	for($i=0;$i < $cant;$i++){
+		$this->cambioTipoBorrado($Detalles[$i]['tipoordendepago'], $Detalles[$i]);
+		//echo $Detalles[$i]['iddetalleordendepago'];
+	}
+	if($ord->delete()){
+		echo "true";
+	} 	
+}	
+	
+	
 public function nuevoElem($validatedMembers,$fecha,$nroasiento,$masterValues,$prov){
  		// Contraparte del asiento "HABER"
              $cantElm=count($validatedMembers);
@@ -858,15 +884,21 @@ public function nuevoMovCaja($datos){
 	}
 	
 	public function modImpDetalleCtacte($idctacte,$idordendepago,$impnuevo, $fecha){
-		$detalle=Detallectacteprov::model()->find("ordendepago_idordendepago=:id AND ctactecliente_idctactecliente=:ctacte",
+		$detalle=Detallectacteprov::model()->find("ordendepago_idordendepago=:id AND ctacteprov_idctacteprov=:ctacte",
 						array(':id'=>$idordendepago,
 							  ':ctacte'=>$idctacte));
 		$detalle->haber=$impnuevo;
 		$detalle->fecha=$fecha;
 		$detalle->save();
-		$asiento=Asiento::model()->find("cobranza_idcobranza=:id",
-					array(':id'=>$idcobranza));
+		$asiento=Asiento::model()->find("ordendepago_idordendepago=:id",
+					array(':id'=>$idordendepago));
+		$DeAs=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
+						array(':idasiento'=>$asiento->idasiento,
+							  ':idcuenta'=> 48)); //211100 Proveedores compras varias
+		$DeAs->debe=$impnuevo;
+		$DeAs->save();
 		$asiento->fecha=$fecha;
+		
 		$asiento->save();
 	}
 	public function actionEnvio(){

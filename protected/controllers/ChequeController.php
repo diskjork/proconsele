@@ -197,7 +197,7 @@ class ChequeController extends Controller
 		if (isset($_POST['Banco'])) {
 			$modelBanco->attributes=$_POST['Banco'];
 			if ($modelBanco->save()) {
-				$this->redirect(array('admin'));
+				$this->redirect(array('recibido'));
 			}
 		}
 		//-----------
@@ -218,7 +218,7 @@ class ChequeController extends Controller
 		if (isset($_POST['Banco'])) {
 			$modelBanco->attributes=$_POST['Banco'];
 			if ($modelBanco->save()) {
-				$this->redirect(array('admin'));
+				$this->redirect(array('recibido'));
 			}
 		}
 		//-----------
@@ -294,7 +294,7 @@ public function actionDebitar($id){
 					            	$json = json_encode($array);
 					            	echo $json;
 					            	Yii::app()->end(); 
-									$this->redirect(Yii::app()->request->baseUrl.'/cheque/admin');
+									$this->redirect(Yii::app()->request->baseUrl.'/cheque/emitido');
 									}
 						}else {
 							echo CActiveForm::validate($modelBanco);
@@ -349,7 +349,7 @@ public function labelEstado($data, $row){
 				            	$json = json_encode($array);
 				            	echo $json;
 				            	Yii::app()->end(); 
-								$this->redirect(Yii::app()->request->baseUrl.'/cheque/admin');
+								$this->redirect(Yii::app()->request->baseUrl.'/cheque/recibido');
 								}
 						}else {
 							echo CActiveForm::validate($modelBanco);

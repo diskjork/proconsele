@@ -28,7 +28,9 @@ $gridColumns= array(
 	array(
             'id'=>'iddetalleasiento',
             'keys'=>array('debe', 'haber', 'cuenta_idcuenta', 'asiento_idasiento', 'proveedor_idproveedor','cliente_idcliente','iddocumento'),
-            
+            'sort'=>array(
+            	'defaultOrder'=>'debe DESC',
+			),
             'pagination'=>array(
                 'pageSize'=>15,
             ),

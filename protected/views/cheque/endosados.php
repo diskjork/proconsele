@@ -10,7 +10,7 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 	array('label'=>'Cheques endosados','url'=>'#','active' => true),
-	array('label'=>'Volver','url'=>'admin'),
+	array('label'=>'Volver','url'=>'recibido'),
 );
 	
 ?>

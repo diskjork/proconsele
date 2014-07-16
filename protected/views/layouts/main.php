@@ -46,7 +46,7 @@
 						array('label'=>'REPORTES','icon'=>'icon-signal','url'=>Yii::app()->request->baseUrl.'/index.php/reporte/index'),
 						array('label'=>'CUENTAS','icon'=>'icon-signal','url'=>'#',
 							'items'=>array(
-									array('label'=>'CUENTAS','url'=>Yii::app()->request->baseUrl.'/index.php/cuenta/admin'),
+									array('label'=>'PLAN DE CUENTAS','url'=>Yii::app()->request->baseUrl.'/index.php/cuenta/admin'),
 									array('label'=>'ASIENTO','url'=>Yii::app()->request->baseUrl.'/index.php/asiento/admin'),
 							)
 						),
@@ -85,10 +85,12 @@
 								)),
 						array('label'=>'CONFIGURACION','icon'=>'icon-wrench','url'=>'#',
 								'items'=>array(
+									array('label'=>'Datos Empresa', 'url'=>Yii::app()->request->baseUrl.'/index.php/empresa/admin'),
 									array('label'=>'Usuarios', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/admin'),
 									array('label'=>'Contraseña', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/updateClave'),
 									array('label'=>'Datos Empresa', 'url'=>Yii::app()->request->baseUrl.'/index.php/empresa/index'),
 									array('label'=>'Cuentas bancarias', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctabancaria/admin'),
+									array('label'=>'Chequeras', 'url'=>Yii::app()->request->baseUrl.'/index.php/chequera/admin'),
 									array('label'=>'Cajas', 'url'=>Yii::app()->request->baseUrl.'/index.php/caja/admin'),
 									array('label'=>'Contribuyente', 'url'=>Yii::app()->request->baseUrl.'/index.php/tipodecontribuyente/admin'),
 								)),	

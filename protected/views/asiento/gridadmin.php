@@ -1,3 +1,6 @@
+<div id="iconoExportar" align="right">
+<?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel'),'Exportar',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+</div>
 <?php
 $dataProvider=$model->search($model->fecha=$anioTab."-".$mesTab);
 $dataProvider->setPagination(array('pageSize'=>200));
@@ -21,26 +24,20 @@ $gridColumns= array(
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
-			'template'=>'{update}{actmovbanco}{actmovcaja}{actcompra}{actfactura}{delete}',
+			'template'=>'{delete} {update} {actmovbanco} {actmovcaja} {actcompra} {actordenpago} 
+						{actcobranza} {actfactura} {borrarOrPago} {borrarCobranza} {borrarFactura} {borrarCompra}',
             'buttons'=>array(
-             /*   'view'=>
-                    array(
-                        'url'=>'Yii::app()->createUrl("ordendepago/view", array("id"=>$data->idordendepago))',
-                        'options'=>array(
-                            'ajax'=>array(
-                                'type'=>'POST',
-                                'url'=>"js:$(this).attr('href')",
-                                'success'=>'function(data) { $("#viewModal .modal-body p").html(data); $("#viewModal").modal(); }'
-                            ),
-                        ),
-                    ),*/
+             	
                  'update'=>array(
 					'label'=>'Modificar asiento',
 	                    //'icon'=>TbHtml::ICON_MINUS_SIGN,
 	                    'visible'=>'$data->movimientobanco_idmovimientobanco == NULL AND
 	                    		    $data->movimientocaja_idmovimientocaja == NULL AND 
 	                    		    $data->compra_idcompra == NULL AND
-	                    		    $data->factura_idfactura == NULL ',
+	                    		    $data->factura_idfactura == NULL AND
+	                    		    $data->ordendepago_idordendepago == NULL AND
+	                    		    $data->cobranza_idcobranza == NULL
+	                    		    ',
 						'url'=> 'Yii::app()->createUrl("asiento/update",
 								 array(	"id"=>$data->idasiento,
 								 		
@@ -91,7 +88,125 @@ $gridColumns= array(
 								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',
 						
-	                  ),    
+	                  ),  
+	              'actordenpago'=>array(
+					'label'=>'Modificar Orden de pago',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->ordendepago_idordendepago != NULL',
+						'url'=> 'Yii::app()->createUrl("ordendepago/update",
+								 array(	"id"=>$data->ordendepago_idordendepago,
+								 		//"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),   
+	               'actcobranza'=>array(
+					'label'=>'Modificar Cobranza',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->cobranza_idcobranza != NULL',
+						'url'=> 'Yii::app()->createUrl("cobranza/update",
+								 array(	"id"=>$data->cobranza_idcobranza,
+								 		//"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+	                'borrarOrPago'=>array(
+	                  	'label'=>'Borrar Orden de Pago',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->ordendepago_idordendepago != NULL',
+	                  	'url'=>'Yii::app()->createUrl("ordendepago/borrar", array("id"=>$data->ordendepago_idordendepago))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la orden de pago?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrado con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		            'borrarCobranza'=>array(
+	                  	'label'=>'Borrar Cobranza',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->cobranza_idcobranza != NULL',
+	                  	'url'=>'Yii::app()->createUrl("cobranza/borrar", array("id"=>$data->cobranza_idcobranza))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Cobranza?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		             'borrarFactura'=>array(
+	                  	'label'=>'Borrar Factura',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->factura_idfactura != NULL',
+	                  	'url'=>'Yii::app()->createUrl("factura/borrar", array("id"=>$data->factura_idfactura))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Factura?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		              'borrarCompra'=>array(
+	                  	'label'=>'Borrar Compra',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->compra_idcompra != NULL',
+	                  	'url'=>'Yii::app()->createUrl("compras/borrar", array("id"=>$data->compra_idcompra))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Compra?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
             ),
            
         ),
@@ -100,9 +215,11 @@ $gridColumns= array(
 
 //Yii::app()->getComponent('yiiwheels')->registerAssetJs('bootbox.min.js');
 $this->widget('yiiwheels.widgets.grid.WhGridView', array(
+	'id'=>'asientogrid',
 	'type' => 'striped bordered',
 	'dataProvider' =>$dataProvider,
 	'template' => "{items}",
+	
 	'columns' => array_merge(
 					$gridColumns,
 					array(

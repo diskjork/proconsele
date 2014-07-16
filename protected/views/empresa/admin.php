@@ -1,67 +1,49 @@
-<?php
-/* @var $this EmpresaController */
-/* @var $model Empresa */
+<?php 
 
+	if($cantidad < 1){
+	$valor=array(
+		array('label'=>'Volver','url'=>Yii::app()->request->Urlreferrer),
+		array('label'=>'Cargar Empresa','url'=>array('create'))
+	);
+}
+ else {
+	$valor=array(
+		array('label'=>'Volver','url'=>Yii::app()->request->Urlreferrer)
+		);
+}
+$this->menu=$valor;
 
-$this->breadcrumbs=array(
-	'Empresas'=>array('index'),
-	'Manage',
-);
-
-$this->menu=array(
-	array('label'=>'List Empresa', 'url'=>array('index')),
-	array('label'=>'Create Empresa', 'url'=>array('create')),
-);
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$('#empresa-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
 ?>
 
-<h1>Manage Empresas</h1>
-
-<p>
-    You may optionally enter a comparison operator (<b>&lt;</b>, <b>&lt;=</b>, <b>&gt;</b>, <b>&gt;=</b>, <b>
-        &lt;&gt;</b>
-or <b>=</b>) at the beginning of each of your search values to specify how the comparison should be done.
-</p>
-
-<?php echo CHtml::link('Advanced Search','#',array('class'=>'search-button btn')); ?>
-<div class="search-form" style="display:none">
-<?php $this->renderPartial('_search',array(
-	'model'=>$model,
-)); ?>
-</div><!-- search-form -->
-
-<?php $this->widget('bootstrap.widgets.TbGridView',array(
+<?php $this->widget('yiiwheels.widgets.grid.WhGridView',array(
 	'id'=>'empresa-grid',
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'idempresa',
-		'razonsocial',
-		'nombrefantasia',
-		'cuit',
-		'direccion',
-		'telefono',
-		/*
-		'telefax',
-		'email',
-		'tiposociedad',
-		'localidad_idlocalidad',
-		'logo',
-		*/
+		array(
+			'name'=>'razonsocial',
+			'header'=>'Razon Social',
+			'filter'=>false,
+			),
+		array(
+			'name'=>'cuit',
+			'header'=>'CUIT',
+			'filter'=>false,
+			),
+		array(
+			'name'=>'direccion',
+			'header'=>'DIRECCIÓN',
+			'filter'=>false,
+			),
+		array(
+			'name'=>'telefono',
+			'header'=>'TELÉFONO',
+			'filter'=>false,
+			),
 		array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',
+			'htmlOptions' => array('style' =>'text-align: right'),
+			'template'=>'{view} {update}',
 		),
 	),
 )); ?>

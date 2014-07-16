@@ -87,6 +87,11 @@ abstract class BaseCuenta extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort'=>array(
+            	'defaultOrder'=>'tipocuenta_idtipocuenta ASC',
+                
+            
+        ),
 		));
 	}
 	public function nuevaCuentaRepetida($attribute,$params){

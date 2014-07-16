@@ -7,7 +7,7 @@
  * property or method in class "Empresa".
  *
  * Columns in table "empresa" available as properties of the model,
- * followed by relations of table "empresa" available as properties of the model.
+ * and there are no model relations.
  *
  * @property integer $idempresa
  * @property string $razonsocial
@@ -20,8 +20,8 @@
  * @property string $tiposociedad
  * @property integer $localidad_idlocalidad
  * @property string $logo
+ * @property string $web
  *
- * @property Localidad $localidadIdlocalidad
  */
 abstract class BaseEmpresa extends GxActiveRecord {
 
@@ -43,19 +43,18 @@ abstract class BaseEmpresa extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('idempresa, razonsocial, localidad_idlocalidad', 'required'),
+			array('idempresa, razonsocial, localidad_idlocalidad, cuit', 'required'),
 			array('idempresa, localidad_idlocalidad', 'numerical', 'integerOnly'=>true),
 			array('razonsocial, nombrefantasia', 'length', 'max'=>200),
-			array('cuit, direccion, telefono, telefax, email, tiposociedad', 'length', 'max'=>45),
+			array('cuit, direccion, telefono, telefax, email, tiposociedad, web', 'length', 'max'=>45),
 			array('logo', 'length', 'max'=>255),
-			array('nombrefantasia, cuit, direccion, telefono, telefax, email, tiposociedad, logo', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idempresa, razonsocial, nombrefantasia, cuit, direccion, telefono, telefax, email, tiposociedad, localidad_idlocalidad, logo', 'safe', 'on'=>'search'),
+			array('nombrefantasia,  direccion, telefono, telefax, email, tiposociedad, logo, web', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idempresa, razonsocial, nombrefantasia, cuit, direccion, telefono, telefax, email, tiposociedad, localidad_idlocalidad, logo, web', 'safe', 'on'=>'search'),
 		);
 	}
 
 	public function relations() {
 		return array(
-			'localidadIdlocalidad' => array(self::BELONGS_TO, 'Localidad', 'localidad_idlocalidad'),
 		);
 	}
 
@@ -67,17 +66,17 @@ abstract class BaseEmpresa extends GxActiveRecord {
 	public function attributeLabels() {
 		return array(
 			'idempresa' => Yii::t('app', 'Idempresa'),
-			'razonsocial' => Yii::t('app', 'Razonsocial'),
-			'nombrefantasia' => Yii::t('app', 'Nombrefantasia'),
+			'razonsocial' => Yii::t('app', 'Razon Social'),
+			'nombrefantasia' => Yii::t('app', 'Nombre fantasia'),
 			'cuit' => Yii::t('app', 'Cuit'),
-			'direccion' => Yii::t('app', 'Direccion'),
-			'telefono' => Yii::t('app', 'Telefono'),
+			'direccion' => Yii::t('app', 'Dirección'),
+			'telefono' => Yii::t('app', 'Teléfono'),
 			'telefax' => Yii::t('app', 'Telefax'),
 			'email' => Yii::t('app', 'Email'),
-			'tiposociedad' => Yii::t('app', 'Tiposociedad'),
-			'localidad_idlocalidad' => null,
+			'tiposociedad' => Yii::t('app', 'Tipo de Sociedad'),
+			'localidad_idlocalidad' => Yii::t('app', 'Localidad'),
 			'logo' => Yii::t('app', 'Logo'),
-			'localidadIdlocalidad' => null,
+			'web' => Yii::t('app', 'Web'),
 		);
 	}
 
@@ -95,6 +94,7 @@ abstract class BaseEmpresa extends GxActiveRecord {
 		$criteria->compare('tiposociedad', $this->tiposociedad, true);
 		$criteria->compare('localidad_idlocalidad', $this->localidad_idlocalidad);
 		$criteria->compare('logo', $this->logo, true);
+		$criteria->compare('web', $this->web, true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

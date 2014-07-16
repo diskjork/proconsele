@@ -222,7 +222,7 @@
         	'onClick'=>'sumatotal();',
 		     )); ?>
 	    <?php 
-	    	echo CHtml::link('Cancelar',Yii::app()->createUrl("ctactecliente/admin"),
+	    	echo CHtml::link('Cancelar',Yii::app()->request->Urlreferrer,
 			array('class'=>'btn btn-primary'));
 		?>
     	</div>

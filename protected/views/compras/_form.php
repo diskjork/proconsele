@@ -6,10 +6,7 @@ if(isset($_GET['vista'])){
 		$vista=$_GET['vista'];
 		
 	}
-	if(isset($vista)){
-		Yii::app()->clientScript->registerScript('vista',"
-		$('#Movimientobanco_vista').val('".$vista."');");
-	}
+	
 ?>
 <?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js', CClientScript::POS_HEAD);?>
 
@@ -232,6 +229,7 @@ if(isset($model->importeIIBB)){
 </div>	
 
 	<?php echo $form->hiddenField($model,'asiento_idasiento',array('span'=>5)); ?>
+	<?php echo $form->hiddenField($model,'vista',array('span'=>5)); ?>
         
 
         <div class="form-actions" align="center">
@@ -242,15 +240,19 @@ if(isset($model->importeIIBB)){
 		    'id'=>'boton-submit',
 		)); ?>
 		
-		<?php 
-				
-				echo CHtml::link('Cancelar', Yii::app()->request->baseUrl.'/compras/admin',array ('class'=>'btn btn-primary'));
+		<?php 				
+				echo CHtml::link('Cancelar', Yii::app()->request->Urlreferrer,array ('class'=>'btn btn-primary'));
 				//echo TbHtml::button('Primary',Yii::app()->request->baseUrl.'/movimientobanco/admin', array('color' => TbHtml::BUTTON_COLOR_PRIMARY));
 			?>
    		</div>
 
     <?php $this->endWidget(); ?>
-
+<?php 
+if(isset($vista)){
+		Yii::app()->clientScript->registerScript('vista','
+		$("#Compras_vista").val("'.$vista.'");');
+	}
+?>
 </div><!-- form -->
  <?php Yii::app()->clientScript->registerScript('test',"
 				$('div .modal-footer').remove();

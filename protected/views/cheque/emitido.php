@@ -3,11 +3,7 @@
 /* @var $model Cheque */
 
 $this->menu=array(
-	array('label'=>'Nuevo Cheque','url'=>'create'),
-	array('label'=>'Nuevo Banco','url'=>'#',
-						'htmlOptions'=>array('data-toggle' => 'modal',
-    					'data-target' => '#ModalBanco'),
-	),
+	
 	array('label'=>'Cheque Recibidos','url'=>'recibido'),
 	//array('label'=>'Cheque Endosados','url'=>'endosados'),
 );
@@ -43,7 +39,7 @@ $this->menu=array(
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel'),'Exportar',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
 </div>
 <?php
-$valores=array('0'=>'A pagar', '1'=>'Pagado');
+$valores=array('0'=>'A Pagar', '1'=>'Pagado');
 $columnas=array(
 	array(
 					'header' => '#',
@@ -106,10 +102,11 @@ $columnas=array(
 			'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right'),
-			'template'=>'{debitar} {view} {update} {delete} {canDebito}',
+			'template'=>'{debitar} {view} {update} {canDebito}',
 			'buttons' => array(
 				 'view'=>
                     array(
+                    	'label'=>'Vista previa',
                         'url'=>'Yii::app()->createUrl("cheque/view", array("id"=>$data->idcheque))',
                         'options'=>array(
                             'ajax'=>array(
@@ -121,8 +118,13 @@ $columnas=array(
                     ),
                 'update'=>
                     array(
-                        'url'=>'Yii::app()->createUrl("cheque/update", array("id"=>$data->idcheque))',
-                        'visible'=>'$data->estado == 0 || $data->estado == 2 ',
+                    	'icon'=>TbHtml::ICON_PENCIL,
+                    	'label'=>'Modificar cheque desde orden de pago',
+                    	'visible'=>'$data->estado == 0 AND 
+                    				$data->iddetalleordendepago != null
+                    				',
+                        'url'=>'Yii::app()->createUrl("ordendepago/update", array("id"=>$data->ordendepagoIdordendepago->ordendepago_idordendepago))',
+                        
                     ),
 				'debitar'=>array(
 					'label'=>'Debitar',

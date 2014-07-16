@@ -32,7 +32,7 @@
 	<b><?php echo CHtml::encode($data->getAttributeLabel('email')); ?>:</b>
 	<?php echo CHtml::encode($data->email); ?>
 	<br />
-
+	
 	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('web')); ?>:</b>
 	<?php echo CHtml::encode($data->web); ?>

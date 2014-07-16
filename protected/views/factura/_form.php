@@ -405,7 +405,7 @@ if(isset($_GET['vista'])){
 		
 		<?php 
 			
-				echo CHtml::link('Cancelar', Yii::app()->request->baseUrl.'/factura/admin',array ('class'=>'btn btn-primary'));
+				echo CHtml::link('Cancelar', Yii::app()->request->Urlreferrer ,array ('class'=>'btn btn-primary'));
 				//echo TbHtml::button('Primary',Yii::app()->request->baseUrl.'/movimientobanco/admin', array('color' => TbHtml::BUTTON_COLOR_PRIMARY));
 			?>
    		</div>

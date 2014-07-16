@@ -14,7 +14,8 @@ class ComprasController extends Controller
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
+			//'accessControl', // perform access control for CRUD operations
+			array('auth.filters.AuthFilter'),
 			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
@@ -180,7 +181,7 @@ class ComprasController extends Controller
 				    	$this->updateTotalAsVta($modeloviejo, $model);
 				    }
 				    $this->updateIvaMovimiento($modeloviejo, $model, $_POST['Compras']['fecha']);
-					if($_POST['Factura']['vista'] == 2){
+					if($_POST['Compras']['vista'] == 2){
 						$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 					}
 				    $this->redirect(array('admin','id'=>$model->idcompra));
@@ -193,7 +194,7 @@ class ComprasController extends Controller
 					//todo el haber
 					$this->updateHaberAsiento($modeloviejo, $model, $_POST['Compras']);
 					$this->updateIvaMovimiento($modeloviejo, $model, $_POST['Compras']['fecha']);
-					if($_POST['Factura']['vista'] == 2){
+					if($_POST['Compras']['vista'] == 2){
 						$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 					}
 					$this->redirect(array('admin','id'=>$model->idcompra));
@@ -207,7 +208,7 @@ class ComprasController extends Controller
 						$this->updateImpuestos($modeloviejo, $model);
 					} 
 				   $this->updateIvaMovimiento($modeloviejo, $model, $_POST['Compras']['fecha']);
-					if($_POST['Factura']['vista'] == 2){
+					if($_POST['Compras']['vista'] == 2){
 						$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 					}
 				   $this->redirect(array('admin','id'=>$model->idcompra));
@@ -223,7 +224,7 @@ class ComprasController extends Controller
 				    }
 				$this->updateHaberAsiento($modeloviejo, $model, $_POST['Compras']);
 				$this->updateIvaMovimiento($modeloviejo, $model, $_POST['Compras']['fecha']);
-				if($_POST['Factura']['vista'] == 2){
+				if($_POST['Compras']['vista'] == 2){
 					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 				}
 				$this->redirect(array('admin','id'=>$model->idcompra));
@@ -540,10 +541,10 @@ public function movCaja($model,$datosPOST){
 	}
 	public function updateIvaMovimiento($datosviejos, $datosnuevos, $fecha){
 		if(($datosviejos->tipofactura == 1) && ($datosnuevos->tipofactura == 1)){
-		$IvaMovGuardado=Ivamovimiento::model()->find("compra_idcompra:=idcompra",
+		$IvaMovGuardado=Ivamovimiento::model()->find("compra_idcompra=:idcompra",
 						array(':idcompra'=>$datosviejos->idcompra));
 		$IvaMovGuardado->fecha=$fecha;
-		$IvaMovGuardado->nrocomprobante=$datosnuevos->nrofactura;
+		$IvaMovGuardado->nrocomprobante=$datosnuevos->nrodefactura;
 		$IvaMovGuardado->proveedor_idproveedor=$datosnuevos->proveedor_idproveedor;
 		$IvaMovGuardado->cuitentidad=$datosnuevos->proveedorIdproveedor->cuit;
 		$IvaMovGuardado->tipofactura=$datosnuevos->tipofactura;
@@ -553,13 +554,13 @@ public function movCaja($model,$datosPOST){
 		$IvaMovGuardado->importeneto=$datosnuevos->importeneto;
 		$IvaMovGuardado->save();
 		} elseif(($datosviejos->tipofactura == 1) && ($datosnuevos->tipofactura > 1) ) {
-			$IvaMovGuardado=Ivamovimiento::model()->find("compra_idcompra:=idcompra",
+			$IvaMovGuardado=Ivamovimiento::model()->find("compra_idcompra=:idcompra",
 						array(':idcompra'=>$datosviejos->idcompra));
 			$IvaMovGuardado->delete();
 		} elseif(($datosviejos->tipofactura > 1) &&($datosnuevos->tipofactura == 1)){
 			$IvaMovGuardado=new Ivamovimiento;
 			$IvaMovGuardado->fecha=$fecha;
-			$IvaMovGuardado->nrocomprobante=$datosnuevos->nrofactura;
+			$IvaMovGuardado->nrocomprobante=$datosnuevos->nrodefactura;
 			$IvaMovGuardado->proveedor_idproveedor=$datosnuevos->proveedor_idproveedor;
 			$IvaMovGuardado->cuitentidad=$datosnuevos->proveedorIdproveedor->cuit;
 			$IvaMovGuardado->tipofactura=$datosnuevos->tipofactura;
@@ -624,7 +625,7 @@ public function movCaja($model,$datosPOST){
 	}
 	public function updateDatosAsiento($datosviejos, $datosnuevos, $datosPOST){
 		if($datosviejos->fecha != $datosnuevos->fecha ||
-		   $datosviejos->nrofactura != $datosnuevos->nrofactura){
+		   $datosviejos->nrodefactura != $datosnuevos->nrodefactura){
 		   	$asiento=Asiento::model()->findByPk($datosviejos->asiento_idasiento);
 		   	$asiento->fecha=$datosPOST['fecha'];
 		   	$asiento->descripcion="Factura ".$this->tipoFactura($datosnuevos->tipofactura)." Compra N°: ".$datosnuevos->nrodefactura." -  ".$datosnuevos->proveedorIdproveedor;
@@ -723,4 +724,20 @@ public function movCaja($model,$datosPOST){
 		}
 						}
 	}
+
+	public function actionBorrar($id){
+		
+		$model=Compras::model()->findByPk($id);
+		if($this->borrado($model)){
+				if($model->tipofactura == 1){
+					if($this->borradoIvaMov($model)){
+						if($model->delete()){
+							echo "true";
+						}
+					}
+				}
+			
+			}
+	}
+
 }

@@ -14,7 +14,8 @@ class FacturaController extends Controller
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
+			//'accessControl', // perform access control for CRUD operations
+			array('auth.filters.AuthFilter'),
 			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
@@ -615,4 +616,15 @@ class FacturaController extends Controller
 			$ivamov=Ivamovimiento::model()->find("factura_idfactura=:factura",array(':factura'=>$model->idfactura));
 			return $ivamov->delete();
 		}
+		
+	public function actionBorrar($id){
+		
+		$model=Factura::model()->findByPk($id);
+		if($this->borrado($model) && $this->borradoIvaMov($model)){
+			if($model->delete()){
+				echo "true";
+				}
+			}
+	}
+	
 }

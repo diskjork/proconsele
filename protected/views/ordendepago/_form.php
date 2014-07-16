@@ -224,7 +224,7 @@ if(isset($_GET['idctacte'])){
         	'id'=>'boton-submit',
 		     )); ?>
 		     <?php 
-		    	echo CHtml::link('Cancelar',Yii::app()->createUrl("ctacteprov/admin"),
+		    	echo CHtml::link('Cancelar',Yii::app()->request->Urlreferrer,
 				array('class'=>'btn btn-primary'));
 			?>
 		

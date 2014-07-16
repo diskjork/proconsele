@@ -8,7 +8,7 @@
 			'keyboard'=> false,
 			'buttonOptions'=> false,
 			'closeText'=>"",
-			'footer'=>array(CHtml::link('Cancelar', Yii::app()->request->baseUrl.'/cheque/admin',array ('class'=>'btn btn-primary'))),
+			'footer'=>array(CHtml::link('Cancelar', Yii::app()->request->baseUrl.'/cheque/recibido',array ('class'=>'btn btn-primary'))),
 			
 			
 ));

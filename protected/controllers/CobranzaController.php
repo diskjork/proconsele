@@ -921,7 +921,21 @@ class CobranzaController extends Controller
 		$Asiento->save();
 	}
 	
-	
+	public function actionBorrar($id){
+		$Detalles=Detallecobranza::model()->findAll('cobranza_idcobranza=:id',
+						 array(':id'=>$id));
+		$cobranza=Cobranza::model()->findByPk($id);
+		$cant=count($Detalles);
+		$this->decrementarCtacteDelete($cobranza->ctactecliente_idctactecliente, $cobranza->importe);
+		$this->borrarDetCtaCte($cobranza->idcobranza, $cobranza->importe, $cobranza->ctactecliente_idctactecliente);
+		for($i=0;$i < $cant;$i++){
+			$this->cambioTipoBorrado($Detalles[$i]['tipocobranza'], $Detalles[$i]);
+			//echo $Detalles[$i]['iddetalleordendepago'];
+		}
+		if($cobranza->delete()){
+			echo "true";
+		} 	
+}	
 	
 	
 	

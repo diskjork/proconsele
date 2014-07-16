@@ -47,7 +47,7 @@ abstract class BaseCheque extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('nrocheque, titular, fechaingreso, fechacobro, debeohaber, estado', 'required'),
-			array('debeohaber, Banco_idBanco, estado, proveedor_idproveedor, cliente_idcliente, chequera_idchequera, iddetallecobranza', 'numerical', 'integerOnly'=>true),
+			array('debeohaber, Banco_idBanco, estado, proveedor_idproveedor, cliente_idcliente, chequera_idchequera, iddetallecobranza, iddetalleordendepago', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('nrocheque', 'length', 'max'=>20),
 			array('titular', 'length', 'max'=>255),
@@ -63,6 +63,8 @@ abstract class BaseCheque extends GxActiveRecord {
 			'chequeraIdchequera' => array(self::BELONGS_TO, 'Chequera', 'chequera_idchequera'),
 			'clienteIdcliente' => array(self::BELONGS_TO, 'Cliente', 'cliente_idcliente'),
 			'proveedorIdproveedor' => array(self::BELONGS_TO, 'Proveedor', 'proveedor_idproveedor'),
+			'ordendepagoIdordendepago'=> array(self::BELONGS_TO, 'Detalleordendepago', 'iddetalleordendepago'),
+			'detallecobranzaIddetallecobranza'=> array(self::BELONGS_TO, 'Detallecobranza', 'iddetallecobranza'),
 		);
 	}
 
@@ -111,7 +113,7 @@ abstract class BaseCheque extends GxActiveRecord {
 		$criteria->compare('chequera_idchequera', $this->chequera_idchequera);
 		$criteria->compare('iddetallecobranza', $this->iddetallecobranza);
 		$criteria->compare('iddetalleordendepago', $this->iddetalleordendepago);
-
+		
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 		));
