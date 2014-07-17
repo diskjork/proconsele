@@ -82,7 +82,7 @@ $("#Factura_impInt").click(function() {
 function sumatotal(){
 	
 	
-	var subtotalpro=parseFloat($("#Factura_stbruto_producto").val());
+	var subtotalbruto=parseFloat($("#Factura_stbruto_producto").val());
 	var checkdescRec=$("input[name='Factura[desRec]']:checked", "#factura-form").val();
 	var checkiibb=$("input[name='Factura[iibb]']:checked", "#factura-form").val();
 
@@ -90,14 +90,54 @@ function sumatotal(){
 	var checkimpint=$("input[name='Factura[impInt]']:checked", "#factura-form").val();
 	var coficienteimpint=parseFloat($("#Factura_impuestointerno").val());
 	var e=$("#Factura_iva").val();
-	var ei=parseFloat(e);
+	var ei=parseFloat(e); //coeficiente iva por ej: 1,21 o 1,105
 	var cofIVA=ei - 1;
-//	var subtotalbruto=subtotalpro*ei;
-	var subtotalbruto=subtotalpro;
-	
-//----------------descuento-Recargo--------------
 	var descRecar=1;
 	var deReBloc=parseFloat($("#Factura_descrecar").val());
+	var SUBtotal;
+	var TOTALNETO=0.00;
+	var TOTALimpint=0;
+	
+	var TOTALiva=0;
+	var TOTALdes_rec=0;
+//-----------------------IVA----------------------------
+	TOTALiva=subtotalbruto * cofIVA;
+	//TOTALiva=TOTALiva.toFixed(2);
+	
+//----------------------IMPUESTO INTERNO---------------------------
+//console.log("checkimpint="+checkiibb+" coficienteimpint="+coficienteiibb);
+	
+	if((checkimpint == 1) && (!isNaN(coficienteimpint)))
+	{
+		coficienteimpint= coficienteimpint/100;
+		TOTALimpint=coficienteimpint * subtotalbruto;
+
+		var impint=TOTALimpint.toFixed(2);
+		var importeint=$.number(impint, 2);
+
+		$("#total-impint").text(importeint);
+		$("#Factura_importeImpInt").val(TOTALimpint);
+
+	}
+	//----------------CALCULO TOTALNETO--------------------
+
+		 TOTALNETO=subtotalbruto+TOTALiva+TOTALimpint;
+		 SUBtotal=subtotalbruto;
+		 console.log("suma: "+coficienteiibb);
+		//SUBtotal=TOTALNETO;
+
+	//----------------------IIBB---------------------------
+	//console.log("checkiibb="+checkiibb+" coficienteiibb="+coficienteiibb);
+	var TOTALiibb=0;
+	
+	if((checkiibb == 1) && (!isNaN(coficienteiibb)))
+	{
+		coficienteiibb= coficienteiibb/100;
+		
+		
+
+	}
+	//----------------descuento-Recargo--------------
 	if((checkdescRec == 1) && (!isNaN(deReBloc)))
 	{
 	
@@ -114,11 +154,14 @@ function sumatotal(){
 			descRecar=parseFloat(deReBloc);
 			descRecar=descRecar/100;
 			var tem= 1 - descRecar;
-			var desc = subtotalbruto * descRecar;			
-			subtotalbruto= subtotalbruto * tem;
+			TOTALdes_rec = SUBtotal * descRecar;			
 			
-			var desc_impor= $.number( desc, 2 ); 
-			$("#descuento_recargo_importe").text(desc_impor);
+			TOTALdes_rec=TOTALdes_rec.toFixed(2);
+			var importe_des= $.number( TOTALdes_rec, 2 );
+			SUBtotal=TOTALNETO;
+			TOTALNETO=TOTALNETO - TOTALdes_rec;
+			
+			$("#descuento_recargo_importe").text("-"+importe_des);
 			$("#descuento_recargo").text("Descuento");
 			$("#desc_recar").show();
 			//totalneto=totalneto * descRecar;
@@ -127,11 +170,11 @@ function sumatotal(){
 			var deReBloc=$("#Factura_descrecar").val();
 			descRecar=parseFloat(deReBloc);
 			descRecar=descRecar/100;
-			var tem=descRecar + 1;
-			var recar= subtotalbruto * descRecar;
-			subtotalbruto=subtotalbruto * tem;
 			
-			var rec_impote= $.number(recar, 2 ); 
+			TOTALdes_rec= SUBtotal * descRecar;
+			SUBtotal=TOTALNETO;
+			TOTALNETO=TOTALNETO + TOTALdes_rec;
+			var rec_impote= $.number(TOTALdes_rec, 2 ); 
 			$("#descuento_recargo_importe").text(rec_impote);
 			$("#descuento_recargo").text("Recargo");
 			$("#desc_recar").show();
@@ -143,66 +186,49 @@ function sumatotal(){
 		//$("input[name='Factura[tipodescrecar]']:unchecked", "#factura-form");
 
 		}
-
-//---------------------------------------------------
-	var totalneto=subtotalbruto * ei;
-	var totaliva=subtotalbruto * cofIVA;
-	
-//----------------------IIBB---------------------------
-//console.log("checkiibb="+checkiibb+" coficienteiibb="+coficienteiibb);
-	importeRetenIIBBpars=null;
-	if((checkiibb == 1) && (!isNaN(coficienteiibb)))
-	{
-		coficienteiibb= coficienteiibb/100;
-		var temCoif= coficienteiibb + 1;
-		importeRetenIIBB=coficienteiibb * totalneto;
-		totalneto=totalneto * temCoif;
-		importeRetenIIBBpars=importeRetenIIBB.toFixed(2);
-		importeRetenIIBB=$.number(importeRetenIIBB, 2);
-		$("#total-iibb").text(importeRetenIIBB);
-		$("#Factura_importeIIBB").val(importeRetenIIBBpars);
-
-	}
-//----------------------IMPUESTO INTERNO---------------------------
-//console.log("checkimpint="+checkiibb+" coficienteimpint="+coficienteiibb);
-	var importeIMPINTpars=null;
-	if((checkimpint == 1) && (!isNaN(coficienteimpint)))
-	{
-		coficienteimpint= coficienteimpint/100;
-		var temCofimpint= coficienteimpint + 1;
-		importeIMPINT=coficienteimpint * totalneto;
-		totalneto=totalneto * temCofimpint;
-		
-		importeIMPINTpars=importeIMPINT.toFixed(2);
-		importeIMPINT=$.number(importeIMPINT, 2);
-
-		$("#total-impint").text(importeIMPINT);
-		$("#Factura_importeImpInt").val(importeIMPINTpars);
-
-	}
-	
-//--------------------------------------------
+//------------------FINAL--------------------------
 	//$("#Factura_importe").val(totalneto.toFixed(2));
 	//$("#Factura_subtotal").val(total.toFixed(2));
-	totaltransfor= $.number( subtotalbruto, 2 ); 
-	totalnetotransfor = $.number( totalneto, 2 );
-	totalIvaTrasfor = $.number(totaliva, 2);
+	if(!isNaN(coficienteiibb)){
+		TOTALiibb=coficienteiibb * TOTALNETO;
+		SUBtotal=TOTALNETO;
+		TOTALNETO=TOTALNETO + TOTALiibb;
+		var importeiibb=$.number(TOTALiibb, 2);
+		$("#total-iibb").text(importeiibb);
+
+		$("#Factura_importeIIBB").val(TOTALiibb);
+	} 
+	totaltransfor= $.number( SUBtotal, 2 ); 
+	totalnetotransfor = $.number( TOTALNETO, 2 );
+	totalIvaTrasfor = $.number(TOTALiva, 2);
+
+	
+
 	$("#subtotalblock").text(totaltransfor);
-	$("#Factura_importebruto").val(subtotalbruto.toFixed(2));
+	$("#Factura_importebruto").val(SUBtotal.toFixed(2));
 	$("#totalnetoblock").text(totalnetotransfor);
-	$("#Factura_importeneto").val(totalneto.toFixed(2));
+	$("#Factura_importeneto").val(TOTALNETO.toFixed(2));
 	$("#ivablock").text(totalIvaTrasfor);
-	$("#Factura_ivatotal").val(totaliva.toFixed(2));
-	$("#Factura_importeImpInt").val(importeIMPINTpars);
-	$("#Factura_importeIIBB").val(importeRetenIIBBpars);
-	if(importeIMPINTpars == null){
-		$("#Factura_impuestointerno").val(importeIMPINTpars);
+	if(TOTALiva == 0){
+		$("#Factura_ivatotal").val(null);
+	} else {
+		$("#Factura_ivatotal").val(TOTALiva.toFixed(2));
 	}
-	if(importeRetenIIBBpars == null){
-		$("#Factura_impuestoIIBB").val(importeRetenIIBBpars);
+	
+	if(TOTALimpint == 0){
+		$("#Factura_impuestointerno").val(null);
+	} else {
+		$("#Factura_importeImpInt").val(TOTALimpint.toFixed(2));
 	}
-	console.log("iva: "+totalIvaTrasfor+" tbruto: "+totaltransfor+" neto: "+totalnetotransfor);
+	if(TOTALiibb == 0){
+		$("#Factura_importeIIBB").val(null);
+	} else {
+	$("#Factura_importeIIBB").val(TOTALiibb.toFixed(2));
 	}
+	
+	
+	//console.log("iva: "+totalIvaTrasfor+" tbruto: "+totaltransfor+" neto: "+totalnetotransfor);
+}
 
 
 function solonumeromod(event) {
@@ -221,7 +247,7 @@ function codigo(obj){
 var id_input=obj.id;
 		
 	var codprod=obj.val;
-	console.log(codprod);
+	//console.log(codprod);
 	$.ajax({ 
 		  type: "POST",
 		  url: "/proconsele/factura/envio",

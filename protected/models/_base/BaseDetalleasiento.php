@@ -128,4 +128,23 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
+	public function generarGrid($anio,$mes)
+        {
+                $criteria=new CDbCriteria;
+                
+                $criteria->select = array(
+                	'cuenta.codigocta as codigo','cuenta.nombre as nombre','asiento.fecha',
+                	'SUM(detalleasiento.debe) as totaldebe',
+                	'SUM(detalleasiento.haber) as totalhaber',
+                );
+				//$criteria->join = ',detallecompra';
+                $criteria->condition = 'YEAR(asiento.fecha)='.$anio.' AND MONTH(asiento.fecha)='.$mes.' AND detalleasiento.asiento_idasiento=asiento.idasiento AND detalleasiento.cuenta_idcuenta = cuenta.idcuenta';
+                $criteria->group = 'cuenta.nombre';
+                //$criteria->order = 'fecha DESC';
+                
+                $result = Compras::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+        }
 }

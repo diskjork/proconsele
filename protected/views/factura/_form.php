@@ -253,14 +253,7 @@ if(isset($_GET['vista'])){
 	</div>
 	 
 	</div>
-	<div style="float:right; margin-right:10px; margin-top:10px;">
-	<div class=" well  " style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
-		<h5 style="padding:0px;margin-left:-3px;">IVA</h5>
-		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="ivablock"></h6>
-		
-	</div>
 	
-	</div>
 	<div  style="float:right; margin-right:10px; margin-top:10px;">
 	
 	<div class="well " style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
@@ -269,7 +262,20 @@ if(isset($_GET['vista'])){
 	</div>
 	
 	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px;">
+	<div class=" well  " style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-3px;">IVA</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="ivablock"></h6>
 		
+	</div>
+	
+	</div>	
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-impint">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-iibb">Imp.Int.</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-impint"></h6>
+	</div>	
+	</div>
 	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="desc_recar">
 	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-15%;" id="descuento_recargo"></h5>
@@ -331,7 +337,7 @@ if(isset($_GET['vista'])){
 			  //'name'=>'cuenta_idcuenta',
 			 'model'=>$model,
 			 'attribute'=>'iva',
-			  'data' => array("1.21"=>"21%","1.105"=>"10,5%","1"=>"Exento"),
+			  'data' => array("1.21"=>"21%","1.105"=>"10,5%"),
 			'events'=>array(
 				 					'change'=>'js:sumatotal'
 				 					),
@@ -368,12 +374,7 @@ if(isset($_GET['vista'])){
 	<?php echo $form->textFieldControlGroup($model,'impuestointerno',array('style'=>'width:20%;','label'=>false,
 			'onkeydown'=>'if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
 	)); ?>
-	<div style="float:left; margin-right:10px;  display:none;" id="totaldiv-impint">
-	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
-		<h5 style="padding:0px;margin-left:-15%;" id="label-iibb">Imp.Int.</h5>
-		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-impint"></h6>
-	</div>	
-	</div>
+	
 	
 	</div>
 	<div class="row-fluid" id="descripcionimpint" style="display:none;"> 

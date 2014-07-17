@@ -191,7 +191,7 @@ class FacturaController extends Controller
 			$model->attributes=$_POST['Factura'];
 			//echo $model->formadepago."  viejo".$modeloviejo->formadepago;die();
 			if ($model->save()) {
-				
+				$this->modificarIvamovimiento($model, $_POST['Factura']['fecha']);
 				if($model->formadepago != $modeloviejo->formadepago){
 					$this->updateCambioFormadepago($modeloviejo, $model, $_POST['Factura']);
 					
@@ -612,6 +612,22 @@ class FacturaController extends Controller
 			$nuevo->save();
 			
 		} 
+	public function modificarIvamovimiento($model,$fecha){
+		$nuevo=Ivamovimiento::model()->find("factura_idfactura=:id",
+				array(':id'=>$model->idfactura));
+			$nuevo->fecha=$fecha;
+			$nuevo->nrocomprobante=$model->nrodefactura;
+			$nuevo->cliente_idcliente=$model->cliente_idcliente;
+			$nuevo->cuitentidad=$model->clienteIdcliente->cuit;
+			$nuevo->tipofactura=$model->tipofactura;
+			$nuevo->tipoiva=$model->iva;
+			$nuevo->importeiibb=$model->importeIIBB;
+			$nuevo->importeiva=$model->ivatotal;
+			$nuevo->importeneto=$model->importeneto;
+			$nuevo->save();
+			
+	}		
+
 		public function borradoIvaMov($model){
 			$ivamov=Ivamovimiento::model()->find("factura_idfactura=:factura",array(':factura'=>$model->idfactura));
 			return $ivamov->delete();
