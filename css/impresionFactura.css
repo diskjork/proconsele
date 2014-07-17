@@ -1,0 +1,203 @@
+@CHARSET "UTF-8";
+
+#fecha {
+    position:absolute;
+    width:100px;
+    height:15px;
+    z-index:1;
+    right: 105px;
+    top: 36px;
+    border: thin solid #F00;
+    color: black;
+}
+#nombre {
+    position:absolute;
+    width:440px;
+    height:15px;
+    z-index:2;
+    left: 90px;
+    top: 155px;
+    border: thin solid #F00;
+    color: black;
+}
+#direccion {
+    position:absolute;
+    width:440px;
+    height:15px;
+    z-index:3;
+    left: 90px;
+    top: 170px;
+    border: thin solid #F00;
+    color: black;
+}
+#cuit {
+    position:absolute;
+    width:100px;
+    height:15px;
+    z-index:3;
+    left: 625px;
+    top: 155px;
+    border: thin solid #F00;
+    color: black;
+}
+#remito {
+    position:absolute;
+    width:100px;
+    height:15px;
+    z-index:3;
+    left: 625px;
+    top: 170px;
+    border: thin solid #F00;
+    color: black;
+}
+#contado {
+    position:absolute;
+    width:15px;
+    height:15px;
+    z-index:3;
+    left: 347px;
+    top: 205px;
+    border: thin solid #F00;
+    color: black;
+}
+#cc {
+    position:absolute;
+    width:15px;
+    height:15px;
+    z-index:3;
+    left: 347px;
+    top: 222px;
+    border: thin solid #F00;
+    color: black;
+}
+#ri {
+    position:absolute;
+    width:15px;
+    height:15px;
+    z-index:3;
+    left: 705px;
+    top: 205px;
+    border: thin solid #F00;
+    color: black;
+}
+#cantidad {
+    position:absolute;
+    text-align:right;
+    width:86px;
+    height:15px;
+    z-index:4;
+    left: 8px;
+    top: 280px;
+    border: thin solid #F00;
+    color: black;
+}
+#descripcion {
+    position:absolute;
+    width:400px;
+    height:15px;
+    z-index:4;
+    left: 112px;
+    top: 280px;
+	border: thin solid #F00;
+    color: black;
+}
+#preciounitario {
+    position:absolute;
+    text-align:left;
+    width:146px;
+    height:15px;
+    z-index:4;
+    left: 515px;
+    top: 280px;
+	border: thin solid #F00;
+    color: black;
+}
+#importe {
+    position:absolute;
+    text-align:left;
+    width:110px;
+    height:15px;
+    z-index:4;
+    left: 665px;
+    top: 280px;
+	border: thin solid #F00;
+    color: black;
+}
+#impuesto {
+    position:absolute;
+    text-align: center;
+    width:110px;
+    height:15px;
+    z-index:4;
+    left: 8px;
+    top: 1040px;
+	border: thin solid #F00;
+    color: black;
+}
+#descuento {
+    position:absolute;
+    text-align: center;
+    width:100px;
+    height:15px;
+    z-index:4;
+    left: 132px;
+    top: 1040px;
+	border: thin solid #F00;
+    color: black;
+}
+#recargo {
+    position:absolute;
+    text-align: center;
+    width:100px;
+    height:15px;
+    z-index:4;
+    left: 250px;
+    top: 1040px;
+	border: thin solid #F00;
+    color: black;
+}
+#subtotal {
+    position:absolute;
+    text-align: center;
+    width:100px;
+    height:15px;
+    z-index:4;
+    left: 366px;
+    top: 1040px;
+	border: thin solid #F00;
+    color: black;
+}
+#iva {
+    position:absolute;
+    text-align: center;
+    width:100px;
+    height:15px;
+    z-index:4;
+    left: 480px;
+    top: 1040px;
+	border: thin solid #F00;
+    color: black;
+}
+#total {
+    position:absolute;
+    text-align: center;
+    width:100px;
+    height:15px;
+    z-index:4;
+    left: 681px;
+    top: 1040px;
+	border: thin solid #F00;
+    color: black;
+}
+
+#apDiv1 {
+	position: absolute;
+	width: 210mm;
+	height: 280mm;
+	z-index: 5;
+	background-image: url(../images/factura.jpg);
+	/*background-size: contain;*/
+	border: thin solid #F00;
+	background-size: 100%;
+	color: #FFF;
+}
