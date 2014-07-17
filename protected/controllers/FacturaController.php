@@ -643,4 +643,32 @@ class FacturaController extends Controller
 			}
 	}
 	
+	public function actionImprimirFactura($id) {
+            
+            $this->layout='//layouts/imprimir'; // defines el archivo protected/views/layouts/imprimir.php como layout por defecto sólo para esta acción.
+            
+            $factura = Factura::model()->findByPk($id); // agregas el código a ejecutar que cargará los datos que enviarás a la vista y que generarán tu factura
+
+           /* $detallefactura = Detallefactura::model()->findAllByAttributes(
+            	array(),
+            	$condition  = 'factura_idfactura = '.$factura->idfactura,
+		        $params     = array(
+		                ':factura_idfactura'=>$factura->idfactura
+		        )
+            );*/
+            
+            //CON HTML2PDF
+            $html2pdf = Yii::app()->ePdf->HTML2PDF();
+            
+            $html2pdf=Yii::app()->ePdf->mpdf('utf-8', 'Letter-L');
+			$html2pdf->ignore_invalid_utf8 = true;
+            $html2pdf = new HTML2PDF('P', 'A4', 'es');
+	        $html2pdf->WriteHTML($this->render('imprimirFactura', array('factura'=>$factura), true));
+	        $html2pdf->Output();
+ 
+            //$this->renderPartial('imprimirFactura',array('factura'=>$factura),false,true);
+                        
+        }
+    
+	
 }
