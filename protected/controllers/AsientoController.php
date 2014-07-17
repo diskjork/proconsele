@@ -221,6 +221,7 @@ class AsientoController extends Controller
 				$mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];
                 $model=new Detalleasiento('search');
+                /*
                 $dataproviderDEBE=$model->generarArrayDEBE($anio_tab, $mes_tab)->data;
                 $dataproviderHABER=$model->generarArrayHABER($anio_tab, $mes_tab)->data;
                 $cantDEBE=count($dataproviderDEBE);
@@ -258,15 +259,11 @@ class AsientoController extends Controller
 				        'pageSize'=>10,
 				    ),
 				)); 
-                 //echo "<br>".$cantHABER;
-               /* echo "cantidad debe:".$cantDEBE;
-                 echo "cantidad haber: ".$cantHABER;
-                 print_r($dataProvider);
-                  die();*/
+                */ 
                	$this->widget('application.components.widgets.EExcelView', array(
                 	
 				    'id'                   => 'some-grid',
-				    'dataProvider'		   => $dataProvider,
+				    'dataProvider'		   => $model->generarGrid($anio_tab, $mes_tab),
 				    'grid_mode'            => 'export', // Same usage as EExcelView v0.33
 				    //'template'             => "{summary}\n{items}\n{exportbuttons}\n{pager}",
 				    'title'                => 'Libro diario ' . date('d-m-Y'),
@@ -305,22 +302,24 @@ class AsientoController extends Controller
                			array(
                				'name' => 'codigo',
 							'header' => 'COD. CUENTA',
-               				'visible'=>'$data->debe != null) && ($data->haber != null',
+               				
 						),	
 						array(
-							'name' => 'cuenta',
+							'name' => 'NombreCta',
 							'header' => 'NOMBRE',
-							//'value'=>'($data->debe !== null)? "$".number_format($data->debe, 2, ".", ","): ""',			
+										
 						),
 						array(
-							'name' => 'debe',
+							//'name' => 'totaldebe',
 							'header' => 'DEBE',
-							//'value'=>'number_format($data->debe, 2, ".", ",")',			
+							'value'=>'($data->totaldebe !== null)? number_format($data->totaldebe, 2, ",", "."):""',
+							//'value'=>'($data->totaldebe !== null)? "$".number_format($data->totaldebe, 2, ",", "."): ""',		
 						),
 						array(
-							'name' => 'haber',
+							//'name' => 'totalhaber',
 							'header' => 'HABER',
-							//'value'=>'($data->haber !== null)? "$".number_format($data->haber, 2, ".", ","): ""',
+							'value'=>'($data->totalhaber !== null)? number_format($data->totalhaber, 2, ",", "."):""',
+							//'value'=>'($data->totalhaber !== null)? "$".number_format($data->totalhaber, 2, ",", "."): ""',		
 						),
 					), 
 				)); 

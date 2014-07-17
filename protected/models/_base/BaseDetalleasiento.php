@@ -128,27 +128,9 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
-		public function generarGrid($anio,$mes)
-        {
-                $criteria=new CDbCriteria;
-                
-                $criteria->select = array(
-                	'cuenta.codigocta as codigo','cuenta.nombre as nombre',
-                	'SUM(detalleasiento.debe) as totaldebe',
-                	'SUM(detalleasiento.haber) as totalhaber',
-                );
-				$criteria->with = array('asiento', 'detalleasiento','cuenta');
-                $criteria->condition = 'YEAR(asiento.fecha)='.$anio.' AND MONTH(asiento.fecha)='.$mes.' AND detalleasiento.asiento_idasiento=asiento.idasiento AND detalleasiento.cuenta_idcuenta = cuenta.idcuenta';
-                $criteria->group = 'cuenta.nombre';
-                //$criteria->order = 'fecha DESC';
-                
-                $result = Detalleasiento::model()->find($criteria); 
-                return new CActiveDataProvider($this, array(
-                        'criteria'=>$criteria,
-                ));
-        }
+		
         
-        public  function generarArrayDEBE($anio, $mes){
+       /* public  function generarArrayDEBE($anio, $mes){
         	
         	//$count=Yii::app()->db->createCommand('SELECT COUNT(*) FROM tbl_user')->queryScalar();
 			$sql='SELECT cuenta.codigocta as codigo,cuenta.nombre AS cuenta, SUM( detalleasiento.debe ) AS debe 
@@ -166,15 +148,15 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			             'codigo', 'cuenta', 'debe',
 			        ),
 			    ),
-			   /* 'pagination'=>array(
-			        'pageSize'=>10,
-			    ),*/
+			   
 				));
 			return $dataProvider;
-        }
-		public  function generarArrayHABER($anio, $mes){
+        } */
+	public $totaldebe, $totalhaber, $codigo, $Idcuenta ,$NombreCta;
+	
+		public  function generarGrid($anio, $mes){
         	
-        	//$count=Yii::app()->db->createCommand('SELECT COUNT(*) FROM tbl_user')->queryScalar();
+        	/*//$count=Yii::app()->db->createCommand('SELECT COUNT(*) FROM tbl_user')->queryScalar();
 			$sql='SELECT cuenta.codigocta AS codigo, cuenta.nombre AS cuenta, SUM( detalleasiento.haber ) AS haber
 					FROM asiento, cuenta, detalleasiento
 					WHERE YEAR( asiento.fecha ) ='.$anio.'
@@ -182,17 +164,50 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 					AND detalleasiento.asiento_idasiento = asiento.idasiento
 					AND detalleasiento.cuenta_idcuenta = cuenta.idcuenta
 					GROUP BY cuenta.nombre ';
+			$sql='SELECT cuenta.codigocta as codigo, cuenta.nombre as cuenta, 
+				detalleasiento.cuenta_idcuenta as idcuenta,
+					 sum(detalleasiento.debe) as debe, sum(detalleasiento.haber) as haber 
+			        from asiento, detalleasiento 
+			        LEFT JOIN cuenta on detalleasiento.cuenta_idcuenta=cuenta.idcuenta 
+			        where month(asiento.fecha)='.$mes.' and year(asiento.fecha)='.$anio.'
+			        AND detalleasiento.asiento_idasiento = asiento.idasiento 
+			        group by detalleasiento.cuenta_idcuenta';
+			$count=Yii::app()->db->createCommand($sql)->queryScalar();
 			$dataProvider=new CSqlDataProvider($sql, array(
-			    //'totalItemCount'=>$count,
+			    'totalItemCount'=>$count,
 			    'sort'=>array(
 			        'attributes'=>array(
-			             'codigo', 'cuenta', 'haber'
+			             'codigo', 'cuenta','debe','haber'
 			        ),
 			    ),
-			   /* 'pagination'=>array(
-			        'pageSize'=>10,
-			    ),*/
+			  
 				));
-			return $dataProvider;
+			return $dataProvider;*/
+			
+			$criteria=new CDbCriteria;
+               // $criteria->with=array('asientoIdasiento'=>array('asiento'));
+                $criteria->select = array(
+                	'cuenta.codigocta as codigo',
+                	't.cuenta_idcuenta as Idcuenta',
+                	'cuenta.nombre as NombreCta',
+                	' sum(t.debe) as totaldebe',
+                	'sum(t.haber) as totalhaber',
+                );
+               //$criteria->with= 'asiento';
+				$criteria->join = 'LEFT JOIN cuenta on t.cuenta_idcuenta=cuenta.idcuenta, asiento';
+                $criteria->condition = 'month(asiento.fecha)='.$mes.' and year(asiento.fecha)='.$anio.'
+			        AND t.asiento_idasiento = asiento.idasiento ';
+                //$criteria->condition = 'cliente_idcliente IN (select cliente_idcliente from cliente where tipocliente_idtipocliente in (select idtipocliente from tipocliente order by idtipocliente))';
+                $criteria->group = 't.cuenta_idcuenta';
+                //$criteria->order = 'cliente_idcliente IN (select cliente_idcliente from cliente order by nombre desc)';
+                
+                $result = Detalleasiento::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+			
+			
         }
+        
+        
 }
