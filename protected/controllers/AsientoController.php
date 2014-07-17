@@ -221,11 +221,52 @@ class AsientoController extends Controller
 				$mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];
                 $model=new Detalleasiento('search');
-                	
+                $dataproviderDEBE=$model->generarArrayDEBE($anio_tab, $mes_tab)->data;
+                $dataproviderHABER=$model->generarArrayHABER($anio_tab, $mes_tab)->data;
+                $cantDEBE=count($dataproviderDEBE);
+                $cantHABER=count($dataproviderHABER);
+                $cantTOTAL=$cantDEBE+$cantHABER;
+                
+               for($i=0;$i<$cantTOTAL;$i++){
+               	if($i < ($cantDEBE)){
+               		$Resultado[$i]=$dataproviderDEBE[$i];
+               		$Resultado[$i]['haber']=null;
+               	}
+               		if($i >= $cantDEBE){
+               			$e=$i-$cantDEBE;
+               			$Resultado[$i]=$dataproviderHABER[$e];
+               			$Resultado[$i]['debe']=null;
+               		}
+               }
+               $var=0;
+               for($a=0;$a < count($Resultado);$a++){
+               		if(!(($Resultado[$a]['debe']== null) and ($Resultado[$a]['haber'] == null))){
+               			$ResultadoTotal[$var]=$Resultado[$a];
+               			$var=$var+1;
+               		}
+               	
+               }
+              
+               $dataProvider=new CArrayDataProvider($ResultadoTotal, array(
+				    //'id'=>'',
+				    'sort'=>array(
+				        'attributes'=>array(
+				             'codigo', 'cuenta', 'debe','haber'
+				        ),
+				    ),
+				    'pagination'=>array(
+				        'pageSize'=>10,
+				    ),
+				)); 
+                 //echo "<br>".$cantHABER;
+               /* echo "cantidad debe:".$cantDEBE;
+                 echo "cantidad haber: ".$cantHABER;
+                 print_r($dataProvider);
+                  die();*/
                	$this->widget('application.components.widgets.EExcelView', array(
                 	
 				    'id'                   => 'some-grid',
-				    'dataProvider'		   => $model->generarGrid($anio_tab,$mes_tab),
+				    'dataProvider'		   => $dataProvider,
 				    'grid_mode'            => 'export', // Same usage as EExcelView v0.33
 				    //'template'             => "{summary}\n{items}\n{exportbuttons}\n{pager}",
 				    'title'                => 'Libro diario ' . date('d-m-Y'),
@@ -264,21 +305,22 @@ class AsientoController extends Controller
                			array(
                				'name' => 'codigo',
 							'header' => 'COD. CUENTA',
+               				'visible'=>'$data->debe != null) && ($data->haber != null',
 						),	
 						array(
-							'name' => 'nombre',
+							'name' => 'cuenta',
 							'header' => 'NOMBRE',
 							//'value'=>'($data->debe !== null)? "$".number_format($data->debe, 2, ".", ","): ""',			
 						),
 						array(
-							'name' => 'totaldebe',
+							'name' => 'debe',
 							'header' => 'DEBE',
-							'value'=>'($data->totaldebe !== null)? "$".number_format($data->totaldebe, 2, ".", ","): ""',			
+							//'value'=>'number_format($data->debe, 2, ".", ",")',			
 						),
 						array(
-							'name' => 'totalhaber',
+							'name' => 'haber',
 							'header' => 'HABER',
-							'value'=>'($data->totalhaber !== null)? "$".number_format($data->totalhaber, 2, ".", ","): ""',
+							//'value'=>'($data->haber !== null)? "$".number_format($data->haber, 2, ".", ","): ""',
 						),
 					), 
 				)); 

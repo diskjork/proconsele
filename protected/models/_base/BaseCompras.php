@@ -158,6 +158,26 @@ abstract class BaseCompras extends GxActiveRecord {
                         'criteria'=>$criteria,
                 ));
         }
+	public function generarGrid($anio,$mes)
+        {
+                $criteria=new CDbCriteria;
+                
+                $criteria->select = array(
+                	'idcompra','nrodefactura','fecha','descripcion',
+                	//'SUM(importeneto) as importeTotal',
+                	//'SUM(detallefactura.subtotal*t.iva-detallecompra.precio) as ivaTotal',
+                	'proveedor_idproveedor','estado','importeneto');
+				//$criteria->join = ',detallefactura';
+                $criteria->condition = 'YEAR(fecha)='.$anio.' AND MONTH(fecha)='.$mes;
+                //$criteria->group = 'detallefactura.factura_idfactura';
+                $criteria->order = 'fecha DESC';
+                
+                $result = Compras::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+        }
+        
 	public function behaviors()
 		{
 			 return array(
