@@ -138,6 +138,8 @@ function sumatotal(){
 
 	}
 	//----------------descuento-Recargo--------------
+	Descuento=1;
+	Recargo=1;
 	if((checkdescRec == 1) && (!isNaN(deReBloc)))
 	{
 	
@@ -152,16 +154,8 @@ function sumatotal(){
 		if(e == 0){ //descuento
 			//if( deReBloc == "")$("#desc_recar").css("display","none"); 
 			descRecar=parseFloat(deReBloc);
-			descRecar=descRecar/100;
-			var tem= 1 - descRecar;
-			TOTALdes_rec = SUBtotal * descRecar;			
-			
-			TOTALdes_rec=TOTALdes_rec.toFixed(2);
-			var importe_des= $.number( TOTALdes_rec, 2 );
-			SUBtotal=TOTALNETO;
-			TOTALNETO=TOTALNETO - TOTALdes_rec;
-			
-			$("#descuento_recargo_importe").text("-"+importe_des);
+			Descuento=descRecar/100;
+						
 			$("#descuento_recargo").text("Descuento");
 			$("#desc_recar").show();
 			//totalneto=totalneto * descRecar;
@@ -169,13 +163,9 @@ function sumatotal(){
 		if(e == 1){ //recargo
 			var deReBloc=$("#Factura_descrecar").val();
 			descRecar=parseFloat(deReBloc);
-			descRecar=descRecar/100;
+			Recargo=descRecar/100;
 			
-			TOTALdes_rec= SUBtotal * descRecar;
-			SUBtotal=TOTALNETO;
-			TOTALNETO=TOTALNETO + TOTALdes_rec;
-			var rec_impote= $.number(TOTALdes_rec, 2 ); 
-			$("#descuento_recargo_importe").text(rec_impote);
+			
 			$("#descuento_recargo").text("Recargo");
 			$("#desc_recar").show();
 			
@@ -189,6 +179,20 @@ function sumatotal(){
 //------------------FINAL--------------------------
 	//$("#Factura_importe").val(totalneto.toFixed(2));
 	//$("#Factura_subtotal").val(total.toFixed(2));
+	if(Descuento != 1){
+
+		TOTALdes_rec=TOTALNETO * Descuento;
+		var importe_des= $.number( TOTALdes_rec, 2 );
+		$("#descuento_recargo_importe").text("-"+importe_des);
+		TOTALNETO=TOTALNETO - TOTALdes_rec;
+	} 
+	if(Recargo != 1){
+		TOTALdes_rec= TOTALNETO * Recargo;
+		TOTALNETO=TOTALNETO + TOTALdes_rec;
+		var rec_impote= $.number(TOTALdes_rec, 2 ); 
+		$("#descuento_recargo_importe").text(rec_impote);
+	}
+
 	if(!isNaN(coficienteiibb)){
 		TOTALiibb=coficienteiibb * TOTALNETO;
 		SUBtotal=TOTALNETO;
