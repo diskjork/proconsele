@@ -116,6 +116,8 @@ function sumatotal(){
 		var importeint=$.number(impint, 2);
 
 		$("#total-impint").text(importeint);
+		$("#Factura_impuestointerno").show();
+		$("#descripcionimpint").show();
 		$("#Factura_importeImpInt").val(TOTALimpint);
 
 	}

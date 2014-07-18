@@ -112,7 +112,6 @@ abstract class BaseFactura extends GxActiveRecord {
 			'nombreproducto' => Yii::t('app', 'Producto'),
 			'precioproducto' => Yii::t('app', 'Precio'),
 			'stbruto_producto' => Yii::t('app', 'Subtotal'),
-			
 			'asiento_idasiento' => null,
 			'impuestointerno' => Yii::t('app', 'Imp. Interno'),
 			'desc_imp_interno' => Yii::t('app', 'Desc Imp Interno'),
