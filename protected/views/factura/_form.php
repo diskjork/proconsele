@@ -110,8 +110,8 @@ if(isset($_GET['vista'])){
 		
 			<?php echo $form->textFieldControlGroup($model,'nrodefactura',array('width'=>'10%','class'=>'mascara')); ?>
 			</div>
-			<div id="nroremito" style="display:none;">
-			<?php echo $form->textFieldControlGroup($model,'nroremito',array('width'=>'10%','style'=>'display:none;')); ?>
+			<div id="nroremito" >
+			<?php echo $form->textFieldControlGroup($model,'nroremito',array('width'=>'10%')); ?>
 			</div>
 			<div id="nropresupuesto" style="display:none;">
 			<?php echo $form->textFieldControlGroup($model,'nropresupuesto',array('width'=>'10%',)); ?>
@@ -387,12 +387,7 @@ if(isset($_GET['vista'])){
 
 </div>	
 			
-   	<?php // echo $form->textFieldControlGroup($model,'ivatotal',array('span'=>5)); ?>
-	<?php /// echo $form->textFieldControlGroup($model,'importeneto',array('span'=>5)); ?>
-	<?php // echo $form->textFieldControlGroup($model,'impuestointerno',array('span'=>5)); ?>
-	<?php //echo $form->textFieldControlGroup($model,'desc_imp_interno',array('span'=>5,'maxlength'=>100)); ?>
-	<?php // echo $form->hiddenField($model,'estado',array('span'=>5)); ?>
-	<?php // echo $form->hiddenField($model,'presupuesto',array('span'=>5)); ?>
+   	
 	<?php echo $form->hiddenField($model,'asiento_idasiento',array('span'=>5)); ?>
     <?php echo $form->hiddenField($model, 'vista', array());?>    
 
