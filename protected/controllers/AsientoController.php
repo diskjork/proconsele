@@ -217,56 +217,144 @@ class AsientoController extends Controller
 		));
 	}
 
+	
 	public function actionExcel(){
 				$mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];
+                $tipo=$_GET['tipo'];
+                
                 $model=new Detalleasiento('search');
-                /*
+		if($tipo == 0){
                 $dataproviderDEBE=$model->generarArrayDEBE($anio_tab, $mes_tab)->data;
                 $dataproviderHABER=$model->generarArrayHABER($anio_tab, $mes_tab)->data;
+                /*print_r($dataproviderDEBE);
+                echo "<br>";
+                print_r($dataproviderHABER);die();*/
                 $cantDEBE=count($dataproviderDEBE);
                 $cantHABER=count($dataproviderHABER);
                 $cantTOTAL=$cantDEBE+$cantHABER;
-                
+               // echo $cantTOTAL." debe: ".$cantDEBE." haber: ".$cantHABER; die();
                for($i=0;$i<$cantTOTAL;$i++){
-               	if($i < ($cantDEBE)){
-               		$Resultado[$i]=$dataproviderDEBE[$i];
-               		$Resultado[$i]['haber']=null;
-               	}
-               		if($i >= $cantDEBE){
-               			$e=$i-$cantDEBE;
-               			$Resultado[$i]=$dataproviderHABER[$e];
-               			$Resultado[$i]['debe']=null;
-               		}
-               }
+	               		if($i < $cantDEBE){
+		               		$Resultado[$i]=$dataproviderDEBE[$i];
+		               		$Resultado[$i]['haber']=null;
+		               	}
+		               	if($i > ($cantDEBE-1)){
+	               			$e=$i-$cantDEBE;
+	               			$Resultado[$i]=$dataproviderHABER[$e];
+	               			$Resultado[$i]['debe']=null;
+		               	}
+	            }
+	            
                $var=0;
                for($a=0;$a < count($Resultado);$a++){
-               		if(!(($Resultado[$a]['debe']== null) and ($Resultado[$a]['haber'] == null))){
+               		if(!(($Resultado[$a]['debe'] == null) and ($Resultado[$a]['haber'] == null))){
                			$ResultadoTotal[$var]=$Resultado[$a];
                			$var=$var+1;
                		}
                	
                }
-              
+             //print_r($Resultado);
+              //die();
                $dataProvider=new CArrayDataProvider($ResultadoTotal, array(
-				    //'id'=>'',
+				    'id'=>'codigo',
 				    'sort'=>array(
 				        'attributes'=>array(
-				             'codigo', 'cuenta', 'debe','haber'
+				             'codigo','cuenta', 'debe', 'haber',
 				        ),
 				    ),
 				    'pagination'=>array(
-				        'pageSize'=>10,
+				        'pageSize'=>30,
 				    ),
-				)); 
-                */ 
+				));
+				$datos=	array( 
+               			array(
+               				'name' => 'codigo',
+							'header' => 'COD. CUENTA',
+               			),	
+						array(
+							'name' => 'cuenta',
+							'header' => 'NOMBRE',
+						),
+						array(
+							'header' => 'DEBE',
+							'value'=>'($data["debe"] !== null)? number_format($data["debe"], 2, ",", "."):""',
+						),
+						array(
+							'header' => 'HABER',
+							'value'=>'($data["haber"] !== null)? number_format($data["haber"], 2, ",", "."):""',
+						),
+					);
+					$nombreArchivo='Resumen-Asiento Mes ('.date('m').') - Generado (' .date('d-m-Y').')';
+		} else {
+			$dataproviderAsiento=$model->generarAsientos($anio_tab, $mes_tab)->data;
+			$cantAsientos=count($dataproviderAsiento);
+		//echo $cantAsientos;die();
+			for($i=0;$i<$cantAsientos;$i++){
+				$dataproviderResultadoAsiento[$i]=$dataproviderAsiento[$i];
+				if($i > 0){
+				if($dataproviderAsiento[$i]['asiento'] == $dataproviderAsiento[$i-1]['asiento']){
+					$dataproviderResultadoAsiento[$i]['asiento']=null;
+					$dataproviderResultadoAsiento[$i]['descripcion']=null;
+					$dataproviderResultadoAsiento[$i]['fecha']=null;
+					
+				}
+				}
+			}
+			//print_r($dataproviderResultadoAsiento);die();
+			$dataProvider=new CArrayDataProvider($dataproviderResultadoAsiento, array(
+				    'id'=>'codigo',
+				    'sort'=>array(
+				        'attributes'=>array(
+				           'fecha', 'asiento','codigo','nombre', 'debe', 'haber',
+				        ),
+				    ),
+				    'pagination'=>array(
+				        'pageSize'=>30,
+				    ),
+				));
+			$datos=	array(
+						array(
+               				'name' => 'fecha',
+							'header' => 'FECHA',
+               			), 
+						array(
+               				'name' => 'asiento',
+							'header' => 'NRO ASIENTO',
+               			),
+               			array(
+							'name' => 'descripcion',
+							'header' => 'DESCRIPCION',
+						),
+               			array(
+               				'name' => 'codigo',
+							'header' => 'COD. CUENTA',
+               			),	
+						array(
+							'name' => 'nombre',
+							'header' => 'NOMBRE',
+						),
+						array(
+							'header' => 'DEBE',
+							'value'=>'($data["debe"] !== null)? number_format($data["debe"], 2, ",", "."):""',
+						),
+						array(
+							'header' => 'HABER',
+							'value'=>'($data["haber"] !== null)? number_format($data["haber"], 2, ",", "."):""',
+						),
+						
+					);
+					$nombreArchivo='Libro Diario Mes ('.date('m').') - Generado (' .date('d-m-Y').')';
+		}
+				//print_r($dataProvider);die(); 
+               // public $totaldebe, $totalhaber, $codigo, $Idcuenta ,$NombreCta;
                	$this->widget('application.components.widgets.EExcelView', array(
                 	
 				    'id'                   => 'some-grid',
-				    'dataProvider'		   => $model->generarGrid($anio_tab, $mes_tab),
+				    'dataProvider'		   => $dataProvider,//$model->generarGrid($anio_tab, $mes_tab),
 				    'grid_mode'            => 'export', // Same usage as EExcelView v0.33
 				    //'template'             => "{summary}\n{items}\n{exportbuttons}\n{pager}",
-				    'title'                => 'Libro diario ' . date('d-m-Y'),
+				    'title'                => $nombreArchivo,
 				    'creator'              => 'YVN',
 				    'subject'              => mb_convert_encoding('Something important with a date in French: ' . utf8_encode(strftime('%e %B %Y')), 'ISO-8859-1', 'UTF-8'),
 				    'description'          => mb_convert_encoding('Etat de production g�n�r� � la demande par l\'administrateur (some text in French).', 'ISO-8859-1', 'UTF-8'),
@@ -297,31 +385,8 @@ class AsientoController extends Controller
 				    'footerHeight'         => 25, // Default: 20
 				    'exportType'		   => 'Excel2007',
                 	'enablePagination'		=> true,
-				    'columns'              => array( // an array of your CGridColumns
-
-               			array(
-               				'name' => 'codigo',
-							'header' => 'COD. CUENTA',
-               				
-						),	
-						array(
-							'name' => 'NombreCta',
-							'header' => 'NOMBRE',
-										
-						),
-						array(
-							//'name' => 'totaldebe',
-							'header' => 'DEBE',
-							'value'=>'($data->totaldebe !== null)? number_format($data->totaldebe, 2, ",", "."):""',
-							//'value'=>'($data->totaldebe !== null)? "$".number_format($data->totaldebe, 2, ",", "."): ""',		
-						),
-						array(
-							//'name' => 'totalhaber',
-							'header' => 'HABER',
-							'value'=>'($data->totalhaber !== null)? number_format($data->totalhaber, 2, ",", "."):""',
-							//'value'=>'($data->totalhaber !== null)? "$".number_format($data->totalhaber, 2, ",", "."): ""',		
-						),
-					), 
+				    'columns'              => $datos,
+               
 				)); 
                
         	
