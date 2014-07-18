@@ -14,16 +14,16 @@
 	}
 
 	if ($factura->tipodescrecar==0 AND $factura->descrecar!=NULL){
-		$descuento="$ ".number_format(($factura->importebruto+$factura->ivatotal)*($factura->descrecar/100),2, ".", ",");
-		$subtotalRecDes=$factura->importebruto-$descuento;
+		$descuento=number_format(($factura->stbruto_producto+$factura->ivatotal+$factura->importeImpInt)*($factura->descrecar/100),2, ".", ",");
+		$descuentostr="$ ".$descuento;
 		$recargo="";
 	}else if ($factura->tipodescrecar==1 AND $factura->descrecar!=NULL){
 		$descuento="";
-		$recargo="$ ".number_format(($factura->importebruto+$factura->ivatotal)*($factura->descrecar/100),2, ".", ",");
-		$subtotalRecDes=$factura->importebruto+$recargo;
+		$recargo=number_format(($factura->stbruto_producto+$factura->ivatotal+$factura->importeImpInt)*($factura->descrecar/100),2, ".", ",");
+		$recargostr="$ ".$recargo;
 	}else{
-		$recargo="";
-		$descuento="";
+		$recargostr="";
+		$descuentostr="";
 		$subtotalRecDes=$factura->importebruto;
 	}
 	$e=0;
@@ -44,11 +44,11 @@
 	<div id="preciounitario"  style="margin-top:<?php echo $e;?>;"><?php echo "$ ".$factura->precioproducto;?></div>
 	<div id="importe"  style="margin-top:<?php echo $e;?>;"><?php echo "$ ".$factura->stbruto_producto;?></div>
   	<div id="impuesto"><?php echo $factura->importeImpInt;?></div>
-  	<div id="descuento"><?php echo $descuento;?></div>
-  	<div id="recargo"><?php echo $recargo;?></div>
-  	<div id="subtotal"><?php echo "$ ".$factura->importebruto;?></div>
+  	<div id="descuento"><?php echo $descuentostr;?></div>
+  	<div id="recargo"><?php echo $recargostr;?></div>
+  	<div id="subtotal"><?php echo "$ ".$factura->stbruto_producto;?></div>
   	<div id="iva"><?php echo $factura->iva;?></div>
   	<div id="importeiva"><?php echo "$ ".$factura->ivatotal;?></div>
-  	<div id="subtotaliva"><?php echo "$ ".($subtotalRecDes+$factura->ivatotal);?></div>
-  	<div id="total"><?php echo "$ ".($factura->importeIIBB+$subtotalRecDes+$factura->ivatotal);?></div>
+  	<div id="subtotaliva"><?php echo "$ ".$factura->importebruto;//($subtotalRecDes);?></div>
+  	<div id="total"><?php echo "$ ".($factura->importeneto);?></div>
 </div>
