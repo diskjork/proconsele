@@ -17,6 +17,8 @@ $("#Factura_precioproducto").keydown(function(event){
 		solonumeromod(event);});
 $("#Factura_impuestointerno").keydown(function(event){
 		solonumeromod(event);});
+$("#Factura_descrecar").keydown(function(event){
+		solonumeromod(event);});
 sumatotal();
 botonsubmit();
 

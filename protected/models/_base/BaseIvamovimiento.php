@@ -61,6 +61,8 @@ abstract class BaseIvamovimiento extends GxActiveRecord {
 		return array(
 			'compraIdcompra' => array(self::BELONGS_TO, 'Compras', 'compra_idcompra'),
 			'facturaIdfactura' => array(self::BELONGS_TO, 'Factura', 'factura_idfactura'),
+			'proveedorIdproveedor' => array(self::BELONGS_TO, 'Proveedor', 'proveedor_idproveedor'),
+			'clienteIdcliente' => array(self::BELONGS_TO, 'Cliente', 'cliente_idcliente'),
 		);
 	}
 
@@ -107,6 +109,8 @@ abstract class BaseIvamovimiento extends GxActiveRecord {
 		$criteria->compare('importeneto', $this->importeneto);
 		$criteria->compare('compra_idcompra', $this->compra_idcompra);
 		$criteria->compare('factura_idfactura', $this->factura_idfactura);
+		$criteria->compare('proveedorIdproveedor', $this->proveedorIdproveedor);
+		$criteria->compare('clienteIdcliente', $this->clienteIdcliente);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

@@ -6,7 +6,7 @@ class IvamovimientoController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
-	public $layout='//layouts/column2';
+	public $layout='//layouts/column3';
 
 	/**
 	 * @return array action filters
@@ -14,7 +14,8 @@ class IvamovimientoController extends Controller
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
+			//'accessControl', // perform access control for CRUD operations
+			array('auth.filters.AuthFilter'),
 			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
@@ -176,5 +177,117 @@ class IvamovimientoController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+	public function actionAdminCompras()
+	{
+		$model=new Ivamovimiento('search');
+		$model->unsetAttributes();  // clear any default values
+		if (isset($_GET['Ivamovimiento'])) {
+			$model->attributes=$_GET['Ivamovimiento'];
+		}
+
+		$this->render('tabscompras',array(
+			'model'=>$model,
+		));
+	}
+	public function actionAdminVentas()
+	{
+		$model=new Ivamovimiento('search');
+		$model->unsetAttributes();  // clear any default values
+		if (isset($_GET['Ivamovimiento'])) {
+			$model->attributes=$_GET['Ivamovimiento'];
+		}
+
+		$this->render('tabsventas',array(
+			'model'=>$model,
+		));
+	}
+	public function actionExcel(){
+		$mes_tab=$_GET['mesTab'];
+       	$anio_tab=$_GET['anioTab'];
+        $tipo=$_GET['tipo'];
+        $model=new Ivamovimiento('search');
+		if($tipo == 1){
+			$valor="proveedorIdproveedor";
+			$nombreArchivo='Libro IVA COMPRAS mes('.date('m').') - Generado (' .date('d-m-Y').')';
+		} else{
+			$valor="clienteIdcliente";
+			$nombreArchivo='Libro IVA VENTAS mes('.date('m').') - Generado (' .date('d-m-Y').')';
+		}
+			
+        $dataProvider= $model->search($model->fecha=$anio_tab."-".$mes_tab, $model->tipomoviento= $tipo);
+		$dataProvider->setPagination(array('pageSize'=>$model->count()));
+		
+		$datos=array(
+		array('name' => 'nrocomprobante',
+					'header' => 'NRO.COMP.' ),
+		array(
+			'name' => 'fecha',
+			'header' => 'F. COBRO' ),
+		array(
+			'header'=>'EMPRESA',
+			'value'=>'$data->'.$valor.'', ),
+		array('name' => ''.$valor.'.cuit',
+			  'header' => 'CUIT',),	
+		array(
+				'header' => 'FACTURA',
+				'value'=>'($data->tipofactura == 1)?"A" :"B"', ),	
+		array(
+				'header' => 'IVA',
+				'value'=>'($data->tipoiva == 1.21)?"21%" :"10,5%"', ),
+		array(
+				'header' => 'IIBB',
+				'value'=>'($data->importeiibb != null) ? number_format($data->importeiibb, 2, ",", "."): ""',
+			),
+		array(
+				'header' => 'TOTAL IVA',
+				'value'=>'number_format($data->importeiva, 2, ",", ".")',
+			),
+		array(
+				'header' => 'TOTAL NETO',
+				'value'=>'number_format($data->importeneto, 2, ",", ".")',
+			));
+			
+		
+		$this->widget('application.components.widgets.EExcelView', array(
+                	
+				    'id'                   => 'some-grid',
+				    'dataProvider'		   => $dataProvider,//$model->generarGrid($anio_tab, $mes_tab),
+				    'grid_mode'            => 'export', // Same usage as EExcelView v0.33
+				    //'template'             => "{summary}\n{items}\n{exportbuttons}\n{pager}",
+				    'title'                => $nombreArchivo,
+				    'creator'              => 'YVN',
+				    'subject'              => mb_convert_encoding('Something important with a date in French: ' . utf8_encode(strftime('%e %B %Y')), 'ISO-8859-1', 'UTF-8'),
+				    'description'          => mb_convert_encoding('Etat de production g�n�r� � la demande par l\'administrateur (some text in French).', 'ISO-8859-1', 'UTF-8'),
+				    'lastModifiedBy'       => 'YVN',
+				    'sheetTitle'           => 'CC Proveedores ' . date('m-d-Y H-i'),
+				    'keywords'             => '',
+				    'category'             => '',
+				    'landscapeDisplay'     => true, // Default: false
+				    'A4'                   => true, // Default: false - ie : Letter (PHPExcel default)
+				    'pageFooterText'       => '&RThis is page no. &P of &N pages', // Default: '&RPage &P of &N'
+				    'automaticSum'         => true, // Default: false
+				    'decimalSeparator'     => ',', // Default: '.'
+				    'thousandsSeparator'   => '.', // Default: ','
+				    //'displayZeros'       => false,
+				    'zeroPlaceholder'      => '-',
+				    //'sumLabel'             => 'TOTALES:', // Default: 'Totals'
+				    'borderColor'          => '000000', // Default: '000000'
+				    'bgColor'              => 'E0E0E0', // Default: 'FFFFFF'
+				    'textColor'            => '000000', // Default: '000000'
+				    'rowHeight'            => 15, // Default: 15
+				    'headerBorderColor'    => '000000', // Default: '000000'
+				    'headerBgColor'        => 'FF7F50', // Default: 'CCCCCC'
+				    'headerTextColor'      => '000000', // Default: '000000'
+				    'headerHeight'         => 25, // Default: 20
+				    'footerBorderColor'    => '000000', // Default: '000000'
+				    'footerBgColor'        => 'CCCCCC', // Default: 'FFFFCC'
+				    'footerTextColor'      => '000000', // Default: '0000FF'
+				    'footerHeight'         => 25, // Default: 20
+				    'exportType'		   => 'Excel2007',
+                	'enablePagination'		=> true,
+				    'columns'              => $datos,
+               
+				)); 
 	}
 }

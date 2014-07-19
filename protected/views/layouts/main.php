@@ -78,6 +78,11 @@
 									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/compras/admin'),
 									
 								)),
+						array('label'=>'LIBROS IVA','icon'=>'icon-briefcase', 'url'=>'#',
+								'items'=>array(
+									array('label'=>'LIBRO IVA COMPRAS', 'url'=>Yii::app()->request->baseUrl.'/ivamovimiento/admincompras'),
+									array('label'=>'LIBRO IVA VENTA', 'url'=>Yii::app()->request->baseUrl.'/ivamovimiento/adminventas'),
+								)),
 						array('label'=>'PRODUCTOS','icon'=>'icon-briefcase', 'url'=>'#',
 								'items'=>array(
 									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/producto/admin'),

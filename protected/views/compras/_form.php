@@ -24,7 +24,7 @@ if(isset($model->importeIIBB)){
 	}
 ?>
 
-<div class="form">
+<div class="form" style="background-color: rgb(248, 245, 245);">
 
     <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'factura-form',

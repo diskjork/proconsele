@@ -11,12 +11,14 @@ $gridColumns= array(
 		),
 	array(
 			'header'=>'DEBE',
-			'name'=>'debe',
+			//'name'=>'debe',
+			'value'=>'($data->debe !== null)?"$".number_format($data->debe, 2, ",", "."): ""',
 		'htmlOptions' => array('width' =>'10%'),
 		),
 		array(
 			'header'=>'HABER',
-			'name'=>'haber',
+			//'name'=>'haber',
+			'value'=>'($data->haber !== null)? "$".number_format($data->haber, 2, ",", "."): ""',
 		'htmlOptions' => array('width' =>'10%'),
 		),
 		

@@ -1,6 +1,6 @@
 <div id="iconoExportar" align="right">
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>0),'Exportar asiento resumen del mes',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
-<?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_IMPORTANT)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>1),'Exportar todos los asientos del mes',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php echo " ".TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_IMPORTANT)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>1),'Exportar todos los asientos del mes',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
 </div>
 <?php
 $dataProvider=$model->search($model->fecha=$anioTab."-".$mesTab);
