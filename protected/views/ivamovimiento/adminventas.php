@@ -79,7 +79,7 @@ $columnas=array(
 	                    'visible'=>'$data->factura_idfactura != NULL',
 						'url'=> 'Yii::app()->createUrl("factura/update",
 								 array(	"id"=>$data->factura_idfactura,
-								 		//"vista"=>2,
+								 		"vista"=>3,
 								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',
 						

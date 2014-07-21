@@ -43,20 +43,20 @@
 					'class'=>'bootstrap.widgets.TbNav',
 					'items'=>array(
 						array('label'=>'DASHBOARD','icon'=>'icon-th-large','url'=>Yii::app()->request->baseUrl.'/index.php'),
-						array('label'=>'REPORTES','icon'=>'icon-signal','url'=>Yii::app()->request->baseUrl.'/index.php/reporte/index'),
-						array('label'=>'CUENTAS','icon'=>'icon-signal','url'=>'#',
+						//array('label'=>'REPORTES','icon'=>'icon-signal','url'=>Yii::app()->request->baseUrl.'/index.php/reporte/index'),
+						array('label'=>'CUENTAS','icon'=>' icon-align-justify','url'=>'#',
 							'items'=>array(
 									array('label'=>'PLAN DE CUENTAS','url'=>Yii::app()->request->baseUrl.'/index.php/cuenta/admin'),
 									array('label'=>'ASIENTO','url'=>Yii::app()->request->baseUrl.'/index.php/asiento/admin'),
 							)
 						),
+						array('label'=>'CLIENTES','icon'=>'icon-star','items'=>array(
+							array('label'=>'Administrar','url'=>Yii::app()->request->baseUrl.'/index.php/cliente/admin'),
+							array('label'=>'Cuentas Corrientes', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctactecliente/admin'),
+						)),
 						array('label'=>'PROVEEDORES','icon'=>'icon-star-empty','items'=>array(
 							array('label'=>'Administrar','url'=>Yii::app()->request->baseUrl.'/index.php/proveedor/admin'),
 							array('label'=>'Cuentas Corrientes', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctacteprov/admin'),
-						)),
-						array('label'=>'CLIENTES','icon'=>'icon-star-empty','items'=>array(
-							array('label'=>'Administrar','url'=>Yii::app()->request->baseUrl.'/index.php/cliente/admin'),
-							array('label'=>'Cuentas Corrientes', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctactecliente/admin'),
 						)),
 						array('label'=>'VALORES','icon'=>'icon-briefcase', 'url'=>'#',
 								'items'=>array(

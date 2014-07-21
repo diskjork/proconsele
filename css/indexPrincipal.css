@@ -14,7 +14,7 @@
 }
 #bloqueUpRight{
 	border: 3px solid #666666;
-	height: 300px;
+	height: 150px;
 	width:48%;
 	float: right;
 	padding:4px;
@@ -23,7 +23,7 @@
 
 #bloqueUpLeft{
 	border: 3px solid #666666;
-	height: 300px;
+	height: 150px;
 	width: 48%;
 	padding: 4px;
 	border-radius: 10px;
@@ -31,18 +31,17 @@
 
 #bloqueDownRight{
 	border: 3px solid #666666;
-	height: 292px;
+	height: 150px;
 	width: 48%;
 	float:right;
 	margin-top:10px;
 	padding:4px;
 	border-radius: 10px;
-	padding-top:10px;
 }
 
 #bloqueDownLeft{
 	border: 3px solid #666666;
-	height: 300px;
+	height: 150px;
 	width: 48%;
 	float: left;
 	margin-top: 10px;

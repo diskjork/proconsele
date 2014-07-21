@@ -22,13 +22,23 @@ $gridColumns= array(
 			'htmlOptions' => array('width' =>'60%',
 										'style'=>'text-align:left;'),
 		),
+		
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
 			'template'=>'{delete} {update} {actmovbanco} {actmovcaja} {actcompra} {actordenpago} 
 						{actcobranza} {actfactura} {borrarOrPago} {borrarCobranza} {borrarFactura} {borrarCompra}',
             'buttons'=>array(
-             	
+             	 'delete'=>array(
+					'label'=>'Borrar asiento',
+					'visible'=>'$data->movimientobanco_idmovimientobanco == NULL AND
+	                    		    $data->movimientocaja_idmovimientocaja == NULL AND 
+	                    		    $data->compra_idcompra == NULL AND
+	                    		    $data->factura_idfactura == NULL AND
+	                    		    $data->ordendepago_idordendepago == NULL AND
+	                    		    $data->cobranza_idcobranza == NULL
+	                    		    ',
+				 ),
                  'update'=>array(
 					'label'=>'Modificar asiento',
 	                    //'icon'=>TbHtml::ICON_MINUS_SIGN,

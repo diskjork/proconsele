@@ -34,7 +34,8 @@ $('.search-form form').submit(function(){
 ");
 ?>
 
-<h1>Plan de Cuentas</h1>
+<h5 class="well well-small">PLAN DE CUENTAS</h5>
+<br>
 <!-- search-form -->
 <?php 
 $dataProvider= $model->search();
@@ -75,7 +76,7 @@ $columnas=array(
 
 <?php 
     $this->widget('yiiwheels.widgets.grid.WhGroupGridView', array(
-    'type' => 'striped bordered',
+	'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
     'dataProvider' => $dataProvider,
  //   'extraRowColumns' =>array('tipo'),
     'template' => "{items}",

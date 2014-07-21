@@ -79,7 +79,7 @@ $valores=array('1.21'=>'21%', '1.105'=>'10.5%');$columnas=array(
 	                    'visible'=>'$data->compra_idcompra != NULL',
 						'url'=> 'Yii::app()->createUrl("compras/update",
 								 array(	"id"=>$data->compra_idcompra,
-								 		"vista"=>2,
+								 		"vista"=>3,
 								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',
 						

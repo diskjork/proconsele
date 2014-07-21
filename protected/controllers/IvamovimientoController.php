@@ -210,9 +210,11 @@ class IvamovimientoController extends Controller
 		if($tipo == 1){
 			$valor="proveedorIdproveedor";
 			$nombreArchivo='Libro IVA COMPRAS mes('.date('m').') - Generado (' .date('d-m-Y').')';
+			$label="Compras";
 		} else{
 			$valor="clienteIdcliente";
 			$nombreArchivo='Libro IVA VENTAS mes('.date('m').') - Generado (' .date('d-m-Y').')';
+			$label="Ventas";
 		}
 			
         $dataProvider= $model->search($model->fecha=$anio_tab."-".$mes_tab, $model->tipomoviento= $tipo);
@@ -260,7 +262,7 @@ class IvamovimientoController extends Controller
 				    'subject'              => mb_convert_encoding('Something important with a date in French: ' . utf8_encode(strftime('%e %B %Y')), 'ISO-8859-1', 'UTF-8'),
 				    'description'          => mb_convert_encoding('Etat de production g�n�r� � la demande par l\'administrateur (some text in French).', 'ISO-8859-1', 'UTF-8'),
 				    'lastModifiedBy'       => 'YVN',
-				    'sheetTitle'           => 'CC Proveedores ' . date('m-d-Y H-i'),
+				    'sheetTitle'           => 'IVA '.$label.' '.date('m-d-Y'),
 				    'keywords'             => '',
 				    'category'             => '',
 				    'landscapeDisplay'     => true, // Default: false

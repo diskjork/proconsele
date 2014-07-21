@@ -74,7 +74,7 @@ class ComprasController extends Controller
 					
 					$asiento=new Asiento;
 					$asiento->fecha=$model->fecha;
-					$asiento->descripcion="Factura ".$this->tipoFactura($model->tipofactura)." Compra N°: ".$model->nrodefactura." -  ".$model->proveedorIdproveedor;
+					$asiento->descripcion="Factura '".$this->tipoFactura($model->tipofactura)."' Compra N°: ".$model->nrodefactura." -  ".$model->proveedorIdproveedor;
 					$totaliva=0;
 					$totaliibb=0;
 					if($asiento->save()){
@@ -143,6 +143,7 @@ class ComprasController extends Controller
 							$this->ivamovimiento($model, $_POST['Compras']);
 							}
 					}
+				Yii::app()->user->setFlash('success', "<strong>Factura creada correctamente.</strong>");
 				$this->redirect(array('admin','id'=>$model->idcompra));
 			}
 		}
@@ -168,7 +169,7 @@ class ComprasController extends Controller
 			$model->attributes=$_POST['Compras'];
 			//die();
 			if ($model->save()) {
-				
+				Yii::app()->user->setFlash('success', "<strong>Factura actualizada correctamente.</strong>");
 				//se modifica la forma de pago pero no el tipo de factura
 				if(($model->formadepago != $modeloviejo->formadepago) && ($modeloviejo->tipofactura == $model->tipofactura)){
 					$this->updateDatosAsiento($modeloviejo, $model, $_POST['Compras']);
@@ -184,6 +185,9 @@ class ComprasController extends Controller
 					if($_POST['Compras']['vista'] == 2){
 						$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 					}
+					if($_POST['Compras']['vista'] == 3){
+						$this->redirect(Yii::app()->request->baseUrl.'/ivamovimiento/admincompras');
+					}
 				    $this->redirect(array('admin','id'=>$model->idcompra));
 				}
 				//se modifica el tipofactura pero no la forma de pago
@@ -196,6 +200,9 @@ class ComprasController extends Controller
 					$this->updateIvaMovimiento($modeloviejo, $model, $_POST['Compras']['fecha']);
 					if($_POST['Compras']['vista'] == 2){
 						$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
+					}
+					if($_POST['Compras']['vista'] == 3){
+						$this->redirect(Yii::app()->request->baseUrl.'/ivamovimiento/admincompras');
 					}
 					$this->redirect(array('admin','id'=>$model->idcompra));
 				}
@@ -210,6 +217,9 @@ class ComprasController extends Controller
 				   $this->updateIvaMovimiento($modeloviejo, $model, $_POST['Compras']['fecha']);
 					if($_POST['Compras']['vista'] == 2){
 						$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
+					}
+					if($_POST['Compras']['vista'] == 3){
+						$this->redirect(Yii::app()->request->baseUrl.'/ivamovimiento/admincompras');
 					}
 				   $this->redirect(array('admin','id'=>$model->idcompra));
 				}
@@ -227,6 +237,9 @@ class ComprasController extends Controller
 				if($_POST['Compras']['vista'] == 2){
 					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 				}
+				if($_POST['Compras']['vista'] == 3){
+						$this->redirect(Yii::app()->request->baseUrl.'/ivamovimiento/admincompras');
+					}
 				$this->redirect(array('admin','id'=>$model->idcompra));
 				}
 			 
@@ -322,7 +335,7 @@ class ComprasController extends Controller
 	}
 public function movCaja($model,$datosPOST){
 		$mov=new Movimientocaja;
-		$mov->descripcion="Factura ".$this->tipoFactura($model->tipofactura)." Compra N°: ".$model->nrodefactura." -  ".$model->proveedorIdproveedor;
+		$mov->descripcion="Factura '".$this->tipoFactura($model->tipofactura)."' Compra N°: ".$model->nrodefactura." -  ".$model->proveedorIdproveedor;
 		$mov->fecha=$datosPOST['fecha'];
 		$mov->debeohaber=0;
 		$mov->haber=$model->importeneto;
@@ -340,7 +353,7 @@ public function movCaja($model,$datosPOST){
 	 	if($ctacte->save()){
 	 		$modelDeCprov= new Detallectacteprov;
 	 		$modelDeCprov->fecha=$datosPOST['fecha'];
-           	$modelDeCprov->descripcion="Factura ".$this->tipoFactura($model->tipofactura)." Compra N°: ".$model->nrodefactura." -  ".$model->proveedorIdproveedor;
+           	$modelDeCprov->descripcion="Factura '".$this->tipoFactura($model->tipofactura)."' Compra N°: ".$model->nrodefactura." -  ".$model->proveedorIdproveedor;
            	$modelDeCprov->tipo= 0;
            	//$modelDeCprov->compra_idcompra=$model->idfactura;
            	$modelDeCprov->debe=$model->importeneto;
@@ -540,9 +553,11 @@ public function movCaja($model,$datosPOST){
 		
 	}
 	public function updateIvaMovimiento($datosviejos, $datosnuevos, $fecha){
-		if(($datosviejos->tipofactura == 1) && ($datosnuevos->tipofactura == 1)){
 		$IvaMovGuardado=Ivamovimiento::model()->find("compra_idcompra=:idcompra",
 						array(':idcompra'=>$datosviejos->idcompra));
+		if(isset($IvaMovGuardado)){
+		if(($datosviejos->tipofactura == 1) && ($datosnuevos->tipofactura == 1)){
+		
 		$IvaMovGuardado->fecha=$fecha;
 		$IvaMovGuardado->nrocomprobante=$datosnuevos->nrodefactura;
 		$IvaMovGuardado->proveedor_idproveedor=$datosnuevos->proveedor_idproveedor;
@@ -569,6 +584,7 @@ public function movCaja($model,$datosPOST){
 			$IvaMovGuardado->importeiva=$datosnuevos->ivatotal;
 			$IvaMovGuardado->importeneto=$datosnuevos->importeneto;
 			$IvaMovGuardado->save();	
+		}
 		}
 	}
 	
@@ -609,6 +625,8 @@ public function movCaja($model,$datosPOST){
 			$DeAsIVA->cuenta_idcuenta=14;// cuenta 113200-cuenta Ret. y Percep. de IVA
 			$DeAsIVA->asiento_idasiento=$datosviejos->asiento_idasiento;
 			$DeAsIVA->save();
+			
+			$this->ivamovimiento($datosnuevos, $datosPOST);
 		//detalle asiento de retenciones IIBB
 			if($datosnuevos->importeIIBB != null){
 				$detAs3=new Detalleasiento;
@@ -635,7 +653,7 @@ public function movCaja($model,$datosPOST){
 	public function updateHaberAsiento($datosviejos, $datosnuevos,$datosPOST){
 	if($datosviejos->formadepago != 99999){ //para movimiento caja
 		$movCaja=Movimientocaja::model()->findByPk($datosviejos->movimientocaja_idmovimientocaja);
-		$movCaja->descripcion="Factura ".$this->tipoFactura($datosnuevos->tipofactura)." Compra N°: ".$datosnuevos->nrodefactura." -  ".$datosnuevos->proveedorIdproveedor;
+		$movCaja->descripcion="Factura '".$this->tipoFactura($datosnuevos->tipofactura)."' Compra N°: ".$datosnuevos->nrodefactura." -  ".$datosnuevos->proveedorIdproveedor;
 		$movCaja->fecha=$datosPOST['fecha'];
 		$movCaja->haber=$datosnuevos->importeneto;
 		$movCaja->cuenta_idcuenta=$datosnuevos->cuenta_idcuenta;
@@ -678,7 +696,7 @@ public function movCaja($model,$datosPOST){
  										  );
  			$Dctacte->ctacteprov_idctacteprov=$datosnuevos->proveedorIdproveedor->ctacteprov_idctacteprov;
  			$Dctacte->fecha=$datosPOST['fecha'];
- 			$Dctacte->descripcion="Factura ".$this->tipoFactura($datosnuevos->tipofactura)." Compra N°: ".$datosnuevos->nrodefactura." -  ".$datosnuevos->proveedorIdproveedor;
+ 			$Dctacte->descripcion="Factura '".$this->tipoFactura($datosnuevos->tipofactura)."' Compra N°: ".$datosnuevos->nrodefactura." -  ".$datosnuevos->proveedorIdproveedor;
  			$Dctacte->debe=$datosnuevos->importeneto;
  			$Dctacte->save();
  			$DeAs=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 

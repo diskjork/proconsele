@@ -39,6 +39,7 @@
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
+			'template'=>'{update} {delete}',
             'buttons'=>array(
                 'view'=>
                     array(

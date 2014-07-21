@@ -136,7 +136,7 @@ if(isset($model->importeIIBB)){
 
 </div>
 <div>
-<?php echo $form->textFieldControlGroup($model,'descripcion',array('style'=>'width:300px;','maxlength'=>45)); ?>
+<?php echo $form->textAreaControlGroup($model,'descripcion', array('span' => 6, 'rows' => 3)); ?>
 </div>
 <div style="width:50%">
  <?php echo $form->label($model, 'cuenta_idcuenta');?>

@@ -86,7 +86,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			'iddetalleasiento' => Yii::t('app', 'Iddetalleasiento'),
 			'debe' => Yii::t('app', 'Debe'),
 			'haber' => Yii::t('app', 'Haber'),
-			'cuenta_idcuenta' => null,
+			'cuenta_idcuenta' => Yii::t('app', 'Cuenta contable'),
 			'asiento_idasiento' => null,
 			'proveedor_idproveedor' => null,
 			'cliente_idcliente' => null,

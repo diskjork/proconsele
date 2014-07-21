@@ -43,7 +43,7 @@ abstract class BaseCtacteprov extends GxActiveRecord {
 			array('proveedor_idproveedor', 'numerical', 'integerOnly'=>true),
 			array('debe, haber, saldo', 'numerical'),
 			array('debe, haber, saldo', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idctacteprov, debe, haber, saldo, proveedor_idproveedor', 'safe', 'on'=>'search'),
+			array('idctacteprov, debe, haber, saldo, proveedor_idproveedor, searchprov', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -88,6 +88,7 @@ abstract class BaseCtacteprov extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			
 		));
 	}
 	public function search2() {
@@ -104,6 +105,9 @@ abstract class BaseCtacteprov extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort'=>array(
+            	'defaultOrder'=>'saldo DESC',
+			),
 		));
 	}
 }

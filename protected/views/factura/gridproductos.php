@@ -66,7 +66,8 @@ function cargardatos(target_id){
 			  $('#Factura_stbruto_Producto').val(subtotal.toFixed(2));
 			  $('#ModalProducto').modal('hide');
 			  var idcantidad="Factura_cantidadproducto";
-			  sumaSubtotal(idcantidad);
+			  	sumaSubtotal(idcantidad);
+			  	sumatotal();
 				botonsubmit();
 			  },
 		  dataType: "json"

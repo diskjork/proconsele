@@ -158,8 +158,86 @@ abstract class BaseCompras extends GxActiveRecord {
                         'criteria'=>$criteria,
                 ));
         }
+	/*public function generarGrid($anio,$mes)
+        {
+                $criteria=new CDbCriteria;
+                
+                $criteria->select = array(
+                	'idfactura','nrodefactura','fecha',
+                	//'SUM(importeneto) as importeTotal',
+                	//'SUM(detallefactura.subtotal*t.iva-detallecompra.precio) as ivaTotal',
+                	'cliente_idcliente','estado','importeneto');
+				//$criteria->join = ',detallefactura';
+                $criteria->condition = 'YEAR(fecha)='.$anio.' AND MONTH(fecha)='.$mes.' AND presupuesto=0';
+                //$criteria->group = 'detallefactura.factura_idfactura';
+                $criteria->order = 'fecha DESC';
+                
+                $result = Factura::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+        }*/
+    public $ene,$feb,$mar,$abr,$may,$jun,$jul,$ago,$sep,$oct,$nov,$dic,$nombreproducto,$maxnropresupuesto;
+	public function reporteCompras($anio)
+        {
+                $criteria=new CDbCriteria;
+                
+                $criteria->select = array(
+                	
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=01,importeneto,0)) AS ene',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=02,importeneto,0)) AS feb',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=03,importeneto,0)) AS mar',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=04,importeneto,0)) AS abr',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=05,importeneto,0)) AS may',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=06,importeneto,0)) AS jun',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=07,importeneto,0)) AS jul',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=08,importeneto,0)) AS ago',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=09,importeneto,0)) AS sep',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=10,importeneto,0)) AS oct',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=11,importeneto,0)) AS nov',
+					'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=12,importeneto,0)) AS dic',
+                );
 
-        
+                $criteria->condition = 'YEAR(fecha)='.$anio;
+                //$criteria->condition = 'cliente_idcliente IN (select cliente_idcliente from cliente where tipocliente_idtipocliente in (select idtipocliente from tipocliente order by idtipocliente))';
+                //$criteria->group = 'producto_idproducto';
+                //$criteria->order = 'cliente_idcliente IN (select cliente_idcliente from cliente order by nombre desc)';
+                
+                $result = Compras::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+        }    
+    public function reporteComprasIVA($anio)
+        {
+                $criteria=new CDbCriteria;
+                
+                $criteria->select = array(
+                	
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=01,importeneto,0)) AS ene',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=02,importeneto,0)) AS feb',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=03,importeneto,0)) AS mar',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=04,importeneto,0)) AS abr',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=05,importeneto,0)) AS may',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=06,importeneto,0)) AS jun',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=07,importeneto,0)) AS jul',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=08,importeneto,0)) AS ago',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=09,importeneto,0)) AS sep',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=10,importeneto,0)) AS oct',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=11,importeneto,0)) AS nov',
+					'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=12,importeneto,0)) AS dic',
+                );
+
+                $criteria->condition = 'YEAR(fecha)='.$anio;
+                //$criteria->condition = 'cliente_idcliente IN (select cliente_idcliente from cliente where tipocliente_idtipocliente in (select idtipocliente from tipocliente order by idtipocliente))';
+                //$criteria->group = 'producto_idproducto';
+                //$criteria->order = 'cliente_idcliente IN (select cliente_idcliente from cliente order by nombre desc)';
+                
+                $result = Compras::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+        }       
 	public function behaviors()
 		{
 			 return array(

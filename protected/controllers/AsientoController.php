@@ -359,7 +359,7 @@ class AsientoController extends Controller
 				    'subject'              => mb_convert_encoding('Something important with a date in French: ' . utf8_encode(strftime('%e %B %Y')), 'ISO-8859-1', 'UTF-8'),
 				    'description'          => mb_convert_encoding('Etat de production g�n�r� � la demande par l\'administrateur (some text in French).', 'ISO-8859-1', 'UTF-8'),
 				    'lastModifiedBy'       => 'YVN',
-				    'sheetTitle'           => 'CC Proveedores ' . date('m-d-Y H-i'),
+				    'sheetTitle'           => 'Libro diario ' . date('m-d-Y H-i'),
 				    'keywords'             => '',
 				    'category'             => '',
 				    'landscapeDisplay'     => true, // Default: false

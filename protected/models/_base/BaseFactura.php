@@ -69,6 +69,7 @@ abstract class BaseFactura extends GxActiveRecord {
 			array('nombreproducto, desc_imp_interno', 'length', 'max'=>100),
 			array('estado, descrecar, tipodescrecar, iva, retencionIIBB, impuestointerno, desc_imp_interno,ivatotal, importeIIBB, importeImpInt', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('idfactura, nrodefactura, tipofactura, nroremito, fecha, formadepago, cliente_idcliente, estado, descrecar, tipodescrecar, iva, retencionIIBB, presupuesto, nropresupuesto, importebruto, ivatotal, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, asiento_idasiento, impuestointerno, desc_imp_interno, importeneto,importeIIBB, importeImpInt, movimientocaja_idmovimientocaja', 'safe', 'on'=>'search'),
+			array('nrodefactura','validarNrofactura'),
 		);
 	}
 
@@ -184,6 +185,67 @@ abstract class BaseFactura extends GxActiveRecord {
                         'criteria'=>$criteria,
                 ));
         }
+	public function reportefactura($anio)
+        {
+                $criteria=new CDbCriteria;
+                
+                $criteria->select = array(
+                	
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=01,importeneto,0)) AS ene',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=02,importeneto,0)) AS feb',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=03,importeneto,0)) AS mar',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=04,importeneto,0)) AS abr',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=05,importeneto,0)) AS may',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=06,importeneto,0)) AS jun',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=07,importeneto,0)) AS jul',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=08,importeneto,0)) AS ago',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=09,importeneto,0)) AS sep',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=10,importeneto,0)) AS oct',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=11,importeneto,0)) AS nov',
+					'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=12,importeneto,0)) AS dic',
+                );
+
+                $criteria->condition = 'YEAR(fecha)='.$anio;
+                //$criteria->condition = 'cliente_idcliente IN (select cliente_idcliente from cliente where tipocliente_idtipocliente in (select idtipocliente from tipocliente order by idtipocliente))';
+                //$criteria->group = 'producto_idproducto';
+                //$criteria->order = 'cliente_idcliente IN (select cliente_idcliente from cliente order by nombre desc)';
+                
+                $result = Factura::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+        }    
+    public function reportefacturaIVA($anio)
+        {
+                $criteria=new CDbCriteria;
+                
+                $criteria->select = array(
+                	
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=01,ivatotal,0)) AS ene',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=02,ivatotal,0)) AS feb',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=03,ivatotal,0)) AS mar',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=04,ivatotal,0)) AS abr',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=05,ivatotal,0)) AS may',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=06,ivatotal,0)) AS jun',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=07,ivatotal,0)) AS jul',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=08,ivatotal,0)) AS ago',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=09,ivatotal,0)) AS sep',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=10,ivatotal,0)) AS oct',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=11,ivatotal,0)) AS nov',
+					'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=12,ivatotal,0)) AS dic',
+                );
+
+                $criteria->condition = 'YEAR(fecha)='.$anio;
+                //$criteria->condition = 'cliente_idcliente IN (select cliente_idcliente from cliente where tipocliente_idtipocliente in (select idtipocliente from tipocliente order by idtipocliente))';
+                //$criteria->group = 'producto_idproducto';
+                //$criteria->order = 'cliente_idcliente IN (select cliente_idcliente from cliente order by nombre desc)';
+                
+                $result = Factura::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+        }    
+        
 	public function behaviors()
 		{
 			 return array(
@@ -196,4 +258,10 @@ abstract class BaseFactura extends GxActiveRecord {
 		    
 		   ); // 'ext' is in Yii 1.0.8 version. For early versions, use 'application.extensions' instead.
 		}
+	public function validarNrofactura($attribute,$params){
+		$check=Factura::model()->find("nrodefactura=:id",array(':id'=>$this->nrodefactura));
+		if(isset($check->idfactura)){
+			$this->addError('nrofactura', 'El número de factura existe');
+	}
+	}
 }

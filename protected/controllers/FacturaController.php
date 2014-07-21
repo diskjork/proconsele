@@ -198,12 +198,18 @@ class FacturaController extends Controller
 					if($_POST['Factura']['vista'] == 2){
 					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 					}
+					if($_POST['Factura']['vista'] == 3){
+					$this->redirect(Yii::app()->request->baseUrl.'/ivamovimiento/adminventas');
+					}
 					$this->redirect(array('admin','id'=>$model->idfactura));
 				}else {
 					$this->updateFacAsiento($modeloviejo,$model,$_POST['Factura']);
 					
 					if($_POST['Factura']['vista'] == 2){
 					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
+					}
+					if($_POST['Factura']['vista'] == 3){
+					$this->redirect(Yii::app()->request->baseUrl.'/ivamovimiento/adminventas');
 					}
 					$this->redirect(array('admin','id'=>$model->idfactura));
 				}
