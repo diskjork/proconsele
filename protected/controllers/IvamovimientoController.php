@@ -202,6 +202,27 @@ class IvamovimientoController extends Controller
 			'model'=>$model,
 		));
 	}
+	public function labelEstado($data, $row){	
+		switch ($data->tipofactura){
+				case '1':
+					$text="F.(A)";
+					return $text;
+					break;
+				case '2':
+					$text="F. (B)";
+					return $text;
+					break;
+				case '3':
+					$text="NC";
+					return $text;
+					break;
+				case '4':
+					$text="ND";
+					return $text;
+					break;
+		}
+	}
+	
 	public function actionExcel(){
 		$mes_tab=$_GET['mesTab'];
        	$anio_tab=$_GET['anioTab'];
@@ -232,14 +253,15 @@ class IvamovimientoController extends Controller
 		array('name' => ''.$valor.'.cuit',
 			  'header' => 'CUIT',),	
 		array(
-				'header' => 'FACTURA',
-				'value'=>'($data->tipofactura == 1)?"A" :"B"', ),	
+				'header' => 'COMPROBANTE',
+				'value'=>array($this,'labelEstado') ),	
 		array(
 				'header' => 'IVA',
 				'value'=>'($data->tipoiva == 1.21)?"21%" :"10,5%"', ),
 		array(
 				'header' => 'IIBB',
 				'value'=>'($data->importeiibb != null) ? number_format($data->importeiibb, 2, ",", "."): ""',
+				//'value'=>array($this,'labelNumIIBB'),
 			),
 		array(
 				'header' => 'TOTAL IVA',
@@ -271,6 +293,7 @@ class IvamovimientoController extends Controller
 				    'automaticSum'         => true, // Default: false
 				    'decimalSeparator'     => ',', // Default: '.'
 				    'thousandsSeparator'   => '.', // Default: ','
+				    
 				    //'displayZeros'       => false,
 				    'zeroPlaceholder'      => '-',
 				    //'sumLabel'             => 'TOTALES:', // Default: 'Totals'

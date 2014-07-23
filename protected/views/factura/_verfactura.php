@@ -42,17 +42,19 @@
 			'value'=>'GxHtml::valueEx($data->clienteIdcliente)',
 			'filter'=>GxHtml::listDataEx(Cliente::model()->findAllAttributes(null, true)),
 		),
-		/*array(
-			'header'=>'ESTADO',
+		array(
+			'header'=>'N.C.',
 			'name'=>'estado',
-			'value'=>'($data->estado == 1) ? "Pagada":"Impaga"',
-		),*/
+			'value'=>array($this,'labelEstado'),
+			'htmlOptions'=>array('style'=>'width:15%'),
+			'filter'=>false,
+		),
 		
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
-			'htmlOptions' => array('width' =>'70px'),
-			'template'=>'{view} {update} {delete} {remito} {imprimir}',
+			'htmlOptions' => array('width' =>'15%','style'=>'text-align: right;'),
+			'template'=>'{view} {update} {delete} {remito} {imprimir} ',
             'buttons'=>array(
                 'view'=>
                     array(
@@ -79,9 +81,40 @@
 		            	'url'=>'Yii::app()->createUrl("factura/imprimirfactura", array("id"=>$data->idfactura))',
                     	'options'=>array('target'=>'_blank'),
 	           	
-                    )
-                    
-            ),
+                    ),
+                  'delete'=>array(
+	                  	'label'=>'Borrar Factura',
+	                    //'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->estado == 0 ',
+                    ),   
+				  'update'=>array(
+	                  	'label'=>'Actualizar Factura',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+						'visible'=>'$data->estado == 0 ',
+                    ),   
+                /*'anular'=>
+                    array(
+						'label'=>'Anular Factura',
+		            	'icon'=>TbHtml::ICON_BAN_CIRCLE,
+		            	'url'=>'Yii::app()->createUrl("factura/anularfactura", array("id"=>$data->idfactura))',
+                    	'options'=>array(
+	                  		'confirm' => 'Está seguro de anular la Factura?',
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue anulada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo anularse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),*/
+               )   
         ),
 	);
 	$this->widget('yiiwheels.widgets.grid.WhGridView', array(

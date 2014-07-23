@@ -31,9 +31,9 @@ $columnas=array_merge(array(
 					),
 		array('name' => 'tipo',
 					'header' => 'TIPO',
-					'htmlOptions' => array('width' =>'160px',
+					'htmlOptions' => array('width' =>'10%',
 										   'style'=>'padding-right:0px'),
-					'value'=>'($data->tipo == 0)? "Factura": "Cobranza"',
+					'value'=>array($this,'labelTipo'),
 			 ),
        	array(
               		'header'=>'DEBE',
@@ -54,7 +54,7 @@ $columnas=array_merge(array(
         array(
         	'header'=>'Opciones',
         	'headerHtmlOptions'=>array('colspan'=>2),
-        	'htmlOptions' => array('colspan'=>2),
+        	'htmlOptions' => array('colspan'=>2,'width'=>'12%'),
         	'footerHtmlOptions'=>array('colspan'=>2),
 			'class'=>'bootstrap.widgets.TbButtonColumn',
         	'deleteConfirmation'=>'Seguro que quiere eliminar el elemento?',

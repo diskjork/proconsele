@@ -26,8 +26,9 @@ $gridColumns= array(
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
-			'template'=>'{delete} {update} {actmovbanco} {actmovcaja} {actcompra} {actordenpago} 
-						{actcobranza} {actfactura} {borrarOrPago} {borrarCobranza} {borrarFactura} {borrarCompra}',
+			'template'=>'{delete} {update} {actNC} {actmovbanco} {actmovcaja} {actcompra} {actordenpago} 
+						{actcobranza} {actfactura} {borrarOrPago} {borrarCobranza} {borrarFactura} {borrarCompra}
+						{borrarNC}',
             'buttons'=>array(
              	 'delete'=>array(
 					'label'=>'Borrar asiento',
@@ -36,7 +37,8 @@ $gridColumns= array(
 	                    		    $data->compra_idcompra == NULL AND
 	                    		    $data->factura_idfactura == NULL AND
 	                    		    $data->ordendepago_idordendepago == NULL AND
-	                    		    $data->cobranza_idcobranza == NULL
+	                    		    $data->cobranza_idcobranza == NULL AND
+	                    		    $data->notacredito_idnotacredito == NULL
 	                    		    ',
 				 ),
                  'update'=>array(
@@ -47,7 +49,8 @@ $gridColumns= array(
 	                    		    $data->compra_idcompra == NULL AND
 	                    		    $data->factura_idfactura == NULL AND
 	                    		    $data->ordendepago_idordendepago == NULL AND
-	                    		    $data->cobranza_idcobranza == NULL
+	                    		    $data->cobranza_idcobranza == NULL AND
+	                    		    $data->notacredito_idnotacredito == NULL
 	                    		    ',
 						'url'=> 'Yii::app()->createUrl("asiento/update",
 								 array(	"id"=>$data->idasiento,
@@ -92,7 +95,7 @@ $gridColumns= array(
 	              'actfactura'=>array(
 					'label'=>'Modificar Factura',
 	                    'icon'=>TbHtml::ICON_PENCIL,
-	                    'visible'=>'$data->factura_idfactura != NULL',
+	                    'visible'=>'$data->factura_idfactura != NULL AND $data->facturaIdfactura->estado == 0',
 						'url'=> 'Yii::app()->createUrl("factura/update",
 								 array(	"id"=>$data->factura_idfactura,
 								 		"vista"=>2,
@@ -173,7 +176,7 @@ $gridColumns= array(
 		             'borrarFactura'=>array(
 	                  	'label'=>'Borrar Factura',
 	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
-						'visible'=>'$data->factura_idfactura != NULL',
+						'visible'=>'$data->factura_idfactura != NULL AND $data->facturaIdfactura->estado == 0 ',
 	                  	'url'=>'Yii::app()->createUrl("factura/borrar", array("id"=>$data->factura_idfactura))',
 	                  	'options'=>array(
 	                  		'confirm' => 'Está seguro de borrar la Factura?',
@@ -201,6 +204,41 @@ $gridColumns= array(
 	                  	'url'=>'Yii::app()->createUrl("compras/borrar", array("id"=>$data->compra_idcompra))',
 	                  	'options'=>array(
 	                  		'confirm' => 'Está seguro de borrar la Compra?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		              'actNC'=>array(
+						'label'=>'Modificar Nota Credito',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notacredito_idnotacredito != NULL',
+						'url'=> 'Yii::app()->createUrl("notacredito/update",
+								 array(	"id"=>$data->notacredito_idnotacredito,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+					'borrarNC'=>array(
+	                  	'label'=>'Borrar Nota Crédito',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->notacredito_idnotacredito != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notacredito/borrar", array("id"=>$data->notacredito_idnotacredito))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Nota de crédito?',
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",

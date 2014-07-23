@@ -63,13 +63,13 @@ abstract class BaseFactura extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('nrodefactura, tipofactura,  fecha, formadepago, cliente_idcliente, presupuesto, nropresupuesto, importebruto, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto,  importeneto', 'required'),
-			array('tipofactura, nroremito, formadepago, cliente_idcliente, estado, tipodescrecar, presupuesto, nropresupuesto, producto_idproducto, asiento_idasiento', 'numerical', 'integerOnly'=>true),
+			array('tipofactura,  formadepago, cliente_idcliente, estado, tipodescrecar, presupuesto, nropresupuesto, producto_idproducto, asiento_idasiento', 'numerical', 'integerOnly'=>true),
 			array('descrecar, iva, retencionIIBB, importebruto, ivatotal, cantidadproducto, precioproducto, stbruto_producto, impuestointerno, importeneto, importeIIBB, importeImpInt,movimientocaja_idmovimientocaja', 'numerical'),
-			array('nrodefactura', 'length', 'max'=>45),
+			array('nrodefactura,nroremito', 'length', 'max'=>45),
 			array('nombreproducto, desc_imp_interno', 'length', 'max'=>100),
 			array('estado, descrecar, tipodescrecar, iva, retencionIIBB, impuestointerno, desc_imp_interno,ivatotal, importeIIBB, importeImpInt', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('idfactura, nrodefactura, tipofactura, nroremito, fecha, formadepago, cliente_idcliente, estado, descrecar, tipodescrecar, iva, retencionIIBB, presupuesto, nropresupuesto, importebruto, ivatotal, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, asiento_idasiento, impuestointerno, desc_imp_interno, importeneto,importeIIBB, importeImpInt, movimientocaja_idmovimientocaja', 'safe', 'on'=>'search'),
-			array('nrodefactura','validarNrofactura'),
+			array('nrodefactura','validarNrofactura','on'=>'insert'),
 		);
 	}
 
@@ -263,5 +263,16 @@ abstract class BaseFactura extends GxActiveRecord {
 		if(isset($check->idfactura)){
 			$this->addError('nrofactura', 'El número de factura existe');
 	}
+	}
+private $nombrefactura;
+	public function getnombrefactura(){
+		if($this->estado == 1){
+			$estado=" - Anulada con N.C.";
+		}elseif($this->estado == 2){ 
+			$estado=" - Con N.C. por Dev.Mer.";
+		}else {
+			$estado="";
+		}	
+		return "Fecha:".$this->fecha." Nro.".$this->nrodefactura." - Importe: $".$this->importeneto."".$estado;
 	}
 }

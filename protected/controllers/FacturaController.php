@@ -65,18 +65,18 @@ class FacturaController extends Controller
 	{
 		$model=new Factura;
 		$modelformprod=new Producto('search');
-		$model->estado=1;
+		//$model->estado=1;
 		$model->nropresupuesto=0;
 		$model->presupuesto=0;
 		
-		// PARA EL NRO DE FACTURA
+		/*// PARA EL NRO DE FACTURA
 		$ulFactua=$model->ultimaFactura();
 		//echo $ulFactua;die();
 		if($ulFactua == null){
 			$model->nrodefactura=1;
 		} else{
 			$model->nrodefactura=$ulFactua + 1;
-		}  
+		}  */
 			
 			
 		
@@ -100,9 +100,11 @@ class FacturaController extends Controller
 						if($model->formadepago != 99999){//es pago con alguna caja?
 								$detAs->cuenta_idcuenta=$model->cajaIdcaja->cuenta_idcuenta;
 								$movCaja= $this->movCaja($model,$_POST['Factura']);
+								
 							} elseif($model->formadepago == 99999){//es en cta corriente
 								$detalleCCcliente=$this->ctacte($model,$_POST['Factura']);
 								$detAs->cuenta_idcuenta=11;  //112100 deudores por venta
+								
 						}
 						$detAs->asiento_idasiento=$asiento->idasiento;
 						$detAs->save();
@@ -359,7 +361,7 @@ class FacturaController extends Controller
 												  ':asiento'=>$model->asiento_idasiento));	
 				}
 				
-																
+															
 				$DTasientoCC->cuenta_idcuenta=$nuevodatos->cajaIdcaja->cuenta_idcuenta;
 				$DTasientoCC->debe=$nuevodatos->importeneto;
 				$DTasientoCC->save();
@@ -376,6 +378,7 @@ class FacturaController extends Controller
 				
 				$modelNuevo=Factura::model()->findByPk($model->idfactura);
 				$modelNuevo->movimientocaja_idmovimientocaja=$modelmovcaja->idmovimientocaja;
+				//$modelNuevo->estado=1; //pagado
 				$modelNuevo->save();
 				//para decrementar y borrar el detalle de ctactecliente
 				$Nctacte=Ctactecliente::model()->findByPk($model->clienteIdcliente->ctactecliente_idctactecliente);
@@ -404,6 +407,7 @@ class FacturaController extends Controller
 				$Dctacte=$this->ctacte($nuevodatos, $datosPOST);
 				$modelNuevo=Factura::model()->findByPk($model->idfactura);
 				$modelNuevo->movimientocaja_idmovimientocaja=  NULL;
+				//$modelNuevo->estado=0;
 				$modelNuevo->save();
 				$Dectacte=Detallectactecliente::model()->findByPk($Dctacte);
 				$Dectacte->factura_idfactura=$nuevodatos->idfactura;
@@ -649,6 +653,23 @@ class FacturaController extends Controller
 			}
 	}
 	
+	public function labelEstado($data, $row){	
+		switch ($data->estado){
+				case '0':
+					$text="-";
+					return $text;
+					break;
+				case '1':
+					$text="N.C.-Anulación";
+					return $text;
+					break;
+				case '2':
+					$text="N.C.-Devolución";
+					return $text;
+					break;
+			
+		}
+	}
 	public function actionImprimirFactura($id) {
             
             $this->layout='//layouts/imprimir'; // defines el archivo protected/views/layouts/imprimir.php como layout por defecto sólo para esta acción.
@@ -667,6 +688,7 @@ class FacturaController extends Controller
             //$this->renderPartial('imprimirFactura',array('factura'=>$factura),false,true);
                         
         }
+   
         
 	public function actionImprimirRemito($id) {
             

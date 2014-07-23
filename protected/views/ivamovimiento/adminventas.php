@@ -42,8 +42,8 @@ $columnas=array(
 					),	
 		
 		array(//'name' => 'tipofactura',
-				'header' => 'FACTURA',
-				'value'=>'($data->tipofactura == 1)?"A" :"B"',
+				'header' => 'TIPO COMP.',
+				'value'=>array($this,'labelEstado'),
 								
 		),	
 		array(//'name' => 'tipoiva',
@@ -71,7 +71,7 @@ $columnas=array(
 			//'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right; width:5%;'),
-			'template'=>' {actfactura} ',
+			'template'=>' {actfactura} {actNC} ',
 			'buttons'=> array(
 					'actfactura'=>array(
 					'label'=>'Modificar Factura',
@@ -83,7 +83,18 @@ $columnas=array(
 								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',
 						
-	                  ),  
+	                  ),
+	                  'actNC'=>array(
+						'label'=>'Modificar Nota Credito',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notacredito_idnotacredito != NULL',
+						'url'=> 'Yii::app()->createUrl("notacredito/update",
+								 array(	"id"=>$data->notacredito_idnotacredito,
+								 		"vista"=>3,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),    
 					)
 		          ),
 		 );

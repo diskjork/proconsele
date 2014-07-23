@@ -102,46 +102,7 @@ function sumatotal(){
 	
 	var TOTALiva=0;
 	var TOTALdes_rec=0;
-//-----------------------IVA----------------------------
-	TOTALiva=subtotalbruto * cofIVA;
-	//TOTALiva=TOTALiva.toFixed(2);
-	
-//----------------------IMPUESTO INTERNO---------------------------
-//console.log("checkimpint="+checkiibb+" coficienteimpint="+coficienteiibb);
-	
-	if((checkimpint == 1) && (!isNaN(coficienteimpint)))
-	{
-		coficienteimpint= coficienteimpint/100;
-		TOTALimpint=coficienteimpint * subtotalbruto;
-
-		var impint=TOTALimpint.toFixed(2);
-		var importeint=$.number(impint, 2);
-
-		$("#total-impint").text(importeint);
-		$("#Factura_impuestointerno").show();
-		$("#descripcionimpint").show();
-		$("#Factura_importeImpInt").val(TOTALimpint);
-
-	}
-	//----------------CALCULO TOTALNETO--------------------
-
-		 TOTALNETO=subtotalbruto+TOTALiva+TOTALimpint;
-		 SUBtotal=subtotalbruto;
-		 console.log("suma: "+coficienteiibb);
-		//SUBtotal=TOTALNETO;
-
-	//----------------------IIBB---------------------------
-	//console.log("checkiibb="+checkiibb+" coficienteiibb="+coficienteiibb);
-	var TOTALiibb=0;
-	
-	if((checkiibb == 1) && (!isNaN(coficienteiibb)))
-	{
-		coficienteiibb= coficienteiibb/100;
-		
-		
-
-	}
-	//----------------descuento-Recargo--------------
+//----------------descuento-Recargo--------------
 	Descuento=1;
 	Recargo=1;
 	if((checkdescRec == 1) && (!isNaN(deReBloc)))
@@ -180,22 +141,64 @@ function sumatotal(){
 		//$("input[name='Factura[tipodescrecar]']:unchecked", "#factura-form");
 
 		}
-//------------------FINAL--------------------------
-	//$("#Factura_importe").val(totalneto.toFixed(2));
-	//$("#Factura_subtotal").val(total.toFixed(2));
 	if(Descuento != 1){
 
-		TOTALdes_rec=TOTALNETO * Descuento;
+		TOTALdes_rec=subtotalbruto * Descuento;
 		var importe_des= $.number( TOTALdes_rec, 2 );
 		$("#descuento_recargo_importe").text("-"+importe_des);
-		TOTALNETO=TOTALNETO - TOTALdes_rec;
+		subtotalbruto=subtotalbruto - TOTALdes_rec;
 	} 
 	if(Recargo != 1){
-		TOTALdes_rec= TOTALNETO * Recargo;
-		TOTALNETO=TOTALNETO + TOTALdes_rec;
+		TOTALdes_rec= subtotalbruto * Recargo;
+		subtotalbruto=subtotalbruto + TOTALdes_rec;
 		var rec_impote= $.number(TOTALdes_rec, 2 ); 
 		$("#descuento_recargo_importe").text(rec_impote);
 	}
+	
+//----------------------IMPUESTO INTERNO---------------------------
+//console.log("checkimpint="+checkiibb+" coficienteimpint="+coficienteiibb);
+	
+	if((checkimpint == 1) && (!isNaN(coficienteimpint)))
+	{
+		coficienteimpint= coficienteimpint/100;
+		TOTALimpint=coficienteimpint * subtotalbruto;
+
+		var impint=TOTALimpint.toFixed(2);
+		var importeint=$.number(impint, 2);
+
+		$("#total-impint").text(importeint);
+		$("#Factura_impuestointerno").show();
+		$("#descripcionimpint").show();
+		$("#Factura_importeImpInt").val(TOTALimpint);
+
+	}
+
+	//-----------------------IVA----------------------------
+	TOTALiva=subtotalbruto * cofIVA;
+	
+	//----------------CALCULO TOTALNETO--------------------
+
+		 TOTALNETO=subtotalbruto+TOTALiva+TOTALimpint;
+		 SUBtotal=subtotalbruto;
+		 console.log("suma: "+coficienteiibb);
+		//SUBtotal=TOTALNETO;
+
+	//----------------------IIBB---------------------------
+	//console.log("checkiibb="+checkiibb+" coficienteiibb="+coficienteiibb);
+	var TOTALiibb=0;
+	
+	if((checkiibb == 1) && (!isNaN(coficienteiibb)))
+	{
+		coficienteiibb= coficienteiibb/100;
+		
+		
+
+	}
+	
+//------------------FINAL--------------------------
+	//$("#Factura_importe").val(totalneto.toFixed(2));
+	//$("#Factura_subtotal").val(total.toFixed(2));
+	
 
 	if(!isNaN(coficienteiibb)){
 		TOTALiibb=coficienteiibb * TOTALNETO;

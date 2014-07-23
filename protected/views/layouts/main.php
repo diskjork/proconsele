@@ -71,6 +71,7 @@
 						array('label'=>'FACTURACION','icon'=>'icon-briefcase', 'url'=>'#',
 								'items'=>array(
 									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/factura/admin'),
+									array('label'=>'Notas de Crédito', 'url'=>Yii::app()->request->baseUrl.'/notacredito/admin'),
 									
 								)),
 						array('label'=>'COMPRAS','icon'=>'icon-briefcase', 'url'=>'#',
