@@ -142,7 +142,7 @@ class NotadebitoController extends Controller
 				$this->cambioImporteAsiento($modelviejo,$model,$_POST['Notadebito']['fecha']);
 				if($this->cambioImporteCtaCte($modelviejo, $model, $_POST['Notadebito']['fecha'])){
 					$this->modificarIvamovimiento($model, $_POST['Notadebito']['fecha']);
-					$this->redirect(array('view','id'=>$model->idnotadebito));
+					$this->redirect(array('admin','id'=>$model->idnotadebito));
 				}
 			}
 		}
@@ -180,10 +180,7 @@ class NotadebitoController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Notadebito');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+		$this->redirect(array('admin'));
 	}
 
 	/**

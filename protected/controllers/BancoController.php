@@ -128,10 +128,7 @@ class BancoController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Banco');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+		$this->redirect(array('cheque/emitido'));
 	}
 
 	/**
