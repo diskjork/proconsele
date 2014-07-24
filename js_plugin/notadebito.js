@@ -64,11 +64,13 @@ function sumatotal(){
   var subtotal=totalneto/totaliva;
       totaliva=totalneto-subtotal;
 
-  console.log(totaliva);
+  
   
   totalnetotransfor = $.number( totalneto, 2 );
   totalIvaTrasfor = $.number(totaliva, 2);
   SubtotalTrasfor = $.number(subtotal, 2);
+  $("#Notadebito_ivatotal").val(totaliva.toFixed(2));
+  $("#Notadebito_importebruto").val(subtotal.toFixed(2));
   $("#totalnetoblock").text(totalnetotransfor);
   $("#subtotalblock").text(SubtotalTrasfor);
   $("#ivablock").text(totalIvaTrasfor);

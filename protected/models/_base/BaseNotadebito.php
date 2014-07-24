@@ -58,6 +58,8 @@ abstract class BaseNotadebito extends GxActiveRecord {
 	public function relations() {
 		return array(
 			'asientos' => array(self::HAS_MANY, 'Asiento', 'notadebito_idnotadebito'),
+			'asientoIdasiento' => array(self::BELONGS_TO, 'Asiento', 'asiento_idasiento'),
+			'clienteIdcliente' => array(self::BELONGS_TO, 'Cliente', 'cliente_idcliente'),
 		);
 	}
 

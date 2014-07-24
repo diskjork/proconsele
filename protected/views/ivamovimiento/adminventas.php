@@ -71,7 +71,7 @@ $columnas=array(
 			//'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right; width:5%;'),
-			'template'=>' {actfactura} {actNC} ',
+			'template'=>' {actfactura} {actND}',
 			'buttons'=> array(
 					'actfactura'=>array(
 					'label'=>'Modificar Factura',
@@ -84,12 +84,12 @@ $columnas=array(
 								 		))',
 						
 	                  ),
-	                  'actNC'=>array(
-						'label'=>'Modificar Nota Credito',
+	                  'actND'=>array(
+						'label'=>'Modificar Nota Débito',
 	                    'icon'=>TbHtml::ICON_PENCIL,
-	                    'visible'=>'$data->notacredito_idnotacredito != NULL',
-						'url'=> 'Yii::app()->createUrl("notacredito/update",
-								 array(	"id"=>$data->notacredito_idnotacredito,
+	                    'visible'=>'$data->notadebito_idnotadebito != NULL',
+						'url'=> 'Yii::app()->createUrl("notadebito/update",
+								 array(	"id"=>$data->notadebito_idnotadebito,
 								 		"vista"=>3,
 								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',

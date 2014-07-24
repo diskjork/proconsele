@@ -71,7 +71,7 @@ $valores=array('1.21'=>'21%', '1.105'=>'10.5%');$columnas=array(
 			//'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right; width:5%;'),
-			'template'=>' {actcompra} ',
+			'template'=>' {actcompra} {actNC}',
 			'buttons'=> array(
 					'actcompra'=>array(
 					'label'=>'Modificar Compra',
@@ -84,6 +84,17 @@ $valores=array('1.21'=>'21%', '1.105'=>'10.5%');$columnas=array(
 								 		))',
 						
 	                  ),
+	                  'actNC'=>array(
+						'label'=>'Modificar Nota Crédito',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notacredito_idnotacredito != NULL',
+						'url'=> 'Yii::app()->createUrl("notacredito/update",
+								 array(	"id"=>$data->notacredito_idnotacredito,
+								 		"vista"=>3,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),    
 					)
 		          ),
 		 );

@@ -26,9 +26,9 @@ $gridColumns= array(
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
-			'template'=>'{delete} {update} {actNC} {actmovbanco} {actmovcaja} {actcompra} {actordenpago} 
+			'template'=>'{delete} {update} {actNC} {actND} {actmovbanco} {actmovcaja} {actcompra} {actordenpago} 
 						{actcobranza} {actfactura} {borrarOrPago} {borrarCobranza} {borrarFactura} {borrarCompra}
-						{borrarNC}',
+						{borrarNC} {borrarND} ',
             'buttons'=>array(
              	 'delete'=>array(
 					'label'=>'Borrar asiento',
@@ -38,6 +38,7 @@ $gridColumns= array(
 	                    		    $data->factura_idfactura == NULL AND
 	                    		    $data->ordendepago_idordendepago == NULL AND
 	                    		    $data->cobranza_idcobranza == NULL AND
+	                    		    $data->notadebito_idnotadebito == NULL AND
 	                    		    $data->notacredito_idnotacredito == NULL
 	                    		    ',
 				 ),
@@ -50,6 +51,7 @@ $gridColumns= array(
 	                    		    $data->factura_idfactura == NULL AND
 	                    		    $data->ordendepago_idordendepago == NULL AND
 	                    		    $data->cobranza_idcobranza == NULL AND
+	                    		    $data->notadebito_idnotadebito == NULL AND
 	                    		    $data->notacredito_idnotacredito == NULL
 	                    		    ',
 						'url'=> 'Yii::app()->createUrl("asiento/update",
@@ -232,6 +234,41 @@ $gridColumns= array(
 								 		))',
 						
 	                  ),
+					'actND'=>array(
+						'label'=>'Modificar Nota Débito',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notadebito_idnotadebito != NULL',
+						'url'=> 'Yii::app()->createUrl("notadebito/update",
+								 array(	"id"=>$data->notadebito_idnotadebito,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+					'borrarND'=>array(
+	                  	'label'=>'Borrar Nota Débito',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->notadebito_idnotadebito != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notadebito/borrar", array("id"=>$data->notadebito_idnotadebito))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Nota de débito?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
 					'borrarNC'=>array(
 	                  	'label'=>'Borrar Nota Crédito',
 	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,

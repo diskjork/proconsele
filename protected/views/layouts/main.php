@@ -53,6 +53,8 @@
 						array('label'=>'CLIENTES','icon'=>'icon-star','items'=>array(
 							array('label'=>'Administrar','url'=>Yii::app()->request->baseUrl.'/index.php/cliente/admin'),
 							array('label'=>'Cuentas Corrientes', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctactecliente/admin'),
+							array('label'=>'Notas de Crédito', 'url'=>Yii::app()->request->baseUrl.'/notacredito/admin'),
+							array('label'=>'Notas de Débito', 'url'=>Yii::app()->request->baseUrl.'/notadebito/admin'),
 						)),
 						array('label'=>'PROVEEDORES','icon'=>'icon-star-empty','items'=>array(
 							array('label'=>'Administrar','url'=>Yii::app()->request->baseUrl.'/index.php/proveedor/admin'),
@@ -71,8 +73,7 @@
 						array('label'=>'FACTURACION','icon'=>'icon-briefcase', 'url'=>'#',
 								'items'=>array(
 									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/factura/admin'),
-									array('label'=>'Notas de Crédito', 'url'=>Yii::app()->request->baseUrl.'/notacredito/admin'),
-									
+												
 								)),
 						array('label'=>'COMPRAS','icon'=>'icon-briefcase', 'url'=>'#',
 								'items'=>array(

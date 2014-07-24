@@ -310,12 +310,13 @@ class NotacreditoController extends Controller
 	 	}
 	}
 	public function cambioImporteAsiento($viejos, $nuevos, $fecha){
-		if($viejos->importeneto != $nuevos->importeneto){
 			if($viejos->fecha != $nuevos->fecha){
 				$asiento=Asiento::model()->findByPk($viejos->asiento_idasiento);
 				$asiento->fecha=$fecha;
 				$asiento->save();
 			}
+		if($viejos->importeneto != $nuevos->importeneto){
+			
 			$iva=0;
 			if($viejos->ivatotal != $nuevos->ivatotal){
 				$DeAsIVA=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
