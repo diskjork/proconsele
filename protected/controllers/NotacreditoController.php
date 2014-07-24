@@ -504,13 +504,9 @@ class NotacreditoController extends Controller
 			$nuevo->cuitentidad=$model->clienteIdcliente->cuit;
 			//$nuevo->tipofactura=$model->tipofactura;
 			//$nuevo->tipoiva=$model->iva;
-			if($model->importeIIBB == null){
-				$nuevo->importeiibb=null;
-			}else {
-				$nuevo->importeiibb=-$model->importeIIBB;
-			}
-			$nuevo->importeiva=-$model->ivatotal;
-			$nuevo->importeneto=-$model->importeneto;
+			$nuevo->importeiibb=$model->importeIIBB;
+			$nuevo->importeiva=$model->ivatotal;
+			$nuevo->importeneto=$model->importeneto;
 			$nuevo->save();
 			
 	}	

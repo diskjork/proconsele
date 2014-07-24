@@ -2,13 +2,13 @@
 
 $this->menu=array(
 	
-	array('label'=>'Nueva NOTA CREDITO','url'=>array('create')),
+	array('label'=>'Nueva NOTA DEBITO','url'=>array('create')),
 	//array('label'=>'Cheque Endosados','url'=>'endosados'),
 );
 	
 ?>
    
-<h5 class="well well-small">ADMINISTRACIÓN DE NOTAS CREDITO</h5>
+<h5 class="well well-small">ADMINISTRACIÓN DE NOTAS DEBITO</h5>
 <div>
 <?php $this->widget('bootstrap.widgets.TbAlert'); ?>
 </div>
@@ -27,7 +27,7 @@ $valores=array('0'=>'A Pagar', '1'=>'Pagado');
 $columnas=array(
 		array(
 					'header' => 'NRO.',
-					'value'=>'$data->nronotacredito',
+					'value'=>'$data->nronotadebito',
 					'htmlOptions' => array('width' =>'10%'),
 					),
 		array('name' => 'fecha',
@@ -58,15 +58,9 @@ $columnas=array(
 		
 		array(
 			'header'=>'DESCRIPCIÓN',
-			'value'=>'"Relac. a la Factura Nro: ".$data->facturaIdfactura->nrodefactura." - ".$data->clienteIdcliente',
+			'name'=>'descripcion',
 			'htmlOptions' => array('width' =>'45%','style'=>'text-align:center'),
 		),
-		
-		array(
-			'header' => 'MOTIVO',
-			'htmlOptions' => array('width' =>'15%'),
-			'value' =>'($data->cantidadproducto == $data->facturaIdfactura->cantidadproducto)?"Anulación Factura":"Devolución mercadería"'
-		),	
 		
 		array(
 			//'name' => 'importeneto',

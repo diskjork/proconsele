@@ -31,21 +31,21 @@ $valores=array('1.21'=>'21%', '1.105'=>'10.5%');$columnas=array(
 			), // (#4)
 		array(
 			'header'=>'EMPRESA',
-			'value'=>'$data->proveedorIdproveedor',
+			'value'=>'($data->proveedorIdproveedor != null)?$data->proveedorIdproveedor:$data->clienteIdcliente',
 			'htmlOptions' => array('width' =>'150px','style'=>'text-align: left;'),
 		),
 		
-		array('name' => 'proveedorIdproveedor.cuit',
+		array(		//'name' => 'proveedorIdproveedor.cuit',
 					'header' => 'CUIT',
 					'htmlOptions' => array('width' =>'100px'),
-					//'filter'=>'proveedorIdproveedor.cuit'
+					'value'=>'($data->proveedorIdproveedor != null)? $data->proveedorIdproveedor->cuit : $data->clienteIdcliente->cuit'
 					),	
 		
 		array(//'name' => 'tipofactura',
-				'header' => 'FACTURA',
-				'value'=>'($data->tipofactura == 1)?"A" :"B"',
+				'header' => 'TIPO COMP.',
+				'value'=>array($this,'labelEstado'),
 								
-		),	
+		),
 		array(//'name' => 'tipoiva',
 				'header' => 'IVA',
 				'value'=>'($data->tipoiva == 1.21)?"21%" :"10,5%"',
