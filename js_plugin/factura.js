@@ -1,5 +1,12 @@
 $(document).on('ready',function(){
 $("#boton-submit").attr("disabled","disabled");
+$("input").keypress(function (evt) {
+	//Deterime where our character code is coming from within the event
+	var charCode = evt.charCode || evt.keyCode;
+	if (charCode  == 13) { //Enter key's keycode
+	return false;
+		}
+	});
 //$("#Factura_descrecar").parent().append("<span> %</span>");
 $("#Factura_retencionIIBB").css('display','none');
 $("#Factura_impuestointerno").css('display','none');
@@ -19,6 +26,11 @@ $("#Factura_impuestointerno").keydown(function(event){
 		solonumeromod(event);});
 $("#Factura_descrecar").keydown(function(event){
 		solonumeromod(event);});
+$("#Factura_tipofactura").change(function(event){
+		resetValores();
+		sumatotal();
+	});
+
 sumatotal();
 botonsubmit();
 
@@ -84,85 +96,106 @@ $("#Factura_impInt").click(function() {
 function sumatotal(){
 	
 	
-	var subtotalbruto=parseFloat($("#Factura_stbruto_producto").val());
-	var checkdescRec=$("input[name='Factura[desRec]']:checked", "#factura-form").val();
-	var checkiibb=$("input[name='Factura[iibb]']:checked", "#factura-form").val();
-
-	var coficienteiibb=parseFloat($("#Factura_retencionIIBB").val());
-	var checkimpint=$("input[name='Factura[impInt]']:checked", "#factura-form").val();
-	var coficienteimpint=parseFloat($("#Factura_impuestointerno").val());
-	var e=$("#Factura_iva").val();
-	var ei=parseFloat(e); //coeficiente iva por ej: 1,21 o 1,105
-	var cofIVA=ei - 1;
-	var descRecar=1;
-	var deReBloc=parseFloat($("#Factura_descrecar").val());
-	var SUBtotal;
-	var TOTALNETO=0.00;
-	var TOTALimpint=0;
+	var subtotalbruto=parseFloat($("#Factura_stbruto_producto").val()); // sin impuestos
+	var tipofactura=$("#Factura_tipofactura").val(); // A o B
 	
+	var checkdescRec=$("input[name='Factura[desRec]']:checked", "#factura-form").val();//hay descuento o recargo?
+	var deReBloc=parseFloat($("#Factura_descrecar").val()); // % de descuento o recargo
+
+	var checkiibb=$("input[name='Factura[iibb]']:checked", "#factura-form").val(); // existe IIBB?
+	var coficienteiibb=parseFloat($("#Factura_retencionIIBB").val()); // % de ingreso bruto
+
+	var checkimpint=$("input[name='Factura[impInt]']:checked", "#factura-form").val(); // existe impuesto interno?
+	var coficienteimpint=parseFloat($("#Factura_impuestointerno").val());//% impuesto interno
+	
+	var e=$("#Factura_iva").val(); // % IVA
+	var IVA=parseFloat(e); //coeficiente iva por ej: 1,21 o 1,105
+	//console.log("suma: "+subtotalbruto);
+	var subtotalbruto_B=0;
+	
+	// para el caso de factura "B"
+	if(tipofactura == 2){ 
+		subtotalbruto_B= subtotalbruto / IVA;// sin iva
+	}
+	var cofIVA=IVA - 1;
+	var descRecar=1;
+	var SUBtotal=0.00;
+	var TOTALNETO=0.00; // total general 
 	var TOTALiva=0;
 	var TOTALdes_rec=0;
 //----------------descuento-Recargo--------------
 	Descuento=1;
 	Recargo=1;
+
 	if((checkdescRec == 1) && (!isNaN(deReBloc)))
 	{
-	
-	
 		var e=$("input[name='Factura[tipodescrecar]']:checked", "#factura-form").val();
-
 		if(e === undefined){
 			alert("Debe Seleccionar Descuento o Recargo");
 			return false;
 		}
-		
 		if(e == 0){ //descuento
-			//if( deReBloc == "")$("#desc_recar").css("display","none"); 
 			descRecar=parseFloat(deReBloc);
 			Descuento=descRecar/100;
-						
+				
 			$("#descuento_recargo").text("Descuento");
 			$("#desc_recar").show();
-			//totalneto=totalneto * descRecar;
-			}
+			
+		}
 		if(e == 1){ //recargo
 			var deReBloc=$("#Factura_descrecar").val();
 			descRecar=parseFloat(deReBloc);
 			Recargo=descRecar/100;
-			
-			
+						
 			$("#descuento_recargo").text("Recargo");
 			$("#desc_recar").show();
-			
 		}
 
 	} else	{
 		$("#desc_recar").css("display","none");
-		//$("input[name='Factura[tipodescrecar]']:unchecked", "#factura-form");
-
-		}
+	}
+// para hacer efecto el descuento o el recargo
 	if(Descuento != 1){
-
+		if(tipofactura == 2){  //factura B
+			TOTALdes_rec=subtotalbruto_B * Descuento;
+			var importe_des= $.number( TOTALdes_rec, 2 );
+			$("#descuento_recargo_importe").text("-"+importe_des);
+			subtotalbruto_B=subtotalbruto_B - TOTALdes_rec;
+		} else {
+		// para el caso de una factura A
 		TOTALdes_rec=subtotalbruto * Descuento;
 		var importe_des= $.number( TOTALdes_rec, 2 );
 		$("#descuento_recargo_importe").text("-"+importe_des);
 		subtotalbruto=subtotalbruto - TOTALdes_rec;
+		}
 	} 
 	if(Recargo != 1){
+		if(tipofactura == 2){  //factura B
+			TOTALdes_rec= subtotalbruto_B * Recargo;
+			subtotalbruto_B=subtotalbruto_B + TOTALdes_rec;
+			var rec_impote= $.number(TOTALdes_rec, 2 ); 
+			$("#descuento_recargo_importe").text(rec_impote);
+		} else { 
+		// para el caso de una factura A
 		TOTALdes_rec= subtotalbruto * Recargo;
 		subtotalbruto=subtotalbruto + TOTALdes_rec;
 		var rec_impote= $.number(TOTALdes_rec, 2 ); 
 		$("#descuento_recargo_importe").text(rec_impote);
 	}
+	}
 	
 //----------------------IMPUESTO INTERNO---------------------------
 //console.log("checkimpint="+checkiibb+" coficienteimpint="+coficienteiibb);
-	
+	var TOTALimpint=0;
 	if((checkimpint == 1) && (!isNaN(coficienteimpint)))
 	{
 		coficienteimpint= coficienteimpint/100;
-		TOTALimpint=coficienteimpint * subtotalbruto;
-
+		//factura B
+		if(tipofactura == 2){  
+			TOTALimpint=coficienteimpint * subtotalbruto_B;
+		} else {
+			TOTALimpint=coficienteimpint * subtotalbruto;
+		}
 		var impint=TOTALimpint.toFixed(2);
 		var importeint=$.number(impint, 2);
 
@@ -172,60 +205,81 @@ function sumatotal(){
 		$("#Factura_importeImpInt").val(TOTALimpint);
 
 	}
-
+	console.log(TOTALimpint);
 	//-----------------------IVA----------------------------
-	TOTALiva=subtotalbruto * cofIVA;
-	
+	if(tipofactura == 1){
+		subtotalbruto=subtotalbruto + TOTALimpint;
+		TOTALiva= subtotalbruto * cofIVA;
+	} else {
+		subtotalbruto_B= subtotalbruto_B + TOTALimpint;
+		subtotalbruto_B_con_iva= subtotalbruto_B * IVA;
+	}
+	//console.log(subtotalbruto_B);
 	//----------------CALCULO TOTALNETO--------------------
-
-		 TOTALNETO=subtotalbruto+TOTALiva+TOTALimpint;
+		if(tipofactura == 2){  //factura B
+			
+			SUBtotal=subtotalbruto_B_con_iva;
+			TOTALiva=subtotalbruto_B * cofIVA;
+			TOTALNETO=subtotalbruto_B_con_iva;
+		} else {
 		 SUBtotal=subtotalbruto;
-		 console.log("suma: "+coficienteiibb);
-		//SUBtotal=TOTALNETO;
-
-	//----------------------IIBB---------------------------
+		 TOTALNETO=subtotalbruto+TOTALiva;
+	}
+		 
+//----------------------IIBB---------------------------
 	//console.log("checkiibb="+checkiibb+" coficienteiibb="+coficienteiibb);
 	var TOTALiibb=0;
 	
 	if((checkiibb == 1) && (!isNaN(coficienteiibb)))
 	{
 		coficienteiibb= coficienteiibb/100;
-		
-		
-
 	}
 	
 //------------------FINAL--------------------------
 	//$("#Factura_importe").val(totalneto.toFixed(2));
 	//$("#Factura_subtotal").val(total.toFixed(2));
 	
-
 	if(!isNaN(coficienteiibb)){
-		TOTALiibb=coficienteiibb * TOTALNETO;
-		SUBtotal=TOTALNETO;
-		TOTALNETO=TOTALNETO + TOTALiibb;
+	
+		if(tipofactura == 2){
+			TOTALiibb=subtotalbruto_B_con_iva * coficienteiibb;
+			TOTALNETO=TOTALNETO + TOTALiibb;
+		} else {
+			TOTALiibb=coficienteiibb * SUBtotal;
+			TOTALNETO=TOTALNETO + TOTALiibb;
+		}
 		var importeiibb=$.number(TOTALiibb, 2);
 		$("#total-iibb").text(importeiibb);
-
 		$("#Factura_importeIIBB").val(TOTALiibb);
 	} 
+	
 	totaltransfor= $.number( SUBtotal, 2 ); 
 	totalnetotransfor = $.number( TOTALNETO, 2 );
-	totalIvaTrasfor = $.number(TOTALiva, 2);
-
 	
-
 	$("#subtotalblock").text(totaltransfor);
+	
 	$("#Factura_importebruto").val(SUBtotal.toFixed(2));
+
 	$("#totalnetoblock").text(totalnetotransfor);
 	$("#Factura_importeneto").val(TOTALNETO.toFixed(2));
-	$("#ivablock").text(totalIvaTrasfor);
-	if(TOTALiva == 0){
-		$("#Factura_ivatotal").val(null);
-	} else {
-		$("#Factura_ivatotal").val(TOTALiva.toFixed(2));
-	}
 	
+	totalIvaTrasfor = $.number(TOTALiva, 2);
+	if(tipofactura == 1){
+		$("#ivablock").text(totalIvaTrasfor);
+		$("#totalivadiv").show();
+	} else {
+		$("#totalivadiv").css('display','none');
+	}
+		
+		if(TOTALiva == 0){
+			$("#Factura_ivatotal").val(null);
+		} else {
+			
+			$("#Factura_ivatotal").val(TOTALiva.toFixed(2));
+			
+			
+		}
+
 	if(TOTALimpint == 0){
 		$("#Factura_impuestointerno").val(null);
 	} else {
@@ -274,13 +328,22 @@ var id_input=obj.id;
 				
 			  var cantidad=parseFloat(cantidad);
 			  var precio= parseFloat(data.precio);
-			  var subtotal=cantidad * precio;
-			  //alert(id_nombre_precio);
+			  	  
 			  $('#Factura_nombreproducto').val(data.nombre+" (x "+data.venta+")");
 			  $('#Factura_precioproducto').val(data.precio);
-			  $('#Factura_stbruto_producto').val(subtotal.toFixed(2));
-			  sumatotal();
-			  botonsubmit();
+			  
+			  var tipofactura=$('#Factura_tipofactura').val();
+			  var cofiva=parseFloat($('#Factura_iva').val());
+			  if(tipofactura == 2){
+					var subtotal= cantidad * precio;
+					var subtotal= subtotal * cofiva;
+					
+				} else if(tipofactura == 1){
+					var subtotal=cantidad * precio;
+				}
+			 $('#Factura_stbruto_producto').val(subtotal.toFixed(2));
+			  	sumatotal();
+			    botonsubmit();
 			  },
 			error: function(data){
 					alert("Ingrese un código valido.");
@@ -320,14 +383,22 @@ function sumaSubtotal(obj){
 	var codigo=$('#Factura_producto_idproducto').val();
 	var cantidad=$('#Factura_cantidadproducto').val();
 	
-		if((cantidad == "") || (codigo == "")){
+	if((cantidad == "") || (codigo == "")){
 			alert("Debe ingresar un producto");
 			return false;
 			} 
 	var cantidad=parseFloat(cantidad);
 	var precio=parseFloat($('#Factura_precioproducto').val());
-	
-	var subtotal=cantidad * precio;
+	var tipofactura=$('#Factura_tipofactura').val();
+	var cofiva=parseFloat($('#Factura_iva').val());
+	if(tipofactura == 2){
+					var subtotal= cantidad * precio;
+					var subtotal= subtotal * cofiva;
+					
+				} else if(tipofactura == 1){
+					var subtotal=cantidad * precio;
+				}
+	//console.log("subtotal sumasubtotal:"+subtotal);
 	$('#Factura_stbruto_producto').val(subtotal.toFixed(2));
 	
 }
@@ -346,4 +417,31 @@ function botonsubmit(){
 		$("#boton-submit").removeAttr("disabled");
 	}
 	
+}
+
+function resetValores(){
+	$("#Factura_cantidadproducto").val(null);
+	$("#Factura_producto_idproducto").val(null);
+	$("#Factura_nombreproducto").val("");
+	$("#Factura_stbruto_producto").val('0.00');
+	$("#Factura_precioproducto").val(null);
+
+	$("#Factura_iibb").removeAttr('checked');
+ 	$("#Factura_retencionIIBB").css('display','none');
+    $("#Factura_retencionIIBB").val("");
+    $("#totaldiv-iibb").css('display','none');
+	$("#Factura_impInt").removeAttr('checked');
+    $("#Factura_impuestointerno").css('display','none');
+    $("#Factura_impuestointerno").val("");
+    $("#descripcionimpint").css('display','none');
+    $("#totaldiv-impint").css('display','none');
+    $("#Factura_desc_imp_interno").val(null);
+	 $("#Factura_desRec").removeAttr('checked');
+	 $("#radiobutton-descRec").css('display','none');
+	 $("#Factura_descrecar").val(null);
+	 $("#Factura_tipodescrecar_0").attr('checked',false);
+	 $("#Factura_tipodescrecar_1").attr('checked',false);
+	 $("#Factura_descrecar").parent().find("span").remove();
+	 $("#desc_recar").css('display','none');
+
 }
