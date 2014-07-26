@@ -7,7 +7,6 @@
 .metadata
 bin/
 tmp/
-assets/
 dump_sql/
 *.tmp
 *.bak
