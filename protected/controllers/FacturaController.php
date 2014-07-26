@@ -713,7 +713,7 @@ class FacturaController extends Controller
                 $mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];
                 $model=new Factura('search');
-                //$model->fecha=$mes_tab."/".$anio_tab                	
+             	
                	$this->widget('application.components.widgets.EExcelView', array(
                 	
 				    'id'                   => 'some-grid',
@@ -773,12 +773,13 @@ class FacturaController extends Controller
 						),
 						array(
 							'header'=>'ESTADO',
-							'name'=>'estado',
+							//'name'=>'estado',
+							'value'=>array($this,'labelEstado'),
 						),
 						array(
 							'header'=>'FORMA DE PAGO',
-							'name'=>'formadepago',
-							//'value'=>'GxHtml::valueEx($data->formadepagoIdformadepago)',
+							//'name'=>'formadepago',
+							'value'=>'($data->estado==99999)? "Cta Cte":"Efectivo"',
 						),
 					) 
 				)); 
