@@ -1,5 +1,6 @@
 <?php 
-	$dataProvider=$model->search($model->fecha=$anioTab."-".$mesTab);
+	//$dataProvider=$model->search($model->fecha=$anioTab."-".$mesTab);
+	$dataProvider=$model->search($model->fecha=$mesTab."/".$anioTab);
 	//$dataProvider= $model->generarGrid($anioTab,$mesTab);
 	
 	$dataProvider->setPagination(array('pageSize'=>$model->count())); 
