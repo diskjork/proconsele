@@ -13,7 +13,7 @@
 
 	</div><!-- sidebar -->
 </div>
-<div class="span-22">
+<div class="span-24">
 	<div id="content">
 		<?php echo $content; ?>
 	</div><!-- content -->

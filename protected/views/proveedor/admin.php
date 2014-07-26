@@ -9,6 +9,7 @@ $this->breadcrumbs=array(
 	'Manage',
 );
 
+$valores=array('0'=>'Inactivo','1'=>'Activo');
 ?>
 <?php
 $this->menu=array(
@@ -78,6 +79,7 @@ Yii::app()->clientScript->registerScript(
          	'name'=>'estado',
 		 	'header'=>'Estado',
         	'value'=>'$data->estado == 1 ? "Activo" : "Inactivo"',
+			'filter' => CHtml::activeDropDownList($model, 'estado', $valores, array('prompt' => '','style'=>'width:100%;')),
         ),
 		array(
             'header'=>'Opciones',

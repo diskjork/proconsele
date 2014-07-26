@@ -39,11 +39,10 @@
 							'attribute' => 'fecha',
 		            	    'pluginOptions' => array(
 					            'format' => 'dd/mm/yyyy',
-		            			'width' => '40',
 		            			),
 					        'htmlOptions' => array(
 					            //'placeholder' => 'Seleccionar fecha',
-					        	//'class' => 'input-medium',
+					        	'class' => 'input-small',
 					        	
 					            'value'=>date('d/m/Y'),
 					        )

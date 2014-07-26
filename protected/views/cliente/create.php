@@ -9,6 +9,7 @@ $this->breadcrumbs=array(
 	'Create',
 );
 ?>
+
 <?php  $this->widget('bootstrap.widgets.TbModal', array(
     		'id' => 'modalup',
     		'header' => '<h4>Cargar Cliente</h4>',

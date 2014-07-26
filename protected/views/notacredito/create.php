@@ -10,8 +10,15 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	
-	array('label'=>'Administrar', 'url'=>array('admin')),
+	array(
+		'label'=>'Admnistrar', 
+		'url'=>array('admin'),
+	),
+	array(
+		'label'=>'Nueva NOTA CREDITO',
+		'url'=>array('create'),
+		'active' => true,
+	),
 );
 ?>
 

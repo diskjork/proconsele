@@ -93,13 +93,13 @@
 						array('label'=>'CONFIGURACION','icon'=>'icon-wrench','url'=>'#',
 								'items'=>array(
 									array('label'=>'Datos Empresa', 'url'=>Yii::app()->request->baseUrl.'/index.php/empresa/admin'),
-									array('label'=>'Usuarios', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/admin'),
+									array('label'=>'Usuarios y Permisos', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/admin'),
 									array('label'=>'Contraseña', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/updateClave'),
 									array('label'=>'Datos Empresa', 'url'=>Yii::app()->request->baseUrl.'/index.php/empresa/index'),
 									array('label'=>'Cuentas bancarias', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctabancaria/admin'),
 									array('label'=>'Chequeras', 'url'=>Yii::app()->request->baseUrl.'/index.php/chequera/admin'),
 									array('label'=>'Cajas', 'url'=>Yii::app()->request->baseUrl.'/index.php/caja/admin'),
-									array('label'=>'Contribuyente', 'url'=>Yii::app()->request->baseUrl.'/index.php/tipodecontribuyente/admin'),
+									//array('label'=>'Contribuyente', 'url'=>Yii::app()->request->baseUrl.'/index.php/tipodecontribuyente/admin'),
 								)),	
 						
 						
