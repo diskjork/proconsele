@@ -131,6 +131,7 @@ abstract class BaseFactura extends GxActiveRecord {
 		$criteria->compare('tipofactura', $this->tipofactura);
 		$criteria->compare('nroremito', $this->nroremito);
 		$criteria->compare('fecha', $this->fecha, true);
+		//$criteria->compare('DATE_FORMAT(fecha,"%d/%m/%Y")',$this->fecha,true);
 		$criteria->compare('formadepago', $this->formadepago);
 		$criteria->compare('cliente_idcliente', $this->cliente_idcliente);
 		$criteria->compare('estado', $this->estado);

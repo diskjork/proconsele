@@ -709,5 +709,80 @@ class FacturaController extends Controller
                         
         }
     
-	
+	public function actionExcel(){
+                $mes_tab=$_GET['mesTab'];
+                $anio_tab=$_GET['anioTab'];
+                $model=new Factura('search');
+                //$model->fecha=$mes_tab."/".$anio_tab                	
+               	$this->widget('application.components.widgets.EExcelView', array(
+                	
+				    'id'                   => 'some-grid',
+				    'dataProvider'		   => $model->Search($model->fecha=$mes_tab."/".$anio_tab),
+				    'grid_mode'            => 'export', // Same usage as EExcelView v0.33
+				    //'template'             => "{summary}\n{items}\n{exportbuttons}\n{pager}",
+				    'title'                => 'Factura ' . date('d-m-Y'),
+				    'creator'              => 'YVN',
+				    'subject'              => mb_convert_encoding('Something important with a date in French: ' . utf8_encode(strftime('%e %B %Y')), 'ISO-8859-1', 'UTF-8'),
+				    'description'          => mb_convert_encoding('Etat de production g�n�r� � la demande par l\'administrateur (some text in French).', 'ISO-8859-1', 'UTF-8'),
+				    'lastModifiedBy'       => 'YVN',
+				    'sheetTitle'           => 'Factura ' . date('m-d-Y H-i'),
+				    'keywords'             => '',
+				    'category'             => '',
+				    'landscapeDisplay'     => true, // Default: false
+				    'A4'                   => true, // Default: false - ie : Letter (PHPExcel default)
+				    'pageFooterText'       => '&RThis is page no. &P of &N pages', // Default: '&RPage &P of &N'
+				    'automaticSum'         => true, // Default: false
+				    'decimalSeparator'     => ',', // Default: '.'
+				    'thousandsSeparator'   => '.', // Default: ','
+				    //'displayZeros'       => false,
+				    'zeroPlaceholder'      => '-',
+				    'sumLabel'             => 'TOTALES:', // Default: 'Totals'
+				    'borderColor'          => '000000', // Default: '000000'
+				    'bgColor'              => 'E0E0E0', // Default: 'FFFFFF'
+				    'textColor'            => '000000', // Default: '000000'
+				    'rowHeight'            => 15, // Default: 15
+				    'headerBorderColor'    => '000000', // Default: '000000'
+				    'headerBgColor'        => 'FF7F50', // Default: 'CCCCCC'
+				    'headerTextColor'      => '000000', // Default: '000000'
+				    'headerHeight'         => 25, // Default: 20
+				    'footerBorderColor'    => '000000', // Default: '000000'
+				    'footerBgColor'        => 'CCCCCC', // Default: 'FFFFCC'
+				    'footerTextColor'      => '000000', // Default: '0000FF'
+				    'footerHeight'         => 25, // Default: 20
+				    'exportType'		   => 'Excel2007',
+                	'enablePagination'		=> true,
+				    'columns'              => array( // an array of your CGridColumns
+
+   						array(
+							'header'=>'NRO. FACTURA',
+							'value'=>'(string)$data->nrodefactura',
+						),
+						array(
+							'header'=>'FECHA',
+							'name'=>'fecha',
+						),
+						array(
+							'header'=>'IMPORTE',
+							'name'=>'importeneto',
+							'value'=>'number_format($data->importeneto,2,",",".")',
+						),
+						array(
+							'header'=>'CLIENTE',
+							'name'=>'cliente_idcliente',
+							'value'=>'GxHtml::valueEx($data->clienteIdcliente)',
+						),
+						array(
+							'header'=>'ESTADO',
+							'name'=>'estado',
+						),
+						array(
+							'header'=>'FORMA DE PAGO',
+							'name'=>'formadepago',
+							//'value'=>'GxHtml::valueEx($data->formadepagoIdformadepago)',
+						),
+					) 
+				)); 
+               
+        	
+	}
 }
