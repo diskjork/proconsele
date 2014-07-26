@@ -269,7 +269,7 @@ if(isset($_GET['vista'])){
 	</div>
 	
 	</div>
-	<div style="float:right; margin-right:10px; margin-top:10px;">
+	<div style="float:right; margin-right:10px; margin-top:10px;" id="totalivadiv">
 	<div class=" well  " style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-3px;">IVA</h5>
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="ivablock"></h6>
@@ -315,7 +315,7 @@ if(isset($_GET['vista'])){
 	</div>
 	
 	</div>
-	<div style="float:right; margin-right:10px; margin-top:10px;">
+	<div style="float:right; margin-right:10px; margin-top:10px;" id="totalivadivNC">
 	<div class=" well  " style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-3px;">IVA</h5>
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="ivablockNC"></h6>
@@ -334,7 +334,13 @@ if(isset($_GET['vista'])){
 		<h5 style="padding:0px;margin-left:-15%;" id="descuento_recargoNC"></h5>
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="descuento_recargo_importeNC"></h6>
 	</div>	
-	</div>		
+	</div>	
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-iibbNC">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-iibb">IIBB</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-iibbNC"></h6>
+	</div>	
+	</div>	
 		
 </div>		
 				<?php echo $form->hiddenField($model,'importeneto',array('span'=>4,)); ?>
@@ -409,12 +415,7 @@ if(isset($_GET['vista'])){
 	<?php echo $form->textFieldControlGroup($model,'retencionIIBB',array('style'=>'width:20%;','label'=>false,
 				
 	)); ?>
-	<div style="float:left; margin-right:10px;  display:none;" id="totaldiv-iibbNC">
-	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
-		<h5 style="padding:0px;margin-left:-15%;" id="label-iibb">IIBB</h5>
-		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-iibbNC"></h6>
-	</div>	
-	</div>
+	
 	</div>
 	</td>
 	<td style="width:25%; vertical-align: top;"  class="well" >

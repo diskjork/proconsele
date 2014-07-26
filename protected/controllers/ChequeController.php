@@ -177,10 +177,7 @@ class ChequeController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Cheque');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+		$this->redirect(array('cheque/emitido'));
 	}
 
 	/**

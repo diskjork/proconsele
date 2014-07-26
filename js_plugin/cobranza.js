@@ -1,4 +1,11 @@
 $(document).on('ready',function(){
+	// para bloquear la tecla enter 	
+$("input").keypress(function (evt) {
+	var charCode = evt.charCode || evt.keyCode;
+	if (charCode  == 13) { 
+	return false;
+		}
+	});
 $("table.table.mmf_table > thead > tr:eq(0)").css("display","none");
 $("table.table.mmf_table > tbody").addClass("well");
 $("#cobranza-form").removeClass("well");

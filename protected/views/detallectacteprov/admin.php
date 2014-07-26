@@ -18,8 +18,11 @@ $this->menu=array(
 			);
 
 ?>
-<h5 class="well well-small">DETALLE CTA. CTE.:  <?php echo $_GET['nombre'];?></h5>
-
+<div class="well" style="padding-top: 0px;padding-bottom: 0px;">
+<h5 style="margin-top: 0px;margin-bottom: 0px;">CTA. CTE. - PROVEEDOR </h5>
+<h5 style="margin-top: 0px;margin-bottom: 0px;"> <?php echo $_GET['nombre'];?></h5>
+</div>
+<br>
 <?php
 $model->ctacteprov_idctacteprov=$_GET['id'];
 

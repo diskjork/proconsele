@@ -262,7 +262,7 @@ if(isset($_GET['vista'])){
 	</div>
 	
 	</div>
-	<div style="float:right; margin-right:10px; margin-top:10px;">
+	<div style="float:right; margin-right:10px; margin-top:10px;" id="totalivadiv">
 	<div class=" well  " style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-3px;">IVA</h5>
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="ivablock"></h6>

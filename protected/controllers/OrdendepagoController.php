@@ -412,10 +412,7 @@ public function actionDelete($id)
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Ordendepago');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+		$this->redirect(array('admin'));
 	}
 
 	/**

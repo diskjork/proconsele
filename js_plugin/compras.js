@@ -1,4 +1,11 @@
 $(document).on('ready',function(){
+  // para bloquear la tecla enter   
+$("input").keypress(function (evt) {
+  var charCode = evt.charCode || evt.keyCode;
+  if (charCode  == 13) { 
+  return false;
+    }
+  });
 $("#boton-submit").attr("disabled","disabled");
 //$("#Compras_descrecar").parent().append("<span> %</span>");
 //$("#Compras_importeIIBB").attr('readonly','true');
@@ -25,11 +32,12 @@ $("#Compras_iibb").click(function() {
         if($("#Compras_iibb").is(':checked')) {  
           $("#Compras_importeIIBB").removeAttr('readonly');
           $("#Compras_importeIIBB").val("");
-                    
+                $("#blockiibb").show();
          // sumatotal();
         } else {  
             $("#Compras_importeIIBB").attr('readonly','true');
             $("#Compras_importeIIBB").val("");
+            $("#blockiibb").css('display','none');
            
           //  sumatotal();
         }  
@@ -94,6 +102,7 @@ function sumatotal(){
   var totalpercepcionIIBB=parseFloat($("#Compras_importeIIBB").val());
   var totaliva=parseFloat($("#Compras_ivatotal").val());
   var totalneto=parseFloat($("#Compras_importeneto").val());
+
   if(totalpercepcionIIBB >= totalneto || totaliva >= totalneto){
     alert("Importe IVA o Importe IIBB no pueden ser mayores que Importe Neto.")
     $("#Compras_ivatotal").val("");
@@ -109,10 +118,14 @@ function sumatotal(){
      
 
   }
+  if(totalpercepcionIIBB != null){
+    totalpercepcionIIBB=totalpercepcionIIBB.toFixed(2);
+    $("#totaiibbblock").text($.number(totalpercepcionIIBB,2));
+  }
   totalnetotransfor = $.number( totalneto, 2 );
   totalIvaTrasfor = $.number(totaliva, 2);
-  $("#totalnetoblock").text(totalnetotransfor);
   
-  $("#ivablock").text(totalIvaTrasfor);
+  $("#totalnetoblock").text(totalnetotransfor);
+   $("#ivablock").text(totalIvaTrasfor);
   botonsubmit();
   }
