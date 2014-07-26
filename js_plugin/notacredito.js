@@ -1,6 +1,6 @@
 $(document).on('ready',function(){
-$("input").keypress(function (evt) {
 // para bloquear la tecla enter 	
+$("input").keypress(function (evt) {
 	var charCode = evt.charCode || evt.keyCode;
 	if (charCode  == 13) { 
 	return false;

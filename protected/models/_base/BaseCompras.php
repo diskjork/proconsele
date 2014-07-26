@@ -89,7 +89,7 @@ abstract class BaseCompras extends GxActiveRecord {
 			'formadepago' => Yii::t('app', 'Forma de pago'),
 			'proveedor_idproveedor' => Yii::t('app', 'Proveedor'),
 			'estado' => Yii::t('app', 'Estado'),
-			'iva' => Yii::t('app', 'Iva'),
+			'iva' => Yii::t('app', 'IVA'),
 			'percepcionIIBB' => Yii::t('app', 'Importe IIBB'),
 			'percepcionIIBB2' => Yii::t('app', 'IIBB'),
 			'importebruto' => Yii::t('app', 'Importebruto'),
