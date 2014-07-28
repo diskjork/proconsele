@@ -31,7 +31,7 @@ $columnas=array(
 			), // (#4)
 		array(
 			'header'=>'EMPRESA',
-			'value'=>'$data->clienteIdcliente',
+			'value'=>'($data->proveedorIdproveedor != null)?$data->proveedorIdproveedor:$data->clienteIdcliente',
 			'htmlOptions' => array('width' =>'150px','style'=>'text-align: left;'),
 		),
 		
@@ -71,7 +71,7 @@ $columnas=array(
 			//'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right; width:5%;'),
-			'template'=>' {actfactura} {actND}',
+			'template'=>' {actfactura} {actND} {actNC}',
 			'buttons'=> array(
 					'actfactura'=>array(
 					'label'=>'Modificar Factura',
@@ -94,7 +94,18 @@ $columnas=array(
 								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',
 						
-	                  ),    
+	                  ),
+	                  'actNC'=>array(
+						'label'=>'Modificar Nota Crédito - Proveedor',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notacreditoprov_idnotacreditoprov != NULL',
+						'url'=> 'Yii::app()->createUrl("notacreditoprov/update",
+								 array(	"id"=>$data->notacreditoprov_idnotacreditoprov,
+								 		"vista"=>3,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),        
 					)
 		          ),
 		 );

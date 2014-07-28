@@ -265,7 +265,7 @@ abstract class BaseFactura extends GxActiveRecord {
 			$this->addError('nrofactura', 'El número de factura existe');
 	}
 	}
-private $nombrefactura;
+	private $nombrefactura;
 	public function getnombrefactura(){
 		if($this->estado == 1){
 			$estado=" - Anulada con N.C.";

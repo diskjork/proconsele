@@ -59,6 +59,8 @@
 						array('label'=>'PROVEEDORES','icon'=>'icon-star-empty','items'=>array(
 							array('label'=>'Administrar','url'=>Yii::app()->request->baseUrl.'/index.php/proveedor/admin'),
 							array('label'=>'Cuentas Corrientes', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctacteprov/admin'),
+							array('label'=>'Notas de Crédito', 'url'=>Yii::app()->request->baseUrl.'/notacreditoprov/admin'),
+							array('label'=>'Notas de Débito', 'url'=>Yii::app()->request->baseUrl.'/notadebitoprov/admin'),
 						)),
 						array('label'=>'VALORES','icon'=>'icon-briefcase', 'url'=>'#',
 								'items'=>array(

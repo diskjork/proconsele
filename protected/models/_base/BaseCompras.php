@@ -257,4 +257,15 @@ abstract class BaseCompras extends GxActiveRecord {
 			}
 		}
 	}
+	private $nombrecompra;
+	public function getnombrecompra(){
+		if($this->estado == 1){
+			$estado=" - Anulada con N.C.";
+		}elseif($this->estado == 2){ 
+			$estado=" - Con N.C. por Dev.Mer.";
+		}else {
+			$estado="";
+		}	
+		return "Fecha:".$this->fecha." Nro.".$this->nrodefactura." - Importe: $".$this->importeneto."".$estado;
+	}
 }

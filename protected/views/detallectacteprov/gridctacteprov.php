@@ -60,7 +60,7 @@ $columnas=array_merge(array(
         	'htmlOptions' => array('colspan'=>2),
         	'footerHtmlOptions'=>array('colspan'=>2),
 			'class'=>'bootstrap.widgets.TbButtonColumn',
-			'template'=>'{update}{updatecomp}{delete}{deleteordendepago}',
+			'template'=>'{update}{updatecomp}{delete}{deleteordendepago}{actNC}{borrarNC}',
 			'buttons' => array(
 				'update'=>array(
 					'label'=>'Modificar Orden de pago',
@@ -105,6 +105,41 @@ $columnas=array_merge(array(
 	                   'options'=>array('class'=>'delete'),
 						
 	                  ),
+	              'actNC'=>array(
+						'label'=>'Modificar Nota Crédito - Proveedor',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notacreditoprov_idnotacreditoprov != NULL',
+						'url'=> 'Yii::app()->createUrl("notacreditoprov/update",
+								 array(	"id"=>$data->notacreditoprov_idnotacreditoprov,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+				  'borrarNC'=>array(
+	                  	'label'=>'Borrar Nota Crédito - Proveedor',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->notacreditoprov_idnotacreditoprov != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notacreditoprov/borrar", array("id"=>$data->notacreditoprov_idnotacreditoprov))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Nota de crédito?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
 		),
 		),
 	));

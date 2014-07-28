@@ -345,7 +345,7 @@ public function movCaja($model,$datosPOST){
 	}
 	public function ctacte($model, $datosPOST){
 		$ctacte=Ctacteprov::model()->findByPk($model->proveedorIdproveedor->ctacteprov_idctacteprov);
-	 	$ctacte->debe=$ctacte->debe + $model->importeneto;
+	 	$ctacte->haber=$ctacte->haber + $model->importeneto;
 	 	$ctacte->saldo=$ctacte->debe - $ctacte->haber;
 	 	if($ctacte->save()){
 	 		$modelDeCprov= new Detallectacteprov;
@@ -353,7 +353,7 @@ public function movCaja($model,$datosPOST){
            	$modelDeCprov->descripcion="Factura '".$this->tipoFactura($model->tipofactura)."' Compra N°: ".$model->nrodefactura." -  ".$model->proveedorIdproveedor;
            	$modelDeCprov->tipo= 0;
            	//$modelDeCprov->compra_idcompra=$model->idfactura;
-           	$modelDeCprov->debe=$model->importeneto;
+           	$modelDeCprov->haber=$model->importeneto;
            	$modelDeCprov->ctacteprov_idctacteprov=$ctacte->idctacteprov;
            	$modelDeCprov->save();
 	 		return $modelDeCprov->iddetallectacteprov;
@@ -401,7 +401,7 @@ public function movCaja($model,$datosPOST){
 				$modelNuevo->save();
 				//para decrementar y borrar el detalle de ctacteprov
 				$Nctacte=Ctacteprov::model()->findByPk($model->proveedorIdproveedor->ctacteprov_idctacteprov);
-	 			$Nctacte->debe=$Nctacte->debe - $model->importeneto;
+	 			$Nctacte->haber=$Nctacte->haber - $model->importeneto;
 	 			$Nctacte->saldo=$Nctacte->debe - $Nctacte->haber;
 	 			$Nctacte->save();
 	 			$Dctacte=Detallectacteprov::model()->find('compra_idcompra=:factura',
@@ -523,7 +523,7 @@ public function movCaja($model,$datosPOST){
 			
 		} else {//ctacte 
 			$ctacte=Ctacteprov::model()->findByPk($model->proveedorIdproveedor->ctacteprov_idctacteprov);
-			$ctacte->debe=$ctacte->debe - $model->importeneto;
+			$ctacte->haber=$ctacte->haber - $model->importeneto;
 			$ctacte->saldo=$ctacte->debe - $ctacte->haber;
 			$ctacte->save();
 			$Dctacte=Detallectacteprov::model()->find("compra_idcompra=:factura AND ctacteprov_idctacteprov=:ctacte",
@@ -665,14 +665,14 @@ public function movCaja($model,$datosPOST){
 			if($datosviejos->proveedor_idproveedor == $datosnuevos->proveedor_idproveedor){//se mantiene el mismo cliente
 			$ctacte=Ctacteprov::model()->findByPk($datosviejos->proveedorIdproveedor->ctacteprov_idctacteprov);
 			$total=$datosnuevos->importeneto - $datosviejos->importeneto;
-			$ctacte->debe=$ctacte->debe + $total;
+			$ctacte->haber=$ctacte->haber + $total;
 			$ctacte->saldo=$ctacte->debe - $ctacte->haber;
 			$ctacte->save();
 			$Dctacte=Detallectacteprov::model()->find('compra_idcompra=:factura',
  									array(':factura'=>$datosviejos->idcompra));
  			$Dctacte->fecha=$datosPOST['fecha'];
  			$Dctacte->descripcion="Factura ".$this->tipoFactura($datosnuevos->tipofactura)." Compra N°: ".$datosnuevos->nrodefactura." -  ".$datosnuevos->proveedorIdproveedor;
- 			$Dctacte->debe=$datosnuevos->importeneto;
+ 			$Dctacte->haber=$datosnuevos->importeneto;
  			$Dctacte->save();
  			$DeAs=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
 							array(':cuenta'=>48,
@@ -681,11 +681,11 @@ public function movCaja($model,$datosPOST){
 			$DeAs->save();
  		} else{ //cambia el proveedor
  			$ctacte=Ctacteprov::model()->findByPk($datosviejos->proveedorIdproveedor->ctacteprov_idctacteprov);
-			$ctacte->debe=$ctacte->debe - $datosviejos->importeneto;
+			$ctacte->haber=$ctacte->haber - $datosviejos->importeneto;
 			$ctacte->saldo=$ctacte->debe - $ctacte->haber;
 			$ctacte->save();
 			$Nctacte=Ctacteprov::model()->findByPk($datosnuevos->proveedorIdproveedor->ctacteprov_idctacteprov);
-			$Nctacte->debe=$Nctacte->debe + $datosnuevos->importeneto;
+			$Nctacte->haber=$Nctacte->haber + $datosnuevos->importeneto;
 			$Nctacte->saldo=$Nctacte->debe - $Nctacte->haber;
 			$Nctacte->save();
 			$Dctacte=Detallectacteprov::model()->find('compra_idcompra=:factura ',
@@ -693,8 +693,8 @@ public function movCaja($model,$datosPOST){
  										  );
  			$Dctacte->ctacteprov_idctacteprov=$datosnuevos->proveedorIdproveedor->ctacteprov_idctacteprov;
  			$Dctacte->fecha=$datosPOST['fecha'];
- 			$Dctacte->descripcion="Factura '".$this->tipoFactura($datosnuevos->tipofactura)."' Compra N°: ".$datosnuevos->nrodefactura." -  ".$datosnuevos->proveedorIdproveedor;
- 			$Dctacte->debe=$datosnuevos->importeneto;
+ 			$Dctacte->descripcion="Factura Compra '".$this->tipoFactura($datosnuevos->tipofactura)."' Compra N°: ".$datosnuevos->nrodefactura." -  ".$datosnuevos->proveedorIdproveedor;
+ 			$Dctacte->haber=$datosnuevos->importeneto;
  			$Dctacte->save();
  			$DeAs=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
 							array(':cuenta'=>48,

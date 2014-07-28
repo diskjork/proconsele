@@ -14,8 +14,8 @@ class TipodecontribuyenteController extends Controller
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
-			//array('auth.filters.AuthFilter'),
+			//'accessControl', // perform access control for CRUD operations
+			array('auth.filters.AuthFilter'),
 			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}

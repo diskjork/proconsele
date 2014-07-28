@@ -137,7 +137,7 @@ class OrdendepagoController extends Controller
            	$modelDeCCprov->descripcion="ORDEN DE PAGO Nro:".$model->idordendepago."";
            	$modelDeCCprov->tipo= 1; //tipo ordendepago,0 para compra
            	$modelDeCCprov->ordendepago_idordendepago=$model->idordendepago;
-           	$modelDeCCprov->haber=$model->importe;
+           	$modelDeCCprov->debe=$model->importe;
            	$modelDeCCprov->ctacteprov_idctacteprov=$model->ctacteprov_idctacteprov;
            	$modelDeCCprov->save();
            	
@@ -265,7 +265,7 @@ public function actionUpdate($id)
            	if($llave != null){
            		$importeviejo=$llave;
            		$importenuevo=$model->importe;
-           		$fecha=$model->fecha;
+           		$fecha=$this->fechadmY($model->fecha);
            		$idctacte=$model->ctacteprov_idctacteprov;
            		$this->modificarImporteCtaCte($importeviejo, $importenuevo, $idctacte);
            		$this->modImpDetalleCtacte($idctacte, $id, $importenuevo,$fecha);
@@ -792,21 +792,21 @@ public function nuevoMovCaja($datos){
 	public function incrementoCtacte($idctacte,$importe){
  		$command = Yii::app()->db->createCommand();
 				$command->update('ctacteprov', array(
-				    'ctacteprov.haber'=>new CDbExpression('ctacteprov.haber + '.$importe),
+				    'ctacteprov.debe'=>new CDbExpression('ctacteprov.debe + '.$importe),
 				), 'idctacteprov='.$idctacte);
 		$this->updateSaldoCtaCte($idctacte);
  	}
  	public function modificarImporteCtaCte($impviejo,$impnuevo,$idctacte){
  		$command = Yii::app()->db->createCommand();
 				$command->update('ctacteprov', array(
-				    'ctacteprov.haber'=>new CDbExpression('ctacteprov.haber - '.$impviejo.' + '.$impnuevo),
+				    'ctacteprov.debe'=>new CDbExpression('ctacteprov.debe - '.$impviejo.' + '.$impnuevo),
 				), 'idctacteprov='.$idctacte);
 		$this->updateSaldoCtaCte($idctacte);
  	}
  	public function decrementarCtacteDelete($idctacte, $importe){
  		$command = Yii::app()->db->createCommand();
 				$command->update('ctacteprov', array(
-				    'ctacteprov.haber'=>new CDbExpression('ctacteprov.haber - '.$importe),
+				    'ctacteprov.debe'=>new CDbExpression('ctacteprov.debe - '.$importe),
 				), 'idctacteprov='.$idctacte);
 		$this->updateSaldoCtaCte($idctacte);
  	}
@@ -820,7 +820,7 @@ public function nuevoMovCaja($datos){
 	public function borrarDetCtaCte($idordendepago,$importe,$idctacte){
  			$commandmovi= Yii::app()->db->createCommand();
 			$commandmovi->delete('detallectacteprov',
-						'ordendepago_idordendepago=:iddocument AND haber=:haber AND
+						'ordendepago_idordendepago=:iddocument AND debe=:haber AND
 						 ctacteprov_idctacteprov=:idctacteprov',
 						array(':iddocument'=>$idordendepago,
 							  ':haber'=>$importe,
@@ -884,7 +884,7 @@ public function nuevoMovCaja($datos){
 		$detalle=Detallectacteprov::model()->find("ordendepago_idordendepago=:id AND ctacteprov_idctacteprov=:ctacte",
 						array(':id'=>$idordendepago,
 							  ':ctacte'=>$idctacte));
-		$detalle->haber=$impnuevo;
+		$detalle->debe=$impnuevo;
 		$detalle->fecha=$fecha;
 		$detalle->save();
 		$asiento=Asiento::model()->find("ordendepago_idordendepago=:id",

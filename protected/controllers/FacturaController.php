@@ -770,13 +770,11 @@ class FacturaController extends Controller
 						),
 						array(
 							'header'=>'ESTADO',
-							//'name'=>'estado',
 							'value'=>array($this,'labelEstado'),
 						),
 						array(
 							'header'=>'FORMA DE PAGO',
-							//'name'=>'formadepago',
-							'value'=>'($data->estado==99999)? "Cta Cte":"Efectivo"',
+							'value'=>'($data->formadepago==99999)? "Cta Cte":"Efectivo"',
 						),
 					) 
 				)); 

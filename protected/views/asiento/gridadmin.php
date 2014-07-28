@@ -28,7 +28,7 @@ $gridColumns= array(
             'class'=>'bootstrap.widgets.TbButtonColumn',
 			'template'=>'{delete} {update} {actNC} {actND} {actmovbanco} {actmovcaja} {actcompra} {actordenpago} 
 						{actcobranza} {actfactura} {borrarOrPago} {borrarCobranza} {borrarFactura} {borrarCompra}
-						{borrarNC} {borrarND} ',
+						{borrarNC} {borrarND} {actNC-P} {borrarNC-P}',
             'buttons'=>array(
              	 'delete'=>array(
 					'label'=>'Borrar asiento',
@@ -39,6 +39,7 @@ $gridColumns= array(
 	                    		    $data->ordendepago_idordendepago == NULL AND
 	                    		    $data->cobranza_idcobranza == NULL AND
 	                    		    $data->notadebito_idnotadebito == NULL AND
+	                    		    $data->notacreditoprov_idnotacreditoprov == NULL AND
 	                    		    $data->notacredito_idnotacredito == NULL
 	                    		    ',
 				 ),
@@ -52,6 +53,7 @@ $gridColumns= array(
 	                    		    $data->ordendepago_idordendepago == NULL AND
 	                    		    $data->cobranza_idcobranza == NULL AND
 	                    		    $data->notadebito_idnotadebito == NULL AND
+	                    		    $data->notacreditoprov_idnotacreditoprov == NULL AND
 	                    		    $data->notacredito_idnotacredito == NULL
 	                    		    ',
 						'url'=> 'Yii::app()->createUrl("asiento/update",
@@ -274,6 +276,41 @@ $gridColumns= array(
 	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
 						'visible'=>'$data->notacredito_idnotacredito != NULL',
 	                  	'url'=>'Yii::app()->createUrl("notacredito/borrar", array("id"=>$data->notacredito_idnotacredito))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Nota de crédito?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		           'actNC-P'=>array(
+						'label'=>'Modificar Nota Crédito - Proveedor',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notacreditoprov_idnotacreditoprov != NULL',
+						'url'=> 'Yii::app()->createUrl("notacreditoprov/update",
+								 array(	"id"=>$data->notacreditoprov_idnotacreditoprov,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+				  'borrarNC-P'=>array(
+	                  	'label'=>'Borrar Nota Crédito - Proveedor',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->notacreditoprov_idnotacreditoprov != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notacreditoprov/borrar", array("id"=>$data->notacreditoprov_idnotacreditoprov))',
 	                  	'options'=>array(
 	                  		'confirm' => 'Está seguro de borrar la Nota de crédito?',
 		                  		'ajax' => array(

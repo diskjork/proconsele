@@ -46,6 +46,7 @@ Yii::app()->clientScript->registerScript(
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel'),'Exportar',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
 </div>
 <?php 
+	$valores=array('0'=>'Inactivo', '1'=>'Activo');
 	$gridColumns= array(
 		array(
 	    	'value'=>'$this->grid->dataProvider->pagination->currentPage*
@@ -72,6 +73,7 @@ Yii::app()->clientScript->registerScript(
          	'name'=>'estado',
 		 	'header'=>'Estado',
         	'value'=>'$data->estado == 1 ? "Activo" : "Inactivo"',
+			'filter'=> CHtml::activeDropDownList($model, 'estado', $valores, array('prompt' => '','style'=>'width:100%;')),
         ),
 		array(
             'header'=>'Opciones',

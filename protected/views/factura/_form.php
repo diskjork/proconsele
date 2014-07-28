@@ -58,7 +58,7 @@ if(isset($_GET['vista'])){
    
 
     <?php echo $form->errorSummary($model); ?>
-<div class="row-fluid" id="encabezadofactura">
+<div class="row-fluid well" id="encabezadofactura" style="margin-bottom: 5px;">
 	
 
 	<table style="width:100%;">
@@ -165,7 +165,7 @@ if(isset($_GET['vista'])){
 	</table>
 
 </div>
-<div id="detallefactura" class="row-fluid ">
+<div id="detallefactura" class="row-fluid well" style="margin-bottom: 5px;">
 	
 	<table style="width:100%;" class="well" id="detalle">
 	<thead>
@@ -294,8 +294,8 @@ if(isset($_GET['vista'])){
            		 <?php // echo $form->textFieldControlGroup($model,'tipodescrecar',array('span'=>5)); ?>
 				
 
-<br>
-<div class="row-fluid">
+
+<div class="row-fluid well" style="padding-bottom: 2px;">
 	<table >
 	<tr style="width:100%;">
 	

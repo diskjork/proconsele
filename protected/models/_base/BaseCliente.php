@@ -90,7 +90,7 @@ abstract class BaseCliente extends GxActiveRecord {
 			'nombrecontacto' => Yii::t('app', 'Nombre contacto'),
 			'email' => Yii::t('app', 'Email'),
 			'web' => Yii::t('app', 'Web'),
-			'localidad_idlocalidad' => null,
+			'localidad_idlocalidad' => Yii::t('app', 'Localidad'),
 			'tipodecontribuyente_idtipocontribuyente' => Yii::t('app', 'Tipo Contribuyente'),
 			'created' => Yii::t('app', 'Created'),
 			'modified' => Yii::t('app', 'Modified'),

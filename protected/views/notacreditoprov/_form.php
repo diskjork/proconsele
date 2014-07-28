@@ -1,6 +1,6 @@
 <?php
-/* @var $this NotacreditoController */
-/* @var $model Notacredito */
+/* @var $this NotacreditoprovController */
+/* @var $model Notacreditoprov */
 /* @var $form TbActiveForm */
 if(isset($_GET['vista'])){
 		$vista=$_GET['vista'];
@@ -9,7 +9,7 @@ if(isset($_GET['vista'])){
 ?>
 <?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js', CClientScript::POS_HEAD);?>
 
-<?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/notacredito.js', CClientScript::POS_HEAD);?>
+<?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/notacreditoprov.js', CClientScript::POS_HEAD);?>
 
 <?php 
 //print_r($model->attributes);
@@ -101,7 +101,7 @@ if(isset($_GET['vista'])){
 		<div id="nrofactura" >
 		
 							
-			<?php echo $form->textFieldControlGroup($model,'nronotacredito',array('width'=>'10%','class'=>'mascara')); ?>
+			<?php echo $form->textFieldControlGroup($model,'nronotacreditoprov',array('width'=>'10%','class'=>'mascara')); ?>
 		
 			<?php echo $form->textFieldControlGroup($model,'nrodefactura',array('width'=>'10%','class'=>'mascara')); ?>
 			</div>
@@ -114,7 +114,7 @@ if(isset($_GET['vista'])){
 	<tr>
 	<td colspan="3">
 	<div class="alert">
-	<?php echo $form->labelEx($model, 'factura_idfactura');?>
+	<?php echo $form->labelEx($model, 'compras_idcompras');?>
 		<?php 
 		
 		$mes=(int)date('m');
@@ -138,43 +138,43 @@ if(isset($_GET['vista'])){
 		$this->widget('ext.select2.ESelect2',array(
 			 
 			 'model'=>$model,
-			 'attribute'=>'factura_idfactura',
-			  'data' =>GxHtml::listDataEx(Factura::model()->
-					   				findAllAttributes(array('nrodefactura, fecha, importeneto,estado'),true,array('condition'=>$cond2,'order'=>'fecha ASC')),'idfactura','nombrefactura'),
+			 'attribute'=>'compras_idcompras',
+			  'data' =>GxHtml::listDataEx(Compras::model()->
+					   				findAllAttributes(array('nrodefactura, fecha, importeneto,estado'),true,array('condition'=>$cond2,'order'=>'fecha ASC')),'idcompra','nombrecompra'),
 			  'options'=>array(
-				   'placeholder'=>'Factura',
+				   'placeholder'=>'Factura compra',
 				   'allowClear'=>true,
 					'width'=> '70%',
 					
 				  ),
 			)); ?>
-		<?php  echo $form->error($model,'factura_idfactura',array('style'=>'color:#b94a48')); ?>
+		<?php  echo $form->error($model,'compras_idcompras',array('style'=>'color:#b94a48')); ?>
 	</div>	
 	</td>
 	</tr>
 	
 	<tr style="width:100%;">
 		<td style="width:33%;">
-		<?php echo $form->labelEx($model, 'cliente_idcliente');?>
+		<?php echo $form->labelEx($model, 'proveedor_idproveedor');?>
 		<?php $this->widget('ext.select2.ESelect2',array(
 			  //'name'=>'cuenta_idcuenta',
 			 'model'=>$model,
-			 'attribute'=>'cliente_idcliente',
-			  'data' =>GxHtml::listDataEx(Cliente::model()->
-					   				findAll('estado = :estado', array(':estado' => 1)),'idcliente','nombre'),
+			 'attribute'=>'proveedor_idproveedor',
+			  'data' =>GxHtml::listDataEx(Proveedor::model()->
+					   				findAll('estado = :estado', array(':estado' => 1)),'idproveedor','nombre'),
 			  'options'=>array(
-				   'placeholder'=>'Cliente',
+				   'placeholder'=>'Proveedor',
 				   'allowClear'=>true,
 					'width'=> '100%',
 				  ),
 			)); ?>
-		<?php  echo $form->error($model,'cliente_idcliente',array('style'=>'color:#b94a48')); ?>
+		<?php  echo $form->error($model,'proveedor_idproveedor',array('style'=>'color:#b94a48')); ?>
 		</td>
 		<td style="width:33%;">
 		
-		<?php echo $form->label($model, 'formadepago');?>
+		<?php // echo $form->label($model, 'formadepago');?>
 		<?php 
-			$formPago=GxHtml::listDataEx(Caja::model()->
+			/*$formPago=GxHtml::listDataEx(Caja::model()->
 					   				findAll('estado = :estado', array(':estado' => 1)),'idcaja','nombre');
 			$formPago['99999']='Cta Cte (Cheque, Trans. bancaria)';	
 			//print_r($formPago);	   				
@@ -188,8 +188,8 @@ if(isset($_GET['vista'])){
 				   'allowClear'=>true,
 					'width'=> '100%',
 				  ),
-			)); ?>
-		<?php  echo $form->error($model,'formadepago',array('style'=>'color:#b94a48')); ?>
+			));*/ ?>
+		<?php // echo $form->error($model,'formadepago',array('style'=>'color:#b94a48')); ?>
 	
 		</td>
 	<td style="width:34%;">
@@ -200,75 +200,17 @@ if(isset($_GET['vista'])){
 	</table>
 
 </div>
-<div id="detalleNotacredito" class="row-fluid ">
-	
-	<table style="width:100%;" class="well" id="detalle">
-	<thead>
-	<tr>
-	<th>CANTIDAD</th>
-	<th>CODIGO</th>
-	<th>DESCRIPCIÓN</th>
-	<th>PRECIO U.</th>
-	<th>SUBTOTAL</th>
-	</tr>
-	
-	</thead>
-	<tr >
-	<td style="width:6%; text-align: center;">
-	
-	<?php echo $form->textFieldControlGroup($model,'cantidadproducto',array('label'=>false,'style'=>'width:40px;',
-							'onkeydown'=> 'if((event.keyCode == 9) || (event.keyCode == 13 )  ){
-            									var idselect=this.id;
-            									var valor=this.value;
-				        						var obj={
-				        						id:idselect,
-				        						val:valor};
-				        						blurcantidad(obj);
-				        						
-            								}',
-            				'onblur'=>'	var idselect=this.id;
-				        						var valor=this.value;
-				        						var obj={
-				        						id:idselect,
-				        						val:valor};
-				        						blurcantidad(obj)')); ?>
-	</td>
-	<td style="width:6%; text-align: center;">
-	<?php echo $form->textFieldControlGroup($model,'producto_idproducto',array('label'=>false,'style'=>'width:40px;'				 		)
-	); ?>
-	</td>
-	<td style="width:48%; text-align: center;">
-	<?php echo $form->textFieldControlGroup($model,'nombreproducto',array('label'=>false,'style'=>'width:98%;','maxlength'=>100)); ?>
-	</td>
-	<td style="width:15%; text-align: center;"> 
-	<?php echo $form->textFieldControlGroup($model,'precioproducto',array('label'=>false,'style'=>'width:70px;',
-							)); ?>
-											
-	</td>
-	<td style="width:15%; text-align: center;">
-	<?php echo $form->textFieldControlGroup($model,'stbruto_producto',array('label'=>false,'style'=>'width:70px;','readonly' => true,)); ?>
-	</td>
-	</tr>
-	</table>
-</div>
 <div class="row-fluid " id="totalesfactura" >
 <h5 style="text-align: right;"> TOTALES DE FACTURA</h5>
 	<div style="float:right; margin-right:10px; margin-top:10px;" >
-	<div class=" well" style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto; border: 3px solid #0E0D0D;">
+	<div class=" well" style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto; border: 3px solid #0E0D0D;">
 			<h5 style="padding:0px">TOTAL</h5>
 			<h5 style="text-align:center;margin:0;margin-left:-4px;" id="totalnetoblock"></h5>
 	</div>
 	 
 	</div>
 	
-	<div  style="float:right; margin-right:10px; margin-top:10px;">
 	
-	<div class="well " style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
-		<h5 style="padding:0px;margin-left:-6px;">SubTotal</h5>
-		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="subtotalblock"></h6>
-	</div>
-	
-	</div>
 	<div style="float:right; margin-right:10px; margin-top:10px;" id="totalivadiv">
 	<div class=" well  " style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-3px;">IVA</h5>
@@ -277,18 +219,7 @@ if(isset($_GET['vista'])){
 	</div>
 	
 	</div>	
-	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-impint">
-	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
-		<h5 style="padding:0px;margin-left:-15%;" id="label-iibb">Imp.Int.</h5>
-		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-impint"></h6>
-	</div>	
-	</div>
-	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="desc_recar">
-	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
-		<h5 style="padding:0px;margin-left:-15%;" id="descuento_recargo"></h5>
-		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="descuento_recargo_importe"></h6>
-	</div>	
-	</div>	
+
 	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-iibb">
 	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-15%;" id="label-iibb">IIBB</h5>
@@ -296,25 +227,18 @@ if(isset($_GET['vista'])){
 	</div>	
 	</div>
 	
-</div>	
+</div>
+
 <div class="row-fluid alert" id="totalesnotacredito" style="margin-top: 10px;margin-bottom: -10px;padding: 2px 2px 2px 0px;">
-<h5 style="text-align: right;"> TOTALES DE NOTA DE CREDITO</h5>
+	<h5 style="text-align: right;"> TOTALES DE NOTA DE CREDITO</h5>
 	<div style="float:right; margin-right:10px; margin-top:10px;" >
-	<div class=" well" style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto; border: 3px solid #0E0D0D;">
+	<div class=" well" style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto; border: 3px solid #0E0D0D;">
 			<h5 style="padding:0px">TOTAL</h5>
 			<h5 style="text-align:center;margin:0;margin-left:-4px;" id="totalnetoblockNC"></h5>
 	</div>
-	 
 	</div>
 	
-	<div  style="float:right; margin-right:10px; margin-top:10px;">
 	
-	<div class="well " style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
-		<h5 style="padding:0px;margin-left:-6px;">SubTotal</h5>
-		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="subtotalblockNC"></h6>
-	</div>
-	
-	</div>
 	<div style="float:right; margin-right:10px; margin-top:10px;" id="totalivadivNC">
 	<div class=" well  " style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-3px;">IVA</h5>
@@ -323,18 +247,7 @@ if(isset($_GET['vista'])){
 	</div>
 	
 	</div>	
-	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-impintNC">
-	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
-		<h5 style="padding:0px;margin-left:-15%;" id="label-iibbNC">Imp.Int.</h5>
-		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-impintNC"></h6>
-	</div>	
-	</div>
-	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="desc_recarNC">
-	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
-		<h5 style="padding:0px;margin-left:-15%;" id="descuento_recargoNC"></h5>
-		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="descuento_recargo_importeNC"></h6>
-	</div>	
-	</div>	
+	
 	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-iibbNC">
 	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-15%;" id="label-iibb">IIBB</h5>
@@ -343,14 +256,11 @@ if(isset($_GET['vista'])){
 	</div>	
 		
 </div>		
-				<?php echo $form->hiddenField($model,'importeneto',array('span'=>4,)); ?>
-				<?php echo $form->hiddenField($model,'ivatotal',array('span'=>4,)); ?>
-				<?php echo $form->hiddenField($model,'importeIIBB',array('span'=>4,)); ?>
-				<?php echo $form->hiddenField($model,'importeImpInt',array('span'=>4,)); ?>
+				<?php  //echo $form->hiddenField($model,'importeneto',array('span'=>4,)); ?>
+				<?php // echo $form->hiddenField($model,'ivatotal',array('span'=>4,)); ?>
+				<?php //echo $form->hiddenField($model,'importeIIBB',array('span'=>4,)); ?>
 				<?php echo $form->hiddenField($model,'importebruto',array('span'=>5)); ?>
-				<?php //echo $form->textFieldControlGroup($model,'descrecar',array('span'=>5)); ?>
-
-           		 <?php // echo $form->textFieldControlGroup($model,'tipodescrecar',array('span'=>5)); ?>
+				
 				
 
 <br>
@@ -361,31 +271,6 @@ if(isset($_GET['vista'])){
 	</tr>
 	<tr style="width:100%;" >
 	<td style="width:25%; vertical-align: top;" class="well" >
-	
-	<?php echo $form->label($model, 'desRec',array('label'=>'Descuento - Recargo'));?>
-	<?php echo $form->checkBox($model, 'desRec',array('value'=>1));echo " Descuento - Recargo";?>
-	<div id="radiobutton-descRec" style="display:none;">
-	<?php echo $form->radioButtonListControlGroup($model, 'tipodescrecar', array(
-	'Descuento %',
-	'Recargo %',
-	),array('label'=>false)); ?>
-	
-	
-	    <?php echo $form->textFieldControlGroup(
-	 			$model,
-	 			'descrecar',
-	 			array('span'=>4,
-	 				'label'=>false,
-	 				'style'=> 'width:20%',
-	 				'margin-left'=>' 20%',
-	 				
-	 				//'placeholder'=>'%',
-					)); ?> 
-	</div>
-	</td>
-	
-	<td style="width:25%; vertical-align: top;" class="well" >
-	
 	<div >	
 	
 	<?php echo $form->label($model, 'iva');?>
@@ -405,33 +290,42 @@ if(isset($_GET['vista'])){
 				  ),
 			)); ?>
 		<?php  echo $form->error($model,'iva',array('style'=>'color:#b94a48')); ?>
+		
 	</div>		
+	
+	
+	</td>
+	
+	<td style="width:25%; vertical-align: top;" class="well" >
+	<?php echo $form->textFieldControlGroup($model,'ivatotal',array('span'=>5,
+							'onkeydown'=>' 
+	        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+	 							'onblur'=> 'sumatotal();',)); ?>				
+	<?php  echo $form->textFieldControlGroup($model,'importeneto',array('span'=>5,
+			'onkeydown'=>' 
+	        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+	 							'onblur'=> 'sumatotal();'
+ 		)); 
+ 	?>
+	
 	</td>
 	<td style="width:25%; vertical-align: top;"  class="well" >
-	
 	<div >	
-	<?php echo $form->label($model, 'retencionIIBB');?>
-	<?php echo $form->checkBox($model, 'iibb',array('value'=>1));echo " Percepción IIBB";?>
-	<?php echo $form->textFieldControlGroup($model,'retencionIIBB',array('style'=>'width:20%;','label'=>false,
-				
+	<?php echo $form->label($model, 'percepcionIIBB');?>
+	<?php echo $form->checkBox($model, 'iibb',array('value'=>1));echo "Percepción IIBB";?>
+	<br><br>
+	<?php echo $form->textFieldControlGroup($model,'importeIIBB',array('style'=>'width:20%;',
+	'onkeydown'=>' 
+	        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+	 							'onblur'=> 'sumatotal();'
 	)); ?>
 	
 	</div>
+	
 	</td>
 	<td style="width:25%; vertical-align: top;"  class="well" >
 	
-	<div class="row-fluid">	
-	<?php echo $form->label($model, 'impuestointerno');?>
-	<?php echo $form->checkBox($model, 'impInt',array('value'=>1));echo " Imp. Interno";?>
-	<?php echo $form->textFieldControlGroup($model,'impuestointerno',array('style'=>'width:20%;','label'=>false,
-			
-	)); ?>
 	
-	
-	</div>
-	<div class="row-fluid" id="descripcionimpint" style="display:none;"> 
-	<?php echo $form->textFieldControlGroup($model,'desc_imp_interno',array('maxlength'=>100)); ?>
-	</div>
 	</td>
 	</tr>
 	</table>
@@ -442,7 +336,9 @@ if(isset($_GET['vista'])){
    	
 	<?php echo $form->hiddenField($model,'asiento_idasiento',array('span'=>5)); ?>
     <?php echo $form->hiddenField($model, 'vista', array());?>    
+            
 
+            
         <div class="form-actions" align="center">
         <?php 
         

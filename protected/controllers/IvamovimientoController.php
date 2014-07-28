@@ -217,6 +217,14 @@ class IvamovimientoController extends Controller
 					$text="ND";
 					return $text;
 					break;
+				case '5':
+					$text="NC-Prov.";
+					return $text;
+					break;
+				case '6':
+					$text="ND-Prov.";
+					return $text;
+					break;
 		}
 	}
 	
