@@ -19,7 +19,7 @@
 
     <?php echo $form->errorSummary($model); ?>
 
-            <?php echo $form->textFieldControlGroup($model,'codigocta',array('span'=>5,'maxlength'=>45)); ?>
+            <?php echo $form->textFieldControlGroup($model,'codigocta',array('span'=>2,'maxlength'=>45)); ?>
 
             <?php echo $form->textFieldControlGroup($model,'nombre',array('span'=>5,'maxlength'=>45)); ?>
 

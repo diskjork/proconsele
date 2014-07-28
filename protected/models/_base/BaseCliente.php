@@ -94,7 +94,7 @@ abstract class BaseCliente extends GxActiveRecord {
 			'tipodecontribuyente_idtipocontribuyente' => Yii::t('app', 'Tipo Contribuyente'),
 			'created' => Yii::t('app', 'Created'),
 			'modified' => Yii::t('app', 'Modified'),
-			'localidadIdlocalidad' => null,
+			'localidadIdlocalidad' => Yii::t('app', 'Localidad'),
 			'tipodecontribuyenteIdtipocontribuyente' => Yii::t('app', 'Tipo Contribuyente'),
 			'ctactes' => null,
 			'facturas' => null,

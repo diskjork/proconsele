@@ -111,7 +111,7 @@ abstract class BaseNotacredito extends GxActiveRecord {
 			'importeIIBB' => Yii::t('app', 'Importe Iibb'),
 			'importeImpInt' => Yii::t('app', 'Importe Imp Int'),
 			'factura_idfactura' => Yii::t('app', 'Factura relacionada a la Nota de crédito'),
-			'tipofactura' => Yii::t('app', 'Tipofactura'),
+			'tipofactura' => Yii::t('app', 'Tipo de factura'),
 			'nronotacredito' => Yii::t('app', 'Nro. Nota crédito'),
 		);
 	}

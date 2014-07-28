@@ -19,48 +19,37 @@ $this->menu=array(
 		'url'=>array('/cuenta/create'),
 	),
 );
-
-Yii::app()->clientScript->registerScript('search', "
-$('.search-button').click(function(){
-	$('.search-form').toggle();
-	return false;
-});
-$('.search-form form').submit(function(){
-	$('#cuenta-grid').yiiGridView('update', {
-		data: $(this).serialize()
-	});
-	return false;
-});
-");
 ?>
 
 <h5 class="well well-small">PLAN DE CUENTAS</h5>
 <br>
-<!-- search-form -->
+
 <?php 
 $dataProvider= $model->search();
 $dataProvider->setPagination(array('pageSize'=>200));
 $lista=CHtml::listData(Tipocuenta::model()->findAll(), 'idtipocuenta','nombre');
 $columnas=array(
 		array(
-		'name'=>'codigocta',
-		'htmlOptions' => array('width' =>'30px','style'=>'text-align:center'),
+			'header'=>'COD. CUENTA',
+			'name'=>'codigocta',
+			'htmlOptions' => array('width' =>'30px','style'=>'text-align:center'),
 		),
 		array(
-		'name'=>'tipocuenta_idtipocuenta',
-		'value'=>'$data->tipocuentaIdtipocuenta',
-		'filter'=> $lista,
+			'header'=>'TIPO DE CUENTA',
+			'name'=>'tipocuenta_idtipocuenta',
+			'value'=>'$data->tipocuentaIdtipocuenta',
+			'filter'=> $lista,
 		),
 		array(
-		
-			'header'=>'Tipo Gral.',
+			'header'=>'	TIPO GRAL.',
 			'value'=>array($this,'nombreTipogral'),
-			),
-		'nombre',
-		
-		
+		),
 		array(
-			'header'=>'Asentable:',
+			'header'=>'NOMBRE',
+			'value'=>'$data->nombre',
+		),
+		array(
+			'header'=>'ASENTABLE:',
 			'value'=>'$data->asentable == 1 ? "SI" : "NO"',
 			'htmlOptions' => array('width' =>'20px','style'=>'text-align:center'),
 		),

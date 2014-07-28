@@ -71,7 +71,8 @@ abstract class BaseCuenta extends GxActiveRecord {
 			'asentable' => Yii::t('app', 'Asentable'),
 			'asientos' => null,
 			'cajas' => null,
-			'tipocuentaIdtipocuenta' => null,
+			'tipocuentaIdtipocuenta' => Yii::t('app', 'Tipo de cuenta'),
+			'tipocuenta_idtipocuenta' => Yii::t('app', 'Tipo de cuenta'),
 			'facturas' => null,
 		);
 	}

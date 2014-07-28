@@ -1,9 +1,15 @@
 <?php
 
 $this->menu=array(
-	
-	array('label'=>'Nueva NOTA DEBITO','url'=>array('create')),
-	//array('label'=>'Cheque Endosados','url'=>'endosados'),
+	array(
+		'label'=>'Admnistrar', 
+		'url'=>array('admin'),
+		'active' => true,
+	),
+	array(
+		'label'=>'Nueva NOTA DEDITO',
+		'url'=>array('create'),
+	),
 );
 	
 ?>

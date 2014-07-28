@@ -84,7 +84,7 @@ abstract class BaseMovimientocaja extends GxActiveRecord {
 			'idmovimientocaja' => Yii::t('app', 'Idmovimientocaja'),
 			'descripcion' => Yii::t('app', 'Descripcion'),
 			'fecha' => Yii::t('app', 'Fecha'),
-			'debeohaber' => Yii::t('app', 'Debeohaber'),
+			'debeohaber' => Yii::t('app', 'Debe - Haber'),
 			'debe' => Yii::t('app', 'Debe'),
 			'haber' => Yii::t('app', 'Haber'),
 			'id_de_trabajo' => Yii::t('app', 'Id De Trabajo'),
