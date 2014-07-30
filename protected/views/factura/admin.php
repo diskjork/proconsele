@@ -23,7 +23,7 @@ $this->menu=array(
 ?>
 
 <h5 class="well well-small">ADMINISTRACION DE FACTURAS</h5>
-<br>
+
 <?php
 //////////////ALERT TEMPORIZADO////////////////////
 Yii::app()->clientScript->registerScript(

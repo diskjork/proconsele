@@ -19,6 +19,8 @@ $this->menu=array(
 		'url'=>array('create'),
 		'active' => true,
 	),
+	array('label'=>'Volver', 'url'=>Yii::app()->request->Urlreferrer 
+			),
 );
 ?>
 

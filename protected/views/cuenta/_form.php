@@ -61,6 +61,7 @@
         
         echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		    
 		)); ?>
 		
@@ -77,5 +78,9 @@
 <?php Yii::app()->clientScript->registerScript('test',"
 				$('div .modal-footer').remove();
 				$('div .form-actions').css('background-color','transparent');
-				
+				$('#Cuenta_codigocta')
+				.popover({ 
+        		placement:'right'	,
+        		title: 'Nueva Cuenta', content: 'Antes de cargar una nueva cuenta debe contactar a su contador para ajustarse a su plan de cuentas contables.' })
+	       		.popover('show');
 				"); ?> 	

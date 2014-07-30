@@ -254,9 +254,12 @@ class IvamovimientoController extends Controller
 			'header' => 'F. COBRO' ),
 		array(
 			'header'=>'EMPRESA',
-			'value'=>'$data->'.$valor.'', ),
-		array('name' => ''.$valor.'.cuit',
-			  'header' => 'CUIT',),	
+			'value'=>'($data->proveedorIdproveedor != null)?$data->proveedorIdproveedor:$data->clienteIdcliente',
+		),
+		array(//'name' => ''.$valor.'.cuit',
+			  'header' => 'CUIT',
+			  'value'=>'($data->proveedorIdproveedor != null)?$data->proveedorIdproveedor->cuit:$data->clienteIdcliente->cuit',
+			),	
 		array(
 				'header' => 'COMPROBANTE',
 				'value'=>array($this,'labelEstado') ),	

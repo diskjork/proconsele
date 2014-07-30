@@ -58,7 +58,7 @@
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('width' =>'70px'),
-			'template'=>'{view} {update} {delete} ',
+			'template'=>'{update} {delete} ',
             'buttons'=>array(
                 'view'=>
                     array(

@@ -54,20 +54,10 @@
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
-			'htmlOptions' => array('width' =>'15%','style'=>'text-align: right;'),
-			'template'=>'{view} {update} {delete} {remito} {imprimir} ',
+			'htmlOptions' => array('width' =>'10%'),
+			'template'=>' {update} {delete} {remito} {imprimir} {imprimirB}',
             'buttons'=>array(
-                'view'=>
-                    array(
-                        'url'=>'Yii::app()->createUrl("factura/view", array("id"=>$data->idfactura))',
-                        'options'=>array(
-                            'ajax'=>array(
-                                'type'=>'POST',
-                                'url'=>"js:$(this).attr('href')",
-                                'success'=>'function(data) { $("#viewModal .modal-body p").html(data); $("#viewModal").modal(); }'
-                            ),
-                        ),
-                    ),
+                
               	'remito'=>
                     array(
 						'label'=>'Imprimir remito',
@@ -77,7 +67,8 @@
                     ),
                 'imprimir'=>
                     array(
-						'label'=>'Imprimir factura',
+						'label'=>'Imprimir Factura "A"',
+                    	'visible'=>'$data->tipofactura == 1 ',
 		            	'icon'=>TbHtml::ICON_PRINT,
 		            	'url'=>'Yii::app()->createUrl("factura/imprimirfactura", array("id"=>$data->idfactura))',
                     	'options'=>array('target'=>'_blank'),
@@ -92,6 +83,19 @@
 	                  	'label'=>'Actualizar Factura',
 	                    'icon'=>TbHtml::ICON_PENCIL,
 						'visible'=>'$data->estado == 0 ',
+                    ),
+                     'imprimirB'=>
+                    array(
+						'label'=>'Imprimir Factura "B"',
+                    	'visible'=>'$data->tipofactura == 2 ',
+		            	'icon'=>TbHtml::ICON_PRINT,
+		            	 'url'=>'#',
+                    	'click'=>'function(){alert("Contacte a su diseñador para adquirir el módulo Impresión Factura B.");}',
+                    	'options'=>array(
+                    		//'target'=>'_blank',
+                    		 
+                    ),
+	           	
                     ),   
                 /*'anular'=>
                     array(

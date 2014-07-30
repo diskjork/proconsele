@@ -42,28 +42,32 @@ $columnas=array_merge(array(
               		'name' => 'debe',
 					'htmlOptions' => array('width' =>'75px'),
               		'cssClassExpression' => '$data["debe"] > 0 ? "colorDebe": ""',
-					'value'=>'($data->debe !== null && $data->debe > 0)?number_format($data->debe, 2, ".", ","): "-"',
+					'value'=>'($data->debe !== null && $data->debe > 0)? "$".number_format($data->debe, 2, ".", ","): "-"',
               		//'footer'=>"$ ".number_format($dataProviderDebeHaber[0]['total_debe']-$dataProviderDebeHaber[0]['total_haber'],2,".",","),
-              		'footer'=>"(T.D:$".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",").")  (T.H:$".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",").")",
-              		'footerHtmlOptions'=>array('colspan'=>2 ,'style'=>'text-align:center;font-weight:bold;'),
+              		'footer'=>"$".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",","),
+              		//'footerHtmlOptions'=>array('style'=>'text-align:center;font-weight:bold;'),
               ),
 			  array(
 			  		'header'=>'EGRESOS',
 			  		'name' => 'haber',
 					'htmlOptions' => array('width' =>'75px'),
               		'cssClassExpression' => '$data["haber"] > 0 ? "colorHaber": ""',
-			  		'value'=>'($data->haber !== null && $data->haber > 0)?number_format($data->haber, 2, ".", ","): "-"',
+			  		'value'=>'($data->haber !== null && $data->haber > 0)?"$".number_format($data->haber, 2, ".", ","): "-"',
+			 		'footer'=>"$".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",","),
   			),
 			 array(
 	            'header'=>'Opciones',
 	            'class'=>'bootstrap.widgets.TbButtonColumn',
-			 	'template' => ' {view} {update} {delete}',
+			 	'template' => ' {view}{update}',
+			 	//'htmlOptions'=>array('style'=>'width:5%'),
 	            'buttons'=>array(
 	               
 	                 'view'=>
 	                    array(
 	                    	'label'=>'Ver asiento contable',
-	                    	'visible'=>'$data->idcompra == NULL AND $data->idfactura == NULL',
+	                    	'visible'=>'$data->idcompra == NULL AND $data->idfactura == NULL AND $data->iddetallecobranza == NULL AND
+									$data->iddetalleordendepago == NULL AND
+									$data->asiento_idasiento != NULL',
 	                        'url'=>'Yii::app()->createUrl("asiento/update", array("id"=>$data->asiento_idasiento,"vista"=>2))',
 	                       /* 'options'=>array(
 	                            'ajax'=>array(
@@ -73,11 +77,16 @@ $columnas=array_merge(array(
 	                            ),
 	                        ),*/
 	                    ),
+	                    'update'=>
+	                    array(
+	                    	'label'=>'Modificar ',
+	                    	'visible'=>'$data->asiento_idasiento != NULL',
+	                  )
 	                    
 	            ),
 	            'headerHtmlOptions'=>array('colspan'=>2),
-	            'htmlOptions' => array('colspan'=>2),
-	            'footerHtmlOptions'=>array('colspan'=>2),
+	            'htmlOptions' => array('colspan'=>2,'style'=>'width:5%'),
+	           'footerHtmlOptions'=>array('colspan'=>2),
 	        ),
 		));?>
 

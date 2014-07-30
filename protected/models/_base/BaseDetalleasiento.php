@@ -52,12 +52,13 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('cuenta_idcuenta, asiento_idasiento', 'required'),
+			array('cuenta_idcuenta', 'required'),
 			array('cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque, iddetallecobranza, iddetalleordendepago', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('iddocumento', 'length', 'max'=>20),
-			array('debe, haber, proveedor_idproveedor, cliente_idcliente, iddocumento, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque, iddetallecobranza, iddetalleordendepago', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('iddetalleasiento, debe, haber, cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente, iddocumento, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque, iddetallecobranza, iddetalleordendepago', 'safe', 'on'=>'search'),
+			array('operacion_manual', 'length', 'max'=>30),
+			array('debe, haber, proveedor_idproveedor, cliente_idcliente, iddocumento, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque, iddetallecobranza, iddetalleordendepago, operacion_manual', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('iddetalleasiento, debe, haber, cuenta_idcuenta, asiento_idasiento, proveedor_idproveedor, cliente_idcliente, iddocumento, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, cheque_idcheque, iddetallecobranza, iddetalleordendepago, operacion_manual', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -128,50 +129,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			'criteria' => $criteria,
 		));
 	}
-		/*
-        public $totaldebe, $totalhaber, $codigo, $Idcuenta ,$NombreCta;
-        public  function generarArrayDEBE($anio, $mes){
-        	$criteria=new CDbCriteria;
-            $criteria->select = array(
-                	'cuenta.codigocta as codigo',
-                	't.cuenta_idcuenta as Idcuenta',
-                	'cuenta.nombre as NombreCta',
-                	' sum(t.debe) as totaldebe',
-                    );
-             	$criteria->join = ', asiento, cuenta';
-                $criteria->condition = 'month(asiento.fecha)='.$mes.' 
-                						AND year(asiento.fecha)='.$anio.'
-			        					AND t.asiento_idasiento = asiento.idasiento 
-			        					AND t.cuenta_idcuenta=cuenta.idcuenta ';
-                $criteria->group = 'cuenta.nombre';
-                $result = Detalleasiento::model()->find($criteria); 
-                return new CActiveDataProvider($this, array(
-                        'criteria'=>$criteria,
-			));
-        } 
-	
-	
-		public  function generarArrayHABER($anio, $mes){
-        	$criteria=new CDbCriteria;
-            $criteria->select = array(
-                	'cuenta.codigocta as codigo',
-                	't.cuenta_idcuenta as Idcuenta',
-                	'cuenta.nombre as NombreCta',
-                	' sum(t.haber) as totalhaber',
-                    );
-             	$criteria->join = ',asiento,cuenta';
-                $criteria->condition = 'month(asiento.fecha)='.$mes.' 
-                						AND year(asiento.fecha)='.$anio.'
-			        					AND t.asiento_idasiento = asiento.idasiento
-			        					AND t.cuenta_idcuenta=cuenta.idcuenta ';
-                $criteria->group = 'cuenta.nombre';
-                $result = Detalleasiento::model()->find($criteria); 
-                return new CActiveDataProvider($this, array(
-                        'criteria'=>$criteria,
-			));
-       
-        }
-        */
+		
 		public  function generarArrayDEBE($anio, $mes){
        		$sql='SELECT cuenta.codigocta as codigo,cuenta.nombre AS cuenta, SUM( detalleasiento.debe ) AS debe 
 					FROM asiento, cuenta, detalleasiento
@@ -181,6 +139,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 					AND detalleasiento.cuenta_idcuenta = cuenta.idcuenta
 					GROUP BY cuenta.nombre
 					';
+       		$count=Yii::app()->db->createCommand($sql)->queryScalar();
 			$dataProvider=new CSqlDataProvider($sql, array(
 			    //'totalItemCount'=>$count,
 			    'sort'=>array(
@@ -188,9 +147,9 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			             'codigo', 'cuenta', 'debe',
 			        ),
 			    ),
-			   /* 'pagination'=>array(
-			        'pageSize'=>10,
-			    ),*/
+			   'pagination'=>array(
+			        'pageSize'=>$count,
+			    ),
 				));
 			return $dataProvider;
         }
@@ -206,6 +165,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 					AND detalleasiento.asiento_idasiento = asiento.idasiento
 					AND detalleasiento.cuenta_idcuenta = cuenta.idcuenta
 					GROUP BY cuenta.nombre ';
+			$count=Yii::app()->db->createCommand($sql)->queryScalar();
 			$dataProvider=new CSqlDataProvider($sql, array(
 			    //'totalItemCount'=>$count,
 			    'sort'=>array(
@@ -213,9 +173,9 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			             'codigo', 'cuenta', 'haber'
 			        ),
 			    ),
-			   /* 'pagination'=>array(
-			        'pageSize'=>10,
-			    ),*/
+			   'pagination'=>array(
+			        'pageSize'=>$count,
+			    ),
 				));
 			return $dataProvider;
         }
@@ -239,7 +199,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			$dataProvider=new CSqlDataProvider($sql, array(
 			    'totalItemCount'=>$count,
 			    'sort'=>array(
-					'defaultOrder'=>'fecha DESC',
+					'defaultOrder'=>'idasiento ASC',
 			        'attributes'=>array(
 			             'fecha','asiento','nombre', 'codigo' , 'haber','debe', 'descripcion'
 			        ),

@@ -3,7 +3,7 @@
 $this->menu=array(
 	
 	array('label'=>'Nueva NOTA CREDITO','url'=>array('create')),
-	//array('label'=>'Cheque Endosados','url'=>'endosados'),
+	array('label'=>'Volver','url'=>Yii::app()->request->Urlreferrer),
 );
 	
 ?>
@@ -115,6 +115,5 @@ function reinstallDatePicker(id, data) {
 
 
 <script>
-$("#content").css('width','850px');
 $(".grid-view .table td").css('text-align','center');
 </script>

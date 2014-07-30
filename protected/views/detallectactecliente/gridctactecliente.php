@@ -58,7 +58,7 @@ $columnas=array_merge(array(
         	'footerHtmlOptions'=>array('colspan'=>2),
 			'class'=>'bootstrap.widgets.TbButtonColumn',
         	'deleteConfirmation'=>'Seguro que quiere eliminar el elemento?',
-			'template'=>'{update}{updatefact}{delete}{deletecobranza}',
+			'template'=>'{update}{updatefact}{delete}{deletecobranza}{actNC}{actND}{borrarND}{borrarNC}',
 			'buttons' => array(
 				'update'=>array(
 					'label'=>'Modificar Cobranza',
@@ -109,6 +109,78 @@ $columnas=array_merge(array(
 	                 			 ),
 						
 	                  ),
+	             'actNC'=>array(
+						'label'=>'Modificar Nota Crédito',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notacredito_idnotacredito != NULL',
+						'url'=> 'Yii::app()->createUrl("notacredito/update",
+								 array(	"id"=>$data->notacredito_idnotacredito,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+				  'borrarNC'=>array(
+	                  	'label'=>'Borrar Nota Crédito ',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->notacredito_idnotacredito != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notacredito/borrar", array("id"=>$data->notacredito_idnotacredito))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Nota de crédito?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		         'actND'=>array(
+						'label'=>'Modificar Nota Débito',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notadebito_idnotadebito != NULL',
+						'url'=> 'Yii::app()->createUrl("notadebito/update",
+								 array(	"id"=>$data->notadebito_idnotadebito,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+				  'borrarND'=>array(
+	                  	'label'=>'Borrar Nota Débito',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->notadebito_idnotadebito != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notadebito/borrar", array("id"=>$data->notadebito_idnotadebito))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Nota de débito?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
 		),
 		),
 	));

@@ -1018,4 +1018,15 @@ class CobranzaController extends Controller
 		$detalle->iibbtasa=null;
 		$detalle->save();
 	}
+	public function actionEnvioctactecliente(){
+		$id=$_POST['data'];
+		$cta=Ctactecliente::model()->findByPk($id);
+		$dato=array(
+			'nombre'=>$cta->clienteIdcliente->nombre,
+			'saldo'=>$cta->saldo,
+		
+		);
+		
+		echo json_encode($dato);
+	}
 }

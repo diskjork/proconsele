@@ -35,7 +35,7 @@ $columnas=array_merge(array(
 					'header' => 'TIPO',
 					'htmlOptions' => array('width' =>'160px',
 										   'style'=>'padding-right:0px'),
-					'value'=>'($data->tipo == 0)? "Compra": "Orden de Pago"',
+					'value'=>array($this,'labelTipo'),
 			 ),
        	array(
               		'header'=>'DEBE',
@@ -57,10 +57,10 @@ $columnas=array_merge(array(
         array(
         	'header'=>'Opciones',
         	'headerHtmlOptions'=>array('colspan'=>2),
-        	'htmlOptions' => array('colspan'=>2),
+        	'htmlOptions' => array('colspan'=>2, 'style'=>'width:10%'),
         	'footerHtmlOptions'=>array('colspan'=>2),
 			'class'=>'bootstrap.widgets.TbButtonColumn',
-			'template'=>'{update}{updatecomp}{delete}{deleteordendepago}{actNC}{borrarNC}',
+			'template'=>'{update}{updatecomp}{delete}{deleteordendepago}{actNC}{borrarNC}{actND}{borrarND}',
 			'buttons' => array(
 				'update'=>array(
 					'label'=>'Modificar Orden de pago',
@@ -126,7 +126,44 @@ $columnas=array_merge(array(
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
-		                  			'success' => 'function(data){
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		         'actND'=>array(
+						'label'=>'Modificar Nota Débito - Proveedor',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notadebitoprov_idnotadebitoprov != NULL',
+						'url'=> 'Yii::app()->createUrl("notadebitoprov/update",
+								 array(	"id"=>$data->notadebitoprov_idnotadebitoprov,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+				  'borrarND'=>array(
+	                  	'label'=>'Borrar Nota Débito - Proveedor',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->notadebitoprov_idnotadebitoprov != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notadebitoprov/borrar", array("id"=>$data->notadebitoprov_idnotadebitoprov))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Nota de débito?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
 	                                	if(data == "true"){
 		                                    location.reload();
 		                                  alert("Fue borrada con éxito!");

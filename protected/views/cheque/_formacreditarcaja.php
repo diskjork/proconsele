@@ -102,7 +102,8 @@
         <div class="form-actions" align="center">
         
         <?php echo TbHtml::submitButton('Acreditar',array('onclick'=>'send();',
-        			'color'=>TbHtml::BUTTON_COLOR_PRIMARY)); ?>
+        			'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
+        			'confirm'=>'Está seguro que desea guardar los datos?')); ?>
 			
             <?php 
 			if(!$model->isNewRecord){

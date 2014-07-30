@@ -39,7 +39,7 @@ if(isset($_GET['vista'])){
 				");
 	}
 ?>
-<div class="form">
+<div class="form well">
 
     <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'Notacredito-form',
@@ -161,7 +161,7 @@ if(isset($_GET['vista'])){
 			 'model'=>$model,
 			 'attribute'=>'proveedor_idproveedor',
 			  'data' =>GxHtml::listDataEx(Proveedor::model()->
-					   				findAll('estado = :estado', array(':estado' => 1)),'idproveedor','nombre'),
+					   				findAll('estado = :estado ORDER BY nombre ASC', array(':estado' => 1)),'idproveedor','nombre'),
 			  'options'=>array(
 				   'placeholder'=>'Proveedor',
 				   'allowClear'=>true,
@@ -345,6 +345,7 @@ if(isset($_GET['vista'])){
         echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
 		    'id'=>'boton-submit',
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		)); ?>
 		
 		<?php 

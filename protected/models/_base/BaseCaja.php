@@ -44,6 +44,7 @@ abstract class BaseCaja extends GxActiveRecord {
 			array('descripcion', 'length', 'max'=>255),
 			array('nombre, descripcion', 'default', 'setOnEmpty' => true, 'value' => null),
 			array('idcaja, nombre, descripcion, estado, cuenta_idcuenta', 'safe', 'on'=>'search'),
+			array('cuenta_idcuenta','validarCuenta','on'=>'insert'),
 		);
 	}
 
@@ -89,5 +90,11 @@ abstract class BaseCaja extends GxActiveRecord {
 		$var=$this->find("estado=:estado",array(':estado'=>0));
 		return $var;
 	}
-	
+
+	public function validarCuenta($attribute,$params){
+		$check=Caja::model()->find("cuenta_idcuenta=:id",array(':id'=>$this->cuenta_idcuenta));
+		if(isset($check->idcaja)){
+			$this->addError('cuenta_idcuenta', 'Existe una caja con la misma cuenta contable relacionada.');
+	}
+	}
 }

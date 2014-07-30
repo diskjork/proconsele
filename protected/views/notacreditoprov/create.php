@@ -12,6 +12,8 @@ $this->breadcrumbs=array(
 $this->menu=array(
 	
 	array('label'=>'Administrar', 'url'=>array('admin')),
+	array('label'=>'Volver', 'url'=>Yii::app()->request->Urlreferrer 
+			),
 );
 ?>
 

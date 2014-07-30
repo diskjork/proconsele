@@ -175,7 +175,27 @@ class DetallectacteprovController extends Controller
 			Yii::app()->end();
 		}
 	}
-	
+	public function labelTipo($data, $row){	
+	switch ($data->tipo){
+			case '0':
+				$text="Compra";
+				return $text;
+				break;
+			case '1':
+				$text="Orden de pago";
+				return $text;
+				break;
+			case '3':
+				$text="Nota Crédito - Proveedor";
+				return $text;
+				break;
+			case '2':
+				$text="Nota Débito -  Proveedor";
+				return $text;
+				break;
+			
+		}
+	}
 	public function actionExcel(){
                 $mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];

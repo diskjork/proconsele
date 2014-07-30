@@ -10,6 +10,7 @@ if(isset($_GET['vista'])){
 <?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js', CClientScript::POS_HEAD);?>
 
 <?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/factura.js', CClientScript::POS_HEAD);?>
+<?php  //Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/maskmoney/src/jquery.maskMoney.js', CClientScript::POS_HEAD);?>
 
 <?php 
 //print_r($model->attributes);
@@ -126,7 +127,7 @@ if(isset($_GET['vista'])){
 			 'model'=>$model,
 			 'attribute'=>'cliente_idcliente',
 			  'data' =>GxHtml::listDataEx(Cliente::model()->
-					   				findAll('estado = :estado', array(':estado' => 1)),'idcliente','nombre'),
+					   				findAll('estado = :estado ORDER BY nombre ASC', array(':estado' => 1)),'idcliente','nombre'),
 			  'options'=>array(
 				   'placeholder'=>'Cliente',
 				   'allowClear'=>true,
@@ -167,7 +168,7 @@ if(isset($_GET['vista'])){
 </div>
 <div id="detallefactura" class="row-fluid well" style="margin-bottom: 5px;">
 	
-	<table style="width:100%;" class="well" id="detalle">
+	<table style="width:100%;" class="items table table-condensed table-bordered table-hover" id="detalle">
 	<thead>
 	<tr>
 	<th>CANTIDAD</th>
@@ -227,7 +228,7 @@ if(isset($_GET['vista'])){
 	); ?>
 	</td>
 	<td style="width:48%; text-align: center;">
-	<?php echo $form->textFieldControlGroup($model,'nombreproducto',array('label'=>false,'style'=>'width:98%;','maxlength'=>100)); ?>
+	<?php echo $form->textFieldControlGroup($model,'nombreproducto',array('label'=>false,'style'=>'width:96%;','maxlength'=>100)); ?>
 	</td>
 	<td style="width:15%; text-align: center;"> 
 	<?php echo $form->textFieldControlGroup($model,'precioproducto',array('label'=>false,'style'=>'width:70px;',
@@ -394,9 +395,13 @@ if(isset($_GET['vista'])){
         <div class="form-actions" align="center">
         <?php 
         
-        echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
+        echo/* CHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios', array('confirm'=>'Está seguro que desea guardar los datos?',
+        					'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
+		   					 'id'=>'boton-submit',));*/
+        TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
 		    'id'=>'boton-submit',
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		)); ?>
 		
 		<?php 

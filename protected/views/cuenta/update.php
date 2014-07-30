@@ -10,14 +10,16 @@ $this->breadcrumbs=array(
 	'Update',
 );
 
-$this->menu=array(
-	array('label'=>'List Cuenta', 'url'=>array('index')),
-	array('label'=>'Create Cuenta', 'url'=>array('create')),
-	array('label'=>'View Cuenta', 'url'=>array('view', 'id'=>$model->idcuenta)),
-	array('label'=>'Manage Cuenta', 'url'=>array('admin')),
-);
 ?>
-
-    <h1>Update Cuenta <?php echo $model->idcuenta; ?></h1>
-
-<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php  $this->widget('bootstrap.widgets.TbModal', array(
+    		'id' => 'modalup',
+    		'header' => '<h4>Actualizar Cuenta</h4>',
+			'content' => $this->renderPartial('_form',array('model'=>$model), true),
+			'show'=>true,
+			'backdrop'=> 'static',
+			'fade'=>false,
+			'keyboard'=> false,
+			'buttonOptions'=> false,
+			'closeText'=>"",
+)); 
+?>

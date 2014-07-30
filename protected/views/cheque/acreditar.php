@@ -12,5 +12,5 @@
 			
 			
 ));
-//echo "hola como estas";
+
 ?>

@@ -80,12 +80,14 @@ class AsientoController extends Controller
                 MultiModelForm::validate($member,$validatedMembers,$deleteItems) &&
                 $model->save()
                )
-              
+           //  print_r($validateMembers);die();
                {
                  //the value for the foreign key 'groupid'
                  $masterValues = array ('asiento_idasiento'=>$model->idasiento);
                  if (MultiModelForm::save($member,$validatedMembers,$deleteMembers,$masterValues))
-				$this->redirect(array('view','id'=>$model->idasiento));
+                 
+                 $this->nuevosMovCajaBanco($validatedMembers, $masterValues, $_POST['Asiento']['fecha']);
+				$this->redirect(array('admin','id'=>$model->idasiento));
 			}
 		}
 
@@ -123,7 +125,10 @@ class AsientoController extends Controller
                 MultiModelForm::save($member,$validatedMembers,$deleteMembers,$masterValues) &&
                 $model->save()
                )
-				$this->redirect(array('view','id'=>$model->idasiento));
+               
+               $this->cambioImporteCajaBanco($validatedMembers, $masterValues, $_POST['Asiento']['fecha']);
+               
+				$this->redirect(array('admin','id'=>$model->idasiento));
 
 		}
 
@@ -213,8 +218,114 @@ class AsientoController extends Controller
 			'model'=>$model,
 		));
 	}
-
-	
+	public function nuevosMovCajaBanco($datos,$master,$fecha){
+		$asiento=Asiento::model()->findByPk($master['asiento_idasiento']);
+		$cant=count($datos);
+		for($i=0;$i<$cant;$i++){
+			$cuenta=$datos[$i]['cuenta_idcuenta'];
+		//movimiento caja
+			$caja=Caja::model()->find("cuenta_idcuenta=:id",array(':id'=>$cuenta));
+			if(isset($caja->idcaja)){
+				$MovCaja=new Movimientocaja;
+				$MovCaja->descripcion="Asiento - '".$asiento->descripcion."'";
+				$MovCaja->fecha=$fecha;
+				if($datos[$i]['debe'] != null){
+					$MovCaja->debeohaber=0;
+					$MovCaja->debe=$datos[$i]['debe'];
+				} else {
+					$MovCaja->debeohaber=1;
+					$MovCaja->haber=$datos[$i]['haber'];
+				}
+				$MovCaja->caja_idcaja=$caja->idcaja;
+				//dato obligatorio, colo la cuenta de la misma caja, es redundante
+				$MovCaja->cuenta_idcuenta=$caja->cuenta_idcuenta; 
+				$MovCaja->save();
+				$DeT=Detalleasiento::model()->findByPk($datos[$i]['iddetalleasiento']);
+				$DeT->movimientocaja_idmovimientocaja=$MovCaja->idmovimientocaja;
+				//para diferenciar la operación
+				$DeT->operacion_manual="c".$MovCaja->idmovimientocaja;
+				$DeT->update();
+			}
+			$ctabancaria=Ctabancaria::model()->find("cuenta_idcuenta=:id",array(':id'=>$cuenta));
+			if(isset($ctabancaria->idctabancaria)){
+				$MovBanco=new Movimientobanco;
+				$MovBanco->descripcion="Asiento - '".$asiento->descripcion."'";
+				$MovBanco->fecha=$fecha;
+				if($datos[$i]['debe'] != null){
+					$MovBanco->debeohaber=0;
+					$MovBanco->debe=$datos[$i]['debe'];
+				} else {
+					$MovBanco->debeohaber=1;
+					$MovBanco->haber=$datos[$i]['haber'];
+				}
+				$MovBanco->ctabancaria_idctabancaria=$ctabancaria->idctabancaria;
+				//dato obligatorio, colo la cuenta de la misma caja, es redundante
+				$MovBanco->cuenta_idcuenta=$ctabancaria->cuenta_idcuenta; 
+				$MovBanco->save();
+				$DeT=Detalleasiento::model()->findByPk($datos[$i]['iddetalleasiento']);
+				$DeT->movimientobanco_idmovimientobanco=$MovBanco->idmovimientobanco;
+				$DeT->operacion_manual="b".$MovBanco->idmovimientobanco;
+				$DeT->update();
+			} 
+			
+		}
+		
+	}
+	public function cambioImporteCajaBanco($datos,$master,$fecha){
+		$asiento=Asiento::model()->findByPk($master['asiento_idasiento']);
+		
+		$cant=count($datos);
+		for($i=0;$i<$cant;$i++){
+			 $Deta=Detalleasiento::model()->find("iddetalleasiento=:id",array(':id'=>$datos[$i]['iddetalleasiento']));
+			 if(isset($Deta)){
+			 	if($Deta->operacion_manual != null){
+			 		$operacio=$Deta->operacion_manual;
+			 		if($Deta->movimientocaja_idmovimientocaja != null){
+			 			$comp="c".$Deta->movimientocaja_idmovimientocaja;
+			 			if($operacio == $comp){
+			 				$MovCaja=Movimientocaja::model()->findByPk($Deta->movimientocaja_idmovimientocaja);
+			 				if(($MovCaja->debe != null) && ($Deta->debe != null) && ($Deta->debe != $MovCaja->debe)){
+								$MovCaja->debe=$Deta->debe;
+							} elseif(($MovCaja->debe == null) && ($Deta->debe != null)){
+								$MovCaja->debeohaber=0;
+								$MovCaja->haber=null;
+								$MovCaja->debe=$Deta->debe;
+							} elseif(($MovCaja->debe != null) && ($Deta->haber != null)){
+								$MovCaja->debeohaber=1;
+								$MovCaja->debe=null;
+								$MovCaja->haber=$Deta->haber;
+							}elseif(($MovCaja->haber != null) && ($Deta->haber != null) && ($Deta->haber != $MovCaja->haber)){
+								$MovCaja->haber=$Deta->haber;
+							}
+							$MovCaja->fecha=$fecha;
+							$MovCaja->save();
+			 			}
+			 		}
+			 	if($Deta->movimientobanco_idmovimientobanco != null){
+			 			$comp="b".$Deta->movimientobanco_idmovimientobanco;
+			 			if($operacio == $comp){
+			 				$MovBanco=Movimientobanco::model()->findByPk($Deta->movimientobanco_idmovimientobanco);
+			 				if(($MovBanco->debe != null) && ($Deta->debe != null) && ($Deta->debe != $MovBanco->debe)){
+								$MovBanco->debe=$Deta->debe;
+							} elseif(($MovBanco->debe == null) && ($Deta->debe != null)){
+								$MovBanco->debeohaber=0;
+								$MovBanco->haber=null;
+								$MovBanco->debe=$Deta->debe;
+							} elseif(($MovBanco->debe != null) && ($Deta->haber != null)){
+								$MovBanco->debeohaber=1;
+								$MovBanco->debe=null;
+								$MovBanco->haber=$Deta->haber;
+							}elseif(($MovBanco->haber != null) && ($Deta->haber != null) && ($Deta->haber != $MovBanco->haber)){
+								$MovBanco->haber=$Deta->haber;
+							}
+							$MovBanco->fecha=$fecha;
+							$MovBanco->save();
+			 			}
+			 		}
+			 	}
+			 }
+		}
+	}
 	public function actionExcel(){
 				$mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];
@@ -251,8 +362,8 @@ class AsientoController extends Controller
                		}
                	
                }
-             //print_r($Resultado);
-              //die();
+           //  print_r($dataproviderDEBE);
+             // die();
                $dataProvider=new CArrayDataProvider($ResultadoTotal, array(
 				    'id'=>'codigo',
 				    'sort'=>array(

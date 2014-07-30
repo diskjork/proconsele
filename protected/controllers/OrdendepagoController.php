@@ -915,6 +915,21 @@ public function nuevoMovCaja($datos){
 		
 		
 	}
+	public function actionEnvioctacteprov(){
+		$id=$_POST['data'];
+		$cta=Ctacteprov::model()->findByPk($id);
+		$dato=array(
+			'nombre'=>$cta->proveedorIdproveedor->nombre,
+			'saldo'=>$cta->saldo,
+		
+		);
+		
+		/*foreach ($factura as $key=>$valor){
+			$dato[$key]=$valor;
+		
+		}*/
+		echo json_encode($dato);
+	}
 	public function resetDetalle($iddetalle){
 		$detalle=Detalleordendepago::model()->findByPk($iddetalle);
 		$detalle->transferenciabanco=null;

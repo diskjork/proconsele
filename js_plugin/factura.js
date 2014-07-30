@@ -29,6 +29,8 @@ $("#Factura_descrecar").keydown(function(event){
 $("#Factura_tipofactura").change(function(event){
 		resetValores();
 		sumatotal();
+
+
 	});
 
 sumatotal();

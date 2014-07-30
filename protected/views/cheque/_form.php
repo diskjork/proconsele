@@ -204,6 +204,7 @@
        <div class="form-actions" align="center">
         <?php echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		    
 		)); ?>
 		

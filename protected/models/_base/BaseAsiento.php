@@ -37,8 +37,8 @@ abstract class BaseAsiento extends GxActiveRecord {
 		return array(
 			array('fecha, descripcion', 'required'),
 			array('descripcion', 'length', 'max'=>255),
-			array('descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, factura_idfactura, cobranza_idcobranza, notacredito_idnotacredito', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idasiento, fecha, descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, factura_idfactura, cobranza_idcobranza, notacredito_idnotacredito', 'safe', 'on'=>'search'),
+			array('descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, factura_idfactura, cobranza_idcobranza, notacredito_idnotacredito,notadebitoprov_idnotadebitoprov, idcheque', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idasiento, fecha, descripcion, movimientobanco_idmovimientobanco, movimientocaja_idmovimientocaja, factura_idfactura, cobranza_idcobranza, notacredito_idnotacredito, notadebitoprov_idnotadebitoprov, idcheque', 'safe', 'on'=>'search'),
 			array('totaldebe, totalhaber','safe'),
 			array('totaldebe, totalhaber','validarPartidaDoble'),
 		);

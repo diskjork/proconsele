@@ -43,7 +43,11 @@
 				)); ?>
 				<?php  echo $form->error($model,'tipo',array('style'=>'color:#b94a48')); ?>
 		<br><br>
-        <?php echo $form->labelEx($model, 'ctabancaria_idctabancaria');?>
+		
+		
+        <?php //cuenta bancaria relacionada a la chequera, de donde sale el dinero, se usa para cdo
+        	// se hace el movimiento banco, debitar.
+        echo $form->labelEx($model, 'ctabancaria_idctabancaria');?>
        		<?php $this->widget('ext.select2.ESelect2',array(
 				  //'name'=>'cuenta_idcuenta',
 				 'model'=>$model,
@@ -57,8 +61,12 @@
 					  ),
 				)); ?>
 		<?php  echo $form->error($model,'ctabancaria_idctabancaria',array('style'=>'color:#b94a48')); ?>
+		
 		<br><br>
-        <?php echo $form->labelEx($model, 'cuenta_idcuenta');?>
+		
+        <?php 
+        // cuenta bancaria cdo se genera un cheque, cuando se emite un cheque se utiliza esta cuenta
+        echo $form->labelEx($model, 'cuenta_idcuenta');?>
        		<?php $this->widget('ext.select2.ESelect2',array(
 				  //'name'=>'cuenta_idcuenta',
 				 'model'=>$model,
@@ -72,17 +80,18 @@
 					  ),
 				)); ?>
 		<?php  echo $form->error($model,'cuenta_idcuenta',array('style'=>'color:#b94a48')); ?>
-             
+         </div>    
 					
         <div class="form-actions" align="center">
         <?php echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
 		    'size'=>TbHtml::BUTTON_SIZE_DEFAULT,
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		)); ?>
 		<?php 
 			echo CHtml::link('Cancelar', Yii::app()->request->baseUrl.'/chequera/admin',array ('class'=>'btn btn-primary'));
 		?>
-    </div>
+	
 
     <?php $this->endWidget(); ?>
 
@@ -90,4 +99,6 @@
 <?php Yii::app()->clientScript->registerScript('test',"
 				$('div .modal-footer').remove();
 				$('div .form-actions').css('background-color','transparent');
+						
+	       				
 				");?> 	

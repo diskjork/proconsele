@@ -64,8 +64,8 @@ abstract class BaseChequera extends GxActiveRecord {
 			'descripcion' => Yii::t('app', 'Descripcion'),
 			'estado' => Yii::t('app', 'Estado'),
 			'tipo' => Yii::t('app', 'Tipo de cheques'),
-			'ctabancaria_idctabancaria' => Yii::t('app', 'Cuenta Bancaria relacionada'),
-			'cuenta_idcuenta' => Yii::t('app', 'Cuenta Contable relacionada'),
+			'ctabancaria_idctabancaria' => Yii::t('app', 'Cta. Bancaria que pertenece la chequera.'),
+			'cuenta_idcuenta' => Yii::t('app', 'Cta.Contable cuando se emite un cheque de la chequera.'),
 		);
 	}
 

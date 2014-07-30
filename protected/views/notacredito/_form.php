@@ -39,7 +39,7 @@ if(isset($_GET['vista'])){
 				");
 	}
 ?>
-<div class="form">
+<div class="form well">
 
     <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'Notacredito-form',
@@ -202,7 +202,7 @@ if(isset($_GET['vista'])){
 </div>
 <div id="detalleNotacredito" class="row-fluid ">
 	
-	<table style="width:100%;" class="well" id="detalle">
+	<table style="width:100%;" class="items table table-condensed table-bordered table-hover" id="detalle">
 	<thead>
 	<tr>
 	<th>CANTIDAD</th>
@@ -449,6 +449,7 @@ if(isset($_GET['vista'])){
         echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
 		    'id'=>'boton-submit',
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		)); ?>
 		
 		<?php 

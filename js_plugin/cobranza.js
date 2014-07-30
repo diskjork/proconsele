@@ -19,9 +19,47 @@ $("#id_member").click(function(){
 	botonsubmit();
 	
 });
+var ctacte=$("#Cobranza_ctactecliente_idctactecliente").val();
+if(ctacte != ""){
+	ajaxCiente(ctacte);
+	$("#Cobranza_ctactecliente_idctactecliente").attr('readonly','true');
+}
+$("#Cobranza_ctactecliente_idctactecliente").change(function(event){
+	ajaxCiente(this.value);
 
 });
+});
+function ajaxCiente(id){
+	var idctacte=id;
+		
+		$.ajax({ 
+		  type: "POST",
+		  url: "/proconsele/cobranza/envioctactecliente",
+		  data: {data:idctacte},
+		  success: function (data){
+		  $("#saldoblock").text($.number(data.saldo,2));
+		  if(data.saldo < 0 ){
+		  	$("#blocksaldo")
+		  	.popover({ 
+    		placement:'top'	,
+    		title: 'Saldo', content: "El cliente tiene saldo a favor." })
+       		.popover('show');
+		  } else if(data.saldo > 0){
+		  	$("#blocksaldo")
+		  	.popover({ 
+    		placement:'top'	,
+    		title: 'Saldo', content: "El cliente tiene saldo deudor." })
+       		.popover('show');
+		  } else {
+		  	$("#blocksaldo").popover('hide');
+		  }
+		  $("#titulo").text("COBRANZA  - "+data.nombre);
+		  $("#Cobranza_descripcion").val("Cobranza - "+data.nombre);
+		  },
+		   dataType: "json",
 
+		});
+}
 function newElem(idinput){
 	if(idinput == null){
 		

@@ -95,7 +95,7 @@ class CuentaController extends Controller
 		if (isset($_POST['Cuenta'])) {
 			$model->attributes=$_POST['Cuenta'];
 			if ($model->save()) {
-				$this->redirect(array('view','id'=>$model->idcuenta));
+				$this->redirect(array('admin','id'=>$model->idcuenta));
 			}
 		}
 

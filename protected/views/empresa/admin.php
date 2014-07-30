@@ -1,6 +1,6 @@
 <?php 
 
-	if($cantidad < 1){
+if($cantidad < 1){
 	$valor=array(
 		array('label'=>'Volver','url'=>Yii::app()->request->Urlreferrer),
 		array('label'=>'Cargar Empresa','url'=>array('create'))
@@ -14,15 +14,15 @@
 $this->menu=$valor;
 
 ?>
+<h5 class="well well-small">DATOS DE EMPRESA</h5>
+<br>
+<?php
+$dataProvider= $model->search();
 
-<?php $this->widget('yiiwheels.widgets.grid.WhGridView',array(
-	'id'=>'empresa-grid',
-	'dataProvider'=>$model->search(),
-	'filter'=>$model,
-	'columns'=>array(
+$columnas=array(
 		array(
 			'name'=>'razonsocial',
-			'header'=>'Razon Social',
+			'header'=>'RAZON SOCIAL',
 			'filter'=>false,
 			),
 		array(
@@ -41,9 +41,22 @@ $this->menu=$valor;
 			'filter'=>false,
 			),
 		array(
-			'class'=>'bootstrap.widgets.TbButtonColumn',
-			'htmlOptions' => array('style' =>'text-align: right'),
+            'header'=>'Opciones',
+            'class'=>'bootstrap.widgets.TbButtonColumn',
 			'template'=>'{view} {update}',
-		),
-	),
-)); ?>
+			'htmlOptions' => array('style'=>'width:5%;text-align:center'),
+		),	
+		
+	);
+?>
+
+<?php 
+    $this->widget('yiiwheels.widgets.grid.WhGroupGridView', array(
+	'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
+    'dataProvider' => $dataProvider,
+    'template' => "{items}",
+    'filter'=>$model,
+    'columns' => $columnas,
+    ));
+
+?>

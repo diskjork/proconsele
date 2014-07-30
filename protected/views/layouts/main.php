@@ -72,22 +72,22 @@
 												array('label'=>'Cheques recibidos', 'url'=>Yii::app()->request->baseUrl.'/cheque/recibido'),
 									)),
 								)),
-						array('label'=>'FACTURACION','icon'=>'icon-briefcase', 'url'=>'#',
+						array('label'=>'FACTURACION','icon'=>'icon-file', 'url'=>'#',
 								'items'=>array(
 									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/factura/admin'),
 												
 								)),
-						array('label'=>'COMPRAS','icon'=>'icon-briefcase', 'url'=>'#',
+						array('label'=>'COMPRAS','icon'=>'icon-shopping-cart', 'url'=>'#',
 								'items'=>array(
 									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/compras/admin'),
 									
 								)),
-						array('label'=>'LIBROS IVA','icon'=>'icon-briefcase', 'url'=>'#',
+						array('label'=>'LIBROS IVA','icon'=>'icon-book', 'url'=>'#',
 								'items'=>array(
 									array('label'=>'LIBRO IVA COMPRAS', 'url'=>Yii::app()->request->baseUrl.'/ivamovimiento/admincompras'),
 									array('label'=>'LIBRO IVA VENTA', 'url'=>Yii::app()->request->baseUrl.'/ivamovimiento/adminventas'),
 								)),
-						array('label'=>'PRODUCTOS','icon'=>'icon-briefcase', 'url'=>'#',
+						array('label'=>'PRODUCTOS','icon'=>'icon-inbox', 'url'=>'#',
 								'items'=>array(
 									array('label'=>'Administrar', 'url'=>Yii::app()->request->baseUrl.'/producto/admin'),
 									
@@ -97,7 +97,6 @@
 									array('label'=>'Datos Empresa', 'url'=>Yii::app()->request->baseUrl.'/index.php/empresa/admin'),
 									array('label'=>'Usuarios y Permisos', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/admin'),
 									array('label'=>'Contraseña', 'url'=>Yii::app()->request->baseUrl.'/index.php/user/updateClave'),
-									array('label'=>'Datos Empresa', 'url'=>Yii::app()->request->baseUrl.'/index.php/empresa/index'),
 									array('label'=>'Cuentas bancarias', 'url'=>Yii::app()->request->baseUrl.'/index.php/ctabancaria/admin'),
 									array('label'=>'Chequeras', 'url'=>Yii::app()->request->baseUrl.'/index.php/chequera/admin'),
 									array('label'=>'Cajas', 'url'=>Yii::app()->request->baseUrl.'/index.php/caja/admin'),

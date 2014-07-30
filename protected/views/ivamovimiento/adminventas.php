@@ -35,9 +35,10 @@ $columnas=array(
 			'htmlOptions' => array('width' =>'150px','style'=>'text-align: left;'),
 		),
 		
-		array('name' => 'clienteIdcliente.cuit',
+		array(//'name' => 'clienteIdcliente.cuit',
 					'header' => 'CUIT',
 					'htmlOptions' => array('width' =>'100px'),
+					'value'=>'($data->proveedorIdproveedor != null)?$data->proveedorIdproveedor->cuit:$data->clienteIdcliente->cuit',
 					//'filter'=>'proveedorIdproveedor.cuit'
 					),	
 		
@@ -141,6 +142,5 @@ function reinstallDatePicker(id, data) {
 
 
 <script>
-$("#content").css('width','850px');
 $(".grid-view .table td").css('text-align','center');
 </script>
