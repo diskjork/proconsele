@@ -107,7 +107,7 @@ $this->menu=array(
 			//$("#error-div-nombre").append("Debe seleccionar una  <strong>cuenta</strong> ");
 		} else {
 			$("#error-div-nombre").css('display','none');
-			$("#error-div-nombre").empty();
+			
 		}
 		});
 </script>

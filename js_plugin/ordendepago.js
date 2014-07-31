@@ -564,3 +564,14 @@ function botonsubmit(){
 	}
 	
 }
+/*	var ok="ok";
+	$.ajax({ 
+		  type: "POST",
+		  url: "/proconsele/ordendepago/chequescargados",
+		  data: {data:ok},
+		  success: function (data){
+		  	$("#ModalChequecargados").load(data)
+		  },
+
+		  });
+}*/

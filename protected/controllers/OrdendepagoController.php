@@ -752,7 +752,7 @@ public function nuevoMovCaja($datos){
 					$cheque->chequera_idchequera=$nuevosdatos['chequera'];
 					$cheque->update();
 					
-					$DeAs->debe=$nuevosdatos['importe'];
+					$DeAs->haber=$nuevosdatos['importe'];
 					$DeAs->update();
 									 
 				    }	
@@ -768,7 +768,7 @@ public function nuevoMovCaja($datos){
 						$trans->ctabancaria_idctabancaria=$nuevosdatos['transbanco'];
 						$trans->update();	
 						
-						$DeAs->debe=$nuevosdatos['importe'];
+						$DeAs->haber=$nuevosdatos['importe'];
 						$CtaBancaria=Ctabancaria::model()->findByPk($nuevosdatos['transbanco']);
 						$DeAs->cuenta_idcuenta=$CtaBancaria->cuenta_idcuenta;
 						$DeAs->update();
@@ -785,6 +785,8 @@ public function nuevoMovCaja($datos){
 					$chequeViejo->save();
 					
 					$this->cargarChequeTercero($nuevosdatos);
+					$DeAs->haber=$nuevosdatos['importe'];
+					$DeAs->update();
 				}
 			break; 
 		}
@@ -944,4 +946,20 @@ public function nuevoMovCaja($datos){
 		$detalle->caja_idcaja=null;
 		$detalle->save();
 	}
+	
+	/*public function actionChequescargados(){
+		$ok=$_POST['data'];
+		$modelchequecargado=new Cheque('search');
+		//echo $idcuenta." ".$fecha."  ".$fecha2;
+		echo $this->renderPartial('gridcheque',array('modelchequecargado'=>$modelchequecargado),true);
+		/*$model=Producto::model()->findByPk($dato,'estado = 1');
+		$val=array(
+			'idp'=>$model->idproducto,
+			'nombre'=>$model->nombre,
+			'precio'=>$model->precio,
+			//'stock'=>$model->stock,
+			'venta'=>$model->unidad
+			);	
+			echo json_encode($val);
+		}*/
 }
