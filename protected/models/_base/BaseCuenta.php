@@ -21,7 +21,7 @@
  * @property Factura[] $facturas
  */
 abstract class BaseCuenta extends GxActiveRecord {
-
+	public $fecha,$fecha2;
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -74,6 +74,8 @@ abstract class BaseCuenta extends GxActiveRecord {
 			'tipocuentaIdtipocuenta' => Yii::t('app', 'Tipo de cuenta'),
 			'tipocuenta_idtipocuenta' => Yii::t('app', 'Tipo de cuenta'),
 			'facturas' => null,
+			'fecha'=> Yii::t('app', 'Fecha de inicio'),
+			'fecha2'=> Yii::t('app', 'Fecha de finalización'),
 		);
 	}
 
@@ -109,4 +111,51 @@ abstract class BaseCuenta extends GxActiveRecord {
 	{
 	    return $this->codigocta." - ".$this->nombre;
 	}
+	public $fechaasiento, $codigocuenta, $nombrecuenta,$descripcionasiento,$idcuent,$debeT,$haberT;
+	public  function generargrilladetallecuenta($idcuenta,$fecha, $fecha2){
+        	
+        		        	
+        	$fecha = DateTime::createFromFormat('d/m/Y', $fecha);
+        	
+        	$anio1=$fecha->format('Y');
+        	$mes1=$fecha->format('m');
+        	$dia1=$fecha->format('d');
+        	
+        	$fecha2 = DateTime::createFromFormat('d/m/Y', $fecha2);
+        	$anio2=$fecha2->format('Y');
+        	$mes2=$fecha2->format('m');
+        	$dia2=$fecha2->format('d');
+			$sql='SELECT asiento.fecha AS fechaasiento,
+						 cuenta.codigocta AS codigocuenta,
+						 cuenta.nombre AS nombrecuenta, 
+						 asiento.descripcion AS descripcionasiento,
+						 detalleasiento.cuenta_idcuenta as idcuent, 
+						 detalleasiento.debe AS debeT, 
+						 detalleasiento.haber AS haberT
+					FROM detalleasiento, asiento, cuenta
+					WHERE detalleasiento.cuenta_idcuenta ='.$idcuenta.'
+					AND detalleasiento.asiento_idasiento = asiento.idasiento
+					AND cuenta.idcuenta = detalleasiento.cuenta_idcuenta
+					AND YEAR( asiento.fecha ) >='.$anio1.'
+					AND YEAR( asiento.fecha ) <='.$anio2.'
+					AND MONTH( asiento.fecha ) >='.$mes1.'
+					AND MONTH( asiento.fecha ) <='.$mes2.'
+					AND DAY( asiento.fecha ) >='.$dia1.'
+					AND DAY( asiento.fecha )<='.$dia2;
+			$count=Yii::app()->db->createCommand($sql)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql, array(
+				'keyField'=>'idcuent',
+			    'totalItemCount'=>$count,
+			    'sort'=>array(
+					'defaultOrder'=>'fechaasiento ASC',
+			        'attributes'=>array(
+			             'fechaasiento', 'codigocuenta' ,'nombrecuenta','descripcionasiento','idcuent','debeT', 'haberT'
+			        ),
+			    ),
+			    'pagination'=>array(
+			        'pageSize'=>$count,
+			    ),
+				));
+			return $dataProvider;
+        }
 }

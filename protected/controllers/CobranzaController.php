@@ -280,7 +280,7 @@ class CobranzaController extends Controller
            	if($llave != null){
            		$importeviejo=$llave;
            		$importenuevo=$model->importe;
-           		$fecha=$model->fecha;
+           		$fecha=$this->fechadmY($model->fecha);
            		$idctacte=$model->ctactecliente_idctactecliente;
            		$this->modificarImporteCtaCte($importeviejo, $importenuevo, $idctacte);
            		$this->modImpDetalleCtacte($idctacte, $id, $importenuevo,$fecha);

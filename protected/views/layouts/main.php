@@ -48,6 +48,7 @@
 							'items'=>array(
 									array('label'=>'PLAN DE CUENTAS','url'=>Yii::app()->request->baseUrl.'/index.php/cuenta/admin'),
 									array('label'=>'ASIENTO','url'=>Yii::app()->request->baseUrl.'/index.php/asiento/admin'),
+									array('label'=>'RESUMEN CUENTAS','url'=>Yii::app()->request->baseUrl.'/index.php/cuenta/seleccuenta'),
 							)
 						),
 						array('label'=>'CLIENTES','icon'=>'icon-star','items'=>array(

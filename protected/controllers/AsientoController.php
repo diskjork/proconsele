@@ -364,6 +364,7 @@ class AsientoController extends Controller
                }
            //  print_r($dataproviderDEBE);
              // die();
+             	$cant2=count($ResultadoTotal);
                $dataProvider=new CArrayDataProvider($ResultadoTotal, array(
 				    'id'=>'codigo',
 				    'sort'=>array(
@@ -372,7 +373,7 @@ class AsientoController extends Controller
 				        ),
 				    ),
 				    'pagination'=>array(
-				        'pageSize'=>30,
+				        'pageSize'=>$cant2,
 				    ),
 				));
 				$datos=	array( 
@@ -410,6 +411,7 @@ class AsientoController extends Controller
 				}
 			}
 			//print_r($dataproviderResultadoAsiento);die();
+			$cant=count($dataproviderResultadoAsiento);
 			$dataProvider=new CArrayDataProvider($dataproviderResultadoAsiento, array(
 				    'id'=>'codigo',
 				    'sort'=>array(
@@ -418,7 +420,7 @@ class AsientoController extends Controller
 				        ),
 				    ),
 				    'pagination'=>array(
-				        'pageSize'=>30,
+				        'pageSize'=>$cant,
 				    ),
 				));
 			$datos=	array(
