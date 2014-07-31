@@ -15,18 +15,7 @@
 	'fade'=>false,
     'content' => $this->renderPartial('gridcheque',array('modelchequecargado'=>$modelchequecargado), true),
   )); ?>
-<?php 
-if(isset($_GET['nombre'])){
-	$nombre=$_GET['nombre'];
-}
-if(isset($_GET['idctacte'])){
-	//echo "si si".$_GET['idctacte']."ja".$_GET['nombre'];
-	$idctacteprov=$_GET['idctacte'];
-	$detalleprov=Ctacteprov::model()->findByPk($idctacteprov);
-	$saldo=$detalleprov->saldo;
-	//$model->detallectacteprov_iddetallectacteprov=$_GET['idctacte'];
-} else {$idctacteprov=null;
-		$saldo=null; }?>
+
 <div class="form">
 
     <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
@@ -49,9 +38,29 @@ if(isset($_GET['idctacte'])){
 	
             <?php // echo $form->textFieldControlGroup($model,'fecha',array('span'=>5)); ?>
            <div class="row-fluid"> 
-           <div class="span4">
-            <div class="input-append" >
+           <div class="span6">
+           <?php echo $form->labelEx($model, 'ctacteprov_idctacteprov');?>
+			<?php $this->widget('ext.select2.ESelect2',array(
+				  //'name'=>'cuenta_idcuenta',
+				 'model'=>$model,
+				 'attribute'=>'ctacteprov_idctacteprov',
+				  'data' =>GxHtml::listDataEx(Proveedor::model()->
+						   				findAll('estado = :estado ORDER BY nombre ASC', array(':estado' => 1)),'ctacteprov_idctacteprov','nombre'),
+				  'options'=>array(
+					   'placeholder'=>'Proveedor',
+					   'allowClear'=>true,
+						'width'=> '70%',
+						
+					  ),
+				)); ?>
+			<?php  echo $form->error($model,'ctacteprov_idctacteprov',array('style'=>'color:#b94a48')); ?>
+		
+           </div>
+           
+           <div class="span3">
+           
 					<?php echo $form->label($model, 'fecha');?>
+					 <div class="input-append" >
 		            <?php $this->widget('yiiwheels.widgets.datepicker.WhDatePicker', array(
 					        'model' => $model,
 							'attribute' => 'fecha',
@@ -70,17 +79,17 @@ if(isset($_GET['idctacte'])){
 					<span class="add-on"><icon class="icon-calendar"></icon></span>
 				</div>
 				</div>
-				<div class="span4">
-			<div class="well" style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+				<div class="span3">
+			<div class="well" style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;" id="blocksaldo">
 				<h5 style="padding:0px">Saldo</h5>
-				<h5 style="text-align:center;margin:0;margin-left:-4px;" id="saldoblock"><?php echo $saldo_formateado=number_format($saldo, 2 ,'.',',');?></h5>
+				<h5 style="text-align:center;margin:0;margin-left:-4px;" id="saldoblock"></h5>
 			</div>
 		
 			</div>	
 			</div>		
 			<br>
-			<?php echo $form->hiddenField($model,'ctacteprov_idctacteprov',array('span'=>5,'value'=>$idctacteprov)); ?>
-            <?php echo $form->hiddenField($model,'descripcionordendepago',array('span'=>5,'maxlength'=>45,'value'=>'Orden de pago')); ?>
+			<?php //echo $form->hiddenField($model,'ctacteprov_idctacteprov',array('span'=>5)); ?>
+            <?php echo $form->hiddenField($model,'descripcionordendepago',array('span'=>5,'maxlength'=>45)); ?>
 
             <?php echo $form->hiddenField($model,'importe',array('span'=>5,'maxlength'=>45)); ?>
 
@@ -222,6 +231,7 @@ if(isset($_GET['idctacte'])){
         <?php echo TbHtml::submitButton($model->isNewRecord ? 'Cargar' : 'Guardar',array(
 		    'class'=>'btn btn-primary',
         	'id'=>'boton-submit',
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		     )); ?>
 		     <?php 
 		    	echo CHtml::link('Cancelar',Yii::app()->request->Urlreferrer,

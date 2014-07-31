@@ -96,7 +96,7 @@ if(isset($model->importeIIBB)){
 			 'model'=>$model,
 			 'attribute'=>'proveedor_idproveedor',
 			  'data' =>GxHtml::listDataEx(Proveedor::model()->
-					   				findAll('estado = :estado', array(':estado' => 1)),'idproveedor','nombre'),
+					   				findAll('estado = :estado ORDER BY nombre ASC', array(':estado' => 1)),'idproveedor','nombre'),
 			  'options'=>array(
 				   'placeholder'=>'Proveedor',
 				   'allowClear'=>true,
@@ -156,7 +156,7 @@ if(isset($model->importeIIBB)){
 
 <br>
 
-<div class="row-fluid well" style="margin-top: -20px; padding-bottom: 0px; padding-top: 5px; padding: 0px;">
+<div class="row-fluid well" style="margin-top: -20px; padding-bottom: 0px; padding-top: 5px;width:96%">
 	
 			<div class="span5">	
 				<div class="span7">
@@ -250,6 +250,7 @@ if(isset($model->importeIIBB)){
         echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
 		    'id'=>'boton-submit',
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		)); ?>
 		
 		<?php 				

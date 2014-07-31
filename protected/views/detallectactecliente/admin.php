@@ -13,15 +13,16 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'Nueva Cobranza', 'url'=>Yii::app()->createUrl("cobranza/create", 
-			array('idctacte'=>$idctacte,'nombre'=>$nombre))),
+	array('label'=>'Volver', 'url'=>Yii::app()->request->Urlreferrer 
+			),
+	
 			);
 
 ?>
-<div class="well" style="padding-top: 0px;padding-bottom: 0px;">
-<h5 style="margin-top: 0px;margin-bottom: 0px;">CTA. CTE. - CLIENTE </h5>
-<h5 style="margin-top: 0px;margin-bottom: 0px;"> <?php echo $_GET['nombre'];?></h5>
-</div>
+
+<h5 class="well well-small">CTA. CTE. - CLIENTE - <?php echo $_GET['nombre'];?></h5>
+
+
 <br>
 <?php
 $model->ctactecliente_idctactecliente=$_GET['id'];

@@ -7,7 +7,15 @@ $("input").keypress(function (evt) {
 		}
 	});
 $("table.table.mmf_table > thead > tr:eq(0)").css("display","none");
+var ctacte=$("#Ordendepago_ctacteprov_idctacteprov").val();
+if(ctacte != ""){
+	ajaxProveedor(ctacte);
+	$("#Ordendepago_ctacteprov_idctacteprov").attr('readonly','true');
+}
+$("#Ordendepago_ctacteprov_idctacteprov").change(function(event){
+		ajaxProveedor(this.value);
 
+});
 
 $.datepicker.setDefaults( $.datepicker.regional[ "es" ] );
 sumatotal();
@@ -18,7 +26,36 @@ $("#id_member").click(function(){
 	
 });
 });
+function ajaxProveedor(id){
+	var idctacte=id;
+	$.ajax({ 
+		  type: "POST",
+		  url: "/proconsele/ordendepago/envioctacteprov",
+		  data: {data:idctacte},
+		  success: function (data){
+		  $("#saldoblock").text($.number(data.saldo,2));
+		   if(data.saldo < 0 ){
+		  	$("#blocksaldo")
+		  	.popover({ 
+    		placement:'top'	,
+    		title: 'Saldo', content: "Saldo Deudor." })
+       		.popover('show');
+		  } else if(data.saldo > 0){
+		  	$("#blocksaldo")
+		  	.popover({ 
+    		placement:'top'	,
+    		title: 'Saldo', content: "Saldo a Favor." })
+       		.popover('show');
+		  } else {
+		  	$("#blocksaldo").popover('hide');
+		  }
+		  $("#titulo").text("ORDEN DE PAGO  - "+data.nombre);
+		  $("#Ordendepago_descripcion").val("Orden de pago - "+data.nombre);
+		  },
+		   dataType: "json",
 
+		});
+}
 function newElem(idinput){
 	if(idinput == null){
 		
@@ -527,3 +564,14 @@ function botonsubmit(){
 	}
 	
 }
+/*	var ok="ok";
+	$.ajax({ 
+		  type: "POST",
+		  url: "/proconsele/ordendepago/chequescargados",
+		  data: {data:ok},
+		  success: function (data){
+		  	$("#ModalChequecargados").load(data)
+		  },
+
+		  });
+}*/

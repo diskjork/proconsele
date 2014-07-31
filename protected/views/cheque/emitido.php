@@ -88,7 +88,7 @@ $columnas=array(
 		
 		array('name' => 'haber',
 				'header' => 'IMPORTE',
-				'value'=>'($data->haber !== null)?number_format($data->haber, 2, ".", ","): ""',
+				'value'=>'($data->haber !== null)?"$".number_format($data->haber, 2, ".", ","): ""',
 				'footer'=>"$".$dataHaberTotal,				
 		),	
 		array('name' => 'estado',
@@ -143,7 +143,8 @@ $columnas=array(
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
-		                  			'success' => 'function(data){
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
 	                                	if(data == "true"){
 		                                  $.fn.yiiGridView.update("cheque-grid");
 		                                  alert("Fue cambiand con éxito!");
@@ -192,6 +193,5 @@ function reinstallDatePicker(id, data) {
 
 
 <script>
-$("#content").css('width','850px');
 $(".grid-view .table td").css('text-align','center');
 </script>

@@ -5,15 +5,17 @@
 ?>
 <?php
 $this->menu=array(
-	array(
-		'label'=>'Cta. Cte. - Clientes', 
-		'url'=>array('admin'),
-		'active' => true,
-	),
-	array(
-		'label'=>'Cobranzas', 
-		'url'=>Yii::app()->createUrl('cobranza/admin'),
-	),
+	array('label'=>'Cta. Cte. - Clientes', 'url'=>array('admin'),	'active' => true,
+		),
+	array('label'=>'Cobranzas realizadas', 'url'=>Yii::app()->createUrl('cobranza/admin')
+		),
+	array('label'=>'Nueva Cobranza', 'url'=>Yii::app()->createUrl("cobranza/create" 
+		)),
+	array('label'=>'Nueva Nota Crédito', 'url'=>Yii::app()->createUrl("notacredito/create" 
+		)),	
+	array('label'=>'Nueva Nota Débito', 'url'=>Yii::app()->createUrl("notadebito/create" 
+		)),	
+	
 );
 ?>
 <h5 class="well well-small">CUENTAS CORRIENTES - CLIENTES</h5>
@@ -30,27 +32,29 @@ $columnas=array(
 					'header' => 'CLIENTE',
 					'filter'=> CHtml::activeTextField($model->searchcliente, 'nombre'),
 					'value'=>'$data->clienteIdcliente->nombre',
-					'htmlOptions' => array('width' =>'200px')),	
+					'htmlOptions' => array('width' =>'50%')),	
 		array('name' => 'debe',
 					'header' => 'DEBE',
 					'filter'=> false,
-					'htmlOptions' => array('width' =>'30px'),
+					'htmlOptions' => array('width' =>'15%'),
 					'value'=>'($data->debe !== null)? "$".number_format($data->debe, 2, ".", ","): ""',			
 					),
 		array('name' => 'haber',
 					'header' => 'HABER',
 					'filter'=> false,
-					'htmlOptions' => array('width' =>'30px'),
+					'htmlOptions' => array('width' =>'15%'),
 					'value'=>'($data->haber !== null)? "$".number_format($data->haber, 2, ".", ","): ""',			
 					),
 		array('name' => 'saldo',
 					'header' => 'SALDO',
-					'htmlOptions' => array('width' =>'30px'),
+					'htmlOptions' => array('width' =>'15%'),
 					'value'=>'($data->saldo !== null)? "$".number_format($data->saldo, 2, ".", ","): ""',			
 					),
 		array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'template'=>'{view}',
+			'header'=>'Opciones',
+			'htmlOptions'=>array('style'=>'width:5%; text-align:center;'),
 			'buttons' => array(
 				'view'=>array(
 					'label'=>'Ver detalle Cta.Cte.',

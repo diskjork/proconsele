@@ -48,12 +48,12 @@ abstract class BaseIvamovimiento extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('tipomoviento, fecha, nrocomprobante, tipofactura, tipoiva, importeiva, importeneto', 'required'),
-			array('tipomoviento, nrocomprobante, proveedor_idproveedor, cliente_idcliente, compra_idcompra, factura_idfactura, notacredito_idnotacredito', 'numerical', 'integerOnly'=>true),
+			array('tipomoviento, nrocomprobante, proveedor_idproveedor, cliente_idcliente, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov', 'numerical', 'integerOnly'=>true),
 			array('tipoiva, importeiibb, importeiva, importeneto', 'numerical'),
 			array('cuitentidad', 'length', 'max'=>45),
 			array('tipofactura', 'length', 'max'=>1),
-			array('proveedor_idproveedor, cliente_idcliente, cuitentidad, importeiibb, compra_idcompra, factura_idfactura, notacredito_idnotacredito', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idivamovimiento, tipomoviento, fecha, nrocomprobante, proveedor_idproveedor, cliente_idcliente, cuitentidad, tipofactura, tipoiva, importeiibb, importeiva, importeneto, compra_idcompra, factura_idfactura, notacredito_idnotacredito', 'safe', 'on'=>'search'),
+			array('proveedor_idproveedor, cliente_idcliente, cuitentidad, importeiibb, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idivamovimiento, tipomoviento, fecha, nrocomprobante, proveedor_idproveedor, cliente_idcliente, cuitentidad, tipofactura, tipoiva, importeiibb, importeiva, importeneto, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov', 'safe', 'on'=>'search'),
 		);
 	}
 

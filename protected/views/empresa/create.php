@@ -5,7 +5,7 @@
 
 <?php  $this->widget('bootstrap.widgets.TbModal', array(
     		'id' => 'modalup',
-    		'header' => 'Cargar Datos Empresa',
+    		'header' => '<H4>Cargar Datos Empresa</H4>',
 			'content' => $this->renderPartial('_form',array('model'=>$model), true),
 			'show'=>true,
 			'backdrop'=> 'static',

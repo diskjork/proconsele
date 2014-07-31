@@ -32,21 +32,26 @@ $columnas=array(
 		array(
 			'header'=>'COD. CUENTA',
 			'name'=>'codigocta',
-			'htmlOptions' => array('width' =>'30px','style'=>'text-align:center'),
+			'htmlOptions' => array('style'=>'width:12%;text-align:center'),
 		),
 		array(
 			'header'=>'TIPO DE CUENTA',
 			'name'=>'tipocuenta_idtipocuenta',
-			'value'=>'$data->tipocuentaIdtipocuenta',
+			'value'=>'strtoupper($data->tipocuentaIdtipocuenta)',
 			'filter'=> $lista,
+			'htmlOptions'=>array('style'=>'font-weight:bold;'),
+			
 		),
 		array(
 			'header'=>'	TIPO GRAL.',
 			'value'=>array($this,'nombreTipogral'),
+			'htmlOptions'=>array('style'=>'font-weight:bold;'),
 		),
+		
 		array(
 			'header'=>'NOMBRE',
-			'value'=>'$data->nombre',
+			'name'=>'nombre'
+			//'value'=>'$data->nombre',
 		),
 		array(
 			'header'=>'ASENTABLE:',
@@ -57,7 +62,8 @@ $columnas=array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
 			'template'=>'{update} ',
-		),
+			'htmlOptions' => array('style'=>'width:5%;text-align:center'),
+		),	
 		
 	);
 ?>

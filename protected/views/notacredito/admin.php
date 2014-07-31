@@ -64,14 +64,14 @@ $columnas=array(
 		
 		array(
 			'header'=>'DESCRIPCIÓN',
-			'value'=>'"Relac. a la Factura Nro: ".$data->facturaIdfactura->nrodefactura." - ".$data->clienteIdcliente',
+			'value'=>array($this,'labelDescripcion'),
 			'htmlOptions' => array('width' =>'45%','style'=>'text-align:center'),
 		),
 		
 		array(
 			'header' => 'MOTIVO',
 			'htmlOptions' => array('width' =>'15%'),
-			'value' =>'($data->cantidadproducto == $data->facturaIdfactura->cantidadproducto)?"Anulación Factura":"Devolución mercadería"'
+			'value' =>array($this,'labelMotivo'),
 		),	
 		
 		array(
@@ -121,6 +121,5 @@ function reinstallDatePicker(id, data) {
 
 
 <script>
-$("#content").css('width','850px');
 $(".grid-view .table td").css('text-align','center');
 </script>

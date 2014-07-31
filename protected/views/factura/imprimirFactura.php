@@ -12,14 +12,14 @@
 	}else{
 		$ri="";
 	}
-
+	
 	if ($factura->tipodescrecar==0 AND $factura->descrecar!=NULL){
-		$descuento=number_format(($factura->stbruto_producto+$factura->ivatotal+$factura->importeImpInt)*($factura->descrecar/100),2, ".", ",");
+		$descuento=number_format(($factura->stbruto_producto)*($factura->descrecar/100),2, ".", ",");
 		$descuentostr="$ ".$descuento;
 		$recargo="";
 	}else if ($factura->tipodescrecar==1 AND $factura->descrecar!=NULL){
 		$descuento="";
-		$recargo=number_format(($factura->stbruto_producto+$factura->ivatotal+$factura->importeImpInt)*($factura->descrecar/100),2, ".", ",");
+		$recargo=number_format(($factura->stbruto_producto)*($factura->descrecar/100),2, ".", ",");
 		$recargostr="$ ".$recargo;
 	}else{
 		$recargostr="";

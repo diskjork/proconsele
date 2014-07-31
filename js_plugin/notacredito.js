@@ -32,7 +32,7 @@ ajaxFactura(factura, '0');
 $("#Notacredito_factura_idfactura").change(function(event){
 		ajaxFactura(this.value,'1');
 	});
-
+botonsubmit('0');
 });
 var totalajax=null; //total de la factura seleccionada
 var TOTALNETO=0.00; //total de la notacredito
@@ -328,7 +328,7 @@ function ajaxFactura(id, estado){
     			$("#Notacredito_cantidadproducto")
         		.popover({ 
         		placement:'left'	,
-        		title: 'Cantidad Producto', content: "Debe ingresar una cantidad menor a la especificada cuando recive mercadería en devolución. En el caso de anular la factura completa deje la cantidad especificada. TOCAR PARA CARGAR" })
+        		title: 'Cantidad Producto', content: "Debe ingresar una cantidad menor a la especificada cuando recibe mercadería en devolución. En el caso de anular la factura completa deje la cantidad especificada. TOCAR PARA CARGAR" })
 	       		.popover('show');
 	       	
 	       	 if(estado == 0){ // sin change

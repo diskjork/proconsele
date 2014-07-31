@@ -68,7 +68,7 @@ if(isset($_GET['vista'])){
 			 'model'=>$model,
 			 'attribute'=>'cliente_idcliente',
 			  'data' =>GxHtml::listDataEx(Cliente::model()->
-					   				findAll('estado = :estado', array(':estado' => 1)),'idcliente','nombre'),
+					   				findAll('estado = :estado ORDER BY nombre ASC', array(':estado' => 1)),'idcliente','nombre'),
 			  'options'=>array(
 				   'placeholder'=>'Cliente',
 				   'allowClear'=>true,
@@ -181,6 +181,7 @@ if(isset($_GET['vista'])){
         echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
 		    'id'=>'boton-submit',
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		)); ?>
 		
 		<?php 				

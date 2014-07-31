@@ -115,6 +115,5 @@ function reinstallDatePicker(id, data) {
 
 
 <script>
-$("#content").css('width','850px');
 $(".grid-view .table td").css('text-align','center');
 </script>

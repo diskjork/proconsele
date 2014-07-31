@@ -127,6 +127,7 @@ $columnas=array(
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right'),
 			'template'=>'{view} {update}  {acreditar} {canAcreditarCaja} {canAcreditarBanco}',
+			
 			'buttons' => array(
 				'view'=>
                     array(
@@ -163,6 +164,7 @@ $columnas=array(
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
+	             					'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
 		                  			'success' => 'function(data){
 	                                	if(data == "true"){
 		                                  $.fn.yiiGridView.update("cheque-grid");
@@ -187,7 +189,8 @@ $columnas=array(
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
-		                  			'success' => 'function(data){
+		              				'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		              				'success' => 'function(data){
 	                                	if(data == "true"){
 		                                  $.fn.yiiGridView.update("cheque-grid");
 		                                  alert("Fue cambiando con éxito!");
@@ -198,6 +201,7 @@ $columnas=array(
 	                                		return false;
 	                                	} 
 	                                }',
+		              			
 	                  			),	
 		                  	),
 		              	),
@@ -213,6 +217,7 @@ $columnas=array(
 	'dataProvider'=>$dataProvider,
 	'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
 	'filter'=>$model,
+	//'ajaxUpdateError'=>'function(xhr,ts,et,err){ alert("si"); }',
 	'afterAjaxUpdate' => 'reinstallDatePicker', // (#1)
 	'columns'=>$columnas,
 	'template' => "{items}{pager}",
@@ -231,10 +236,10 @@ $columnas=array(
 	function reinstallDatePicker(id, data) {
 	        //use the same parameters that you had set in your widget else the datepicker will be refreshed by default
 	    $('#datepicker_for_fechacobro').datepicker(jQuery.extend({showMonthAfterYear:false},jQuery.datepicker.regional['es'],{'dateFormat':'dd/mm/yy'}));
+	    
 	}
 	");
 ?>
 <script>
-$("#content").css('width','850px');
 $(".grid-view .table td").css('text-align','center');
 </script>

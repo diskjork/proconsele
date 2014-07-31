@@ -42,11 +42,11 @@ abstract class BaseDetallectactecliente extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('fecha, tipo, ctactecliente_idctactecliente', 'required'),
-			array('iddetallectactecliente, tipo, ctactecliente_idctactecliente, iddocumento, factura_idfactura, notacredito_idnotacredito, notadebito_idnotadebito', 'numerical', 'integerOnly'=>true),
+			array('iddetallectactecliente, tipo, ctactecliente_idctactecliente, iddocumento, factura_idfactura, notacredito_idnotacredito, notadebito_idnotadebito, cobranza_idcobranza', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('descripcion', 'length', 'max'=>100),
-			array('descripcion, iddocumento, debe, haber, factura_idfactura, notacredito_idnotacredito, notadebito_idnotadebito', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('iddetallectactecliente, fecha, descripcion, tipo, iddocumento, debe, haber, ctactecliente_idctactecliente, factura_idfactura, notacredito_idnotacredito, notadebito_idnotadebito', 'safe', 'on'=>'search'),
+			array('descripcion, iddocumento, debe, haber, factura_idfactura, notacredito_idnotacredito, notadebito_idnotadebito,cobranza_idcobranza', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('iddetallectactecliente, fecha, descripcion, tipo, iddocumento, debe, haber, ctactecliente_idctactecliente, factura_idfactura, notacredito_idnotacredito, notadebito_idnotadebito, cobranza_idcobranza', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -89,6 +89,9 @@ abstract class BaseDetallectactecliente extends GxActiveRecord {
 		$criteria->compare('debe', $this->debe);
 		$criteria->compare('haber', $this->haber);
 		$criteria->compare('ctactecliente_idctactecliente', $this->ctactecliente_idctactecliente);
+		$criteria->compare('cobranza_idcobranza', $this->cobranza_idcobranza);
+		$criteria->compare('notacredito_idnotacredito', $this->notacredito_idnotacredito);
+		$criteria->compare('notadebito_idnotadebito', $this->notadebito_idnotadebito);
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,

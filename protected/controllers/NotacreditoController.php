@@ -526,4 +526,30 @@ class NotacreditoController extends Controller
 			
 			
 		}
+	public function labelMotivo($data, $row){	
+		if($data->factura_idfactura == null){
+			return "-";
+		} else {
+			if($data->cantidadproducto == $data->facturaIdfactura->cantidadproducto){
+				return "Anulación Factura";
+			}else {
+				return "Devolución mercadería";
+			}
+			
+		}
+		
+	}	
+	public function labelDescripcion($data, $row){	
+		
+		if($data->factura_idfactura == null){
+			return "-";
+		} else {
+			
+				return "Relac. a la Factura Nro: ".$data->facturaIdfactura->nrodefactura." - ".$data->clienteIdcliente;
+			}
+			
+		}
+		
+	
+	
 }
