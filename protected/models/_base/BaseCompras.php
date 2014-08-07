@@ -33,7 +33,7 @@
  * @property Ivamovimiento[] $ivamovimientos
  */
 abstract class BaseCompras extends GxActiveRecord {
-	public $iibb, $percepcionIIBB2,$vista;
+	public $iibb, $percepcionIIBB2,$vista,$perciva,$desc,$inte;
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -54,10 +54,10 @@ abstract class BaseCompras extends GxActiveRecord {
 		return array(
 			array('nrodefactura, tipofactura, fecha, formadepago, proveedor_idproveedor, importeneto, cuenta_idcuenta', 'required'),
 			array('nrodefactura, tipofactura, nroremito, formadepago, proveedor_idproveedor, estado, movimientocaja_idmovimientocaja, asiento_idasiento, cuenta_idcuenta', 'numerical', 'integerOnly'=>true),
-			array('iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB', 'numerical'),
+			array('iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, importe_per_iva, descuento, interes', 'numerical'),
 			array('descripcion', 'length', 'max'=>150),
-			array('nroremito, descripcion, estado, iva, percepcionIIBB, importebruto, ivatotal, importeIIBB, movimientocaja_idmovimientocaja, asiento_idasiento', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idcompra, nrodefactura, tipofactura, nroremito, fecha, descripcion, formadepago, proveedor_idproveedor, estado, iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, movimientocaja_idmovimientocaja, asiento_idasiento, cuenta_idcuenta', 'safe', 'on'=>'search'),
+			array('nroremito, descripcion, estado, iva, percepcionIIBB, importebruto, ivatotal, importeIIBB, movimientocaja_idmovimientocaja, asiento_idasiento, importe_per_iva, descuento, interes', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idcompra, nrodefactura, tipofactura, nroremito, fecha, descripcion, formadepago, proveedor_idproveedor, estado, iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, movimientocaja_idmovimientocaja, asiento_idasiento, cuenta_idcuenta, importe_per_iva, descuento, interes', 'safe', 'on'=>'search'),
 			array('tipofactura','validarTipoFacturaIVA'),
 		);
 	}
@@ -92,10 +92,13 @@ abstract class BaseCompras extends GxActiveRecord {
 			'iva' => Yii::t('app', 'IVA'),
 			'percepcionIIBB' => Yii::t('app', 'Importe IIBB'),
 			'percepcionIIBB2' => Yii::t('app', 'IIBB'),
-			'importebruto' => Yii::t('app', 'Importebruto'),
+			'importebruto' => Yii::t('app', 'Neto Gravado'),
 			'ivatotal' => Yii::t('app', 'Importe IVA'),
-			'importeneto' => Yii::t('app', 'Importe Neto'),
-			'importeIIBB' => Yii::t('app', 'Importe IIBB'),
+			'importeneto' => Yii::t('app', 'Importe TOTAL '),
+			'importeIIBB' => Yii::t('app', 'Percepción IIBB'),
+			'importe_per_iva' => Yii::t('app', 'Percepción IVA'),
+			'descuento' => Yii::t('app', 'Descuento'),
+			'interes' => Yii::t('app', 'Interés'),
 			'movimientocaja_idmovimientocaja' => Yii::t('app', 'Movimientocaja Idmovimientocaja'),
 			'asiento_idasiento' => null,
 			'cuenta_idcuenta' => Yii::t('app', 'Cuenta contable relacionada a la compra'),
@@ -214,18 +217,18 @@ abstract class BaseCompras extends GxActiveRecord {
                 
                 $criteria->select = array(
                 	
-                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=01,importeneto,0)) AS ene',
-                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=02,importeneto,0)) AS feb',
-                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=03,importeneto,0)) AS mar',
-                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=04,importeneto,0)) AS abr',
-	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=05,importeneto,0)) AS may',
-	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=06,importeneto,0)) AS jun',
-	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=07,importeneto,0)) AS jul',
-	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=08,importeneto,0)) AS ago',
-	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=09,importeneto,0)) AS sep',
-	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=10,importeneto,0)) AS oct',
-	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=11,importeneto,0)) AS nov',
-					'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=12,importeneto,0)) AS dic',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=01,ivatotal,0)) AS ene',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=02,ivatotal,0)) AS feb',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=03,ivatotal,0)) AS mar',
+                	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=04,ivatotal,0)) AS abr',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=05,ivatotal,0)) AS may',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=06,ivatotal,0)) AS jun',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=07,ivatotal,0)) AS jul',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=08,ivatotal,0)) AS ago',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=09,ivatotal,0)) AS sep',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=10,ivatotal,0)) AS oct',
+	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=11,ivatotal,0)) AS nov',
+					'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=12,ivatotal,0)) AS dic',
                 );
 
                 $criteria->condition = 'YEAR(fecha)='.$anio;

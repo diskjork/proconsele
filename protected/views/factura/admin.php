@@ -52,7 +52,7 @@ if(!isset($_GET['anioTab'])){
 ?>
 <?php 
 	//SE COLOCA UN AÑO DE INICIO
-	$anioInicio=2014;
+	$anioInicio=2013;
 	$anioSiguiente=date('Y')+1;
 	$nomVar='modoActive';
 	for ($i=$anioInicio;$i<$anioSiguiente;$i++){	

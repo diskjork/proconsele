@@ -71,48 +71,83 @@ class NotacreditoprovController extends Controller
 		if (isset($_POST['Notacreditoprov'])) {
 			$model->attributes=$_POST['Notacreditoprov'];
 		if ($model->validate()) {
+					
 					$asiento=new Asiento;
 					$asiento->fecha=$model->fecha;
-					$asiento->descripcion="NOTA CREDITO de Proveedor - Compra N°: ".$model->nrodefactura;
+					$asiento->descripcion="NOTA CREDITO PROVEEDOR N°:".$model->nronotacreditoprov." Relacionada a  F.Compra N°: ".$model->nrodefactura." - ".$model->proveedorIdproveedor;
+					$totaliva=0;
+					$totaliibb=0;
 					if($asiento->save()){
+						
 						$model->asiento_idasiento=$asiento->idasiento;
 						
-						//disminuye la cta cte de proveedores por venta
-						$detAs=new Detalleasiento;
-						$detAs->debe=$model->importeneto;
-						$detAs->cuenta_idcuenta=48;  //211100 Proveedores compras varias 
-						$detAs->asiento_idasiento=$asiento->idasiento;
-						$detAs->save();
-						$detalleCCprov=$this->ctacte($model,$_POST['Notacreditoprov']);
-						//------------------------------
-						//detalle asiento de IVA - FACTURA A o B 
-						$totaliva=0;
-						if($model->ivatotal != null ){
-						$detAs2=new Detalleasiento;
-						$totaliva=$model->ivatotal;
-						$detAs2->haber=$model->ivatotal;
-						$detAs2->cuenta_idcuenta=14;// cuenta 113200-cuenta Ret. y Percep. de IVA
-						$detAs2->asiento_idasiento=$asiento->idasiento;
-						$detAs2->save();
-						}
-						$totaliibb=0;
-						//detalle asiento de retenciones IIBB
-						if($model->importeIIBB != null){
-							$detAs3=new Detalleasiento;
-							$totaliibb=$model->importeIIBB;
-							$detAs3->haber=$model->importeIIBB;
-							$detAs3->cuenta_idcuenta=20; // cuenta 113700 Ret. Imp. Ingresos Brutos    
-							$detAs3->asiento_idasiento=$asiento->idasiento;
-							$detAs3->save();
-						}
-						// registro de venta
+						if($model->tipofactura == 1){
+							$detAs2=new Detalleasiento;
+							$totaliva=$model->ivatotal;
+							$detAs2->haber=$model->ivatotal; //por que el iva es un credito fiscal
+							$detAs2->cuenta_idcuenta=13;//113100 Iva - Crédito Fiscal
+							$detAs2->asiento_idasiento=$asiento->idasiento;
+							$detAs2->save();
+							
+							
+							//detalle asiento de percepcion IIBB
+							if($model->importeIIBB != null){
+								$detAs3=new Detalleasiento;
+								
+								$detAs3->haber=$model->importeIIBB; //percepción IIBB a favor de la empresa
+								$detAs3->cuenta_idcuenta=20; // cuenta 113700 Ret. Imp. Ingresos Brutos    
+								$detAs3->asiento_idasiento=$asiento->idasiento;
+								$detAs3->save();
+							}
+						//detalle asiento de percepcion IVA
+							if($model->importe_per_iva != null){
+								$detAs3=new Detalleasiento;
+								$detAs3->haber=$model->importe_per_iva; //percepción iva
+								$detAs3->cuenta_idcuenta=14; // 113200 Ret. y Percep. de IVA
+								$detAs3->asiento_idasiento=$asiento->idasiento;
+								$detAs3->save();
+							}
+						
+						// registro de la compra dependiendo de cuenta_idcuenta
 							$detAs5=new Detalleasiento;
-							$totalventa=$model->importeneto - $totaliva - $totaliibb ;
-							$detAs5->haber=$totalventa;
-							$detAs5->cuenta_idcuenta=161;//580002 -devoluciones por compras
+							$detAs5->haber=$model->importebruto;
+							$detAs5->cuenta_idcuenta=$model->comprasIdcompras->cuenta_idcuenta; 
 							$detAs5->asiento_idasiento=$asiento->idasiento;
 							$detAs5->save();
+						//------------intereses-------------------
+							if($model->interes != null ){
+								$deAsInter=new Detalleasiento;
+								$deAsInter->haber=$model->interes;
+								$deAsInter->cuenta_idcuenta=98; // 431150 intereses y comisiones 
+								$deAsInter->asiento_idasiento=$asiento->idasiento;
+								$deAsInter->save();
+							}
+					} else {
+						// registro de la compra dependiendo de cuenta_idcuenta
+							$detAs5=new Detalleasiento;
+							$detAs5->haber=$model->importeneto;
+							$detAs5->cuenta_idcuenta=$model->comprasIdcompras->cuenta_idcuenta; 
+							$detAs5->asiento_idasiento=$asiento->idasiento;
+							$detAs5->save();
+					}
 						//------------------------------
+						// Para asentar la otra parte del asiento "FORMA DE PAGO"
+							$detAs=new Detalleasiento;
+							$detAs->debe=$model->importeneto;
+							$detAs->cuenta_idcuenta=48;  //211100 Proveedores compras varias 
+							$detAs->asiento_idasiento=$asiento->idasiento;
+							$detalleCCprov=$this->ctacte($model, $_POST['Notacreditoprov']);
+							$detAs->save();
+						//---------descuento ------------------
+							if($model->descuento != null){
+							$deAsDesc=new Detalleasiento;
+							$deAsDesc->debe=$model->descuento;
+							$deAsDesc->cuenta_idcuenta=149; //530000 descuento obtenidos
+							$deAsDesc->asiento_idasiento=$asiento->idasiento;
+							$deAsDesc->save();
+							}
+						
+						//------------------------------	
 							$model->save();
 							if(isset($detalleCCprov)){
 								$detalleCC=Detallectacteprov::model()->findByPk($detalleCCprov);

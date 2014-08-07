@@ -58,16 +58,29 @@ function cargardatos(target_id){
 			  
 			  var cantidad=parseFloat($('#Factura_cantidadproducto').val());
 			  var precio= parseFloat(data.precio);
-			  var subtotal=cantidad*precio;
-			 
+			  
+			  var tipo=$("#Factura_tipofactura").val();
+			  var cofiva=parseFloat($("#Factura_iva").val());
+			 	if(tipo == 2){
+					precio = precio *  cofiva;
+					var subtotal=cantidad * precio;
+					$('#Factura_precioproducto').val(precio.toFixed(2));
+					 $('#Factura_stbruto_producto').val(subtotal.toFixed(2));
+					 
+				}else {
+					subtotal=cantidad * precio;
+					$('#Factura_precioproducto').val(data.precio);
+					 $('#Factura_stbruto_producto').val(subtotal.toFixed(2));
+					 console.log(subtotal);
+					}		
 			  $('#Factura_nombreproducto').val(data.nombre+" (x "+data.venta+")");
 			  $('#Factura_producto_idproducto').val(data.idp);
-			  $('#Factura_precioproducto').val(data.precio);
-			  $('#Factura_stbruto_Producto').val(subtotal.toFixed(2));
+			  
+			 
 			  $('#ModalProducto').modal('hide');
 			  var idcantidad="Factura_cantidadproducto";
-			  	sumaSubtotal(idcantidad);
-			  	sumatotal();
+			  
+			 	sumatotal();
 				botonsubmit();
 			  },
 		  dataType: "json"

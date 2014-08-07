@@ -15,10 +15,30 @@ if(isset($_GET['vista'])){
 if(isset($model->importeIIBB)){
 		Yii::app()->clientScript->registerScript('IIBB',"
 				$('#Compras_iibb').prop('checked',true);
-				 $('#Compras_importeIIBB').show();
-				 $('#Compras_importeIIBB').removeAttr('readonly');
-          		$('#totaldiv-iibb').show();
+				$('#Compras_importeIIBB').show();
+				$('#totaldiv-iibb').show();
 				//$('div .form-actions').css('background-color','transparent');
+				
+				");
+	}
+if(isset($model->importe_per_iva)){
+		Yii::app()->clientScript->registerScript('pIva',"
+				$('#Compras_perciva').prop('checked',true);
+				$('#Compras_importe_per_iva').show();
+				$('#totaldiv-perciva').show();
+				");
+	}
+if(isset($model->descuento)){
+		Yii::app()->clientScript->registerScript('desc',"
+				$('#Compras_desc').prop('checked',true);
+				$('#Compras_descuento').show();
+				
+				");
+}
+if(isset($model->interes)){
+		Yii::app()->clientScript->registerScript('inter',"
+				$('#Compras_inte').prop('checked',true);
+				$('#Compras_interes').show();
 				
 				");
 	}
@@ -71,7 +91,7 @@ if(isset($model->importeIIBB)){
 			  //'name'=>'cuenta_idcuenta',
 			 'model'=>$model,
 			 'attribute'=>'tipofactura',
-			  'data' =>array('1'=>'A','2'=>'B','3'=>'C'),
+			  'data' =>array('1'=>'A','3'=>'C'),
 			  'options'=>array(
 				   //'placeholder'=>'Forma de pago',
 				   'allowClear'=>true,
@@ -158,10 +178,85 @@ if(isset($model->importeIIBB)){
 
 <div class="row-fluid well" style="margin-top: -20px; padding-bottom: 0px; padding-top: 5px;width:96%">
 	
-			<div class="span5">	
-				<div class="span7">
-						<?php echo $form->label($model, 'iva');?>
-						<?php $this->widget('ext.select2.ESelect2',array(
+			<div class="span4">	
+			<table>
+			<tr style="display:none" id="facturac">
+			<td style="width:110px">
+			<?php echo $form->label($model, 'importeneto');?>
+			</td>
+			<td>
+			<?php  echo $form->textFieldControlGroup($model,'importeneto',array('span'=>12,
+							'label'=>false,
+							'onkeydown'=>' 
+			        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+										'onblur'=>'sumatotal();'
+			 				)); 
+			 			?>
+			</td>
+			</tr>
+			
+			<tr class="facturaA">
+			<td style="width:110px">
+			<?php echo $form->label($model, 'importebruto');?>
+			</td>
+			<td>
+			<?php  echo $form->textFieldControlGroup($model,'importebruto',array('span'=>12,
+							'label'=>false,
+							'onkeydown'=>' 
+			        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+										'onblur'=>'sumatotal();'
+			 				)); 
+			 			?>
+			</td>
+			</tr>
+			<tr class="facturaA">
+			<td  style="width:110px">
+			<div class="row-fluid">
+			<div class="span2">
+			<?php echo $form->checkBox($model, 'desc',array('value'=>1));?>
+			</div>
+			<div class="span10">
+			<?php echo $form->label($model, 'descuento');?>
+			</div>
+			</div>
+			</td>
+			<td>
+			<?php echo $form->textFieldControlGroup($model,'descuento',array('span'=>12,
+										'label'=>false,
+										'onkeydown'=>' 
+			        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+										'onblur'=>'sumatotal();'
+			 						
+						)); ?>
+			</td>
+			</tr>
+			<tr class="facturaA">
+			<td  style="width:110px">
+			<div class="row-fluid">
+			<div class="span2">
+			<?php echo $form->checkBox($model, 'inte',array('value'=>1));?>
+			</div>
+			<div class="span10">
+			<?php echo $form->label($model, 'interes');?>
+			</div>
+			</div>
+			</td>
+			<td>
+			<?php echo $form->textFieldControlGroup($model,'interes',array('span'=>12,
+										'label'=>false,
+										'onkeydown'=>' 
+			        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+										'onblur'=>'sumatotal();'
+			 						
+						)); ?>
+			</td>
+			</tr>
+			<tr class="facturaA">
+			<td  style="width:110px">
+			<?php echo $form->label($model, 'iva');?>
+			</td>
+			<td>
+			<?php $this->widget('ext.select2.ESelect2',array(
 								  //'name'=>'cuenta_idcuenta',
 								 'model'=>$model,
 								 'attribute'=>'iva',
@@ -169,39 +264,77 @@ if(isset($model->importeIIBB)){
 								
 								  'options'=>array(
 									   //'placeholder'=>'I.V.A.',
-									   'allowClear'=>true,
-										'width'=> '40%',
-									  ),
+									   'allowClear'=>true),
+								 'htmlOptions'=>array(
+										'style'=>'padding-bottom:10px; ',
+										),
+										
+										
+									  
 								)); ?>
-						<?php  echo $form->error($model,'iva',array('style'=>'color:#b94a48')); ?>
-					
-						<br><br>
-						<?php echo $form->textFieldControlGroup($model,'ivatotal',array('span'=>5,
+			</td>
+			</tr>
+			<tr class="facturaA">
+			<td  style="width:110px">
+			<?php echo $form->label($model, 'ivatotal');?>
+			</td>
+			<td>
+			<?php echo $form->textFieldControlGroup($model,'ivatotal',array('span'=>12,
+							'label'=>false,
 							'onkeydown'=>' 
 	        				if(event.keyCode == 9 ||event.keyCode == 13)blockiva()',
-	 							'onblur'=> 'blockiva();',)); ?>				
-						<?php  echo $form->textFieldControlGroup($model,'importeneto',array('span'=>5,
-							'onkeydown'=>' 
-			        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
-										'onblur'=>'sumatotal();'
-			 				)); 
-			 			?>
-			 			
-	 							
-	 				</div>
-		 			<div  style="float:top;">
-		 				<?php echo $form->label($model, 'percepcionIIBB2');?>
-						<?php echo $form->checkBox($model, 'iibb',array('value'=>1));echo " Percepción IIBB";?>
-						<?php echo $form->textFieldControlGroup($model,'importeIIBB',array('span'=>3,
+	 							'onblur'=> 'blockiva();',)); ?>	
+			</td>
+			</tr>
+			
+			<tr class="facturaA">
+			
+			<td  style="width:110px">
+			<div class="row-fluid">
+			<div class="span2">
+			<?php echo $form->checkBox($model, 'iibb',array('value'=>1));?>
+			</div>
+			<div class="span10">
+			<?php echo $form->label($model, 'importeIIBB');?>
+			</div>
+			</div>
+			</td>
+			<td>
+			<?php echo $form->textFieldControlGroup($model,'importeIIBB',array('span'=>12,
+										'label'=>false,
 										'onkeydown'=>' 
 			        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
 										'onblur'=>'sumatotal();'
 			 						
 						)); ?>
-					</div>
+			</td>
+			</tr>
+			<tr class="facturaA">
+			<td  style="width:110px">
+			<div class="row-fluid">
+			<div class="span2">
+			<?php echo $form->checkBox($model, 'perciva',array('value'=>1));?>
+			</div>
+			<div class="span10">
+			<?php echo $form->label($model, 'importe_per_iva');?>
+			</div>
+			</div>
+			</td>
+			<td>
+			<?php echo $form->textFieldControlGroup($model,'importe_per_iva',array('span'=>12,
+										'label'=>false,
+										'onkeydown'=>' 
+			        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+										'onblur'=>'sumatotal();'
+			 						
+						)); ?>
+			</td>
+			</tr>
+			
+			</table>
 				
 			</div>
-	 		<div class="span7">
+	 		<div class="span8">
 			<div style="float:right; margin-right:10px; margin-top:10px;" >
 				<div class=" well" style="width:60px;height:60px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto; border: 3px solid #0E0D0D;">
 						<h5 style="padding:0px">TOTAL</h5>
@@ -210,7 +343,7 @@ if(isset($model->importeIIBB)){
 			 
 			</div>
 		
-			<div style="float:right; margin-right:10px; margin-top:10px;">
+			<div style="float:right; margin-right:10px; margin-top:10px;" id="block-totaliva">
 				<div class=" well  " style="width:60px;height:60px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 					<h5 style="padding:0px;margin-left:-3px;">IVA</h5>
 					<h6 style="text-align:center;margin:0;margin-left:-4px;" id="ivablock"></h6>
@@ -222,6 +355,13 @@ if(isset($model->importeIIBB)){
 				<div class=" well  " style="width:60px;height:60px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 						<h5 style="padding:0px">IIBB</h5>
 						<h5 style="text-align:center;margin:0;margin-left:-4px;" id="totaiibbblock"></h5>
+				</div>
+			 
+			</div>
+			<div style="float:right; margin-right:10px; margin-top:10px;display:none;" id="blockperciva">
+				<div class=" well  " style="width:60px;height:60px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+						<h5 style="padding:0px">P.IVA</h5>
+						<h5 style="text-align:center;margin:0;margin-left:-4px;" id="totalperciva"></h5>
 				</div>
 			 
 			</div>
@@ -241,6 +381,7 @@ if(isset($model->importeIIBB)){
 
 
 	<?php echo $form->hiddenField($model,'asiento_idasiento',array('span'=>5)); ?>
+	<?php  // echo $form->hiddenField($model,'importeneto',array('span'=>5)); ?> 
 	<?php echo $form->hiddenField($model,'vista',array('span'=>5)); ?>
         
 

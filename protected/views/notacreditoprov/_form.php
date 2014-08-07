@@ -87,7 +87,7 @@ if(isset($_GET['vista'])){
 			  //'name'=>'cuenta_idcuenta',
 			 'model'=>$model,
 			 'attribute'=>'tipofactura',
-			  'data' =>array('1'=>'A','2'=>'B'),
+			  'data' =>array('1'=>'A','3'=>'C'),
 			  'options'=>array(
 				   //'placeholder'=>'Forma de pago',
 				   'allowClear'=>true,
@@ -226,6 +226,30 @@ if(isset($_GET['vista'])){
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-iibb"></h6>
 	</div>	
 	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-perciva">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-perciva">P.IVA</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-perciva"></h6>
+	</div>	
+	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-descuento">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-descuento">Descuento</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-descuento"></h6>
+	</div>	
+	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-interes">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-interes">Interés</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-interes"></h6>
+	</div>	
+	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-netogravado">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-netogravado">Neto G.</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-netogravado"></h6>
+	</div>	
+	</div>
 	
 </div>
 
@@ -254,86 +278,107 @@ if(isset($_GET['vista'])){
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-iibbNC"></h6>
 	</div>	
 	</div>	
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-percivaNC">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-percivaNC">P.IVA</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-percivaNC"></h6>
+	</div>	
+	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-descuentoNC">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-descuentoNC">Descuento</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-descuentoNC"></h6>
+	</div>	
+	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-interesNC">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-interesNC">Interés</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-interesNC"></h6>
+	</div>	
+	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-netogravadoNC">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-netogravadoNC">Neto G.</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-netogravadoNC"></h6>
+	</div>	
+	</div>
 		
 </div>		
-				<?php  //echo $form->hiddenField($model,'importeneto',array('span'=>4,)); ?>
-				<?php // echo $form->hiddenField($model,'ivatotal',array('span'=>4,)); ?>
-				<?php //echo $form->hiddenField($model,'importeIIBB',array('span'=>4,)); ?>
-				<?php echo $form->hiddenField($model,'importebruto',array('span'=>5)); ?>
 				
-				
-
 <br>
-<div class="row-fluid">
-	<table >
-	<tr style="width:100%;">
+<br>
+<div class="row-fluid well" style="margin-top: -20px; padding-bottom: 0px; padding-top: 5px;width:96%">
 	
-	</tr>
-	<tr style="width:100%;" >
-	<td style="width:25%; vertical-align: top;" class="well" >
-	<div >	
-	
-	<?php echo $form->label($model, 'iva');?>
-	
- 	<?php $this->widget('ext.select2.ESelect2',array(
-			  //'name'=>'cuenta_idcuenta',
-			 'model'=>$model,
-			 'attribute'=>'iva',
-			  'data' => array("1.21"=>"21%","1.105"=>"10,5%"),
-			'events'=>array(
-				 					
-				 					),
-			  'options'=>array(
-				   //'placeholder'=>'I.V.A.',
-				   'allowClear'=>true,
-					'width'=> '60%',
-				  ),
-			)); ?>
-		<?php  echo $form->error($model,'iva',array('style'=>'color:#b94a48')); ?>
-		
-	</div>		
-	
-	
-	</td>
-	
-	<td style="width:25%; vertical-align: top;" class="well" >
-	<?php echo $form->textFieldControlGroup($model,'ivatotal',array('span'=>5,
+			<div class="span4">	
+			<table>
+			<tr class="facturaA">
+			<td  style="width:110px">
+			<?php echo $form->label($model, 'iva');?>
+			</td>
+			<td>
+			<?php $this->widget('ext.select2.ESelect2',array(
+								  //'name'=>'cuenta_idcuenta',
+								 'model'=>$model,
+								 'attribute'=>'iva',
+								  'data' => array("1.21"=>"21%","1.105"=>"10,5%"),
+								
+								  'options'=>array(
+									   //'placeholder'=>'I.V.A.',
+									   'allowClear'=>true),
+								 'htmlOptions'=>array(
+										'style'=>'padding-bottom:10px; ',
+										),
+										
+										
+									  
+								)); ?>
+			</td>
+			</tr>
+			<tr style="display:none" id="facturac">
+			<td style="width:110px">
+			<?php echo $form->label($model, 'importeneto');?>
+			</td>
+			<td>
+			<?php  echo $form->textFieldControlGroup($model,'importeneto',array('span'=>12,
+							'label'=>false,
 							'onkeydown'=>' 
-	        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
-	 							'onblur'=> 'sumatotal();',)); ?>				
-	<?php  echo $form->textFieldControlGroup($model,'importeneto',array('span'=>5,
-			'onkeydown'=>' 
-	        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
-	 							'onblur'=> 'sumatotal();'
- 		)); 
- 	?>
-	
-	</td>
-	<td style="width:25%; vertical-align: top;"  class="well" >
-	<div >	
-	<?php echo $form->label($model, 'percepcionIIBB');?>
-	<?php echo $form->checkBox($model, 'iibb',array('value'=>1));echo "Percepción IIBB";?>
-	<br><br>
-	<?php echo $form->textFieldControlGroup($model,'importeIIBB',array('style'=>'width:20%;',
-	'onkeydown'=>' 
-	        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
-	 							'onblur'=> 'sumatotal();'
-	)); ?>
-	
-	</div>
-	
-	</td>
-	<td style="width:25%; vertical-align: top;"  class="well" >
-	
-	
-	</td>
-	</tr>
-	</table>
-	
-
-</div>	
+			        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+										'onblur'=>'sumatotal();'
+			 				)); 
+			 			?>
+			</td>
+			</tr>
 			
-   	
+			<tr class="facturaA">
+			<td style="width:110px">
+			<?php echo $form->label($model, 'importebruto');?>
+			</td>
+			<td>
+			<?php  echo $form->textFieldControlGroup($model,'importebruto',array('span'=>12,
+							'label'=>false,
+							'onkeydown'=>' 
+			        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+										'onblur'=>'sumatotal();'
+			 				)); 
+			 			?>
+			</td>
+			</tr>
+			
+			
+			</table>
+				
+			</div>				
+</div>			
+
+
+			
+   	<?php // echo $form->hiddenField($model,'cuenta_idcuenta',array('span'=>4,)); ?>
+	<?php  echo $form->hiddenField($model,'ivatotal',array('span'=>4,)); ?>
+	<?php  echo $form->hiddenField($model,'importeIIBB',array('span'=>4,)); ?>
+	<?php  echo $form->hiddenField($model,'importe_per_iva',array('span'=>4,)); ?>
+	<?php  echo $form->hiddenField($model,'descuento',array('span'=>4,)); ?>
+	<?php  echo $form->hiddenField($model,'interes',array('span'=>4,)); ?>
+	<?php echo $form->hiddenField($model,'importebruto',array('span'=>5)); ?>
 	<?php echo $form->hiddenField($model,'asiento_idasiento',array('span'=>5)); ?>
     <?php echo $form->hiddenField($model, 'vista', array());?>    
             

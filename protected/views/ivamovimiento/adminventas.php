@@ -58,6 +58,11 @@ $columnas=array(
 								
 		),
 		array(
+				'header' => 'P.IVA',
+				'value'=>'($data->importe_per_iva != null) ? "$".number_format($data->importe_per_iva, 2, ".", ","): ""',
+								
+		),
+		array(
 				'header' => 'TOTAL IVA',
 				'value'=>'"$".number_format($data->importeiva, 2, ".", ",")',
 								
@@ -68,7 +73,7 @@ $columnas=array(
 								
 		),
 
-		array(
+		/*array(
 			//'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right; width:5%;'),
@@ -77,7 +82,8 @@ $columnas=array(
 					'actfactura'=>array(
 					'label'=>'Modificar Factura',
 	                    'icon'=>TbHtml::ICON_PENCIL,
-	                    'visible'=>'$data->factura_idfactura != NULL',
+	                    'visible'=>'$data->factura_idfactura != NULL AND
+	                    			($data->estado != 1 OR $data->estado != 2)',
 						'url'=> 'Yii::app()->createUrl("factura/update",
 								 array(	"id"=>$data->factura_idfactura,
 								 		"vista"=>3,
@@ -108,7 +114,7 @@ $columnas=array(
 						
 	                  ),        
 					)
-		          ),
+		          ),*/
 		 );
 ?>
 <?php

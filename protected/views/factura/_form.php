@@ -30,6 +30,15 @@ if(isset($_GET['vista'])){
 				
 				");
 	}
+	if(isset($model->percepcion_iva)){
+		Yii::app()->clientScript->registerScript('periva',"
+				$('#Factura_perciva').prop('checked',true);
+				 $('#Factura_percepcion_iva').show();
+          $('#totaldiv-perciva').show();
+				//$('div .form-actions').css('background-color','transparent');
+				
+				");
+	}
 	if(isset($model->impuestointerno)){
 		Yii::app()->clientScript->registerScript('impint',"
 				$('#Factura_impInt').prop('checked',true);
@@ -214,8 +223,7 @@ if(isset($_GET['vista'])){
 	        					var obj={
 	        						id:idselect,
 	        						val:valor};
-	        						//codigo(obj);
-	        					codigo(obj);
+	        						codigo(obj);
 					        		}',
 				     	'onblur'=>
 				     		'var idselect=this.id;
@@ -232,13 +240,24 @@ if(isset($_GET['vista'])){
 	</td>
 	<td style="width:15%; text-align: center;"> 
 	<?php echo $form->textFieldControlGroup($model,'precioproducto',array('label'=>false,'style'=>'width:70px;',
+							'onclick'=>
+							'$(this).dblclick(function(){
+		   						  var id_=this.id;
+		   						  
+		        				  $(this).removeAttr("readonly");
+								});',
 							'onkeydown'=> 'if((event.keyCode == 9) || (event.keyCode == 13 )  ){
             					var obj={
 	        						id:this.id,
-	        						val:this.value};sumaSubtotal(obj);sumatotal();}',
+	        						val:this.value};
+	        						sumaSubtotal(obj);
+	        						sumatotal();}',
             				'onblur'=>'var obj={
 	        						id:this.id,
-	        						val:this.value};sumaSubtotal(obj);sumatotal();')); ?>
+	        						val:this.value};
+	        						sumaSubtotal(obj);
+	        						sumatotal();'
+	)); ?>
 											
 	</td>
 	<td style="width:15%; text-align: center;">
@@ -277,6 +296,7 @@ if(isset($_GET['vista'])){
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-impint"></h6>
 	</div>	
 	</div>
+	
 	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="desc_recar">
 	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-15%;" id="descuento_recargo"></h5>
@@ -286,6 +306,8 @@ if(isset($_GET['vista'])){
 </div>		
 </div>		
 				<?php echo $form->hiddenField($model,'importeneto',array('span'=>4,)); ?>
+				<?php echo $form->hiddenField($model,'importe_per_iva',array('span'=>4,)); ?>
+				<?php echo $form->hiddenField($model,'netogravado',array('span'=>4,)); ?>
 				<?php echo $form->hiddenField($model,'ivatotal',array('span'=>4,)); ?>
 				<?php echo $form->hiddenField($model,'importeIIBB',array('span'=>4,)); ?>
 				<?php echo $form->hiddenField($model,'importeImpInt',array('span'=>4,)); ?>
@@ -302,7 +324,7 @@ if(isset($_GET['vista'])){
 	
 	</tr>
 	<tr style="width:100%;" >
-	<td style="width:25%; vertical-align: top;" class="well" >
+	<td style="width:20%; vertical-align: top;" class="well" >
 	
 	<?php echo $form->label($model, 'desRec',array('label'=>'Descuento - Recargo'));?>
 	<?php echo $form->checkBox($model, 'desRec',array('value'=>1));echo " Descuento - Recargo";?>
@@ -328,7 +350,7 @@ if(isset($_GET['vista'])){
 	</div>
 	</td>
 	
-	<td style="width:25%; vertical-align: top;" class="well" >
+	<td style="width:20%; vertical-align: top;" class="well" >
 	
 	<div >	
 	
@@ -351,7 +373,7 @@ if(isset($_GET['vista'])){
 		<?php  echo $form->error($model,'iva',array('style'=>'color:#b94a48')); ?>
 	</div>		
 	</td>
-	<td style="width:25%; vertical-align: top;"  class="well" >
+	<td style="width:20%; vertical-align: top;"  class="well" >
 	
 	<div >	
 	<?php echo $form->label($model, 'retencionIIBB');?>
@@ -367,19 +389,35 @@ if(isset($_GET['vista'])){
 	</div>
 	</div>
 	</td>
-	<td style="width:25%; vertical-align: top;"  class="well" >
+	<td style="width:20%; vertical-align: top;"  class="well" >
+	
+	<div >	
+	<?php echo $form->label($model, 'percepcion_iva');?>
+	<?php echo $form->checkBox($model, 'perciva',array('value'=>1));echo " Percepción IVA";?>
+	<?php echo $form->textFieldControlGroup($model,'percepcion_iva',array('style'=>'width:20%;','label'=>false,
+				'onkeydown'=>'if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+	)); ?>
+	<div style="float:left; margin-right:10px;  display:none;" id="totaldiv-perciva">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-perciva">P.IVA</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-perciva"></h6>
+	</div>	
+	</div>
+	</div>
+	</td>
+	<td style="width:20%; vertical-align: top;"  class="well" >
 	
 	<div class="row-fluid">	
 	<?php echo $form->label($model, 'impuestointerno');?>
 	<?php echo $form->checkBox($model, 'impInt',array('value'=>1));echo " Imp. Interno";?>
-	<?php echo $form->textFieldControlGroup($model,'impuestointerno',array('style'=>'width:20%;','label'=>false,
+	<?php echo $form->textFieldControlGroup($model,'impuestointerno',array('style'=>'width:15%;','label'=>false,
 			'onkeydown'=>'if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
 	)); ?>
 	
 	
 	</div>
 	<div class="row-fluid" id="descripcionimpint" style="display:none;"> 
-	<?php echo $form->textFieldControlGroup($model,'desc_imp_interno',array('maxlength'=>100)); ?>
+	<?php echo $form->textFieldControlGroup($model,'desc_imp_interno',array('maxlength'=>100,'style'=>'width:80%;')); ?>
 	</div>
 	</td>
 	</tr>

@@ -175,7 +175,7 @@ class IvamovimientoController extends Controller
 			Yii::app()->end();
 		}
 	}
-	public function actionAdminCompras()
+	public function actionTabscompras()
 	{
 		$model=new Ivamovimiento('search');
 		$model->unsetAttributes();  // clear any default values
@@ -187,7 +187,7 @@ class IvamovimientoController extends Controller
 			'model'=>$model,
 		));
 	}
-	public function actionAdminVentas()
+	public function actionTabsventas()
 	{
 		$model=new Ivamovimiento('search');
 		$model->unsetAttributes();  // clear any default values

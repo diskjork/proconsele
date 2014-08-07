@@ -30,7 +30,7 @@
  * @property Asiento[] $asientos
  */
 abstract class BaseNotacreditoprov extends GxActiveRecord {
-	public $iibb,$vista;
+	public $iibb,$vista,$perciva,$desc,$inte;
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -51,11 +51,11 @@ abstract class BaseNotacreditoprov extends GxActiveRecord {
 		return array(
 			array(' tipofactura, fecha, proveedor_idproveedor, importeneto,  nronotacreditoprov, compras_idcompras', 'required'),
 			array('nrodefactura, tipofactura, proveedor_idproveedor, estado, asiento_idasiento', 'numerical', 'integerOnly'=>true),
-			array('iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB', 'numerical'),
+			array('iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, importe_per_iva, descuento, interes', 'numerical'),
 			array('descripcion', 'length', 'max'=>150),
 			array('nronotacreditoprov', 'length', 'max'=>45),
-			array('descripcion, estado, iva, percepcionIIBB, importebruto, ivatotal, importeIIBB, asiento_idasiento', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idnotacreditoprov, nrodefactura, tipofactura, fecha, descripcion, proveedor_idproveedor, estado, iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, asiento_idasiento,  compras_idcompras, nronotacreditoprov', 'safe', 'on'=>'search'),
+			array('descripcion, estado, iva, percepcionIIBB, importebruto, ivatotal, importeIIBB, asiento_idasiento, importe_per_iva, descuento, interes', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idnotacreditoprov, nrodefactura, tipofactura, fecha, descripcion, proveedor_idproveedor, estado, iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, asiento_idasiento,  compras_idcompras, nronotacreditoprov, importe_per_iva, descuento, interes', 'safe', 'on'=>'search'),
 			array('factura_idfactura','validarFactura','on'=>'insert'),
 	);
 	}
@@ -84,12 +84,14 @@ abstract class BaseNotacreditoprov extends GxActiveRecord {
 			'estado' => Yii::t('app', 'Estado'),
 			'iva' => Yii::t('app', 'IVA'),
 			'percepcionIIBB' => Yii::t('app', 'IIBB'),
-			'importebruto' => Yii::t('app', 'Importebruto'),
+			'importebruto' => Yii::t('app', 'Neto gravado'),
 			'ivatotal' => Yii::t('app', 'Importe IVA'),
-			'importeneto' => Yii::t('app', 'Importeneto'),
+			'importeneto' => Yii::t('app', 'Total'),
 			'importeIIBB' => Yii::t('app', 'Importe Iibb'),
 			'asiento_idasiento' => Yii::t('app', 'Asiento '),
-			
+			'importe_per_iva' => Yii::t('app', 'Percepción IVA'),
+			'descuento' => Yii::t('app', 'Descuento'),
+			'interes' => Yii::t('app', 'Interés'),
 			'compras_idcompras' => Yii::t('app', 'Compra Relacionada'),
 			'nronotacreditoprov' => Yii::t('app', 'Nro. Nota crédito'),
 			'asientos' => null,

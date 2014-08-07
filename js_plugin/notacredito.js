@@ -26,23 +26,32 @@ $("#Notacredito_descrecar").keydown(function(event){
 		solonumeromod(event);});
 var factura=$("#Notacredito_factura_idfactura").val();
 
-if(factura != null){
+if(factura != ""){
 ajaxFactura(factura, '0');
+} else {
+	$("#Notacredito_formadepago").select2('val',99999);
+	$("#Notacredito_formadepago").attr('readonly',true);
+	$("#Notacredito_tipofactura").attr('readonly',true);
 }
 $("#Notacredito_factura_idfactura").change(function(event){
 		ajaxFactura(this.value,'1');
 	});
 botonsubmit('0');
 });
+
 var totalajax=null; //total de la factura seleccionada
 var TOTALNETO=0.00; //total de la notacredito
 
 
 function sumatotal(){
 	var subtotalbruto=parseFloat($("#Notacredito_stbruto_producto").val());
+
 	var checkdescRec=$("input[name='Notacredito[desRec]']:checked", "#Notacredito-form").val();
 	var deReBloc=parseFloat($("#Notacredito_descrecar").val());
 	var checkiibb=$("input[name='Notacredito[iibb]']:checked", "#Notacredito-form").val();
+
+	var checkperciva=$("input[name='Notacredito[perciva]']:checked", "#Notacredito-form").val(); // existe Per.IVA?
+	var coficienteperciva=parseFloat($("#Notacredito_percepcion_iva").val()); // % de percepcion iva
 
 	var coficienteiibb=parseFloat($("#Notacredito_retencionIIBB").val());
 	var checkimpint=$("input[name='Notacredito[impInt]']:checked", "#Notacredito-form").val();
@@ -54,7 +63,10 @@ function sumatotal(){
 	var tipofactura=$("#Notacredito_tipofactura").val(); // A o B
 	// para el caso de factura "B"
 	if(tipofactura == 2){ 
-		subtotalbruto_B= subtotalbruto / IVA;// sin iva
+		subtotalbruto_B= subtotalbruto; // con IVA traido desde ajax
+		netogravado=(subtotalbruto / IVA);// sin iva
+	} else {
+		netogravado=subtotalbruto;
 	}
 	
 	var cofIVA=IVA - 1;
@@ -99,9 +111,10 @@ function sumatotal(){
 	if(Descuento != 1){
 		if(tipofactura == 2){  //factura B
 			TOTALdes_rec=subtotalbruto_B * Descuento;
+			subtotalbruto_B=subtotalbruto_B - TOTALdes_rec;
 			var importe_des= $.number( TOTALdes_rec, 2 );
 			$("#descuento_recargo_importeNC").text("-"+importe_des);
-			subtotalbruto_B=subtotalbruto_B - TOTALdes_rec;
+			
 		} else {
 		// para el caso de una factura A
 		TOTALdes_rec=subtotalbruto * Descuento;
@@ -148,28 +161,28 @@ function sumatotal(){
 		$("#descripcionimpintNC").show();
 		$("#Notacredito_importeImpInt").val(TOTALimpint);
 		$("#totaldiv-impintNC").show();
-		console.log("si se corre"+"checkimpint: "+checkimpint+" coficienteimpint"+coficienteimpint);
+		//console.log("si se corre"+"checkimpint: "+checkimpint+" coficienteimpint"+coficienteimpint);
 	}
 
 	//-----------------------IVA----------------------------
 	if(tipofactura == 1){
-		subtotalbruto=subtotalbruto + TOTALimpint;
+		subtotalbruto=subtotalbruto;
 		TOTALiva= subtotalbruto * cofIVA;
 	} else {
-		subtotalbruto_B= subtotalbruto_B + TOTALimpint;
-		subtotalbruto_B_con_iva= subtotalbruto_B * IVA;
+		subtotalbruto_B= subtotalbruto_B;
+		
 	}
 	
 	//----------------CALCULO TOTALNETO--------------------
 
 		 if(tipofactura == 2){  //factura B
 			
-			SUBtotal=subtotalbruto_B_con_iva;
-			TOTALiva=subtotalbruto_B * cofIVA;
-			TOTALNETO=subtotalbruto_B_con_iva;
+			SUBtotal=subtotalbruto_B;
+			TOTALiva=subtotalbruto_B - (subtotalbruto_B / IVA);
+			TOTALNETO=subtotalbruto_B + TOTALimpint;
 		} else {
-		 SUBtotal= subtotalbruto;
-		 TOTALNETO= subtotalbruto + TOTALiva;
+		 SUBtotal=subtotalbruto;
+		 TOTALNETO=subtotalbruto+TOTALiva+TOTALimpint ;
 	}
 
 //----------------------IIBB---------------------------
@@ -179,25 +192,49 @@ function sumatotal(){
 	if((checkiibb == 1) && (!isNaN(coficienteiibb)))
 	{
 		coficienteiibb= coficienteiibb/100;
+		$("#Notacredito_retencionIIBB").show();
 	
 	}
+//----------------------Perc. IVA--------------------------
+	//console.log("checkiibb="+checkiibb+" coficienteiibb="+coficienteiibb);
+	var TOTALperciva=0;
 	
+	if((checkperciva == 1) && (!isNaN(coficienteperciva)))
+	{
+		coficienteperciva= coficienteperciva / 100;
+		$("#Notacredito_percepcion_iva").show();
+		//console.log(coficienteperciva+"si");
+	}
+		
 //------------------FINAL--------------------------
 	
 	if(!isNaN(coficienteiibb)){
+	
 		if(tipofactura == 2){
-			TOTALiibb=subtotalbruto_B_con_iva * coficienteiibb;
+			TOTALiibb=SUBtotal * coficienteiibb;
 			TOTALNETO=TOTALNETO + TOTALiibb;
 		} else {
 			TOTALiibb=coficienteiibb * SUBtotal;
 			TOTALNETO=TOTALNETO + TOTALiibb;
 		}
-		
 		var importeiibb=$.number(TOTALiibb, 2);
 		$("#total-iibbNC").text(importeiibb);
-
 		$("#Notacredito_importeIIBB").val(TOTALiibb);
 		$("#totaldiv-iibbNC").show();
+	} 
+	if(!isNaN(coficienteperciva)){
+	
+		if(tipofactura == 2){
+			TOTALperciva=SUBtotal * coficienteperciva;
+			TOTALNETO=TOTALNETO + TOTALperciva;
+		} else {
+			TOTALperciva=coficienteperciva * SUBtotal;
+			TOTALNETO=TOTALNETO + TOTALperciva;
+		}
+		var importeperciva=$.number(TOTALperciva, 2);
+		$("#total-percivaNC").text(importeperciva);
+		$("#Notacredito_importe_per_ivaNC").val(TOTALperciva);
+		$("#totaldiv-percivaNC").show();
 	} 
 
 	totaltransfor= $.number( SUBtotal, 2 ); 
@@ -208,7 +245,7 @@ function sumatotal(){
 	$("#Notacredito_importebruto").val(SUBtotal.toFixed(2));
 	$("#totalnetoblockNC").text(totalnetotransfor);
 	$("#Notacredito_importeneto").val(TOTALNETO.toFixed(2));
-	
+	$("#Notacredito_netogravado").val(netogravado.toFixed(2)); //neto gravado sin impuesto
 	totalIvaTrasfor = $.number(TOTALiva, 2);
 	
 	if(tipofactura == 1){
@@ -236,7 +273,11 @@ function sumatotal(){
 	} else {
 	$("#Notacredito_importeIIBB").val(TOTALiibb.toFixed(2));
 	}
-	
+	if(TOTALperciva == 0){
+		$("#Notacredito_importe_per_iva").val(null);
+	} else {
+	$("#Notacredito_importe_per_iva").val(TOTALperciva.toFixed(2));
+	}
 	
 }
 
@@ -259,7 +300,7 @@ function blurcantidad(obj){
 	var id_input=obj.id;
 	cant=parseFloat(cant_ajax); //enviado por la factura
 	valor=parseFloat(obj.val); //lo seleccionado del input cantidadproducto
-	console.log("cantidad PR:"+cant_ajax+ "  obj:"+obj.val);
+	//console.log("cantidad PR:"+cant_ajax+ "  obj:"+obj.val);
 	if(cant < valor){
 		
 		alert("Debe ingresar una cantidad de productos igual o menor a la ingresada en la factura seleccionada ('"+cant_ajax+"').");
@@ -286,16 +327,7 @@ function sumaSubtotal(){
 			} 
 	var cantidad=parseFloat(cantidad);
 	var precio=parseFloat($('#Notacredito_precioproducto').val());
-	var tipofactura=$('#Notacredito_tipofactura').val();
-	var cofiva=parseFloat($('#Notacredito_iva').val());
-	if(tipofactura == 2){
-					var subtotal= cantidad * precio;
-					var subtotal= subtotal * cofiva;
-					
-				} else if(tipofactura == 1){
-					var subtotal=cantidad * precio;
-				}
-	
+	var subtotal= cantidad * precio;
 	$('#Notacredito_stbruto_producto').val(subtotal.toFixed(2));
 	
 }
@@ -340,7 +372,7 @@ function ajaxFactura(id, estado){
 	       	 		cant_ajax=data.cantidadproducto;
 	       	 		$("#Notacredito_cantidadproducto").val(data.cantidadproducto);
 	       	 }
-	       	 console.log(cant_ajax);
+	       	// console.log(cant_ajax);
 	       	 
 			 $("#Notacredito_cliente_idcliente").select2("val", data.cliente_idcliente).select2('readonly', "true");
 			 $("#Notacredito_formadepago").select2("val", data.formadepago).select2('readonly', "true");
@@ -354,21 +386,14 @@ function ajaxFactura(id, estado){
 			  var cofiva=parseFloat(data.iva);
 			  var precio=data.precioproducto;
 
-			  if(tipofactura == 2){
-					var subtotal= cant_ajax * precio;
-					var subtotal= cant_ajax * cofiva;
-					
-				} else if(tipofactura == 1){
-					var subtotal=cant_ajax * precio;
-				}
-			 $("#Notacredito_stbruto_producto").val(subtotal.toFixed(2));
+			 $("#Notacredito_stbruto_producto").val(data.stbruto_producto);
 			 $("#Notacredito_iva").select2('val',data.iva).select2('readonly','true');
 			 
 			 $("#subtotalblock").text('$'+$.number(data.importebruto,2));
 			 $("#totalnetoblock").text('$'+$.number(data.importeneto,2));
 			 $("#ivablock").text('$'+$.number(data.ivatotal,2));
 			 
-			 sumaSubtotal();
+			 //sumaSubtotal();
 
 			 if(data.importeIIBB !== null){
 			 	$("#Notacredito_iibb").attr('checked',':checked').attr('disabled','disabled');
@@ -386,6 +411,25 @@ function ajaxFactura(id, estado){
            		$("#total-iibbNC").text('');
 	         	$("#Notacredito_importeIIBB").val(null);
 			  	$("#totaldiv-iibbNC").css('display','none');
+			  }
+			 }
+
+			 if(data.importe_per_iva !== null){
+			 	$("#Notacredito_perciva").attr('checked',':checked').attr('disabled','disabled');
+			 	$("#Notacredito_retencion_iva").show();
+	          	$("#totaldiv-perciva").show();
+	          	$("#Notacredito_percepcion_iva").val(data.percepcion_iva).attr('readonly',true);
+	          	$("#total-perciva").text($.number(data.importe_per_iva,2));
+	         } else {
+			 	$("#Notacredito_perciva").removeAttr('checked').attr('disabled','disabled');
+			 	$("#Notacredito_percepcion_iva").css('display','none');
+	            $("#Notacredito_percepcion_iva").val("");
+	            $("#totaldiv-perciva").css('display','none');
+				
+           		if(estado == 1){
+           		$("#total-percivaNC").text('');
+	         	$("#Notacredito_importe_per_iva").val(null);
+			  	$("#totaldiv-percivaNC").css('display','none');
 			  }
 			 }
 			
@@ -417,25 +461,28 @@ function ajaxFactura(id, estado){
         		}
         		
 		        if(data.descrecar != null) {  
-		          $("#Notacredito_desRec").attr('checked',':checked').attr('disabled','disabled');
+		          $("#Notacredito_desRec").attr('checked',':checked').prop('checked', true);
 		          $("#radiobutton-descRec").show();
 		          if(data.tipodescrecar == 0){
-		          	
-		          	$("#Notacredito_tipodescrecar_0").attr('checked',':checked').attr('disabled','disabled');
+		          	$('input[name="Notacredito[tipodescrecar]"][value="0"]').attr('checked', true).attr('disabled','disabled');
+		          	$("#Notacredito_tipodescrecar_1").attr('disabled','disabled');
 		          	$("#descuento_recargo").text("Descuento");
 					$("#desc_recar").show();
-		          	var res=data.stbruto_producto * (data.descrecar /100);
+		          	var res=data.netogravado * (data.descrecar /100);
 		          	$("#descuento_recargo_importe").text('-'+$.number(res,2))
+
 		         
-		          } else if(data.tipodescrecar == 0){
-		          	$("#Notacredito_tipodescrecar_1").attr('checked',':checked').attr('disabled','disabled');
+		          } else if(data.tipodescrecar == 1){
+		          	$('input[name="Notacredito[tipodescrecar]"][value="1"]').attr('checked', true);
+		          	$("#Notacredito_tipodescrecar_0").attr('disabled','disabled');
 		          	$("#descuento_recargo").text("Recargo");
 					$("#desc_recar").show();
-					var res=data.stbruto_producto * (1 + (data.descrecar /100));
+					var res=data.netogravado * (data.descrecar /100);
 		          	$("#descuento_recargo_importe").text($.number(res,2));
-		          		          
+		          	         
 		          }
 		          $("#Notacredito_descrecar").val(data.descrecar).attr('readonly',true);
+		          
 		         
 		        } else {  
 		        	 $("#Notacredito_desRec").removeAttr('checked').attr('disabled','disabled');
@@ -445,7 +492,7 @@ function ajaxFactura(id, estado){
 		             $("#Notacredito_tipodescrecar_1").attr('checked',false);
 		             $("#Notacredito_descrecar").parent().find("span").remove();
 		             $("#desc_recar").css('display','none');
-		             
+		             $("#Notacredito_tipodescrecar").val(null);
 					 if(estado == 1){
 			             $("#descuento_recargoNC").text('');
 						 $("#desc_recarNC").css('display','none');

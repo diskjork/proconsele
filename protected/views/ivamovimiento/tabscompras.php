@@ -7,7 +7,7 @@
 $this->menu=array(
 	array(
 		'label'=>'Ir a IVA VENTAS', 
-		'url'=>array('adminventas'),
+		'url'=>array('tabsventas'),
 		'active' => true,
 	),
 	
@@ -44,7 +44,9 @@ if(!isset($_GET['anioTab'])){
 ?>
 <?php 
 	//SE COLOCA UN AÑO DE INICIO
-	$anioInicio=2014;
+
+		
+	$anioInicio=2013;
 	$anioSiguiente=date('Y')+1;
 	$nomVar='modoActive';
 	for ($i=$anioInicio;$i<$anioSiguiente;$i++){	
@@ -54,7 +56,7 @@ if(!isset($_GET['anioTab'])){
 		if ($anioTab==$i){
 			$$varTemp=true;
 		}
-		$arregloTabs [] =array('label'=>$i, 'url'=>array('tabscommpras','anioTab'=>$i),'active'=>$$varTemp);
+		$arregloTabs [] =array('label'=>$i, 'url'=>array('tabscompras','anioTab'=>$i),'active'=>$$varTemp);
 	}
 ?>
 

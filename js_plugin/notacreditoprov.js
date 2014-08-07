@@ -20,29 +20,20 @@ $("#Notacreditoprov_importeIIBB").keydown(function(event){
 
 $("#Notacreditoprov_cantidadproducto").keydown(function(event){
 		solonumeromod(event);});
-var checked=$("#Notacreditoprov_iibb").attr('checked');
-if(!(checked == "checked")){
-   $("#Notacreditoprov_importeIIBB").attr('readonly','true');
-  // $("#Notacreditoprov_importeIIBB").val("");
-}
+$("#Notacreditoprov_importebruto").keydown(function(event){
+    solonumeromod(event);});
+$("#Notacreditoprov_descuento").keydown(function(event){
+    solonumeromod(event);});
+$("#Notacreditoprov_interes").keydown(function(event){
+    solonumeromod(event);});
+$("#Notacreditoprov_importe_per_iva").keydown(function(event){
+    solonumeromod(event);});
 
-$("#Notacreditoprov_iibb").click(function() {  
-        if($("#Notacreditoprov_iibb").is(':checked')) {  
-          $("#Notacreditoprov_importeIIBB").removeAttr('readonly');
-          $("#Notacreditoprov_importeIIBB").val("");
-          $("#Notacreditoprov_importeIIBB").show();
-          $("#totaldiv-iibbNC").show();
-        } else {  
-            $("#Notacreditoprov_importeIIBB").attr('readonly','true');
-            $("#Notacreditoprov_importeIIBB").val("");
-            $("#totaldiv-iibbNC").css('display','none');
-       	}  
-    }); 
 
 $("#totalesfactura").css("display","none");
 botonsubmit('0');
 var tipo=$("#Notacreditoprov_tipofactura").val();
-if(tipo == 2){
+if(tipo == 3){
 	$("#Notacreditoprov_ivatotal").val('');
 	$("#Notacreditoprov_ivatotal").attr('readonly','true');
 } 
@@ -55,19 +46,8 @@ if(factura != ""){
 	$("#totalesfactura").css('display','none');
 	$("#Notacreditoprov_nrodefactura").attr('readonly','true');
 }
-$("#Notacreditoprov_tipofactura").change(function(event){
-	tiposelec=$("#Notacreditoprov_tipofactura").val();
-	if(tiposelec == 1){
-		$("#Notacreditoprov_ivatotal").val('');
-		$("#Notacreditoprov_ivatotal").removeAttr('readonly');
-		$("#ivablockNC").show();
 
-	} else {
-		$("#Notacreditoprov_ivatotal").val('');
-		$("#Notacreditoprov_ivatotal").attr('readonly','true');
-		$("#ivablockNC").text('');
-	}
-});
+
 $("#Notacreditoprov_compras_idcompras").change(function(event){
 		var factura=$("#Notacreditoprov_compras_idcompras").val();
 		if(factura == ""){
@@ -76,25 +56,41 @@ $("#Notacreditoprov_compras_idcompras").change(function(event){
 		 	$("#Notacreditoprov_iibb").removeAttr('disabled');
 		 	$("#totaldiv-iibb").css('display','none');
 			$("#total-iibbNC").text('');
+         	
          	$("#Notacreditoprov_importeIIBB").val(null);
          	$("#Notacreditoprov_proveedor_idproveedor").select2('readonly', false);
          	$("#Notacreditoprov_iva").select2('readonly', false);
          	$("#Notacreditoprov_tipofactura").select2('readonly', false);
          	$("#Notacreditoprov_proveedor_idproveedor").select2('val', '');
          	$("#Notacreditoprov_nrodefactura").val(null);
-         	//$("#Notacreditoprov_nrodefactura").removeAttr('readonly');
-         	
-		  	$("#totaldiv-iibbNC").css('display','none');
+         	$("#Notacreditoprov_importeneto").val(null);
+
+         	$("#Notacreditoprov_descuento").val(null);
+         	$("#Notacreditoprov_interes").val(null);
+         	$("#Notacreditoprov_importe_per_iva").val(null);
+         	$("#Notacreditoprov_importebruto").val(null);
+         	$("#total-netogravadoNC").text('');
+         	$("#totaldiv-netogravadoNC").css('display','none');
+         	$("#total-descuentoNC").text('');
+         	$("#totaldiv-descuentoNC").css('display','none');
+         	$("#totaldiv-iibbNC").css('display','none');
 		}
-		sumatotal();
+		resetInputs();
 		ajaxFactura(this.value,'1');
 
 	});
-	sumatotal();
+	
 });
 var totalneto_ajax=null; //total de la factura seleccionada
+var totalnetogravado_ajax=null; //netogravado es igual al importebruto traido desde la factura
 var totaliva_ajax=null; //total de la notacredito
 var totaliibb_ajax=null; // ingreso brutos
+var totalperciva_ajax=null; // percepción iva
+var descuento_ajax=null;
+var interes_ajax=null;
+var cofiva_ajax=null;
+var tipofactura_ajax=null;
+
 function ajaxFactura(id, estado){
 
 	var idfactura=id;
@@ -105,7 +101,8 @@ function ajaxFactura(id, estado){
 		  data: {data:idfactura},
 		  success: function (data){
 		  	
-			 totalajax=data.importeneto; //importe de la factura enviada por ajax
+			totalneto_ajax=data.importeneto; //importe de la factura enviada por ajax
+			tipofactura_ajax=data.tipofactura;
 			$("#totalesfactura").show();
 			$("#boton-submit").attr("disabled","disabled");
  
@@ -116,51 +113,129 @@ function ajaxFactura(id, estado){
 			
 			if(estado == 1) {
 			if(data.tipofactura == 1){
-				$("#Notacreditoprov_ivatotal").val('');
-				$("#Notacreditoprov_ivatotal").removeAttr('readonly');
+				
 				$("#ivablockNC").show();
+				$("#ivablockNC").text("$0.00");
+
+				$("#totaldiv-netogravado").show();
+				 $(".facturaA").show();
+  				 $("#facturac").css('display','none');
+				$("#total-netogravado").text("$"+ $.number(data.importebruto,2));
+				totalnetogravado_ajax=parseFloat(data.importebruto);
+				totalneto_ajax=parseFloat(data.importeneto);
+				totaliva_ajax=parseFloat(data.ivatotal);
+				cofiva_ajax=parseFloat(data.iva);
+
+				$("#ivablock").text('$'+$.number(data.ivatotal,2));
+			
+				$("#Notacreditoprov_iva").select2('val',data.iva).select2('readonly','true');
+				
+				 if(data.importeIIBB !== null){
+				 	$("#Notacreditoprov_iibb").attr('checked',':checked').attr('disabled','disabled');
+				 	$("#total-iibb").text('$'+$.number(data.importeIIBB,2));
+		          	$("#Notacreditoprov_importeIIBB").removeAttr('readonly');
+		          	$("#totaldiv-iibbNC").show();
+		          	$("#total-iibbNC").text("$0.00");
+		          	$("#totaldiv-iibb").show();
+		          	totaliibb_ajax=data.importeIIBB;
+		         } else {
+				 	$("#Notacreditoprov_iibb").removeAttr('checked').attr('disabled','disabled');
+				 	$("#totaldiv-iibb").css('display','none');
+					if(estado == 1){
+		           		$("#total-iibbNC").text("$0.00");
+			         	$("#Notacreditoprov_importeIIBB").val(null);
+			         	$("#Notacreditoprov_importeIIBB").attr('readonly','true');
+					  	$("#totaldiv-iibbNC").css('display','none');
+					  	$("#totaldiv-iibbNC").css('display','none');
+					  	totaliibb_ajax=0;
+				  }
+				} 
+				 if(data.importe_per_iva !== null){
+				 	$("#Notacreditoprov_perciva").attr('checked',':checked').attr('disabled','disabled');
+				 	$("#total-perciva").text('$'+$.number(data.importe_per_iva,2));
+		          	$("#Notacreditoprov_importe_per_iva").removeAttr('readonly');
+		          	$("#totaldiv-percivaNC").show();
+		          	$("#total-percivaNC").text("$0.00");
+		          	$("#totaldiv-perciva").show();
+		          	totalperciva_ajax=data.importe_per_iva;
+		         } else {
+				 	$("#Notacreditoprov_perciva").removeAttr('checked').attr('disabled','disabled');
+				 	$("#totaldiv-perciva").css('display','none');
+					if(estado == 1){
+		           		$("#total-percivaNC").text("$0.00");
+			         	$("#Notacreditoprov_importe_per_iva").val(null);
+			         	$("#Notacreditoprov_importe_per_iva").css('display','none');
+					  	$("#totaldiv-perciva").css('display','none');
+					  	$("#totaldiv-percivaNC").css('display','none');
+					  	totalperciva_ajax=0;
+				  }
+				 }  
+				
+				 if(data.descuento != null){
+				 	$("#Notacreditoprov_desc").attr('checked',':checked').attr('disabled','disabled');
+				 	$("#Notacreditoprov_descuento").removeAttr('readonly');
+				 	$("#total-descuento").text('-$'+$.number(data.descuento,2));
+				 	$("#totaldiv-descuentoNC").show();
+				 	$("#total-descuentoNC").text("$0.00");
+		          	$("#totaldiv-descuento").show();
+		          	descuento_ajax=data.descuento;
+		         } else {
+				 	$("#Notacreditoprov_desc").removeAttr('checked').attr('disabled','disabled');
+				 	if(estado == 1){
+		           		$("#total-descuentoNC").text("$0.00");
+			         	$("#Notacreditoprov_descuento").val(null);
+			         	$("#Notacreditoprov_descuento").css('display','none');
+					  	$("#totaldiv-descuento").css('display','none');
+					  	$("#totaldiv-descuentoNC").css('display','none');
+					  	descuento_ajax=0;
+				  	} 
+				 }
+				 if(data.interes !== null){
+				 	$("#Notacreditoprov_inter").attr('checked',':checked').attr('disabled','disabled');
+				 	$("#Notacreditoprov_interes").removeAttr('readonly');
+				 	$("#total-interes").text('$'+$.number(data.interes,2));
+				 	$("#totaldiv-interesNC").show();
+				 	$("#total-interesNC").text("$0.00");
+		          	$("#totaldiv-interes").show();
+		          	interes_ajax=data.interes;
+		         } else {
+				 	$("#Notacreditoprov_inter").removeAttr('checked').attr('disabled','disabled');
+				 	if(estado == 1){
+		           		$("#total-interesNC").text("$0.00");
+			         	$("#Notacreditoprov_interes").val(null);
+			         	$("#Notacreditoprov_interes").css('display','none');
+					  	$("#totaldiv-interes").css('display','none');
+					  	$("#totaldiv-interesNC").css('display','none');
+					  	interes_ajax=0;
+				  	} 
+				 }
+
+
 
 			} else {
-				$("#Notacreditoprov_ivatotal").val('');
-				$("#Notacreditoprov_ivatotal").attr('readonly','true');
-				$("#ivablockNC").text('');
-				$("#ivablock").text('');
-			}
+				 $(".facturaA").css('display', 'none');
+  				 $("#facturac").show();
+  				 $("#totalivadiv").css('display','none');
+				 $("#totalivadivNC").css('display','none');
+				 $("#totaldiv-iibb").css('display','none');
+				 $("#totaldiv-perciva").css('display','none');
+				 $("#totaldiv-descuento").css('display','none');
+				 $("#totaldiv-interes").css('display','none');
+				  $("#totaldiv-iibbNC").css('display','none');
+				 $("#totaldiv-percivaNC").css('display','none');
+				 $("#totaldiv-descuentoNC").css('display','none');
+				 $("#totaldiv-interesNC").css('display','none');
+				 
+				totalnetogravado_ajax=data.importeneto;
+				}
 			}
 			 var tipofactura=data.tipofactura;
 			 var importeIIBB=data.importeIIBB;
-			  
-			$("#totalnetoblock").text('$'+$.number(data.importeneto,2));
-			if(data.ivatotal == null){
-				$("#ivablock").text('');
-			} else {
-				$("#ivablock").text('$'+$.number(data.ivatotal,2));
-			}
-			$("#Notacreditoprov_iva").select2('val',data.iva).select2('readonly','true');
-			totalneto_ajax=data.importeneto;
-			totaliva_ajax=data.ivatotal;
-			//sumaSubtotal();
+			 var importe_per_iva=data.importe_per_iva;
 
-			 if(data.importeIIBB !== null){
-			 	$("#Notacreditoprov_iibb").attr('checked',':checked').attr('disabled','disabled');
-			 	$("#totaldiv-iibb").show();
-	          	$("#total-iibb").text($.number(data.importeIIBB,2));
-	          	$("#Notacreditoprov_importeIIBB").show();
-	          	$("#Notacreditoprov_importeIIBB").removeAttr('readonly');
-	          	$("#totaldiv-iibbNC").show();
-	          	totaliibb_ajax=data.importeIIBB;
-	         } else {
-			 	$("#Notacreditoprov_iibb").removeAttr('checked').attr('disabled','disabled');
-			 	$("#totaldiv-iibb").css('display','none');
-				if(estado == 1){
-           		$("#total-iibbNC").text('');
-	         	$("#Notacreditoprov_importeIIBB").val(null);
-	         	$("#Notacreditoprov_importeIIBB").css('display','none');
-			  	$("#totaldiv-iibbNC").css('display','none');
-			  	$("#totaldiv-iibbNC").css('display','none');
-			  	totaliibb_ajax=0;
-			  } 
-			 }
+			$("#totalnetoblock").text('$'+$.number(data.importeneto,2));
+			
+			
 				//sumatotal();
 			  },
 		  dataType:"json"
@@ -179,59 +254,132 @@ function solonumeromod(event) {
         }
     }
 
- function sumatotal(){
+function sumatotal(){
+var netogravado=parseFloat($("#Notacreditoprov_importebruto").val());
+if((!isNaN(netogravado)) && (netogravado > totalnetogravado_ajax)){
+	alert("Debe ingresar un valor menor o igual al Neto gravado de la compra seleccionada.");
+	$("#Notacreditoprov_importebruto").val("");
+	return false;
+}
+var input_netogravado=netogravado;
 
-  var totalpercepcionIIBB=parseFloat($("#Notacreditoprov_importeIIBB").val());
-  var totaliva=parseFloat($("#Notacreditoprov_ivatotal").val());
-  var totalneto=parseFloat($("#Notacreditoprov_importeneto").val());
-  //console.log("ajax:"+totalneto_ajax+" importe:"+totalneto);
-  if((totalneto_ajax != null) && (totalneto_ajax < totalneto)){
-  	alert("El Importe Neto ingresado es mayor al Importe Neto de la factura seleccionada.");
-  	$("#Notacreditoprov_importeneto").val("");
-  	botonsubmit('0');
-  }
-  if((totaliva_ajax != null) && (totaliva_ajax < totaliva)){
-  	alert("El Importe IVA total es mayor al  IVA de la factura seleccionada.");
-  	$("#Notacreditoprov_ivatotal").val(null);
-  	botonsubmit('0');
-  }
-  if(totalpercepcionIIBB >= totalneto || totaliva >= totalneto){
-    alert("Importe IVA o Importe IIBB no pueden ser mayores que Importe Neto.")
-    $("#Notacreditoprov_ivatotal").val("");
-    $("#Notacreditoprov_importeneto").val("");
-    botonsubmit('0');
-  }
-  var seleccion=$('option:selected', "#Notacreditoprov_tipofactura").attr('value');
-  console.log(totaliva);
-  
-  if((seleccion == 1) && (isNaN(totaliva)) && (!isNaN(totalneto))){
-     alert('Complete "Importe IVA" No puede ser nulo ');
-     $("#Notacreditoprov_importeneto").val("");
-     botonsubmit('0');
+	if(tipofactura_ajax == 1){
+		if(totalperciva_ajax != 0){
+			var cof_per_iva= totalperciva_ajax/totalnetogravado_ajax;
+		} else {
+			var cof_per_iva=0;
+		}
+		if(descuento_ajax != 0){
+			var cof_descuento= descuento_ajax/totalnetogravado_ajax;
+		} else {
+			var cof_descuento=0;
+		}
+		if(interes_ajax != 0){
+			var cof_interes= interes_ajax/totalnetogravado_ajax;
+		} else {
+			var cof_interes=0;
+		}
+		if(totaliibb_ajax != 0){
+			var cof_iibb= totaliibb_ajax/totalnetogravado_ajax;
+		} else {
+			var cof_iibb=0;
+		}
+	var totalpercepcionIIBB= cof_iibb * netogravado;
+	var totalpercepcion_iva= cof_per_iva * netogravado;
+	}
 
-  }
-  if(totalpercepcionIIBB != null){
-    totalpercepcionIIBB=totalpercepcionIIBB.toFixed(2);
-    $("#total-iibbNC").text($.number(totalpercepcionIIBB,2));
-  }
-  totalnetotransfor = $.number( totalneto, 2 );
+	if(tipofactura_ajax == 1){
+	
+	
+		//console.log(netogravado);
+	    if(isNaN(netogravado)){
+	    	
+	      $("#Notacreditoprov_ivatotal").val("");
+	      $("#totalnetoblockNC").text('$0.00');
+	      totaliva=0;
+	    } else {
 
-  
-  totalIvaTrasfor = $.number(totaliva, 2);
-  $("#totalnetoblockNC").text(totalnetotransfor);
-  tipofac=$("#Notacreditoprov_tipofactura").val();
-  if(tipofac == 2){
-	  	$("#ivablockNC").text('');
-	  }else { 
-	    $("#ivablockNC").text(totalIvaTrasfor);
-  }
-	 if(($("#Notacreditoprov_importeneto").val()) != ""){
-	  	botonsubmit('1');
-	  } else {
-	  		botonsubmit('0');
+	      if((descuento_ajax == 0) && (interes_ajax == 0) ){
+	        totaliva=netogravado * (cofiva_ajax - 1);
+	        $("#Notacreditoprov_ivatotal").val(totaliva.toFixed(2));
+	         totalIvaTrasfor = $.number(totaliva, 2);
+	        $("#ivablockNC").text(totalIvaTrasfor);
+	        
+
+	      } else  {
+	      	console.log(" interes:");
+	        descuento= cof_descuento * netogravado;
+	        interes= cof_interes * netogravado;
+	        
+	        if(descuento !== 0 ){
+	        	$("#total-descuentoNC").text("-$"+$.number(descuento,2));
+	        	$("#Notacreditoprov_descuento").val(descuento.toFixed(2));
+	        } else {
+	        	$("#total-descuentoNC").text("$0.00");
+	        }
+	         if(interes !== 0 ){
+	        	$("#total-interesNC").text("$"+$.number(interes,2));
+	        	$("#Notacreditoprov_interes").val(interes.toFixed(2));
+	        } else  {
+	        	$("#total-interesNC").text("$0.00");
+	        	
+	        }
+	        netogravado=netogravado - descuento + interes ;
+	        totaliva = netogravado * (cofiva_ajax - 1);
+	        $("#Notacreditoprov_ivatotal").val(totaliva.toFixed(2));
+	         totalIvaTrasfor = $.number(totaliva, 2);
+	        $("#ivablockNC").text(totalIvaTrasfor);
+
+	        
+	      }
 	  }
-  
-  }
+	 //console.log(totalpercepcionIIBB);
+	 precioTOTAL=netogravado + totaliva + totalpercepcionIIBB + totalpercepcion_iva;
+	  
+	  if(totalpercepcionIIBB != 0){
+	    totalpercepcionIIBB=totalpercepcionIIBB.toFixed(2);
+	    $("#total-iibbNC").text($.number(totalpercepcionIIBB,2));
+	  }
+	  if(totalpercepcion_iva != 0){
+	    totalpercepcion_iva=totalpercepcion_iva.toFixed(2);
+	    $("#total-percivaNC").text($.number(totalpercepcion_iva,2));
+	  }
+	  if(!isNaN(precioTOTAL)){
+	     $("#totalnetoblockNC").text(precioTOTAL.toFixed(2));
+	     $("#Notacreditoprov_importeneto").val(precioTOTAL.toFixed(2));
+	     botonsubmit('1');
+	  }
+	  
+	  $("#totaldiv-netogravadoNC").show();
+	  $("#total-netogravadoNC").text("$"+ $.number(input_netogravado,2));
+	  if(isNaN(input_netogravado.toFixed(2))){
+	  		valor=0.00;
+	  }else {
+	  		valor=input_netogravado.toFixed(2);
+	  }
+	  $("#Notacreditoprov_importebruto").val(valor)
+	 
+	
+	
+} else {
+ 	
+ 	preciototal=parseFloat($("#Notacreditoprov_importeneto").val());
+ 	if((!isNaN(preciototal)) && (preciototal > totalneto_ajax)){
+ 		alert("Debe ingresar un valor menor o igual al Importe Total de la compra seleccionada.");
+		$("#Notacreditoprov_importeneto").val("");
+		return false;
+ 	}
+ 	if(isNaN(preciototal)){
+ 		$("#totalnetoblockNC").text('$0.00');
+  	} else {
+ 		$("#Notacreditoprov_importeneto").val(preciototal.toFixed(2));
+  		$("#totalnetoblockNC").text("$"+$.number(preciototal.toFixed(2),2));
+  		botonsubmit('1');
+	}
+ 	
+  	botonsubmit();
+	}
+} 
   function botonsubmit(estado){
 	
 	if(estado  == 0) {
@@ -240,4 +388,13 @@ function solonumeromod(event) {
 		$("#boton-submit").removeAttr("disabled");
 	}
 	
+}
+function resetInputs(){
+	$("#Notacreditoprov_importeIIBB").val("");
+	$("#Notacreditoprov_descuento").val("");
+	$("#Notacreditoprov_interes").val("");
+	$("#Notacreditoprov_importe_per_iva").val("");
+	$("#Notacreditoprov_importebruto").val("");
+	$("#Notacreditoprov_importeneto").val("");
+	$("#Notacreditoprov_ivatotal").val("");
 }

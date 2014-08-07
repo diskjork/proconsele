@@ -85,8 +85,8 @@
 								)),
 						array('label'=>'LIBROS IVA','icon'=>'icon-book', 'url'=>'#',
 								'items'=>array(
-									array('label'=>'LIBRO IVA COMPRAS', 'url'=>Yii::app()->request->baseUrl.'/ivamovimiento/admincompras'),
-									array('label'=>'LIBRO IVA VENTA', 'url'=>Yii::app()->request->baseUrl.'/ivamovimiento/adminventas'),
+									array('label'=>'LIBRO IVA COMPRAS', 'url'=>Yii::app()->request->baseUrl.'/ivamovimiento/tabscompras'),
+									array('label'=>'LIBRO IVA VENTA', 'url'=>Yii::app()->request->baseUrl.'/ivamovimiento/tabsventas'),
 								)),
 						array('label'=>'PRODUCTOS','icon'=>'icon-inbox', 'url'=>'#',
 								'items'=>array(

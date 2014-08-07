@@ -88,7 +88,7 @@ class NotadebitoprovController extends Controller
 						$detAs2=new Detalleasiento;
 						$totaliva=$model->ivatotal;
 						$detAs2->debe=$model->ivatotal;
-						$detAs2->cuenta_idcuenta=14;// cuenta 113200-cuenta Ret. y Percep. de IVA
+						$detAs2->cuenta_idcuenta=13;//113100 Iva - Crédito Fiscal
 						$detAs2->asiento_idasiento=$asiento->idasiento;
 						$detAs2->save();
 						
@@ -290,7 +290,7 @@ class NotadebitoprovController extends Controller
 			if($viejos->ivatotal != $nuevos->ivatotal){
 				$DeAsIVA=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
 							array(':idasiento'=>$viejos->asiento_idasiento,
-								  ':idcuenta'=>14));// cuenta 113200-cuenta Ret. y Percep. de IVA
+								  ':idcuenta'=>13));//113100 Iva - Crédito Fiscal
 				$DeAsIVA->debe=$nuevos->ivatotal;
 				$iva=$nuevos->ivatotal;
 				$DeAsIVA->save();
