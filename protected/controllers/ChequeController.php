@@ -218,8 +218,7 @@ class ChequeController extends Controller
 				$this->redirect(array('recibido'));
 			}
 		}
-		//-----------
-
+		
 		$this->render('recibido',array(
 			'model'=>$model,
 			'modelBanco'=>$modelBanco,
@@ -788,6 +787,7 @@ public function labelEstado($data, $row){
 		$asiento->descripcion="Cobro de cheque N°: ".$cheque->nrocheque." de: ".$cheque->clienteIdcliente;
 		$asiento->fecha=$fecha;
 		$asiento->movimientocaja_idmovimientocaja=$movcaja->idmovimientocaja;
+		$asiento->idcheque=$cheque->idcheque; 
 		if($asiento->save()){
 			$DeAsCaja=new Detalleasiento;
 			$DeAsRel=new Detalleasiento;
@@ -813,6 +813,7 @@ public function labelEstado($data, $row){
 		$asiento->descripcion="Cobro de cheque N°: ".$cheque->nrocheque." de: ".$cheque->clienteIdcliente;
 		$asiento->fecha=$fecha;
 		$asiento->movimientobanco_idmovimientobanco=$movbanco->idmovimientobanco;
+		$asiento->idcheque=$cheque->idcheque;
 		if($asiento->save()){
 			$DeAsBanco=new Detalleasiento;
 			$DeAsRel=new Detalleasiento;
@@ -838,6 +839,7 @@ public function labelEstado($data, $row){
 		$asiento->descripcion="Debito de cheque N°: ".$cheque->nrocheque." CHEQUERA: ".$cheque->chequeraIdchequera;
 		$asiento->fecha=$fecha;
 		$asiento->movimientobanco_idmovimientobanco=$movbanco->idmovimientobanco;
+		$asiento->idcheque=$cheque->idcheque;
 		if($asiento->save()){
 			$DeAsBanco=new Detalleasiento;
 			$DeAsRel=new Detalleasiento;

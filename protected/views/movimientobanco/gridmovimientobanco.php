@@ -39,10 +39,11 @@
 				'header'=>'INGRESOS',	
 				'cssClassExpression' => '$data["debe"] > 0 ? "colorDebe": ""',
 				'htmlOptions' => array('width' =>'100px'),
-				'value'=>'($data->debe !== null && $data->debe > 0)?number_format($data->debe, 2, ".", ","): "-"',
+				'value'=>'($data->debe !== null && $data->debe > 0)?"$".number_format($data->debe, 2, ".", ","): "-"',
 				//'footer'=>"(T.D:$".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",").")  (T.H:$".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",").")",
 				//'footer'=>"$ ".number_format($dataProviderDebeHaber[0]['total_debe']-$dataProviderDebeHaber[0]['total_haber'],2,".",","),
-				'footerHtmlOptions'=>array('colspan'=>2 ,'style'=>'text-align:center;font-weight:bold;'),
+				'footer'=>"$".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",","),
+				//'footerHtmlOptions'=>array('colspan'=>2 ,'style'=>'text-align:center;font-weight:bold;'),
 			),
 						
 			array(
@@ -50,7 +51,8 @@
 				'header'=>'EGRESOS',
 				'cssClassExpression' => '$data["haber"] > 0 ? "colorHaber": ""',
 				'htmlOptions' => array('width' =>'100px'),
-				'value'=>'($data->haber !== null && $data->haber > 0)?number_format($data->haber, 2, ".", ","): "-"',
+				'value'=>'($data->haber !== null && $data->haber > 0)?"$".number_format($data->haber, 2, ".", ","): "-"',
+				'footer'=>"$".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",","),
 				
 			),
 			array(

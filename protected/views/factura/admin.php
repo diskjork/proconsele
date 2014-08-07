@@ -23,7 +23,7 @@ $this->menu=array(
 ?>
 
 <h5 class="well well-small">ADMINISTRACION DE FACTURAS</h5>
-<br>
+
 <?php
 //////////////ALERT TEMPORIZADO////////////////////
 Yii::app()->clientScript->registerScript(
@@ -52,7 +52,7 @@ if(!isset($_GET['anioTab'])){
 ?>
 <?php 
 	//SE COLOCA UN AÑO DE INICIO
-	$anioInicio=2014;
+	$anioInicio=2013;
 	$anioSiguiente=date('Y')+1;
 	$nomVar='modoActive';
 	for ($i=$anioInicio;$i<$anioSiguiente;$i++){	

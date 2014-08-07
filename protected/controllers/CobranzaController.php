@@ -280,7 +280,7 @@ class CobranzaController extends Controller
            	if($llave != null){
            		$importeviejo=$llave;
            		$importenuevo=$model->importe;
-           		$fecha=$model->fecha;
+           		$fecha=$this->fechadmY($model->fecha);
            		$idctacte=$model->ctactecliente_idctactecliente;
            		$this->modificarImporteCtaCte($importeviejo, $importenuevo, $idctacte);
            		$this->modImpDetalleCtacte($idctacte, $id, $importenuevo,$fecha);
@@ -1017,5 +1017,16 @@ class CobranzaController extends Controller
 		$detalle->iibbcomprelac=null;
 		$detalle->iibbtasa=null;
 		$detalle->save();
+	}
+	public function actionEnvioctactecliente(){
+		$id=$_POST['data'];
+		$cta=Ctactecliente::model()->findByPk($id);
+		$dato=array(
+			'nombre'=>$cta->clienteIdcliente->nombre,
+			'saldo'=>$cta->saldo,
+		
+		);
+		
+		echo json_encode($dato);
 	}
 }

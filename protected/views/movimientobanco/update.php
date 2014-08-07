@@ -23,13 +23,6 @@ $this->breadcrumbs=array(
 	$model->idmovimientobanco=>array('view','id'=>$model->idmovimientobanco),
 	'Update',
 );
-
-$this->menu=array(
-	array('label'=>'List Movimientobanco', 'url'=>array('index')),
-	array('label'=>'Create Movimientobanco', 'url'=>array('create')),
-	array('label'=>'View Movimientobanco', 'url'=>array('view', 'id'=>$model->idmovimientobanco)),
-	array('label'=>'Manage Movimientobanco', 'url'=>array('admin')),
-);
 ?>
 <?php /*
 <h1>Update Movimientobanco <?php echo $model->idmovimientobanco; ?></h1>

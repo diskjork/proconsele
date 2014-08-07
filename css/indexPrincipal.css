@@ -79,7 +79,7 @@ body
 }
 
 thead th {
-	text-align: center; height:30px;vertical-align: middle;color:white;
+	text-align: center; height:25px;vertical-align: middle;color:white;
 	background: #cedce7; /* Old browsers */
 	background: -moz-linear-gradient(top, #cedce7 0%, #596a72 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cedce7), color-stop(100%,#596a72)); /* Chrome,Safari4+ */
@@ -96,6 +96,7 @@ thead th {
 	text-align: center !important;
 	font-size: 12px;
 }
+
 .mmf_table thead th{
 	height:10px;
 }
@@ -149,4 +150,10 @@ thead th {
 }
 .anchoMedium{
 	width:130px;	
+}
+.navbar {
+    margin-bottom: 10px !important;
+}
+.nav{
+	margin-bottom:0px !important;
 }

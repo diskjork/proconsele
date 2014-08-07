@@ -48,12 +48,12 @@ abstract class BaseIvamovimiento extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('tipomoviento, fecha, nrocomprobante, tipofactura, tipoiva, importeiva, importeneto', 'required'),
-			array('tipomoviento, nrocomprobante, proveedor_idproveedor, cliente_idcliente, compra_idcompra, factura_idfactura, notacredito_idnotacredito', 'numerical', 'integerOnly'=>true),
-			array('tipoiva, importeiibb, importeiva, importeneto', 'numerical'),
+			array('tipomoviento, nrocomprobante, proveedor_idproveedor, cliente_idcliente, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov', 'numerical', 'integerOnly'=>true),
+			array('tipoiva, importeiibb, importeiva, importeneto, importe_per_iva', 'numerical'),
 			array('cuitentidad', 'length', 'max'=>45),
 			array('tipofactura', 'length', 'max'=>1),
-			array('proveedor_idproveedor, cliente_idcliente, cuitentidad, importeiibb, compra_idcompra, factura_idfactura, notacredito_idnotacredito', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idivamovimiento, tipomoviento, fecha, nrocomprobante, proveedor_idproveedor, cliente_idcliente, cuitentidad, tipofactura, tipoiva, importeiibb, importeiva, importeneto, compra_idcompra, factura_idfactura, notacredito_idnotacredito', 'safe', 'on'=>'search'),
+			array('proveedor_idproveedor, cliente_idcliente, cuitentidad, importeiibb, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov, importe_per_iva', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idivamovimiento, tipomoviento, fecha, nrocomprobante, proveedor_idproveedor, cliente_idcliente, cuitentidad, tipofactura, tipoiva, importeiibb, importeiva, importeneto, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov, importe_per_iva', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -86,6 +86,7 @@ abstract class BaseIvamovimiento extends GxActiveRecord {
 			'importeiibb' => Yii::t('app', 'Importeiibb'),
 			'importeiva' => Yii::t('app', 'Importeiva'),
 			'importeneto' => Yii::t('app', 'Importeneto'),
+			'importe_per_iva' => Yii::t('app', 'Importe Perc. IVA'),
 			'compra_idcompra' => null,
 			'factura_idfactura' => null,
 			'compraIdcompra' => null,

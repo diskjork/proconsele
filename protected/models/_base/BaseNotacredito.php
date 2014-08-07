@@ -38,7 +38,7 @@
  *
  */
 abstract class BaseNotacredito extends GxActiveRecord {
-	public $desRec, $iibb, $impInt, $vista;
+	public $desRec, $iibb, $impInt, $vista, $perciva;
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -57,13 +57,13 @@ abstract class BaseNotacredito extends GxActiveRecord {
 
 	public function rules() {
 		return array(
-			array('nrodefactura, fecha, formadepago, cliente_idcliente, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, importebruto, importeneto, factura_idfactura, tipofactura, nronotacredito', 'required'),
+			array('fecha, formadepago, cliente_idcliente, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, importebruto, importeneto,  tipofactura, nronotacredito', 'required'),
 			array('nrodefactura, formadepago, cliente_idcliente, estado, tipodescrecar, producto_idproducto, asiento_idasiento, factura_idfactura, tipofactura', 'numerical', 'integerOnly'=>true),
-			array('descrecar, iva, retencionIIBB, cantidadproducto, precioproducto, stbruto_producto, impuestointerno, importebruto, ivatotal, importeneto, importeIIBB, importeImpInt', 'numerical'),
+			array('descrecar, iva, retencionIIBB, cantidadproducto, precioproducto, stbruto_producto, impuestointerno, importebruto, ivatotal, importeneto, importeIIBB, importeImpInt, netogravado, percepcion_iva, importe_per_iva', 'numerical'),
 			array('nombreproducto, desc_imp_interno', 'length', 'max'=>100),
 			array('nronotacredito', 'length', 'max'=>55),
-			array('estado, descrecar, tipodescrecar, iva, retencionIIBB, asiento_idasiento, impuestointerno, desc_imp_interno, ivatotal, importeIIBB, importeImpInt', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idnotacredito, nrodefactura, fecha, formadepago, cliente_idcliente, estado, descrecar, tipodescrecar, iva, retencionIIBB, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, asiento_idasiento, impuestointerno, desc_imp_interno, importebruto, ivatotal, importeneto, importeIIBB, importeImpInt, factura_idfactura, tipofactura, nronotacredito', 'safe', 'on'=>'search'),
+			array('estado, descrecar, tipodescrecar, iva, retencionIIBB, asiento_idasiento, impuestointerno, desc_imp_interno, ivatotal, importeIIBB, importeImpInt, netogravado, percepcion_iva, importe_per_iva', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idnotacredito, nrodefactura, fecha, formadepago, cliente_idcliente, estado, descrecar, tipodescrecar, iva, retencionIIBB, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, asiento_idasiento, impuestointerno, desc_imp_interno, importebruto, ivatotal, importeneto, importeIIBB, importeImpInt, factura_idfactura, tipofactura, nronotacredito, netogravado, percepcion_iva, importe_per_iva', 'safe', 'on'=>'search'),
 			array('factura_idfactura','validarFactura','on'=>'insert'),
 		);
 	}

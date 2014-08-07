@@ -39,7 +39,7 @@ if(isset($_GET['vista'])){
 				");
 	}
 ?>
-<div class="form">
+<div class="form well">
 
     <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'Notacredito-form',
@@ -148,7 +148,7 @@ if(isset($_GET['vista'])){
 					
 				  ),
 			)); ?>
-		<?php  echo $form->error($model,'cliente_idcliente',array('style'=>'color:#b94a48')); ?>
+		<?php  echo $form->error($model,'factura_idfactura',array('style'=>'color:#b94a48')); ?>
 	</div>	
 	</td>
 	</tr>
@@ -202,7 +202,7 @@ if(isset($_GET['vista'])){
 </div>
 <div id="detalleNotacredito" class="row-fluid ">
 	
-	<table style="width:100%;" class="well" id="detalle">
+	<table style="width:100%;" class="items table table-condensed table-bordered table-hover" id="detalle">
 	<thead>
 	<tr>
 	<th>CANTIDAD</th>
@@ -295,6 +295,12 @@ if(isset($_GET['vista'])){
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-iibb"></h6>
 	</div>	
 	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-perciva">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-perciva">P.IVA</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-perciva"></h6>
+	</div>	
+	</div>
 	
 </div>	
 <div class="row-fluid alert" id="totalesnotacredito" style="margin-top: 10px;margin-bottom: -10px;padding: 2px 2px 2px 0px;">
@@ -340,10 +346,18 @@ if(isset($_GET['vista'])){
 		<h5 style="padding:0px;margin-left:-15%;" id="label-iibb">IIBB</h5>
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-iibbNC"></h6>
 	</div>	
+	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-percivaNC">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-perciva">P.IVA</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-percivaNC"></h6>
+	</div>	
 	</div>	
 		
 </div>		
 				<?php echo $form->hiddenField($model,'importeneto',array('span'=>4,)); ?>
+				<?php echo $form->hiddenField($model,'netogravado',array('span'=>4,)); ?>
+				<?php echo $form->hiddenField($model,'importe_per_iva',array('span'=>4,)); ?>
 				<?php echo $form->hiddenField($model,'ivatotal',array('span'=>4,)); ?>
 				<?php echo $form->hiddenField($model,'importeIIBB',array('span'=>4,)); ?>
 				<?php echo $form->hiddenField($model,'importeImpInt',array('span'=>4,)); ?>
@@ -360,7 +374,7 @@ if(isset($_GET['vista'])){
 	
 	</tr>
 	<tr style="width:100%;" >
-	<td style="width:25%; vertical-align: top;" class="well" >
+	<td style="width:20%; vertical-align: top;" class="well" >
 	
 	<?php echo $form->label($model, 'desRec',array('label'=>'Descuento - Recargo'));?>
 	<?php echo $form->checkBox($model, 'desRec',array('value'=>1));echo " Descuento - Recargo";?>
@@ -384,7 +398,7 @@ if(isset($_GET['vista'])){
 	</div>
 	</td>
 	
-	<td style="width:25%; vertical-align: top;" class="well" >
+	<td style="width:20%; vertical-align: top;" class="well" >
 	
 	<div >	
 	
@@ -407,7 +421,7 @@ if(isset($_GET['vista'])){
 		<?php  echo $form->error($model,'iva',array('style'=>'color:#b94a48')); ?>
 	</div>		
 	</td>
-	<td style="width:25%; vertical-align: top;"  class="well" >
+	<td style="width:20%; vertical-align: top;"  class="well" >
 	
 	<div >	
 	<?php echo $form->label($model, 'retencionIIBB');?>
@@ -418,7 +432,18 @@ if(isset($_GET['vista'])){
 	
 	</div>
 	</td>
-	<td style="width:25%; vertical-align: top;"  class="well" >
+	<td style="width:20%; vertical-align: top;"  class="well" >
+	
+	<div >	
+	<?php echo $form->label($model, 'percepcion_iva');?>
+	<?php echo $form->checkBox($model, 'perciva',array('value'=>1));echo " Percepción IVA";?>
+	<?php echo $form->textFieldControlGroup($model,'percepcion_iva',array('style'=>'width:20%;','label'=>false,
+				
+	)); ?>
+	
+	</div>
+	</td>
+	<td style="width:20%; vertical-align: top;"  class="well" >
 	
 	<div class="row-fluid">	
 	<?php echo $form->label($model, 'impuestointerno');?>
@@ -449,6 +474,7 @@ if(isset($_GET['vista'])){
         echo TbHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
 		    'id'=>'boton-submit',
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		)); ?>
 		
 		<?php 

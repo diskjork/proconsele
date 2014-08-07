@@ -9,29 +9,16 @@ $this->breadcrumbs=array(
 	'Create',
 );
 
-/*$this->menu=array(
-	array(
-		'label'=>'Nueva Ordendepago', 
-		'url'=>array('create'),
-		'active' => true,
-	
-	),
-);*/
+$this->menu=array(
+	array('label'=>'Volver', 'url'=>Yii::app()->request->Urlreferrer 
+			),
+);
 
 ?>
-<?php 
-if(isset($_GET['idctacte'])){
-	$idctacte=$_GET['idctacte'];
-	$nombre=$_GET['nombre'];
+
 	
-	} else{
-	$idctacte=null;
-	$nombre=null;
-	
-	}?>
-	
-<h5 class="well well-small">ORDEN DE PAGO: <?php echo $nombre;?></h5>
+<h5 class="well well-small" id="titulo"></h5>
 <br>	
 
-<?php $this->renderPartial('_form', array('model'=>$model,'member'=>$member,'validatedMembers'=>$validatedMembers,'idctacte'=>$idctacte,'nombre'=>$nombre,'modelchequecargado'=>$modelchequecargado)); ?>
+<?php $this->renderPartial('_form', array('model'=>$model,'member'=>$member,'validatedMembers'=>$validatedMembers,'modelchequecargado'=>$modelchequecargado)); ?>
 

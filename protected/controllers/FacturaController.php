@@ -94,6 +94,16 @@ class FacturaController extends Controller
 					if($asiento->save()){
 						$model->asiento_idasiento=$asiento->idasiento;
 						//detalleasiento para el debito de contado
+						$netogravado=$model->netogravado;
+						$D_R=0;
+						if(($model->descrecar != null) && ($model->tipodescrecar != null)){
+							if($model->tipodescrecar == 0){
+								$D_R=$netogravado * ($model->descrecar /100) *-1;
+							}else {
+								$D_R=$netogravado * ($model->descrecar /100);
+							}
+						}
+						
 						$detAs=new Detalleasiento;
 						$detAs->debe=$model->importeneto;
 						//tipo de 
@@ -108,17 +118,26 @@ class FacturaController extends Controller
 						}
 						$detAs->asiento_idasiento=$asiento->idasiento;
 						$detAs->save();
-						//------------------------------
+			//----------------------Descuento-------------
+						if($D_R < 0){
+							$DeAsDesc=new Detalleasiento;
+							$DeAsDesc->debe=$D_R * -1;
+							$DeAsDesc->cuenta_idcuenta=143; //434090 Descuentos cedidos
+							$DeAsDesc->asiento_idasiento=$asiento->idasiento;
+							$DeAsDesc->save();
+						}
+		
+			//------------------------------
 						//detalle asiento de IVA - FACTURA A o B 
 						$totaliva=0;
 						$detAs2=new Detalleasiento;
 						$totaliva=$model->ivatotal;
 						$detAs2->haber=$model->ivatotal;
-						$detAs2->cuenta_idcuenta=14;// cuenta 113200-cuenta Ret. y Percep. de IVA
+						$detAs2->cuenta_idcuenta=68; //215100 IVA - Débito Fiscal
 						$detAs2->asiento_idasiento=$asiento->idasiento;
 						$detAs2->save();
 						$totaliibb=0;
-						//detalle asiento de retenciones IIBB
+					//detalle asiento de percepcion IIBB
 						if($model->importeIIBB != null){
 							$detAs3=new Detalleasiento;
 							$totaliibb=$model->importeIIBB;
@@ -127,7 +146,16 @@ class FacturaController extends Controller
 							$detAs3->asiento_idasiento=$asiento->idasiento;
 							$detAs3->save();
 						}
-						//detalle asiento de impuesto interno
+					//detalle asiento de percepcion iva
+						if($model->importe_per_iva != null){
+							$detAs5=new Detalleasiento;
+							$totaliibb=$model->importe_per_iva;
+							$detAs5->haber=$model->importe_per_iva;
+							$detAs5->cuenta_idcuenta=14; // cuenta 113200 Ret. y Percep. de IVA							    
+							$detAs5->asiento_idasiento=$asiento->idasiento;
+							$detAs5->save();
+						}
+					//detalle asiento de impuesto interno
 						$totalimpint=0;
 						if($model->importeImpInt != null){
 							$detAs4=new Detalleasiento;
@@ -137,13 +165,21 @@ class FacturaController extends Controller
 							$detAs4->asiento_idasiento=$asiento->idasiento;
 							$detAs4->save();
 						}
-						// registro de venta
+					// registro de venta
 							$detAs5=new Detalleasiento;
-							$totalventa=$model->importeneto - $totaliva - $totaliibb - $totalimpint;
+							$totalventa=$model->netogravado;
 							$detAs5->haber=$totalventa;
 							$detAs5->cuenta_idcuenta=$model->productoIdproducto->cuenta_idcuenta; 
 							$detAs5->asiento_idasiento=$asiento->idasiento;
 							$detAs5->save();
+					//----------- Recargo -------
+							if($D_R > 0){
+							$DeAsRecar=new Detalleasiento;
+							$DeAsRecar->haber=$D_R;
+							$DeAsRecar->cuenta_idcuenta=141; // 434020 Actualiz. y Recargos
+							$DeAsRecar->asiento_idasiento=$asiento->idasiento;
+							$DeAsRecar->save();
+							}
 						//------------------------------
 							$model->save();
 							if(isset($movCaja)){
@@ -196,7 +232,7 @@ class FacturaController extends Controller
 				$this->modificarIvamovimiento($model, $_POST['Factura']['fecha']);
 				if($model->formadepago != $modeloviejo->formadepago){
 					$this->updateCambioFormadepago($modeloviejo, $model, $_POST['Factura']);
-					
+					$this->cambioDescuentoRecargo($modeloviejo, $model);
 					if($_POST['Factura']['vista'] == 2){
 					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 					}
@@ -206,7 +242,7 @@ class FacturaController extends Controller
 					$this->redirect(array('admin','id'=>$model->idfactura));
 				}else {
 					$this->updateFacAsiento($modeloviejo,$model,$_POST['Factura']);
-					
+					$this->cambioDescuentoRecargo($modeloviejo, $model);
 					if($_POST['Factura']['vista'] == 2){
 					$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
 					}
@@ -411,7 +447,102 @@ class FacturaController extends Controller
 				$Dectacte->save();
 			}
 		}
-		
+		public function cambioDescuentoRecargo($viejos,$nuevos){
+			if($viejos->descrecar != $nuevos->descrecar){
+				if(($viejos->descrecar == null) && ($nuevos->descrecar != null)){
+					if($nuevos->tipodescrecar == 0){
+						$DeAsDesc=new Detalleasiento;
+						$DeAsDesc->debe=$nuevos->netogravado * ($nuevos->descrecar/100);
+						$DeAsDesc->cuenta_idcuenta=143; //434090 Descuentos cedidos
+						$DeAsDesc->asiento_idasiento=$asiento->idasiento;
+						$DeAsDesc->save();						
+					} else {
+						$DeAsRecar=new Detalleasiento;
+						$DeAsRecar->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
+						$DeAsRecar->cuenta_idcuenta=141; // 434020 Actualiz. y Recargos
+						$DeAsRecar->asiento_idasiento=$asiento->idasiento;
+						$DeAsRecar->save();
+					}
+				} elseif(($viejos->descrecar != null) && ($nuevos->descrecar == null)){
+					if($viejos->tipodescrecar == 0){
+						$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
+											array(':cuenta'=>143, //434090 Descuentos cedidos
+												  ':asiento'=>$viejos->asiento_idasiento));
+						$DeAsDesc->delete();
+					} else {
+						$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
+											array(':cuenta'=>141, // 434020 Actualiz. y Recargos
+												  ':asiento'=>$viejos->asiento_idasiento));
+						$DeAsDesc->delete();
+					}
+				} elseif(($viejos->descrecar != null) && ($nuevos->descrecar != null)){
+					if(($viejos->tipodescrecar == 0) && ($nuevos->tipodescrecar == 1)){
+						$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
+											array(':cuenta'=>143, //434090 Descuentos cedidos
+												  ':asiento'=>$viejos->asiento_idasiento));
+						$DeAsDesc->debe=null;
+						$DeAsDesc->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
+						$DeAsDesc->cuenta_idcuenta=141; // 434020 Actualiz. y Recargos
+						$DeAsDesc->update();
+					} elseif(($viejos->tipodescrecar == 1) && ($nuevos->tipodescrecar == 0)){
+						$DeAsDescR=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
+											array(':cuenta'=>141, //434020 Actualiz. y Recargos
+												  ':asiento'=>$viejos->asiento_idasiento));
+						$DeAsDescR->haber=null;
+						$DeAsDescR->debe=$nuevos->netogravado * ($nuevos->descrecar/100);					
+						$DeAsDescR->cuenta_idcuenta=143; //434090 Descuentos cedidos
+						$DeAsDescR->update();
+					} elseif(($viejos->tipodescrecar == $nuevos->tipodescrecar)){
+						if($viejos->tipodescrecar == 0){
+							$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
+											array(':cuenta'=>143, //434090 Descuentos cedidos
+												  ':asiento'=>$viejos->asiento_idasiento));
+							$DeAsDesc->debe=$nuevos->netogravado * ($nuevos->descrecar/100);
+							$DeAsDesc->update();
+						} else {
+							$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
+											array(':cuenta'=>141, //434020 Actualiz. y Recargos
+												  ':asiento'=>$viejos->asiento_idasiento));
+							$DeAsDesc->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
+							$DeAsDesc->update();
+						}
+					}
+				}
+			} elseif(($viejos->descrecar == $nuevos->descrecar) && ($viejos->descrecar != null)){
+				if(($viejos->tipodescrecar == 0) && ($nuevos->tipodescrecar == 1)){
+						$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
+											array(':cuenta'=>143, //434090 Descuentos cedidos
+												  ':asiento'=>$viejos->asiento_idasiento));
+						$DeAsDesc->debe=null;
+						$DeAsDesc->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
+						$DeAsDesc->cuenta_idcuenta=141; // 434020 Actualiz. y Recargos
+						$DeAsDesc->update();
+					} elseif(($viejos->tipodescrecar == 1) && ($nuevos->tipodescrecar == 0)){
+						$DeAsDescR=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
+											array(':cuenta'=>141, //434020 Actualiz. y Recargos
+												  ':asiento'=>$viejos->asiento_idasiento));
+						$DeAsDescR->haber=null;
+						$DeAsDescR->debe=$nuevos->netogravado * ($nuevos->descrecar/100);					
+						$DeAsDescR->cuenta_idcuenta=143; //434090 Descuentos cedidos
+						$DeAsDescR->update();
+					} elseif(($viejos->tipodescrecar == $nuevos->tipodescrecar)){
+						if($viejos->tipodescrecar == 0){
+							$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
+											array(':cuenta'=>143, //434090 Descuentos cedidos
+												  ':asiento'=>$viejos->asiento_idasiento));
+							$DeAsDesc->debe=$nuevos->netogravado * ($nuevos->descrecar/100);
+							$DeAsDesc->update();
+						} else {
+							$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
+											array(':cuenta'=>141, //434020 Actualiz. y Recargos
+												  ':asiento'=>$viejos->asiento_idasiento));
+							$DeAsDesc->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
+							$DeAsDesc->update();
+						}
+					}
+				
+			} 
+		}
 		public function updateFacAsiento($datosviejos,$datosnuevos,$datosPOST){
 			if($datosviejos->fecha != $datosnuevos->fecha ||
 				$datosviejos->nrodefactura != $datosnuevos->nrodefactura ||
@@ -494,19 +625,19 @@ class FacturaController extends Controller
 					if(($datosviejos->ivatotal != null) && ($datosnuevos->ivatotal != null)){
 						$DeAsIVA=Detalleasiento::model()->find("asiento_idasiento=:asiento AND cuenta_idcuenta=:cuenta",
 								array(':asiento'=>$datosviejos->asiento_idasiento,
-									  ':cuenta' =>14));
+									  ':cuenta' =>68)); //215100 IVA - Débito Fiscal
 						$DeAsIVA->haber=$datosnuevos->ivatotal;
 						$DeAsIVA->save();
 					} elseif(($datosviejos->ivatotal == null) && ($datosnuevos->ivatotal != null)) {
 						$NuevoDeAs=new Detalleasiento;
 						$NuevoDeAs->asiento_idasiento=$datosnuevos->asiento_idasiento;
-						$NuevoDeAs->cuenta_idcuenta=14; //cuenta retenciones IVA
+						$NuevoDeAs->cuenta_idcuenta=68; //215100 IVA - Débito Fiscal
 						$NuevoDeAs->haber=$datosnuevos->ivatotal;
 						$NuevoDeAs->save();
 					} elseif(($datosviejos->ivatotal != null) && ($datosnuevos->ivatotal == null)){
 						$DeGuardado=Detalleasiento::model()->find("asiento_idasiento=:asiento AND cuenta_idcuenta=:cuenta",
 								array(':asiento'=>$datosviejos->asiento_idasiento,
-									  ':cuenta' =>14));
+									  ':cuenta' =>68));
 						$DeGuardado->delete();	
 					}
 					
@@ -533,6 +664,28 @@ class FacturaController extends Controller
 					}
 					
 				}
+				// IMPORTE PERC IVA
+				if($datosviejos->importe_per_iva != $datosnuevos->importe_per_iva){
+					if(($datosviejos->importe_per_iva != null) && ($datosnuevos->importe_per_iva != null)){
+						$DeAsIVA=Detalleasiento::model()->find("asiento_idasiento=:asiento AND cuenta_idcuenta=:cuenta",
+								array(':asiento'=>$datosviejos->asiento_idasiento,
+									  ':cuenta' =>14));
+						$DeAsIVA->haber=$datosnuevos->importe_per_iva;
+						$DeAsIVA->save();
+					} elseif(($datosviejos->importe_per_iva == null) && ($datosnuevos->importe_per_iva != null)) {
+						$NuevoDeAs=new Detalleasiento;
+						$NuevoDeAs->asiento_idasiento=$datosnuevos->asiento_idasiento;
+						$NuevoDeAs->cuenta_idcuenta=14; //percepcion IVA
+						$NuevoDeAs->haber=$datosnuevos->importe_per_iva;
+						$NuevoDeAs->save();
+					} elseif(($datosviejos->importe_per_iva != null) && ($datosnuevos->importe_per_iva == null)){
+						$DeGuardado=Detalleasiento::model()->find("asiento_idasiento=:asiento AND cuenta_idcuenta=:cuenta",
+								array(':asiento'=>$datosviejos->asiento_idasiento,
+									  ':cuenta' =>14));
+						$DeGuardado->delete();	
+					}
+					
+				}
 				// IMPUESTO INTERNO
 				if($datosviejos->importeImpInt != $datosnuevos->importeImpInt){
 					if(($datosviejos->importeImpInt != null) && ($datosnuevos->importeImpInt != null)){
@@ -544,7 +697,7 @@ class FacturaController extends Controller
 					} elseif(($datosviejos->importeImpInt == null) && ($datosnuevos->importeImpInt != null)) {
 						$NuevoDeAs=new Detalleasiento;
 						$NuevoDeAs->asiento_idasiento=$datosnuevos->asiento_idasiento;
-						$NuevoDeAs->cuenta_idcuenta=101; //cuenta retenciones IMPUESTO INTERNO
+						$NuevoDeAs->cuenta_idcuenta=101; //cuenta IMPUESTO INTERNO
 						$NuevoDeAs->haber=$datosnuevos->importeImpInt;
 						$NuevoDeAs->save();
 					} elseif(($datosviejos->importeImpInt != null) && ($datosnuevos->importeImpInt == null)){
@@ -560,17 +713,17 @@ class FacturaController extends Controller
 			$DeAsVta=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
 											array(':cuenta'=>$datosviejos->productoIdproducto->cuenta_idcuenta,
 												  ':asiento'=>$datosviejos->asiento_idasiento));
-			$totalvtaviejo=$this->totalventa($datosviejos);
-			$totalvtanuevo=$this->totalventa($datosnuevos);
+			/*$totalvtaviejo=$this->totalventa($datosviejos);
+			$totalvtanuevo=$this->totalventa($datosnuevos);*/
 			if($datosviejos->producto_idproducto != $datosnuevos->producto_idproducto){
 				$DeAsVta->cuenta_idcuenta=$datosnuevos->productoIdproducto->cuenta_idcuenta;
-				if($totalvtaviejo != $totalvtanuevo){
-					$DeAsVta->haber=$totalvtanuevo;
+				if($datosviejos->netogravado != $datosnuevos->netogravado){
+					$DeAsVta->haber=$datosnuevos->netogravado;
 				}
 				$DeAsVta->save();	
 			} else {
-				if($totalvtaviejo != $totalvtanuevo){
-					$DeAsVta->haber=$totalvtanuevo;
+				if($datosviejos->netogravado != $datosnuevos->netogravado){
+					$DeAsVta->haber=$datosnuevos->netogravado;
 					$DeAsVta->save();
 				}
 			}
@@ -613,6 +766,7 @@ class FacturaController extends Controller
 			$nuevo->tipofactura=$model->tipofactura;
 			$nuevo->tipoiva=$model->iva;
 			$nuevo->importeiibb=$model->importeIIBB;
+			$nuevo->importe_per_iva=$model->importe_per_iva;
 			$nuevo->importeiva=$model->ivatotal;
 			$nuevo->importeneto=$model->importeneto;
 			$nuevo->factura_idfactura=$model->idfactura;
@@ -629,6 +783,7 @@ class FacturaController extends Controller
 			$nuevo->tipofactura=$model->tipofactura;
 			$nuevo->tipoiva=$model->iva;
 			$nuevo->importeiibb=$model->importeIIBB;
+			$nuevo->importe_per_iva=$model->importe_per_iva;
 			$nuevo->importeiva=$model->ivatotal;
 			$nuevo->importeneto=$model->importeneto;
 			$nuevo->save();

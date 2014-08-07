@@ -40,7 +40,7 @@
  * @property Asiento $asientoIdasiento
  */
 abstract class BaseFactura extends GxActiveRecord {
-	public $desRec, $iibb, $impInt, $vista;
+	public $desRec, $iibb, $impInt, $vista,$perciva;
 	
 	public $ene,$feb,$mar,$abr,$may,$jun,$jul,$ago,$sep,$oct,$nov,$dic,$nombreproducto,$maxnropresupuesto;
 	public $importeTotal;
@@ -64,11 +64,11 @@ abstract class BaseFactura extends GxActiveRecord {
 		return array(
 			array('nrodefactura, tipofactura,  fecha, formadepago, cliente_idcliente, presupuesto, nropresupuesto, importebruto, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto,  importeneto', 'required'),
 			array('tipofactura,  formadepago, cliente_idcliente, estado, tipodescrecar, presupuesto, nropresupuesto, producto_idproducto, asiento_idasiento', 'numerical', 'integerOnly'=>true),
-			array('descrecar, iva, retencionIIBB, importebruto, ivatotal, cantidadproducto, precioproducto, stbruto_producto, impuestointerno, importeneto, importeIIBB, importeImpInt,movimientocaja_idmovimientocaja', 'numerical'),
+			array('descrecar, iva, retencionIIBB, importebruto, ivatotal, cantidadproducto, precioproducto, stbruto_producto, impuestointerno, importeneto, importeIIBB, importeImpInt,movimientocaja_idmovimientocaja, netogravado, percepcion_iva, importe_per_iva', 'numerical'),
 			array('nrodefactura,nroremito', 'length', 'max'=>45),
 			array('nombreproducto, desc_imp_interno', 'length', 'max'=>100),
-			array('estado, descrecar, tipodescrecar, iva, retencionIIBB, impuestointerno, desc_imp_interno,ivatotal, importeIIBB, importeImpInt', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idfactura, nrodefactura, tipofactura, nroremito, fecha, formadepago, cliente_idcliente, estado, descrecar, tipodescrecar, iva, retencionIIBB, presupuesto, nropresupuesto, importebruto, ivatotal, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, asiento_idasiento, impuestointerno, desc_imp_interno, importeneto,importeIIBB, importeImpInt, movimientocaja_idmovimientocaja', 'safe', 'on'=>'search'),
+			array('estado, descrecar, tipodescrecar, iva, retencionIIBB, impuestointerno, desc_imp_interno,ivatotal, importeIIBB, importeImpInt, netogravado , percepcion_iva, importe_per_iva', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idfactura, nrodefactura, tipofactura, nroremito, fecha, formadepago, cliente_idcliente, estado, descrecar, tipodescrecar, iva, retencionIIBB, presupuesto, nropresupuesto, importebruto, ivatotal, cantidadproducto, producto_idproducto, nombreproducto, precioproducto, stbruto_producto, asiento_idasiento, impuestointerno, desc_imp_interno, importeneto,importeIIBB, importeImpInt, movimientocaja_idmovimientocaja, netogravado, percepcion_iva, importe_per_iva', 'safe', 'on'=>'search'),
 			array('nrodefactura','validarNrofactura','on'=>'insert'),
 		);
 	}
@@ -120,6 +120,9 @@ abstract class BaseFactura extends GxActiveRecord {
 			'asientos' => null,
 			'detallectacteclientes' => null,
 			'asientoIdasiento' => null,
+			'percepcion_iva' => Yii::t('app', 'Percepción IVA'),
+			'importe_per_iva' => Yii::t('app', 'Importe Perc.IVA'),
+			
 		);
 	}
 
@@ -265,7 +268,7 @@ abstract class BaseFactura extends GxActiveRecord {
 			$this->addError('nrofactura', 'El número de factura existe');
 	}
 	}
-private $nombrefactura;
+	private $nombrefactura;
 	public function getnombrefactura(){
 		if($this->estado == 1){
 			$estado=" - Anulada con N.C.";

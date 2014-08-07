@@ -14,7 +14,8 @@ class CuentaController extends Controller
 	public function filters()
 	{
 		return array(
-			'accessControl', // perform access control for CRUD operations
+			//'accessControl', // perform access control for CRUD operations
+			array('auth.filters.AuthFilter'),
 			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
@@ -94,7 +95,7 @@ class CuentaController extends Controller
 		if (isset($_POST['Cuenta'])) {
 			$model->attributes=$_POST['Cuenta'];
 			if ($model->save()) {
-				$this->redirect(array('view','id'=>$model->idcuenta));
+				$this->redirect(array('admin','id'=>$model->idcuenta));
 			}
 		}
 
@@ -174,6 +175,19 @@ class CuentaController extends Controller
 			Yii::app()->end();
 		}
 	}
+	
+	public function actionSeleccuenta()
+	{
+		$model=new Cuenta('search');
+		$model->unsetAttributes();  // clear any default values
+		if (isset($_GET['Cuenta'])) {
+			$model->attributes=$_GET['Cuenta'];
+		}
+		
+		$this->render('seleccuenta',array(
+			'model'=>$model,
+		));
+	}
 	public function nombreTipogral($data,$row){
 		$modelo=new Tipocuenta;
 		$modelo=Tipocuenta::model()->findByPk($data->tipocuenta_idtipocuenta);
@@ -182,4 +196,112 @@ class CuentaController extends Controller
 		return $modelogral['nombre'];
 		
 		}
+	public function actionMovimientocuenta(){
+		$idcuenta=$_POST['nombre'];
+		$fecha=$_POST['fecha'];
+		$fecha2=$_POST['fecha2'];
+		$model=new Cuenta;
+		//echo $idcuenta." ".$fecha."  ".$fecha2;
+		$this->renderPartial('_seleccuenta',array('model'=>$model,'idcuenta'=>$idcuenta,'fecha'=>$fecha,'fecha2'=>$fecha2));
+		/*$model=Producto::model()->findByPk($dato,'estado = 1');
+		$val=array(
+			'idp'=>$model->idproducto,
+			'nombre'=>$model->nombre,
+			'precio'=>$model->precio,
+			//'stock'=>$model->stock,
+			'venta'=>$model->unidad
+			);	
+			echo json_encode($val);*/
+		}
+	public function actionExcel(){
+		$model=new Cuenta('search');
+		$idcuenta=$_GET['idcuenta'];
+        $fecha=$_GET['fecha'];
+        $fecha2=$_GET['fecha2'];
+        $cuenta=Cuenta::model()->findByPk($idcuenta);
+		$dataProviderRe= $model->generargrilladetallecuenta($idcuenta, $fecha, $fecha2)->data;
+		$cant=count($dataProviderRe);
+		$dataProvider=new CArrayDataProvider($dataProviderRe, array(
+				    'id'=>'idcuent',
+				    'sort'=>array(
+				        'attributes'=>array(
+				           'fechaasiento', 'codigocuenta' ,'nombrecuenta','descripcionasiento','idcuent','debeT', 'haberT'
+				        ),
+				    ),
+				    'pagination'=>array(
+				        'pageSize'=>$cant,
+				    ),
+				));
+		
+$datos=array(
+		
+		array(
+			'name'=>'fechaasiento',
+			'header' => 'FECHA',
+			), 
+		array(
+			'header'=>'CUENTA',
+			'value'=>'$data["codigocuenta"]."-".$data["nombrecuenta"]',
+		),	
+		array(
+			'name'=>'descripcionasiento',
+			'header'=>'DESCRIPCION',
+		),
+		array(
+			'header' => 'DEBE',
+			'value'=>'($data["debeT"] !== null)? number_format($data["debeT"], 2, ",", "."):"-"',
+		),
+		array(
+			'header' => 'HABER',
+			'value'=>'($data["haberT"] !== null)? number_format($data["haberT"], 2, ",", "."):"-"',
+		),
+	);
+				
+		
+	$nombreArchivo="Resumen cuenta ".$cuenta->codigocta."-".$cuenta->nombre." '".$fecha."' - '".$fecha2."'";
+		
+				 	$this->widget('application.components.widgets.EExcelView', array(
+                	
+				    'id'                   => 'some-grid',
+				    'dataProvider'		   => $dataProvider,//$model->generarGrid($anio_tab, $mes_tab),
+				    'grid_mode'            => 'export', // Same usage as EExcelView v0.33
+				    //'template'             => "{summary}\n{items}\n{exportbuttons}\n{pager}",
+				    'title'                => $nombreArchivo,
+				    'creator'              => 'YVN',
+				    'subject'              => mb_convert_encoding('Something important with a date in French: ' . utf8_encode(strftime('%e %B %Y')), 'ISO-8859-1', 'UTF-8'),
+				    'description'          => mb_convert_encoding('Etat de production g�n�r� � la demande par l\'administrateur (some text in French).', 'ISO-8859-1', 'UTF-8'),
+				    'lastModifiedBy'       => 'YVN',
+				    'sheetTitle'           => 'Resumen ' ,
+				    'keywords'             => '',
+				    'category'             => '',
+				    'landscapeDisplay'     => true, // Default: false
+				    'A4'                   => true, // Default: false - ie : Letter (PHPExcel default)
+				    'pageFooterText'       => '&RThis is page no. &P of &N pages', // Default: '&RPage &P of &N'
+				    'automaticSum'         => true, // Default: false
+				    'decimalSeparator'     => ',', // Default: '.'
+				    'thousandsSeparator'   => '.', // Default: ','
+				    //'displayZeros'       => false,
+				    'zeroPlaceholder'      => '-',
+				    //'sumLabel'             => 'TOTALES:', // Default: 'Totals'
+				    'borderColor'          => '000000', // Default: '000000'
+				    'bgColor'              => 'E0E0E0', // Default: 'FFFFFF'
+				    'textColor'            => '000000', // Default: '000000'
+				    'rowHeight'            => 15, // Default: 15
+				    'headerBorderColor'    => '000000', // Default: '000000'
+				    'headerBgColor'        => 'FF7F50', // Default: 'CCCCCC'
+				    'headerTextColor'      => '000000', // Default: '000000'
+				    'headerHeight'         => 25, // Default: 20
+				    'footerBorderColor'    => '000000', // Default: '000000'
+				    'footerBgColor'        => 'CCCCCC', // Default: 'FFFFCC'
+				    'footerTextColor'      => '000000', // Default: '0000FF'
+				    'footerHeight'         => 25, // Default: 20
+				    'exportType'		   => 'Excel2007',
+                	'enablePagination'		=> true,
+				    'columns'              => $datos,
+               
+				)); 
+               
+        	
+	}
+	
 }

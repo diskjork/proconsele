@@ -84,6 +84,7 @@
         <div class="form-actions" align="center">
         <?php echo TbHtml::submitButton($model->isNewRecord ? 'Cargar' : 'Guardar cambios',array(
 		    'color'=>TbHtml::BUTTON_COLOR_PRIMARY,
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		)); ?>
 		<?php 
 			echo CHtml::link('Cancelar', Yii::app()->request->baseUrl.'/cliente/admin',array ('class'=>'btn btn-primary'));

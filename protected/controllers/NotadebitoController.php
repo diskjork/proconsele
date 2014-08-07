@@ -88,7 +88,7 @@ class NotadebitoController extends Controller
 						$detAs2=new Detalleasiento;
 						$totaliva=$model->ivatotal;
 						$detAs2->haber=$model->ivatotal;
-						$detAs2->cuenta_idcuenta=14;// cuenta 113200-cuenta Ret. y Percep. de IVA
+						$detAs2->cuenta_idcuenta=68; //215100 IVA - Débito Fiscal
 						$detAs2->asiento_idasiento=$asiento->idasiento;
 						$detAs2->save();
 						
@@ -139,11 +139,18 @@ class NotadebitoController extends Controller
 		if (isset($_POST['Notadebito'])) {
 			$model->attributes=$_POST['Notadebito'];
 			if ($model->save()) {
+				if($model->cliente_idcliente != $modelviejo->cliente_idcliente){
+					$this->cambioCliente($modelviejo, $model);
+				}
+				if($model->nronotadebito != $modelviejo->nronotadebito){
+					$this->cambioNombreAsiento($model);
+				}
 				$this->cambioImporteAsiento($modelviejo,$model,$_POST['Notadebito']['fecha']);
 				if($this->cambioImporteCtaCte($modelviejo, $model, $_POST['Notadebito']['fecha'])){
 					$this->modificarIvamovimiento($model, $_POST['Notadebito']['fecha']);
 					$this->redirect(array('admin','id'=>$model->idnotadebito));
 				}
+				$this->redirect(array('admin','id'=>$model->idnotadebito));
 			}
 		}
 
@@ -163,7 +170,7 @@ class NotadebitoController extends Controller
 			// we only allow deletion via POST request
 			$model=$this->loadModel($id);
 			if($this->borrado($model) && $this->borradoIvaMov($model)){
-			$this->loadModel($id)->delete();
+				$this->loadModel($id)->delete();
 			}
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
@@ -282,7 +289,7 @@ class NotadebitoController extends Controller
 			if($viejos->ivatotal != $nuevos->ivatotal){
 				$DeAsIVA=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
 							array(':idasiento'=>$viejos->asiento_idasiento,
-								  ':idcuenta'=>14));// cuenta 113200-cuenta Ret. y Percep. de IVA
+								  ':idcuenta'=>68)); //215100 IVA - Débito Fiscal
 				$DeAsIVA->haber=$nuevos->ivatotal;
 				$iva=$nuevos->ivatotal;
 				$DeAsIVA->save();
@@ -354,6 +361,32 @@ class NotadebitoController extends Controller
 									  ':ctacte'=>$ctacte->idctactecliente));
 				return $Dctacte->delete();
 			
+			
+		}
+	public function cambioCliente($viejos,$nuevos){
+		if($viejos->cliente_idcliente != $nuevos->cliente_idcliente){
+			$CtaCtevieja=Ctactecliente::model()->findByPk($viejos->clienteIdcliente->ctactecliente_idctactecliente);
+			$CtaCtevieja->debe=$CtaCtevieja->debe - $viejos->importeneto;
+		 	$CtaCtevieja->saldo=$CtaCtevieja->debe - $CtaCtevieja->haber;
+		 	$CtaCtevieja->save();
+		 	$Ctactenueva=Ctactecliente::model()->findByPk($nuevos->clienteIdcliente->ctactecliente_idctactecliente);
+		 	$Ctactenueva->debe=$Ctactenueva->debe + $nuevos->importeneto;
+		 	$Ctactenueva->saldo=$Ctactenueva->debe - $Ctactenueva->haber;
+		 	$Ctactenueva->save();
+		 	$DeCC=Detallectactecliente::model()->find("notadebito_idnotadebito=:id",
+						array(':id'=>$viejos->idnotadebito));
+			$DeCC->descripcion="NOTA DEBITO  N°: ".(string)$nuevos->nronotadebito." - ".$nuevos->clienteIdcliente;
+			$DeCC->debe=$nuevos->importeneto;
+           	$DeCC->ctactecliente_idctactecliente=$Ctactenueva->idctactecliente;
+           	$DeCC->save();
+		 	
+		}
+	}
+	public function cambioNombreAsiento($nuevo){
+			$asiento=Asiento::model()->find("notadebitoprov_idnotadebitoprov=:id",array(':id'=>$nuevo->idnotadebitoprov));
+			$asiento->descripcion="NOTA DEBITO - Proveedor N°: ".$nuevo->nronotadebitoprov." - ".$nuevo->proveedorIdproveedor;
+			//$asiento->fecha=$fecha;
+			$asiento->save();
 			
 		}	
 }

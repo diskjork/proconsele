@@ -26,9 +26,10 @@ $gridColumns= array(
 		array(
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
-			'template'=>'{delete} {update} {actNC} {actND} {actmovbanco} {actmovcaja} {actcompra} {actordenpago} 
+			'htmlOptions' => array('style'=>'width:5%;text-align:center;'),
+			'template'=>'{update} {delete} {actNC} {actND} {actmovbanco} {actmovcaja} {actcompra} {actordenpago} 
 						{actcobranza} {actfactura} {borrarOrPago} {borrarCobranza} {borrarFactura} {borrarCompra}
-						{borrarNC} {borrarND} ',
+						{borrarNC} {borrarND} {actNC-P} {borrarNC-P} {actND-P} {borrarND-P}',
             'buttons'=>array(
              	 'delete'=>array(
 					'label'=>'Borrar asiento',
@@ -39,6 +40,8 @@ $gridColumns= array(
 	                    		    $data->ordendepago_idordendepago == NULL AND
 	                    		    $data->cobranza_idcobranza == NULL AND
 	                    		    $data->notadebito_idnotadebito == NULL AND
+	                    		    $data->notacreditoprov_idnotacreditoprov == NULL AND
+	                    		    $data->notadebitoprov_idnotadebitoprov == NULL AND
 	                    		    $data->notacredito_idnotacredito == NULL
 	                    		    ',
 				 ),
@@ -52,6 +55,8 @@ $gridColumns= array(
 	                    		    $data->ordendepago_idordendepago == NULL AND
 	                    		    $data->cobranza_idcobranza == NULL AND
 	                    		    $data->notadebito_idnotadebito == NULL AND
+	                    		    $data->notacreditoprov_idnotacreditoprov == NULL AND
+	                    		    $data->notadebitoprov_idnotadebitoprov == NULL AND
 	                    		    $data->notacredito_idnotacredito == NULL
 	                    		    ',
 						'url'=> 'Yii::app()->createUrl("asiento/update",
@@ -64,7 +69,7 @@ $gridColumns= array(
 	              'actmovbanco'=>array(
 					'label'=>'Modificar Mov.Banco',
 	                    'icon'=>TbHtml::ICON_PENCIL,
-	                    'visible'=>'$data->movimientobanco_idmovimientobanco != NULL',
+	                    'visible'=>'$data->movimientobanco_idmovimientobanco != NULL AND $data->idcheque == NULL ',
 						'url'=> 'Yii::app()->createUrl("movimientobanco/update",
 								 array(	"id"=>$data->movimientobanco_idmovimientobanco,
 								 		"vista"=>2,
@@ -75,7 +80,7 @@ $gridColumns= array(
 	              'actmovcaja'=>array(
 					'label'=>'Modificar Mov.Caja',
 	                    'icon'=>TbHtml::ICON_PENCIL,
-	                    'visible'=>'$data->movimientocaja_idmovimientocaja != NULL',
+	                    'visible'=>'$data->movimientocaja_idmovimientocaja != NULL AND $data->idcheque == NULL',
 						'url'=> 'Yii::app()->createUrl("movimientocaja/update",
 								 array(	"id"=>$data->movimientocaja_idmovimientocaja,
 								 		"vista"=>2,
@@ -137,6 +142,7 @@ $gridColumns= array(
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
+	                  				'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
 		                  			'success' => 'function(data){
 	                                	if(data == "true"){
 		                                    location.reload();
@@ -161,7 +167,8 @@ $gridColumns= array(
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
-		                  			'success' => 'function(data){
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
 	                                	if(data == "true"){
 		                                    location.reload();
 		                                  alert("Fue borrada con éxito!");
@@ -185,7 +192,8 @@ $gridColumns= array(
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
-		                  			'success' => 'function(data){
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
 	                                	if(data == "true"){
 		                                    location.reload();
 		                                  alert("Fue borrada con éxito!");
@@ -209,7 +217,8 @@ $gridColumns= array(
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
-		                  			'success' => 'function(data){
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
 	                                	if(data == "true"){
 		                                    location.reload();
 		                                  alert("Fue borrada con éxito!");
@@ -255,7 +264,8 @@ $gridColumns= array(
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
-		                  			'success' => 'function(data){
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
 	                                	if(data == "true"){
 		                                    location.reload();
 		                                  alert("Fue borrada con éxito!");
@@ -279,7 +289,80 @@ $gridColumns= array(
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
-		                  			'success' => 'function(data){
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		           'actNC-P'=>array(
+						'label'=>'Modificar Nota Crédito - Proveedor',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notacreditoprov_idnotacreditoprov != NULL',
+						'url'=> 'Yii::app()->createUrl("notacreditoprov/update",
+								 array(	"id"=>$data->notacreditoprov_idnotacreditoprov,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+				  'borrarNC-P'=>array(
+	                  	'label'=>'Borrar Nota Crédito - Proveedor',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->notacreditoprov_idnotacreditoprov != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notacreditoprov/borrar", array("id"=>$data->notacreditoprov_idnotacreditoprov))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Nota de crédito?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		           'actND-P'=>array(
+						'label'=>'Modificar Nota Débito - Proveedor',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notadebitoprov_idnotadebitoprov != NULL',
+						'url'=> 'Yii::app()->createUrl("notadebitoprov/update",
+								 array(	"id"=>$data->notadebitoprov_idnotadebitoprov,
+								 		"vista"=>2,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),
+				  'borrarND-P'=>array(
+	                  	'label'=>'Borrar Nota Débito - Proveedor',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->notadebitoprov_idnotadebitoprov != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notadebitoprov/borrar", array("id"=>$data->notadebitoprov_idnotadebitoprov))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Nota de débito?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
 	                                	if(data == "true"){
 		                                    location.reload();
 		                                  alert("Fue borrada con éxito!");
@@ -302,7 +385,7 @@ $gridColumns= array(
 //Yii::app()->getComponent('yiiwheels')->registerAssetJs('bootbox.min.js');
 $this->widget('yiiwheels.widgets.grid.WhGridView', array(
 	'id'=>'asientogrid',
-	'type' => 'striped bordered',
+	'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
 	'dataProvider' =>$dataProvider,
 	'template' => "{items}",
 	
@@ -314,10 +397,10 @@ $this->widget('yiiwheels.widgets.grid.WhGridView', array(
 								'name' => 'Visualizar',
 								'url' => $this->createUrl('asiento/grilla'),
 								'value' =>'""',
-								'htmlOptions' => array('width' =>'10%'),
+								'htmlOptions' => array('style' =>'width:5%; text-align:center;'),
 								'cacheData'=>false,
 								'afterAjaxUpdate' => 'js:function(tr,rowid,data){
-								$("td[colspan]").css("background-color","rgb(222,245,217)");
+								$("td[colspan]").css("background-color","#F5F5DC");
 								//$("span.wh-relational-column[data-rowid="+rowid+"]").find("i").removeClass("icon-chevron-down");
 								//$("span.wh-relational-column[data-rowid="+rowid+"]").find("i").addClass("icon-chevron-up");
 								}'

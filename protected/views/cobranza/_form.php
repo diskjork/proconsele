@@ -9,15 +9,8 @@
 /* @var $model Cobranza */
 /* @var $form TbActiveForm */
 ?>
-<?php if(isset($_GET['idctacte'])){
-	//echo "si si".$_GET['idctacte']."ja".$_GET['nombre'];
-	$idctactecliente=$_GET['idctacte'];
-	$detallecliente=Ctactecliente::model()->findByPk($idctactecliente);
-	$saldo=$detallecliente->saldo;
-	//$model->detallectactecliente_iddetallectactecliente=$_GET['idctacte'];
-} else {$idctactecliente=null;
-		$saldo=null; }?>
-<div class="form">
+
+<div class="form well" >
 
     <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 	'id'=>'cobranza-form',
@@ -26,7 +19,7 @@
 	// There is a call to performAjaxValidation() commented in generated controller code.
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
-    'htmlOptions'=>array('class'=>'well'),
+    //'htmlOptions'=>array('class'=>'well'),
 )); ?>
 
    
@@ -39,9 +32,28 @@
 	
             <?php // echo $form->textFieldControlGroup($model,'fecha',array('span'=>5)); ?>
            <div class="row-fluid"> 
-           <div class="span4">
-            <div class="input-append" >
+           <div class="span6">
+           <?php echo $form->labelEx($model, 'ctactecliente_idctactecliente');?>
+			<?php $this->widget('ext.select2.ESelect2',array(
+				  //'name'=>'cuenta_idcuenta',
+				 'model'=>$model,
+				 'attribute'=>'ctactecliente_idctactecliente',
+				  'data' =>GxHtml::listDataEx(Cliente::model()->
+						   				findAll('estado = :estado ORDER BY nombre ASC', array(':estado' => 1)),'ctactecliente_idctactecliente','nombre'),
+				  'options'=>array(
+					   'placeholder'=>'Cliente',
+					   'allowClear'=>true,
+						'width'=> '70%',
+						
+					  ),
+				)); ?>
+			<?php  echo $form->error($model,'ctacteprov_idctacteprov',array('style'=>'color:#b94a48')); ?>
+		
+           </div>
+           <div class="span3">
+           
 					<?php echo $form->label($model, 'fecha');?>
+					 <div class="input-append" >
 		            <?php $this->widget('yiiwheels.widgets.datepicker.WhDatePicker', array(
 					        'model' => $model,
 							'attribute' => 'fecha',
@@ -60,18 +72,18 @@
 					<span class="add-on"><icon class="icon-calendar"></icon></span>
 				</div>
 				</div>
-				<div class="span4">
+				<div class="span3">
 	
-			<div class="well" style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+			<div class="well" style="width:50px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;" id="blocksaldo">
 				<h5 style="padding:0px">Saldo</h5>
-				<h5 style="text-align:center;margin:0;margin-left:-4px;" id="saldoblock"><?php echo number_format($saldo,2,'.',',');?></h5>
+				<h5 style="text-align:center;margin:0;margin-left:-4px;" id="saldoblock"></h5>
 			</div>
 		
 			</div>	
 			</div>		
 			<br>
-			<?php echo $form->hiddenField($model,'ctactecliente_idctactecliente',array('span'=>5,'value'=>$idctactecliente)); ?>
-            <?php echo $form->hiddenField($model,'descripcioncobranza',array('span'=>5,'maxlength'=>45,'value'=>'Cobranza')); ?>
+			
+            <?php echo $form->hiddenField($model,'descripcioncobranza',array('span'=>5,'maxlength'=>45)); ?>
 
             <?php echo $form->hiddenField($model,'importe',array('span'=>5,'maxlength'=>45)); ?>
 
@@ -219,6 +231,7 @@
         <?php echo TbHtml::submitButton($model->isNewRecord ? 'Cargar' : 'Guardar',array(
 		    'class'=>'btn btn-primary',
         	'id'=>'boton-submit',
+        	'confirm'=>'Está seguro que desea guardar los datos?',
         	'onClick'=>'sumatotal();',
 		     )); ?>
 	    <?php 

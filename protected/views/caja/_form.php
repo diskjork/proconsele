@@ -48,6 +48,7 @@
         <?php echo TbHtml::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar',array(
 		    'class'=>'btn btn-primary',
         	'id'=>'boton-submit',
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		)); ?>
 		<?php 
 		    	echo CHtml::link('Cancelar',Yii::app()->createUrl("caja/admin"),

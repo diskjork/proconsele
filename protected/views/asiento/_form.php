@@ -15,6 +15,11 @@
 		
 	}
 ?>
+<style>
+td.mmf_cell {
+	text-align:center;
+}
+</style>
 <div class="form">
 
     <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
@@ -76,6 +81,8 @@
                 		   ',
             	'onkeydown'=>'solonumeromod(event);
 					        				  this.val().toFixed(2);',
+            	'onblur'=>'botonsubmit("1");',	
+           			
             ),
             'haber'=>array(
                 'type'=>'text',
@@ -83,6 +90,7 @@
                 			',
             	'onkeydown'=>'solonumeromod(event);
 					          ',
+            	'onblur'=>'botonsubmit("1");',	
             ),
             
         ));
@@ -116,6 +124,7 @@
         echo TbHtml::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar',array(
 		    'class'=>'btn btn-primary',
         	'id'=>'boton-submit',
+        	'confirm'=>'Está seguro que desea guardar los datos?'
 		)); 
 		 		echo " ";
 		    	echo CHtml::link('Cancelar',Yii::app()->createUrl("asiento/admin"),

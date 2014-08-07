@@ -86,6 +86,7 @@ $this->pageTitle=Yii::app()->name;
 				),
  		);
 	?>
+	<br>
 	<?php 
 		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
 	    //'filter'=>$model,
@@ -96,8 +97,8 @@ $this->pageTitle=Yii::app()->name;
 	    'dataProvider' => $dataProviderCompras,
 	    'columns' => $gridColumnsCompras,
 		'summaryText'=>'',
-		//'template'=>'{items}',
-		'pagerCssClass'=>'pagination pagination-small pagination-centered',
+		'template'=>'{items}',
+		//'pagerCssClass'=>'pagination pagination-small pagination-centered',
 	    ));
 	?>		
 	
@@ -179,6 +180,7 @@ $this->pageTitle=Yii::app()->name;
 				),
  		);
 	?>
+	<br>
 	<?php 
 		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
 	    //'filter'=>$model,
@@ -189,8 +191,8 @@ $this->pageTitle=Yii::app()->name;
 	    'dataProvider' => $dataProviderfactura,
 	    'columns' => $gridColumnsfactura,
 		'summaryText'=>'',
-		//'template'=>'{items}',
-		'pagerCssClass'=>'pagination pagination-small pagination-centered',
+		'template'=>'{items}',
+		//'pagerCssClass'=>'pagination pagination-small pagination-centered',
 	    ));
 	?>	
 	
@@ -270,6 +272,7 @@ $this->pageTitle=Yii::app()->name;
 				),
  		);
 	?>
+	<br>
 	<?php 
 		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
 	    //'filter'=>$model,
@@ -280,8 +283,8 @@ $this->pageTitle=Yii::app()->name;
 	    'dataProvider' => $dataProviderCompras,
 	    'columns' => $gridColumnsCompras,
 		'summaryText'=>'',
-		//'template'=>'{items}',
-		'pagerCssClass'=>'pagination pagination-small pagination-centered',
+		'template'=>'{items}',
+		//'pagerCssClass'=>'pagination pagination-small pagination-centered',
 	    ));
 	?>		
 		
@@ -361,6 +364,7 @@ $this->pageTitle=Yii::app()->name;
 				),
  		);
 	?>
+	<br>
 	<?php 
 		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
 	    //'filter'=>$model,
@@ -371,8 +375,8 @@ $this->pageTitle=Yii::app()->name;
 	    'dataProvider' => $dataProviderfactura,
 	    'columns' => $gridColumnsfactura,
 		'summaryText'=>'',
-		//'template'=>'{items}',
-		'pagerCssClass'=>'pagination pagination-small pagination-centered',
+		'template'=>'{items}',
+		//'pagerCssClass'=>'pagination pagination-small pagination-centered',
 	    ));
 	?>	
 	

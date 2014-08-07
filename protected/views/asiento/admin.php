@@ -17,7 +17,7 @@ $this->menu=array(
 ?>
 
 <h5 class="well well-small">ASIENTOS</h5>
-<br>
+
 <!-- search-form -->
 <?php 
 

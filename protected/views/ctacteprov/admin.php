@@ -10,15 +10,17 @@ $this->breadcrumbs=array(
 
 
 $this->menu=array(
-	array(
-		'label'=>'Cta. Cte. - Proveedores', 
-		'url'=>array('admin'),
-		'active' => true,
-	),
-	array(
-		'label'=>'Ordenes de Pago', 
-		'url'=>Yii::app()->createUrl('ordendepago/admin'),
-	),
+	array('label'=>'Cta. Cte. - Proveedor', 'url'=>array('admin'),	'active' => true,
+		),
+	array('label'=>'Ordenes de pago realizadas', 'url'=>Yii::app()->createUrl('ordendepago/admin')
+		),
+	array('label'=>'Nueva Orden de pago', 'url'=>Yii::app()->createUrl("ordendepago/create" 
+		)),
+	array('label'=>'Nueva Nota Crédito', 'url'=>Yii::app()->createUrl("notacreditoprov/create" 
+		)),	
+	array('label'=>'Nueva Nota Débito', 'url'=>Yii::app()->createUrl("notadebitoprov/create" 
+		)),	
+	
 );
 ?>
 <h5 class="well well-small">CTA. CTE. PROVEEDORES</h5>
@@ -58,7 +60,7 @@ $columnas=array(
 			'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'template'=>'{view}',
-			'htmlOptions' => array('width' =>'5%'),
+			'htmlOptions'=>array('style'=>'width:5%; text-align:center;'),
 			'buttons' => array(
 				'view'=>array(
 					'label'=>'Ver Detalle Cta.Cte.',

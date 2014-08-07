@@ -13,15 +13,18 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'Nueva Orden de Pago', 'url'=>Yii::app()->createUrl("ordendepago/create", 
-			array('idctacte'=>$idctacte,'nombre'=>$nombre))),
+	array('label'=>'Nueva Orden de Pago', 'url'=>Yii::app()->createUrl("ordendepago/create" 
+			)),
+	array('label'=>'Nueva Nota Crédito', 'url'=>Yii::app()->createUrl("notacreditoprov/create" 
+			)),	
+	array('label'=>'Nueva Nota Débito', 'url'=>Yii::app()->createUrl("notadebitoprov/create" 
+			)),		
 			);
 
 ?>
-<div class="well" style="padding-top: 0px;padding-bottom: 0px;">
-<h5 style="margin-top: 0px;margin-bottom: 0px;">CTA. CTE. - PROVEEDOR </h5>
-<h5 style="margin-top: 0px;margin-bottom: 0px;"> <?php echo $_GET['nombre'];?></h5>
-</div>
+
+<h5 class="well well-small">CTA. CTE. - PROVEEDOR  -   <?php echo $_GET['nombre'];?> </h5>
+
 <br>
 <?php
 $model->ctacteprov_idctacteprov=$_GET['id'];

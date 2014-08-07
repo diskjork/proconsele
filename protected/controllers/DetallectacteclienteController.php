@@ -187,11 +187,11 @@ class DetallectacteclienteController extends Controller
 				return $text;
 				break;
 			case '3':
-				$text="Nota Credito";
+				$text="Nota Crédito";
 				return $text;
 				break;
 			case '2':
-				$text="Cobrado-Caja";
+				$text="Nota Débito";
 				return $text;
 				break;
 			

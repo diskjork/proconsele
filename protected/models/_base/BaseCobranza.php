@@ -66,7 +66,7 @@ abstract class BaseCobranza extends GxActiveRecord {
 			'fecha' => Yii::t('app', 'Fecha'),
 			'descripcioncobranza' => Yii::t('app', 'Descripcion'),
 			'importe' => Yii::t('app', 'Importe'),
-			'ctactecliente_idctactecliente' => null,
+			'ctactecliente_idctactecliente' =>  Yii::t('app', 'Cliente'),
 			'ctacteclienteIdctactecliente' => null,
 			'detallecobranzas' => null,
 		);

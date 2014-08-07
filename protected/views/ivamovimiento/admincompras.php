@@ -57,6 +57,11 @@ $valores=array('1.21'=>'21%', '1.105'=>'10.5%');$columnas=array(
 								
 		),
 		array(
+				'header' => 'P.IVA',
+				'value'=>'($data->importe_per_iva != null) ? "$".number_format($data->importe_per_iva, 2, ".", ","): ""',
+								
+		),
+		array(
 				'header' => 'TOTAL IVA',
 				'value'=>'"$".number_format($data->importeiva, 2, ".", ",")',
 								
@@ -67,7 +72,7 @@ $valores=array('1.21'=>'21%', '1.105'=>'10.5%');$columnas=array(
 								
 		),
 
-		array(
+	/*	array(
 			//'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right; width:5%;'),
@@ -96,7 +101,7 @@ $valores=array('1.21'=>'21%', '1.105'=>'10.5%');$columnas=array(
 						
 	                  ),    
 					)
-		          ),
+		          ),*/
 		 );
 ?>
 <?php
@@ -130,6 +135,5 @@ function reinstallDatePicker(id, data) {
 
 
 <script>
-$("#content").css('width','850px');
 $(".grid-view .table td").css('text-align','center');
 </script>

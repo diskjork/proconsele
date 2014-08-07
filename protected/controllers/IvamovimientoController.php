@@ -175,7 +175,7 @@ class IvamovimientoController extends Controller
 			Yii::app()->end();
 		}
 	}
-	public function actionAdminCompras()
+	public function actionTabscompras()
 	{
 		$model=new Ivamovimiento('search');
 		$model->unsetAttributes();  // clear any default values
@@ -187,7 +187,7 @@ class IvamovimientoController extends Controller
 			'model'=>$model,
 		));
 	}
-	public function actionAdminVentas()
+	public function actionTabsventas()
 	{
 		$model=new Ivamovimiento('search');
 		$model->unsetAttributes();  // clear any default values
@@ -215,6 +215,14 @@ class IvamovimientoController extends Controller
 					break;
 				case '4':
 					$text="ND";
+					return $text;
+					break;
+				case '5':
+					$text="NC-Prov.";
+					return $text;
+					break;
+				case '6':
+					$text="ND-Prov.";
 					return $text;
 					break;
 		}
@@ -246,9 +254,12 @@ class IvamovimientoController extends Controller
 			'header' => 'F. COBRO' ),
 		array(
 			'header'=>'EMPRESA',
-			'value'=>'$data->'.$valor.'', ),
-		array('name' => ''.$valor.'.cuit',
-			  'header' => 'CUIT',),	
+			'value'=>'($data->proveedorIdproveedor != null)?$data->proveedorIdproveedor:$data->clienteIdcliente',
+		),
+		array(//'name' => ''.$valor.'.cuit',
+			  'header' => 'CUIT',
+			  'value'=>'($data->proveedorIdproveedor != null)?$data->proveedorIdproveedor->cuit:$data->clienteIdcliente->cuit',
+			),	
 		array(
 				'header' => 'COMPROBANTE',
 				'value'=>array($this,'labelEstado') ),	

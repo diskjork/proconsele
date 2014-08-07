@@ -51,7 +51,7 @@ abstract class BaseDetalleordendepago extends GxActiveRecord {
 			array('iddetalleordendepago, tipoordendepago, importe, idcheque, transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, ordendepago_idordendepago,chequetitular,chequecuittitular, caja_idcaja, chequera', 'safe', 'on'=>'search'),
 			array('tipoordendepago','validarDatosCheque'),
 			array('tipoordendepago','validarDatosTransfe'),
-			array('idcheque','validarChequeEstado'),
+			array('idcheque','validarChequeEstado','on'=>'create'),
 			//array('idcheque','validarEstadoCheque'), esto para ver si estaba en estado de cobro el cheque pero no se va a usar
 		);
 	}
@@ -162,7 +162,7 @@ abstract class BaseDetalleordendepago extends GxActiveRecord {
     		$this->addError('idcheque', 'Cheque cobrado por caja.');
 		}
     	if($modelcheque->estado == 4){
-    		$this->addError('idcheque', 'Cheque endozado.');
+    		$this->addError('idcheque', 'Cheque endozado ya ha sido endozado.');
 		}
    	  }
 	 }

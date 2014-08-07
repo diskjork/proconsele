@@ -37,7 +37,7 @@ return array(
 	'modules'=>array(
 		// uncomment the following to enable the Gii tool
 		
-		'gii'=>array(
+		/*'gii'=>array(
 			'class'=>'system.gii.GiiModule',
 			'password'=>'1234',
 			'generatorPaths' => array(
@@ -47,7 +47,7 @@ return array(
 			// If removed, Gii defaults to localhost only. Edit carefully to taste.
 			'ipFilters'=>array('127.0.0.1','::1'),
 	
-		),
+		),*/
 		/*Modulo para manejor de autorizacion de acceso a los usuarios*/
 		'auth'=> array(
 			  'strictMode' => true, // when enabled authorization items cannot be assigned children of the same type.

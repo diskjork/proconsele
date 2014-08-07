@@ -68,7 +68,7 @@ abstract class BaseCtabancaria extends GxActiveRecord {
 			'idctabancaria' => Yii::t('app', 'Idctabancaria'),
 			'nombre' => Yii::t('app', 'Nombre cuenta'),
 			'descripcion' => Yii::t('app', 'Descripcion'),
-			'cuenta_idcuenta' => null,
+			'cuenta_idcuenta' => Yii::t('app', 'Cuenta contable relacionada.'),
 			'banco_idBanco' => null,
 			'estado' => Yii::t('app', 'Estado'),
 			'bancoIdBanco' => null,

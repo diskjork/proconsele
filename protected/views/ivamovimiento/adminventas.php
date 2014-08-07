@@ -31,13 +31,14 @@ $columnas=array(
 			), // (#4)
 		array(
 			'header'=>'EMPRESA',
-			'value'=>'$data->clienteIdcliente',
+			'value'=>'($data->proveedorIdproveedor != null)?$data->proveedorIdproveedor:$data->clienteIdcliente',
 			'htmlOptions' => array('width' =>'150px','style'=>'text-align: left;'),
 		),
 		
-		array('name' => 'clienteIdcliente.cuit',
+		array(//'name' => 'clienteIdcliente.cuit',
 					'header' => 'CUIT',
 					'htmlOptions' => array('width' =>'100px'),
+					'value'=>'($data->proveedorIdproveedor != null)?$data->proveedorIdproveedor->cuit:$data->clienteIdcliente->cuit',
 					//'filter'=>'proveedorIdproveedor.cuit'
 					),	
 		
@@ -57,6 +58,11 @@ $columnas=array(
 								
 		),
 		array(
+				'header' => 'P.IVA',
+				'value'=>'($data->importe_per_iva != null) ? "$".number_format($data->importe_per_iva, 2, ".", ","): ""',
+								
+		),
+		array(
 				'header' => 'TOTAL IVA',
 				'value'=>'"$".number_format($data->importeiva, 2, ".", ",")',
 								
@@ -67,16 +73,17 @@ $columnas=array(
 								
 		),
 
-		array(
+		/*array(
 			//'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right; width:5%;'),
-			'template'=>' {actfactura} {actND}',
+			'template'=>' {actfactura} {actND} {actNC}',
 			'buttons'=> array(
 					'actfactura'=>array(
 					'label'=>'Modificar Factura',
 	                    'icon'=>TbHtml::ICON_PENCIL,
-	                    'visible'=>'$data->factura_idfactura != NULL',
+	                    'visible'=>'$data->factura_idfactura != NULL AND
+	                    			($data->estado != 1 OR $data->estado != 2)',
 						'url'=> 'Yii::app()->createUrl("factura/update",
 								 array(	"id"=>$data->factura_idfactura,
 								 		"vista"=>3,
@@ -94,9 +101,20 @@ $columnas=array(
 								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',
 						
-	                  ),    
+	                  ),
+	                  'actNC'=>array(
+						'label'=>'Modificar Nota Crédito - Proveedor',
+	                    'icon'=>TbHtml::ICON_PENCIL,
+	                    'visible'=>'$data->notacreditoprov_idnotacreditoprov != NULL',
+						'url'=> 'Yii::app()->createUrl("notacreditoprov/update",
+								 array(	"id"=>$data->notacreditoprov_idnotacreditoprov,
+								 		"vista"=>3,
+								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
+								 		))',
+						
+	                  ),        
 					)
-		          ),
+		          ),*/
 		 );
 ?>
 <?php
@@ -130,6 +148,5 @@ function reinstallDatePicker(id, data) {
 
 
 <script>
-$("#content").css('width','850px');
 $(".grid-view .table td").css('text-align','center');
 </script>

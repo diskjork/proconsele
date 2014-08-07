@@ -34,11 +34,13 @@ $("span.wh-relational-column").find("i").click(function(){
 formato();
 $("#id_member").click(function(){
 	newElem();
+	botonsubmit('1');
 	
 });
 $("#boton-submit").click(function(){
 	chekpartidadoble();
 });
+botonsubmit('0');
 });
 function formato(){
 	var cont1=$("table.table.mmf_table > tbody > tr").size();
@@ -187,6 +189,7 @@ function chekpartidadoble(){
 	console.log("totaldebe="+totaldebe+"\nTotalhaber="+totalhaber);
 	$("#Asiento_totalhaber").val(totalhaber);
 	$("#Asiento_totaldebe").val(totaldebe);
+
 }
 function viewid(cantidad1,cantidad2, id , atributo){
 	//cantidad2: para obtener el indice de los input sin error de validación
@@ -313,5 +316,14 @@ function viewid(cantidad1,cantidad2, id , atributo){
 							
 		}
 		
+	}
+}
+
+function botonsubmit(estado){
+	
+	if(estado  == 0) {
+		$("#boton-submit").attr("disabled","disabled");
+	}else {
+		$("#boton-submit").removeAttr("disabled");
 	}
 }
