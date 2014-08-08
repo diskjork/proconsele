@@ -70,6 +70,8 @@ $("#Notacreditoprov_compras_idcompras").change(function(event){
          	$("#Notacreditoprov_importe_per_iva").val(null);
          	$("#Notacreditoprov_importebruto").val(null);
          	$("#total-netogravadoNC").text('');
+         	$("#totalnetoblockNC").text('$0.00');
+         	
          	$("#totaldiv-netogravadoNC").css('display','none');
          	$("#total-descuentoNC").text('');
          	$("#totaldiv-descuentoNC").css('display','none');
@@ -111,15 +113,14 @@ function ajaxFactura(id, estado){
 			 $("#Notacreditoprov_nrodefactura").val(data.nrodefactura).attr('readonly',true);
 			 $("#Notacreditoprov_tipofactura").select2("val", data.tipofactura).select2('readonly', "true");
 			
-			if(estado == 1) {
-			if(data.tipofactura == 1){
-				
+			
+				if(data.tipofactura == 1){
 				$("#ivablockNC").show();
 				$("#ivablockNC").text("$0.00");
-
+				$("#totalnetoblockNC").text("$0.00");
 				$("#totaldiv-netogravado").show();
-				 $(".facturaA").show();
-  				 $("#facturac").css('display','none');
+				$(".facturaA").show();
+  				$("#facturac").css('display','none');
 				$("#total-netogravado").text("$"+ $.number(data.importebruto,2));
 				totalnetogravado_ajax=parseFloat(data.importebruto);
 				totalneto_ajax=parseFloat(data.importeneto);
@@ -130,108 +131,105 @@ function ajaxFactura(id, estado){
 			
 				$("#Notacreditoprov_iva").select2('val',data.iva).select2('readonly','true');
 				
-				 if(data.importeIIBB !== null){
-				 	$("#Notacreditoprov_iibb").attr('checked',':checked').attr('disabled','disabled');
-				 	$("#total-iibb").text('$'+$.number(data.importeIIBB,2));
-		          	$("#Notacreditoprov_importeIIBB").removeAttr('readonly');
-		          	$("#totaldiv-iibbNC").show();
-		          	$("#total-iibbNC").text("$0.00");
-		          	$("#totaldiv-iibb").show();
-		          	totaliibb_ajax=data.importeIIBB;
-		         } else {
-				 	$("#Notacreditoprov_iibb").removeAttr('checked').attr('disabled','disabled');
-				 	$("#totaldiv-iibb").css('display','none');
-					if(estado == 1){
-		           		$("#total-iibbNC").text("$0.00");
-			         	$("#Notacreditoprov_importeIIBB").val(null);
-			         	$("#Notacreditoprov_importeIIBB").attr('readonly','true');
-					  	$("#totaldiv-iibbNC").css('display','none');
-					  	$("#totaldiv-iibbNC").css('display','none');
-					  	totaliibb_ajax=0;
-				  }
-				} 
-				 if(data.importe_per_iva !== null){
-				 	$("#Notacreditoprov_perciva").attr('checked',':checked').attr('disabled','disabled');
-				 	$("#total-perciva").text('$'+$.number(data.importe_per_iva,2));
-		          	$("#Notacreditoprov_importe_per_iva").removeAttr('readonly');
-		          	$("#totaldiv-percivaNC").show();
-		          	$("#total-percivaNC").text("$0.00");
-		          	$("#totaldiv-perciva").show();
-		          	totalperciva_ajax=data.importe_per_iva;
-		         } else {
-				 	$("#Notacreditoprov_perciva").removeAttr('checked').attr('disabled','disabled');
-				 	$("#totaldiv-perciva").css('display','none');
-					if(estado == 1){
-		           		$("#total-percivaNC").text("$0.00");
-			         	$("#Notacreditoprov_importe_per_iva").val(null);
-			         	$("#Notacreditoprov_importe_per_iva").css('display','none');
-					  	$("#totaldiv-perciva").css('display','none');
-					  	$("#totaldiv-percivaNC").css('display','none');
-					  	totalperciva_ajax=0;
-				  }
-				 }  
+					if(data.importeIIBB !== null){
+					 	$("#Notacreditoprov_iibb").attr('checked',':checked').attr('disabled','disabled');
+					 	$("#total-iibb").text('$'+$.number(data.importeIIBB,2));
+			          	$("#Notacreditoprov_importeIIBB").removeAttr('readonly');
+			          	$("#totaldiv-iibbNC").show();
+			          	$("#total-iibbNC").text("$0.00");
+			          	$("#totaldiv-iibb").show();
+			          	totaliibb_ajax=data.importeIIBB;
+			        } else {
+					 	$("#Notacreditoprov_iibb").removeAttr('checked').attr('disabled','disabled');
+					 	$("#totaldiv-iibb").css('display','none');
+						if(estado == 1){
+			           		$("#total-iibbNC").text("$0.00");
+				         	$("#Notacreditoprov_importeIIBB").val(null);
+				         	$("#Notacreditoprov_importeIIBB").attr('readonly','true');
+						  	$("#totaldiv-iibbNC").css('display','none');
+						  	$("#totaldiv-iibbNC").css('display','none');
+						  	totaliibb_ajax=0;
+					  }
+					} 
+					 if(data.importe_per_iva !== null){
+					 	$("#Notacreditoprov_perciva").attr('checked',':checked').attr('disabled','disabled');
+					 	$("#total-perciva").text('$'+$.number(data.importe_per_iva,2));
+			          	$("#Notacreditoprov_importe_per_iva").removeAttr('readonly');
+			          	$("#totaldiv-percivaNC").show();
+			          	$("#total-percivaNC").text("$0.00");
+			          	$("#totaldiv-perciva").show();
+			          	totalperciva_ajax=data.importe_per_iva;
+			         } else {
+					 	$("#Notacreditoprov_perciva").removeAttr('checked').attr('disabled','disabled');
+					 	$("#totaldiv-perciva").css('display','none');
+						if(estado == 1){
+			           		$("#total-percivaNC").text("$0.00");
+				         	$("#Notacreditoprov_importe_per_iva").val(null);
+				         	$("#Notacreditoprov_importe_per_iva").css('display','none');
+						  	$("#totaldiv-perciva").css('display','none');
+						  	$("#totaldiv-percivaNC").css('display','none');
+						  	totalperciva_ajax=0;
+					  }
+					 }  
 				
-				 if(data.descuento != null){
-				 	$("#Notacreditoprov_desc").attr('checked',':checked').attr('disabled','disabled');
-				 	$("#Notacreditoprov_descuento").removeAttr('readonly');
-				 	$("#total-descuento").text('-$'+$.number(data.descuento,2));
-				 	$("#totaldiv-descuentoNC").show();
-				 	$("#total-descuentoNC").text("$0.00");
-		          	$("#totaldiv-descuento").show();
-		          	descuento_ajax=data.descuento;
-		         } else {
-				 	$("#Notacreditoprov_desc").removeAttr('checked').attr('disabled','disabled');
-				 	if(estado == 1){
-		           		$("#total-descuentoNC").text("$0.00");
-			         	$("#Notacreditoprov_descuento").val(null);
-			         	$("#Notacreditoprov_descuento").css('display','none');
-					  	$("#totaldiv-descuento").css('display','none');
-					  	$("#totaldiv-descuentoNC").css('display','none');
-					  	descuento_ajax=0;
-				  	} 
-				 }
-				 if(data.interes !== null){
-				 	$("#Notacreditoprov_inter").attr('checked',':checked').attr('disabled','disabled');
-				 	$("#Notacreditoprov_interes").removeAttr('readonly');
-				 	$("#total-interes").text('$'+$.number(data.interes,2));
-				 	$("#totaldiv-interesNC").show();
-				 	$("#total-interesNC").text("$0.00");
-		          	$("#totaldiv-interes").show();
-		          	interes_ajax=data.interes;
-		         } else {
-				 	$("#Notacreditoprov_inter").removeAttr('checked').attr('disabled','disabled');
-				 	if(estado == 1){
-		           		$("#total-interesNC").text("$0.00");
-			         	$("#Notacreditoprov_interes").val(null);
-			         	$("#Notacreditoprov_interes").css('display','none');
-					  	$("#totaldiv-interes").css('display','none');
-					  	$("#totaldiv-interesNC").css('display','none');
-					  	interes_ajax=0;
-				  	} 
-				 }
-
-
-
+					 if(data.descuento != null){
+					 	$("#Notacreditoprov_desc").attr('checked',':checked').attr('disabled','disabled');
+					 	$("#Notacreditoprov_descuento").removeAttr('readonly');
+					 	$("#total-descuento").text('-$'+$.number(data.descuento,2));
+					 	$("#totaldiv-descuentoNC").show();
+					 	$("#total-descuentoNC").text("$0.00");
+			          	$("#totaldiv-descuento").show();
+			          	descuento_ajax=data.descuento;
+			         } else {
+					 	$("#Notacreditoprov_desc").removeAttr('checked').attr('disabled','disabled');
+					 	if(estado == 1){
+			           		$("#total-descuentoNC").text("$0.00");
+				         	$("#Notacreditoprov_descuento").val(null);
+				         	$("#Notacreditoprov_descuento").css('display','none');
+						  	$("#totaldiv-descuento").css('display','none');
+						  	$("#totaldiv-descuentoNC").css('display','none');
+						  	descuento_ajax=0;
+					  	} 
+					 }
+					 if(data.interes !== null){
+					 	$("#Notacreditoprov_inter").attr('checked',':checked').attr('disabled','disabled');
+					 	$("#Notacreditoprov_interes").removeAttr('readonly');
+					 	$("#total-interes").text('$'+$.number(data.interes,2));
+					 	$("#totaldiv-interesNC").show();
+					 	$("#total-interesNC").text("$0.00");
+			          	$("#totaldiv-interes").show();
+			          	interes_ajax=data.interes;
+			         } else {
+					 	$("#Notacreditoprov_inter").removeAttr('checked').attr('disabled','disabled');
+					 	if(estado == 1){
+			           		$("#total-interesNC").text("$0.00");
+				         	$("#Notacreditoprov_interes").val(null);
+				         	$("#Notacreditoprov_interes").css('display','none');
+						  	$("#totaldiv-interes").css('display','none');
+						  	$("#totaldiv-interesNC").css('display','none');
+						  	interes_ajax=0;
+					  	} 
+					 }
+				
 			} else {
 				 $(".facturaA").css('display', 'none');
   				 $("#facturac").show();
   				 $("#totalivadiv").css('display','none');
+  				 $("#totaldiv-netogravado").css('display','none');
+  				 
 				 $("#totalivadivNC").css('display','none');
 				 $("#totaldiv-iibb").css('display','none');
 				 $("#totaldiv-perciva").css('display','none');
 				 $("#totaldiv-descuento").css('display','none');
 				 $("#totaldiv-interes").css('display','none');
-				  $("#totaldiv-iibbNC").css('display','none');
+				 $("#totaldiv-iibbNC").css('display','none');
 				 $("#totaldiv-percivaNC").css('display','none');
 				 $("#totaldiv-descuentoNC").css('display','none');
 				 $("#totaldiv-interesNC").css('display','none');
-				 
-				totalnetogravado_ajax=data.importeneto;
+				 totalnetogravado_ajax=data.importeneto;
 				}
-			}
-			 var tipofactura=data.tipofactura;
-			 var importeIIBB=data.importeIIBB;
-			 var importe_per_iva=data.importe_per_iva;
+			
+			
 
 			$("#totalnetoblock").text('$'+$.number(data.importeneto,2));
 			
@@ -355,11 +353,10 @@ var input_netogravado=netogravado;
 	  if(isNaN(input_netogravado.toFixed(2))){
 	  		valor=0.00;
 	  }else {
-	  		valor=input_netogravado.toFixed(2);
+	  		valor=input_netogravado;
+	  		$("#Notacreditoprov_importebruto").val(parseFloat(valor));
 	  }
-	  $("#Notacreditoprov_importebruto").val(valor)
-	 
-	
+	  
 	
 } else {
  	
@@ -373,12 +370,12 @@ var input_netogravado=netogravado;
  		$("#totalnetoblockNC").text('$0.00');
   	} else {
  		$("#Notacreditoprov_importeneto").val(preciototal.toFixed(2));
+ 		$("#Notacreditoprov_importebruto").val(preciototal.toFixed(2));
   		$("#totalnetoblockNC").text("$"+$.number(preciototal.toFixed(2),2));
   		botonsubmit('1');
 	}
- 	
-  	botonsubmit();
-	}
+ 		
+  }
 } 
   function botonsubmit(estado){
 	

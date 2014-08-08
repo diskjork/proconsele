@@ -378,7 +378,7 @@ if(isset($_GET['vista'])){
 	<?php  echo $form->hiddenField($model,'importe_per_iva',array('span'=>4,)); ?>
 	<?php  echo $form->hiddenField($model,'descuento',array('span'=>4,)); ?>
 	<?php  echo $form->hiddenField($model,'interes',array('span'=>4,)); ?>
-	<?php echo $form->hiddenField($model,'importebruto',array('span'=>5)); ?>
+	<?php //echo $form->hiddenField($model,'importebruto',array('span'=>5)); ?>
 	<?php echo $form->hiddenField($model,'asiento_idasiento',array('span'=>5)); ?>
     <?php echo $form->hiddenField($model, 'vista', array());?>    
             

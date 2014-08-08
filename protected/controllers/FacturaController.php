@@ -176,7 +176,7 @@ class FacturaController extends Controller
 							if($D_R > 0){
 							$DeAsRecar=new Detalleasiento;
 							$DeAsRecar->haber=$D_R;
-							$DeAsRecar->cuenta_idcuenta=141; // 434020 Actualiz. y Recargos
+							$DeAsRecar->cuenta_idcuenta=161; // recargo por ventas
 							$DeAsRecar->asiento_idasiento=$asiento->idasiento;
 							$DeAsRecar->save();
 							}
@@ -459,7 +459,7 @@ class FacturaController extends Controller
 					} else {
 						$DeAsRecar=new Detalleasiento;
 						$DeAsRecar->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
-						$DeAsRecar->cuenta_idcuenta=141; // 434020 Actualiz. y Recargos
+						$DeAsRecar->cuenta_idcuenta=161; // recargo por ventas
 						$DeAsRecar->asiento_idasiento=$asiento->idasiento;
 						$DeAsRecar->save();
 					}
@@ -471,7 +471,7 @@ class FacturaController extends Controller
 						$DeAsDesc->delete();
 					} else {
 						$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
-											array(':cuenta'=>141, // 434020 Actualiz. y Recargos
+											array(':cuenta'=>161, // recargos por ventas
 												  ':asiento'=>$viejos->asiento_idasiento));
 						$DeAsDesc->delete();
 					}
@@ -482,11 +482,11 @@ class FacturaController extends Controller
 												  ':asiento'=>$viejos->asiento_idasiento));
 						$DeAsDesc->debe=null;
 						$DeAsDesc->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
-						$DeAsDesc->cuenta_idcuenta=141; // 434020 Actualiz. y Recargos
+						$DeAsDesc->cuenta_idcuenta=161; // recargos por ventas
 						$DeAsDesc->update();
 					} elseif(($viejos->tipodescrecar == 1) && ($nuevos->tipodescrecar == 0)){
 						$DeAsDescR=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
-											array(':cuenta'=>141, //434020 Actualiz. y Recargos
+											array(':cuenta'=>161, //recargos por ventas
 												  ':asiento'=>$viejos->asiento_idasiento));
 						$DeAsDescR->haber=null;
 						$DeAsDescR->debe=$nuevos->netogravado * ($nuevos->descrecar/100);					
@@ -501,7 +501,7 @@ class FacturaController extends Controller
 							$DeAsDesc->update();
 						} else {
 							$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
-											array(':cuenta'=>141, //434020 Actualiz. y Recargos
+											array(':cuenta'=>161, //recargos por ventas
 												  ':asiento'=>$viejos->asiento_idasiento));
 							$DeAsDesc->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
 							$DeAsDesc->update();
@@ -515,11 +515,11 @@ class FacturaController extends Controller
 												  ':asiento'=>$viejos->asiento_idasiento));
 						$DeAsDesc->debe=null;
 						$DeAsDesc->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
-						$DeAsDesc->cuenta_idcuenta=141; // 434020 Actualiz. y Recargos
+						$DeAsDesc->cuenta_idcuenta=161; // recargos por ventas
 						$DeAsDesc->update();
 					} elseif(($viejos->tipodescrecar == 1) && ($nuevos->tipodescrecar == 0)){
 						$DeAsDescR=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
-											array(':cuenta'=>141, //434020 Actualiz. y Recargos
+											array(':cuenta'=>161, //recargos por ventas
 												  ':asiento'=>$viejos->asiento_idasiento));
 						$DeAsDescR->haber=null;
 						$DeAsDescR->debe=$nuevos->netogravado * ($nuevos->descrecar/100);					
@@ -534,7 +534,7 @@ class FacturaController extends Controller
 							$DeAsDesc->update();
 						} else {
 							$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
-											array(':cuenta'=>141, //434020 Actualiz. y Recargos
+											array(':cuenta'=>161, //recargos por ventas
 												  ':asiento'=>$viejos->asiento_idasiento));
 							$DeAsDesc->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
 							$DeAsDesc->update();
