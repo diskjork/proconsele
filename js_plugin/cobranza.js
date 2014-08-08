@@ -65,7 +65,7 @@ function newElem(idinput){
 		
 	var cTR=$("table.table.mmf_table > tbody > tr").size();
 	
-		var n=1+ 15*(cTR-1);
+		var n=1+ 19*(cTR-1);
 		var id_input=$("td.mmf_cell:eq("+n+") > select").attr("id");
 
 		if(id_input == null){
@@ -86,6 +86,10 @@ function newElem(idinput){
 		var iibbfecha=viewid(0,0,id,14);
 		var iibbcomprelac=viewid(0,0,id,15);
 		var iibbtasa=viewid(0,0,id,16);
+		var ivanrocomp=viewid(0,0,id,17);
+		var ivafecha=viewid(0,0,id,18);
+		var ivacomprelac=viewid(0,0,id,19);
+		var ivatasa=viewid(0,0,id,20);
 	} else {
 		var id_input=idinput;
 		//alert(id_input);
@@ -104,6 +108,10 @@ function newElem(idinput){
 		var iibbfecha=viewid(1,1,id,14);
 		var iibbcomprelac=viewid(1,1,id,15);
 		var iibbtasa=viewid(1,1,id,16);
+		var ivanrocomp=viewid(1,1,id,17);
+		var ivafecha=viewid(1,1,id,18);
+		var ivacomprelac=viewid(1,1,id,19);
+		var ivatasa=viewid(1,1,id,20);
 	}
 		//alert(id_input);
 		
@@ -154,6 +162,18 @@ function newElem(idinput){
 
 		$("#"+iibbtasa).parent().removeAttr("style");
 		$("#"+iibbtasa).parent().css("display","none");
+
+		$("#"+ivanrocomp).parent().removeAttr("style");
+		$("#"+ivanrocomp).parent().css("display","none");
+
+		$("#"+ivafecha).parent().removeAttr("style");
+		$("#"+ivafecha).parent().css("display","none");
+
+		$("#"+ivacomprelac).parent().removeAttr("style");
+		$("#"+ivacomprelac).parent().css("display","none");
+
+		$("#"+ivatasa).parent().removeAttr("style");
+		$("#"+ivatasa).parent().css("display","none");
 		
 }
 
@@ -173,6 +193,10 @@ function seleccion(obj){
 	var iibbfecha=viewid(1,1,id,14);
 	var iibbcomprelac=viewid(1,1,id,15);
 	var iibbtasa=viewid(1,1,id,16);
+	var ivanrocomp=viewid(1,1,id,17);
+	var ivafecha=viewid(1,1,id,18);
+	var ivacomprelac=viewid(1,1,id,19);
+	var ivatasa=viewid(1,1,id,20);
 	valor=parseInt(valor);
 	switch(valor){
 		case (0): //efectivo
@@ -260,8 +284,8 @@ function seleccion(obj){
 		case (3): //IIBB
 			newElem(id);
 			$("#"+iibbnrocomp).parent().removeAttr("style");
-			$("#"+iibbnrocomp).parent().find('label').html("Nro.Compr.").remove();
-			$("#"+iibbnrocomp).parent().prepend("<label>Nro.Compr.</label>");
+			$("#"+iibbnrocomp).parent().find('label').html("Nro.Compr.R.IIBB").remove();
+			$("#"+iibbnrocomp).parent().prepend("<label>Nro.Compr.R.IIBB</label>");
 			$("#"+iibbnrocomp).parent().css("text-align","left");
 
 			$("#"+iibbfecha).parent().removeAttr("style");
@@ -288,6 +312,37 @@ function seleccion(obj){
 			$("#"+id_impor).parent().css("text-align","left");
 			
 			break;
+		case (4): //IVA
+			newElem(id);
+			$("#"+ivanrocomp).parent().removeAttr("style");
+			$("#"+ivanrocomp).parent().find('label').html("Nro.Compr.R.IVA").remove();
+			$("#"+ivanrocomp).parent().prepend("<label>Nro.Compr.R.IVA</label>");
+			$("#"+ivanrocomp).parent().css("text-align","left");
+
+			$("#"+ivafecha).parent().removeAttr("style");
+			$("#"+ivafecha).parent().find('label').html("Fecha").remove();
+			$("#"+ivafecha).parent().css("width","70px");
+			$("#"+ivafecha).parent().find('input').css("width","90%");
+			$("#"+ivafecha).parent().prepend("<label>Fecha</label>");
+			$("#"+ivafecha).parent().find('label').css("width","70px");
+			$("#"+ivafecha).parent().css("text-align","left");
+			
+			$("#"+ivacomprelac).parent().removeAttr("style");
+			$("#"+ivacomprelac).parent().find('label').html("Compr.Relac.").remove();
+			$("#"+ivacomprelac).parent().prepend("<label>Compr.Relac.</label>");
+			$("#"+ivacomprelac).parent().css("text-align","left");
+
+			$("#"+ivatasa).parent().removeAttr("style");
+			$("#"+ivatasa).parent().find('label').html("Tasa %").remove();
+			$("#"+ivatasa).parent().prepend("<label>Tasa %</label>");
+			$("#"+ivatasa).parent().css("text-align","left");
+
+			$("#"+id_impor).parent().removeAttr("style");
+			$("#"+id_impor).parent().find('label').html("Importe").remove();
+			$("#"+id_impor).parent().prepend("<label>Importe</label>");
+			$("#"+id_impor).parent().css("text-align","left");
+			
+			break;
 
 	}
 
@@ -299,8 +354,8 @@ function sumatotal(){
 	if(cTR != 0){
 	var total=0;
 	for(i=0;i < cTR;i++){
-		var n=13;
-		n=n+(15*i);
+		var n=17;
+		n=n+(19*i);
 		var subtotal=parseFloat($( "td.mmf_cell:eq("+n+") > input" ).val());
 		if($.isNumeric(subtotal))
 		total=total+subtotal;
@@ -317,7 +372,7 @@ function elementosnovalidados(){
 		
 		for(i=0;i < cTR-1;i++){
 		var n=0;
-		n=n+(15*i);
+		n=n+(19*i);
 		var valor=parseFloat($( "td.mmf_cell:eq("+n+") > select" ).val());
 		var id=$( "td.mmf_cell:eq("+n+") > select" ).attr("id");
 		obj={id:id,val:valor};
@@ -435,6 +490,26 @@ function viewid(cantidad1,cantidad2, id , atributo){
 				return id_iibbtasa;
 				//console.log(iibbfecha);
 				break;
+			case (17): //iva número de comprobante
+				var id_ivanrocomp="Detallecobranza"+indexid+"ivanrocomp";
+				return id_ivanrocomp;
+				//console.log(id_ivanrocomp);
+				break;
+			case (18): //iva fecha del comprobante
+				var id_ivafecha="Detallecobranza"+indexid+"ivafecha";
+				return id_ivafecha;
+				//console.log(ivafecha);
+				break;
+			case (19): //iva número de comprobante
+				var id_ivacomprelac="Detallecobranza"+indexid+"ivacomprelac";
+				return id_ivacomprelac;
+				//console.log(ivafecha);
+				break;
+			case (20): //iva tasa de retencion
+				var id_ivatasa="Detallecobranza"+indexid+"ivatasa";
+				return id_ivatasa;
+				//console.log(ivafecha);
+				break;
 			} 
 	}else {
 		indexid = id_input.substring(cant2,id_input.length);
@@ -502,6 +577,26 @@ function viewid(cantidad1,cantidad2, id , atributo){
 			return id_iibbtasa;
 			//console.log(iibbfecha);
 			break;
+		case (17): //iva número de comprobante
+			var id_ivanrocomp="Detallecobranza_ivanrocomp"+indexid;
+			return id_ivanrocomp;
+			//console.log(id_ivanrocomp);
+			break;
+		case (18): //iva fecha del comprobante
+			var id_ivafecha="Detallecobranza_ivafecha"+indexid;
+			return id_ivafecha;
+			//console.log(ivafecha);
+			break;
+		case (19): //iva número de comprobante
+			var id_ivacomprelac="Detallecobranza_ivacomprelac"+indexid;
+			return id_ivacomprelac;
+			//console.log(ivafecha);
+			break;
+		case (20): //iva tasa de retencion
+			var id_ivatasa="Detallecobranza_ivatasa"+indexid;
+			return id_ivatasa;
+			//console.log(ivafecha);
+			break;
 		}
 		
 	}
@@ -519,6 +614,14 @@ function borradoinputs(id){
 	var idcheque=viewid(1,1,id,9);
 	var chequetitular=viewid(1,1,id,10);
 	var chequecuittitular=viewid(1,1,id,11);
+	var iibbnrocomp=viewid(1,1,id,13);
+	var iibbfecha=viewid(1,1,id,14);
+	var iibbcomprelac=viewid(1,1,id,15);
+	var iibbtasa=viewid(1,1,id,16);
+	var ivanrocomp=viewid(1,1,id,17);
+	var ivafecha=viewid(1,1,id,18);
+	var ivacomprelac=viewid(1,1,id,19);
+	var ivatasa=viewid(1,1,id,20);
 
 	$("#"+bancoT).val("");
 	$("#"+banco).val("");
@@ -529,6 +632,14 @@ function borradoinputs(id){
 	$("#"+idcheque).val("");
 	$("#"+chequetitular).val("");
 	$("#"+chequecuittitular).val("");
+	$("#"+iibbnrocomp).val("");
+	$("#"+iibbfecha).val("");
+	$("#"+iibbcomprelac).val("");
+	$("#"+iibbtasa).val("");
+	$("#"+ivacomprelac).val("");
+	$("#"+ivafecha).val("");
+	$("#"+ivacomprelac).val("");
+	$("#"+ivatasa).val("");
 }
 
 function botonsubmit(){

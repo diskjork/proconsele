@@ -50,17 +50,18 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('tipocobranza, importe', 'required'),
-			array('tipocobranza, chequebanco, cobranza_idcobranza,  caja_idcaja, iibbnrocomp ', 'numerical', 'integerOnly'=>true),
+			array('tipocobranza, chequebanco, cobranza_idcobranza,  caja_idcaja, iibbnrocomp , ivanrocomp', 'numerical', 'integerOnly'=>true),
 			array('importe, iibbtasa', 'numerical'),
-			array('transferenciabanco, chequetitular, chequecuittitular, iibbcomprelac', 'length', 'max'=>100),
+			array('transferenciabanco, chequetitular, chequecuittitular, iibbcomprelac, ivacomprelac', 'length', 'max'=>100),
 			array('nrocheque', 'length', 'max'=>20),
 			array('chequefechacobro, chequefechaingreso, iibbfecha', 'safe'),
-			array('transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, caja_idcaja', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('iddetallecobranza, tipocobranza, importe, transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, cobranza_idcobranza, caja_idcaja, iibbfecha, iibbnrocomp, iibbcomprelac, iibbtasa', 'safe', 'on'=>'search'),
+			array('transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, caja_idcaja, iibbfecha, iibbnrocomp, iibbcomprelac, iibbtasa, ivafecha, ivanrocomp, ivacomprelac, ivatasa', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('iddetallecobranza, tipocobranza, importe, transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, cobranza_idcobranza, caja_idcaja, iibbfecha, iibbnrocomp, iibbcomprelac, iibbtasa, ivafecha, ivanrocomp, ivacomprelac, ivatasa', 'safe', 'on'=>'search'),
 			array('tipocobranza','validarDatosCheque'),
 			array('tipocobranza','validarDatosTransfe'),
 			array('tipocobranza','validarDatosEfectivo'),
 			array('tipocobranza','validarDatosIIBB'),
+			array('tipocobranza','validarDatosIVA'),
 		);
 	}
 
@@ -93,6 +94,10 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
 			'iibbfecha' => Yii::t('app', 'Fecha'),
 			'iibbcomprelac'=> Yii::t('app', 'Compr.Relacionado'),
 			'iibbtasa'=>Yii::t('app', 'Tasa %'),
+			'ivanrocomp' => Yii::t('app', 'Nro.Compr'),
+			'ivafecha' => Yii::t('app', 'Fecha'),
+			'ivacomprelac'=> Yii::t('app', 'Compr.Relacionado'),
+			'ivatasa'=>Yii::t('app', 'Tasa %'),
 			'cobranza_idcobranza' => null,
 			'cobranzaIdcobranza' => null,
 			'cajaIdcaja'=> null,
@@ -183,6 +188,21 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
     				break;
     			case ($this->iibbfecha == null):
     				$this->addError('iibbfecha', 'Fecha No puede ser nula');
+    				break;
+    						
+    		}
+    	}
+    }
+	public function validarDatosIVA($attribute,$params){
+      	
+    	if( $this->tipocobranza == 4){
+    		
+    		switch (true){
+    			case ($this->ivanrocomp == null):
+    				$this->addError('ivanrocomp', 'No puede ser nulo');
+    				break;
+    			case ($this->ivafecha == null):
+    				$this->addError('ivafecha', 'Fecha No puede ser nula');
     				break;
     						
     		}

@@ -1,6 +1,6 @@
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js">
 </script>
-<?php Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/cobranza.js', CClientScript::POS_HEAD);?>
+<?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/cobranza.js', CClientScript::POS_HEAD);?>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js">
 </script>
 
@@ -103,7 +103,8 @@
 								'items'=>array('0'=>'Efectivo',
 											   '1'=>'Cheque',
 											   '2'=>'Transferencia',
-											   '3'=>'Cert. Retención IIBB'),
+											   '3'=>'Cert. Retención IIBB',
+											   '4'=>'Cert. Retención IVA'),
 								'prompt'=>'Seleccione tipo de cobro..',
 					            'class'=>'span2',
 								
@@ -184,7 +185,27 @@
 					            'class'=>'span1',
 					        	'onkeydown'=>'solonumeromod(event);',
 					        ),
-					        	
+					         'ivanrocomp'=>array(
+					            'type'=>'text',
+					            'class'=>'span2',
+					        	'onkeydown'=>'solonumeromod(event);',
+					        ),
+					        'ivafecha'=>array(              
+               					 'type'=>'zii.widgets.jui.CJuiDatePicker',
+                				 'language'=>'es',
+					                'options'=>array(
+					                    'showAnim'=>'fold',
+							            ),
+			                ),
+			                 'ivacomprelac'=>array(
+					            'type'=>'text',
+					            'class'=>'span2',
+					        ),
+					        'ivatasa'=>array(
+					            'type'=>'text',
+					            'class'=>'span1',
+					        	'onkeydown'=>'solonumeromod(event);',
+					        ),	
 					        'importe'=>array(
 					            'type'=>'text',
 					            'class'=>'span1',

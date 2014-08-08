@@ -209,6 +209,10 @@ class CobranzaController extends Controller
 						$itemUpdate[$i]['iibbfecha']=$_POST['Detallecobranza']['u__'][$i]['iibbfecha'];
 						$itemUpdate[$i]['iibbcomprelac']=$_POST['Detallecobranza']['u__'][$i]['iibbcomprelac'];
 						$itemUpdate[$i]['iibbtasa']=$_POST['Detallecobranza']['u__'][$i]['iibbtasa'];
+						$itemUpdate[$i]['ivanrocomp']=$_POST['Detallecobranza']['u__'][$i]['ivanrocomp'];
+						$itemUpdate[$i]['ivafecha']=$_POST['Detallecobranza']['u__'][$i]['ivafecha'];
+						$itemUpdate[$i]['ivacomprelac']=$_POST['Detallecobranza']['u__'][$i]['ivacomprelac'];
+						$itemUpdate[$i]['ivatasa']=$_POST['Detallecobranza']['u__'][$i]['ivatasa'];
 
 						//Datos del detalle ya guardado-----------------------------------
 						
@@ -233,6 +237,10 @@ class CobranzaController extends Controller
 						$datos[$i]['iibbfecha']=$DC_trabajo->iibbfecha;
 						$datos[$i]['iibbcomprelac']=$DC_trabajo->iibbcomprelac;
 						$datos[$i]['iibbtasa']=$DC_trabajo->iibbtasa;
+						$datos[$i]['ivanrocomp']=$DC_trabajo->ivanrocomp;
+						$datos[$i]['ivafecha']=$DC_trabajo->ivafecha;
+						$datos[$i]['ivacomprelac']=$DC_trabajo->ivacomprelac;
+						$datos[$i]['ivatasa']=$DC_trabajo->ivatasa;
 						
 					} else {
 						//elementos borrados
@@ -544,6 +552,17 @@ class CobranzaController extends Controller
 		$modelIIBB->detallecobranza_iddetallecobranza=$datos['iddetallecobranza'];
 		$modelIIBB->save();
 	}
+	public function nuevoIVA($datos){
+		$modeliva=new Retencioniva;
+		$modeliva->nrocomprobante=$datos['ivanrocomp'];
+		$modeliva->fecha=$datos['fecha'];
+		$modeliva->cliente_idcliente=$datos['idcliente'];
+		$modeliva->comp_relacionado=$datos['ivacomprelac'];
+		$modeliva->tasa=$datos['ivatasa'];
+		$modeliva->importe=$datos['importe'];
+		$modeliva->detallecobranza_iddetallecobranza=$datos['iddetallecobranza'];
+		$modeliva->save();
+	}
 	public function idCliente($idctacte){
 		$sql="SELECT cliente.idcliente as idcliente, cliente.nombre AS nombrecliente  FROM cliente,ctactecliente,cobranza 
 				WHERE cliente.idcliente =ctactecliente.cliente_idcliente and  ctactecliente.idctactecliente = ".$idctacte." LIMIT 1;";
@@ -648,7 +667,28 @@ class CobranzaController extends Controller
 			              $DeAsIIBB->save();
 		              }
 	              
+	             } elseif($validatedMembers[$a]['tipocobranza'] == 4 && (!isset($Deta))
+	             ){ //IVA
+	              //nuevo comprobante de retención de IVA
+		              $Moviva=new Retencioniva;
+		              $Moviva->nrocomprobante=$validatedMembers[$a]['ivanrocomp'];
+		              $Moviva->cliente_idcliente=$cliente->idcliente;
+		              $Moviva->fecha=$fecha;
+		              $Moviva->comp_relacionado=$validatedMembers[$a]['ivacomprelac'];
+		              $Moviva->importe=$validatedMembers[$a]['importe'];
+		              $Moviva->tasa=$validatedMembers[$a]['ivatasa'];
+		              $Moviva->detallecobranza_iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+		              if($Moviva->save()){
+			              $DeAsiva=new Detalleasiento;
+			              $DeAsiva->debe=$validatedMembers[$a]['importe'];
+			              $DeAsiva->cuenta_idcuenta=14;// RETENCION IVA
+			              $DeAsiva->asiento_idasiento=$nroasiento;
+			              $DeAsiva->iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+			              $DeAsiva->save();
+		              }
+	              
 	             }
+	             
              } //for
  	}
 	public function cambioTipoBorrado($tipoguardado,$datos){
@@ -689,6 +729,12 @@ class CobranzaController extends Controller
    									array(':id'=>$datos['iddetallecobranza']));
 				$RetIIB->delete();   									
    				break;
+   			case 4 :
+   				//$this->resetDetalle($datos['iddetallecobranza']);	
+   				$RetIVA=Retencioniva::model()->find("detallecobranza_iddetallecobranza=:id",
+   									array(':id'=>$datos['iddetallecobranza']));
+				$RetIVA->delete();   									
+   				break;
    		}
    	}
 	public function cambioTipoNuevoDetalle($datos){
@@ -714,6 +760,10 @@ class CobranzaController extends Controller
 			case 3:
 				
 				$this->nuevoIIBB($datos);
+				break;
+			case 4:
+				
+				$this->nuevoIVA($datos);
 				break;
 		}
 	}
@@ -797,6 +847,27 @@ class CobranzaController extends Controller
 						$MovIIBB->tasa=$nuevosdatos['iibbtasa'];
 						$MovIIBB->importe=$nuevosdatos['importe'];
 						$MovIIBB->save();
+						$DeAs->debe=$nuevosdatos['importe'];
+						$DeAs->update();
+					}
+			break;		
+		
+		case 4: //para IVA
+				$Moviva=Retencioniva::model()->find("detallecobranza_iddetallecobranza=:id",
+						array(':id'=>$datosviejos['iddetallecobranza']));
+						
+				if(	($datosviejos['ivanrocomp'] != $nuevosdatos['ivanrocomp']) || 
+					($datosviejos['ivafecha'] != $nuevosdatos['ivafecha']) ||
+					($datosviejos['ivacomprelac'] != $nuevosdatos['ivacomprelac']) ||
+					($datosviejos['ivatasa'] != $nuevosdatos['ivatasa']) ||
+					($datosviejos['importe'] != $nuevosdatos['importe']) ) 	{
+						//print_r($nuevosdatos);die();
+						$Moviva->nrocomprobante=$nuevosdatos['ivanrocomp'];
+						$Moviva->fecha=$nuevosdatos['ivafecha'];
+						$Moviva->comp_relacionado=$nuevosdatos['ivacomprelac'];
+						$Moviva->tasa=$nuevosdatos['ivatasa'];
+						$Moviva->importe=$nuevosdatos['importe'];
+						$Moviva->save();
 						$DeAs->debe=$nuevosdatos['importe'];
 						$DeAs->update();
 					}
@@ -894,6 +965,11 @@ class CobranzaController extends Controller
 			break;
 			case 3:
 				$DeAsiento->cuenta_idcuenta = 20;// cuenta 113700 Ret. Imp. Ingresos Brutos
+				$DeAsieto->debe=$nuevo['importe'];
+				$DeAsiento->save();
+			break;
+			case 4:
+				$DeAsiento->cuenta_idcuenta = 14;// retencion iva
 				$DeAsieto->debe=$nuevo['importe'];
 				$DeAsiento->save();
 			break;
@@ -1016,6 +1092,10 @@ class CobranzaController extends Controller
 		$detalle->iibbfecha=null;
 		$detalle->iibbcomprelac=null;
 		$detalle->iibbtasa=null;
+		$detalle->ivanrocomp=null;
+		$detalle->ivafecha=null;
+		$detalle->ivacomprelac=null;
+		$detalle->ivatasa=null;
 		$detalle->save();
 	}
 	public function actionEnvioctactecliente(){

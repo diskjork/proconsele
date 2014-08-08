@@ -76,6 +76,8 @@ $("#Notacreditoprov_compras_idcompras").change(function(event){
          	$("#total-descuentoNC").text('');
          	$("#totaldiv-descuentoNC").css('display','none');
          	$("#totaldiv-iibbNC").css('display','none');
+         	$("#Notacreditoprov_importebruto").popover('hide');
+         	$("#Notacreditoprov_importeneto").popover('hide');
 		}
 		resetInputs();
 		ajaxFactura(this.value,'1');
@@ -126,9 +128,14 @@ function ajaxFactura(id, estado){
 				totalneto_ajax=parseFloat(data.importeneto);
 				totaliva_ajax=parseFloat(data.ivatotal);
 				cofiva_ajax=parseFloat(data.iva);
-
+				$("#totalivadiv").show();
 				$("#ivablock").text('$'+$.number(data.ivatotal,2));
-			
+				
+				$("#Notacreditoprov_importebruto")
+					.popover({ 
+	        		placement:'right'	,
+	        		title: 'Neto Gravado', content: "Ingrese un importe menor o igual al Neto Gravado de la factura seleccionada." })
+		       		.popover('show');
 				$("#Notacreditoprov_iva").select2('val',data.iva).select2('readonly','true');
 				
 					if(data.importeIIBB !== null){
@@ -171,7 +178,7 @@ function ajaxFactura(id, estado){
 						  	totalperciva_ajax=0;
 					  }
 					 }  
-				
+						
 					 if(data.descuento != null){
 					 	$("#Notacreditoprov_desc").attr('checked',':checked').attr('disabled','disabled');
 					 	$("#Notacreditoprov_descuento").removeAttr('readonly');
@@ -212,8 +219,15 @@ function ajaxFactura(id, estado){
 					 }
 				
 			} else {
+				 
 				 $(".facturaA").css('display', 'none');
   				 $("#facturac").show();
+  				 $("#Notacreditoprov_importeneto")
+  				 	.popover({ 
+	        		placement:'right',
+	        		title: 'TOTAL', 
+	        		content: "Ingrese un importe menor o igual al Total de la factura seleccionada." })
+		       		.popover('show');
   				 $("#totalivadiv").css('display','none');
   				 $("#totaldiv-netogravado").css('display','none');
   				 
@@ -230,7 +244,6 @@ function ajaxFactura(id, estado){
 				}
 			
 			
-
 			$("#totalnetoblock").text('$'+$.number(data.importeneto,2));
 			
 			

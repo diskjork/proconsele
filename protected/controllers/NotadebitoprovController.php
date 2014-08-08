@@ -264,7 +264,7 @@ class NotadebitoprovController extends Controller
 	public function ivamovimiento($model,$datoPOST){
 			$nuevo=new Ivamovimiento;
 			$nuevo->fecha=$datoPOST['fecha'];
-			$nuevo->tipomoviento=0; //venta debito fiscal de iva
+			$nuevo->tipomoviento=1; //venta crédito fiscal de iva
 			$nuevo->nrocomprobante=$model->nronotadebitoprov;
 			$nuevo->proveedor_idproveedor=$model->proveedor_idproveedor;
 			$nuevo->cuitentidad=$model->proveedorIdproveedor->cuit;

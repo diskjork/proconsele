@@ -492,7 +492,7 @@ public function actionBorrar($id){
 				$iibb=$nuevos->ivatotal;
 				$detAs->save();
 			}
-			if(($viejos->ivatotal != null) && ($nuevos->ivatotal == null)){
+			if((($viejos->ivatotal != null) && ($nuevos->ivatotal == null)) || (($viejos->ivatotal != null) && ($viejos->tipofactura == 1) &&($nuevos->tipofactura == 3))){
 				$DeAsIIBB=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
 							array(':idasiento'=>$viejos->asiento_idasiento,
 								  ':idcuenta'=>13));//113100 Iva - Crédito Fiscal   
@@ -517,7 +517,7 @@ public function actionBorrar($id){
 				$iibb=$nuevos->importeIIBB;
 				$detAs->save();
 			}
-			if(($viejos->importeIIBB != null) && ($nuevos->importeIIBB == null)){
+			if((($viejos->importeIIBB != null) && ($nuevos->importeIIBB == null))|| (($viejos->importeIIBB != null) && ($viejos->tipofactura == 1) &&($nuevos->tipofactura == 3)) ){
 				$DeAsIIBB=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
 							array(':idasiento'=>$viejos->asiento_idasiento,
 								  ':idcuenta'=>20));// cuenta 113700 Ret. Imp. Ingresos Brutos   
@@ -540,7 +540,7 @@ public function actionBorrar($id){
 				$detAs->asiento_idasiento=$viejos->asiento_idasiento;
 				$detAs->save();
 			}
-			if(($viejos->importe_per_iva != null) && ($nuevos->importe_per_iva == null)){
+			if((($viejos->importe_per_iva != null) && ($nuevos->importe_per_iva == null)) || (($viejos->importe_per_iva != null) && ($viejos->tipofactura == 1) &&($nuevos->tipofactura == 3))){
 				$DeAs_per_iva=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
 							array(':idasiento'=>$viejos->asiento_idasiento,
 								  ':idcuenta'=>14));// percepcion iva  
@@ -563,7 +563,7 @@ public function actionBorrar($id){
 				$detAs->asiento_idasiento=$viejos->asiento_idasiento;
 				$detAs->save();
 			}
-			if(($viejos->interes != null) && ($nuevos->interes == null)){
+			if((($viejos->interes != null) && ($nuevos->interes == null)) || (($viejos->interes != null) && ($viejos->tipofactura == 1) &&($nuevos->tipofactura == 3))){
 				$DeAs=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
 							array(':idasiento'=>$viejos->asiento_idasiento,
 								  ':idcuenta'=>98));
@@ -585,7 +585,7 @@ public function actionBorrar($id){
 				$detAs->asiento_idasiento=$viejos->asiento_idasiento;
 				$detAs->save();
 			}
-			if(($viejos->descuento != null) && ($nuevos->descuento == null)){
+			if((($viejos->descuento != null) && ($nuevos->descuento == null)) || (($viejos->descuento != null) && ($viejos->tipofactura == 1) &&($nuevos->tipofactura == 3))){
 				$DeAs=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
 							array(':idasiento'=>$viejos->asiento_idasiento,
 								  ':idcuenta'=>149));
