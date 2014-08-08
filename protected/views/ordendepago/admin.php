@@ -51,7 +51,7 @@ Yii::app()->clientScript->registerScript(
 				$anioTab=$_GET['anioTab'];
 			}
 		//$minmax=2012;
-		$anioInicio=2014;
+		$anioInicio=2013;
 		$anioSiguiente=date('Y')+1;
 		$nomVar='modoActive';
 		

@@ -116,16 +116,17 @@ abstract class BaseCuenta extends GxActiveRecord {
         	
         		        	
         	$fecha = DateTime::createFromFormat('d/m/Y', $fecha);
-        	
-        	$anio1=$fecha->format('Y');
+        	$fecha=$fecha->format('Y-m-d');
+        	/*$anio1=$fecha->format('Y');
         	$mes1=$fecha->format('m');
-        	$dia1=$fecha->format('d');
+        	$dia1=$fecha->format('d');*/
         	
         	$fecha2 = DateTime::createFromFormat('d/m/Y', $fecha2);
-        	$anio2=$fecha2->format('Y');
+        	$fecha2=$fecha2->format('Y-m-d');
+        	/*$anio2=$fecha2->format('Y');
         	$mes2=$fecha2->format('m');
-        	$dia2=$fecha2->format('d');
-			$sql='SELECT asiento.fecha AS fechaasiento,
+        	$dia2=$fecha2->format('d');*/
+			$sql="SELECT asiento.fecha AS fechaasiento,
 						 cuenta.codigocta AS codigocuenta,
 						 cuenta.nombre AS nombrecuenta, 
 						 asiento.descripcion AS descripcionasiento,
@@ -133,15 +134,10 @@ abstract class BaseCuenta extends GxActiveRecord {
 						 detalleasiento.debe AS debeT, 
 						 detalleasiento.haber AS haberT
 					FROM detalleasiento, asiento, cuenta
-					WHERE detalleasiento.cuenta_idcuenta ='.$idcuenta.'
+					WHERE detalleasiento.cuenta_idcuenta ='".$idcuenta."'
 					AND detalleasiento.asiento_idasiento = asiento.idasiento
 					AND cuenta.idcuenta = detalleasiento.cuenta_idcuenta
-					AND YEAR( asiento.fecha ) >='.$anio1.'
-					AND YEAR( asiento.fecha ) <='.$anio2.'
-					AND MONTH( asiento.fecha ) >='.$mes1.'
-					AND MONTH( asiento.fecha ) <='.$mes2.'
-					AND DAY( asiento.fecha ) >='.$dia1.'
-					AND DAY( asiento.fecha )<='.$dia2;
+					AND asiento.fecha between '".$fecha."' and '".$fecha2."'";
 			$count=Yii::app()->db->createCommand($sql)->queryScalar();
 			$dataProvider=new CSqlDataProvider($sql, array(
 				'keyField'=>'idcuent',

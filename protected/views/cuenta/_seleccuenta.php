@@ -1,6 +1,8 @@
 <?php
 	$dataProvider= $model->generargrilladetallecuenta($idcuenta, $fecha, $fecha2);
+	//print_r($dataProvider); die();
 	$dataArray=$dataProvider->getData();
+	
 	$dataDebeTotal=0;$dataHaberTotal=0;
 
 	for ($i=0;$i<count($dataArray);$i++){

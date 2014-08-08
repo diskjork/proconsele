@@ -335,9 +335,11 @@ class AsientoController extends Controller
 		if($tipo == 0){
                 $dataproviderDEBE=$model->generarArrayDEBE($anio_tab, $mes_tab)->data;
                 $dataproviderHABER=$model->generarArrayHABER($anio_tab, $mes_tab)->data;
-                /*print_r($dataproviderDEBE);
-                echo "<br>";
-                print_r($dataproviderHABER);die();*/
+                if(empty($dataproviderDEBE) && empty($dataproviderHABER)){
+                	$this->redirect('admin');
+                	
+                }
+                
                 $cantDEBE=count($dataproviderDEBE);
                 $cantHABER=count($dataproviderHABER);
                 $cantTOTAL=$cantDEBE+$cantHABER;
@@ -397,6 +399,10 @@ class AsientoController extends Controller
 					$nombreArchivo='Resumen-Asiento Mes ('.date('m').') - Generado (' .date('d-m-Y').')';
 		} else {
 			$dataproviderAsiento=$model->generarAsientos($anio_tab, $mes_tab)->data;
+			if(empty($dataproviderAsiento)){
+                	$this->redirect('admin');
+                	
+                }
 			$cantAsientos=count($dataproviderAsiento);
 		//echo $cantAsientos;die();
 			for($i=0;$i<$cantAsientos;$i++){

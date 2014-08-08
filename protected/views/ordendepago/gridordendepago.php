@@ -2,7 +2,8 @@
 <?php 
 	
 	$dataProvider= $model->search($model->fecha=$anioTab.'-'.$mesTab);
-	$dataProvider->setPagination(array('pageSize'=>200)); 
+	$cant=count($dataProvider);
+	$dataProvider->setPagination(array('pageSize'=>$cant)); 
 ?>
 
 <?php 

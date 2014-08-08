@@ -1,7 +1,8 @@
 
 <?php 
 	$dataProvider= $model->search($model->fecha=$anioTab.'-'.$mesTab);
-	$dataProvider->setPagination(array('pageSize'=>200)); 
+	$cant=count($dataProvider);
+	$dataProvider->setPagination(array('pageSize'=>$cant)); 
 ?>
 <div id="iconoExportar" align="right">
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab),'Exportar',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>

@@ -55,6 +55,7 @@ $colum=array(
     	'dataProvider' => $dataProvider,
 		'columns'=>$colum,
 		'selectionChanged'=>'cargardatos',
+		'template' => "{items}{pager}",
 		'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
 		
 )); 
