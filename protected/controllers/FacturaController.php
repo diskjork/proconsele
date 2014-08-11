@@ -68,18 +68,7 @@ class FacturaController extends Controller
 		//$model->estado=1;
 		$model->nropresupuesto=0;
 		$model->presupuesto=0;
-		
-		/*// PARA EL NRO DE FACTURA
-		$ulFactua=$model->ultimaFactura();
-		//echo $ulFactua;die();
-		if($ulFactua == null){
-			$model->nrodefactura=1;
-		} else{
-			$model->nrodefactura=$ulFactua + 1;
-		}  */
 			
-			
-		
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -885,6 +874,12 @@ class FacturaController extends Controller
 		    		if($ivamov->importeneto != null){
 		    			$ivamov->importeneto=0;
 		    		}
+		    		if($factura->tipofactura == 1){
+		    			$ivamov->tipofactura=7; //factura A anulada
+		    		}
+		    		if($factura->tipofactura == 2){
+		    			$ivamov->tipofactura=8; //factura B anulada
+		    		}
 		    		if($ivamov->save()){
 		    			echo "true";  				   				
 		    		}
@@ -892,7 +887,145 @@ class FacturaController extends Controller
     		}
     	}
     }
-   //public function actionUndo
+    	
+   public function actionUndoAnular($id){
+   		$model=Factura::model()->findByPk($id);
+   		$asiento=new Asiento;
+		$asiento->fecha=$model->fecha;
+		
+		$post['fecha']=$model->fecha;
+		$asiento->descripcion="Factura N°: ".$model->nrodefactura;
+			if($asiento->save()){
+				$model->asiento_idasiento=$asiento->idasiento;
+				//detalleasiento para el debito de contado
+				$netogravado=$model->netogravado;
+				$D_R=0;
+				if(($model->descrecar != null) && ($model->tipodescrecar != null)){
+					if($model->tipodescrecar == 0){
+						$D_R=$netogravado * ($model->descrecar /100) *-1;
+					}else {
+						$D_R=$netogravado * ($model->descrecar /100);
+					}
+				}
+				
+				$detAs=new Detalleasiento;
+				$detAs->debe=$model->importeneto;
+				//tipo de 
+				if($model->formadepago != 99999){//es pago con alguna caja?
+						$detAs->cuenta_idcuenta=$model->cajaIdcaja->cuenta_idcuenta;
+						$movCaja= $this->movCaja($model,$post);
+						
+					} elseif($model->formadepago == 99999){//es en cta corriente
+						$detalleCCcliente=$this->ctacte($model,$post);
+						$detAs->cuenta_idcuenta=11;  //112100 deudores por venta
+						
+				}
+				$detAs->asiento_idasiento=$asiento->idasiento;
+				$detAs->save();
+			//----------------------Descuento-------------
+				if($D_R < 0){
+					$DeAsDesc=new Detalleasiento;
+					$DeAsDesc->debe=$D_R * -1;
+					$DeAsDesc->cuenta_idcuenta=143; //434090 Descuentos cedidos
+					$DeAsDesc->asiento_idasiento=$asiento->idasiento;
+					$DeAsDesc->save();
+				}
+			
+			//------------------------------
+				//detalle asiento de IVA - FACTURA A o B 
+				$totaliva=0;
+				$detAs2=new Detalleasiento;
+				$totaliva=$model->ivatotal;
+				$detAs2->haber=$model->ivatotal;
+				$detAs2->cuenta_idcuenta=68; //215100 IVA - Débito Fiscal
+				$detAs2->asiento_idasiento=$asiento->idasiento;
+				$detAs2->save();
+				$totaliibb=0;
+			//detalle asiento de percepcion IIBB
+				if($model->importeIIBB != null){
+					$detAs3=new Detalleasiento;
+					$totaliibb=$model->importeIIBB;
+					$detAs3->haber=$model->importeIIBB;
+					$detAs3->cuenta_idcuenta=20; // cuenta 113700 Ret. Imp. Ingresos Brutos    
+					$detAs3->asiento_idasiento=$asiento->idasiento;
+					$detAs3->save();
+				}
+			//detalle asiento de percepcion iva
+				if($model->importe_per_iva != null){
+					$detAs5=new Detalleasiento;
+					$totaliibb=$model->importe_per_iva;
+					$detAs5->haber=$model->importe_per_iva;
+					$detAs5->cuenta_idcuenta=14; // cuenta 113200 Ret. y Percep. de IVA							    
+					$detAs5->asiento_idasiento=$asiento->idasiento;
+					$detAs5->save();
+				}
+			//detalle asiento de impuesto interno
+				$totalimpint=0;
+				if($model->importeImpInt != null){
+					$detAs4=new Detalleasiento;
+					$totalimpint=$model->importeImpInt;
+					$detAs4->haber=$model->importeImpInt;
+					$detAs4->cuenta_idcuenta=101; //cuenta 431190 Impuestos internos						      Impuestos Internos            						
+					$detAs4->asiento_idasiento=$asiento->idasiento;
+					$detAs4->save();
+				}
+			// registro de venta
+					$detAs5=new Detalleasiento;
+					$totalventa=$model->netogravado;
+					$detAs5->haber=$totalventa;
+					$detAs5->cuenta_idcuenta=$model->productoIdproducto->cuenta_idcuenta; 
+					$detAs5->asiento_idasiento=$asiento->idasiento;
+					$detAs5->save();
+			//----------- Recargo -------
+					if($D_R > 0){
+					$DeAsRecar=new Detalleasiento;
+					$DeAsRecar->haber=$D_R;
+					$DeAsRecar->cuenta_idcuenta=161; // recargo por ventas
+					$DeAsRecar->asiento_idasiento=$asiento->idasiento;
+					$DeAsRecar->save();
+					}
+				//------------------------------
+					
+					if(isset($movCaja)){
+						$modelmovcaja=Movimientocaja::model()->findByPk($movCaja);
+						$modelmovcaja->idfactura=$model->idfactura;
+						$modelmovcaja->save();
+						$modelF=Factura::model()->findByPk($model->idfactura);
+						$modelF->movimientocaja_idmovimientocaja=$movCaja;
+						$modelF->save();
+					}
+					if(isset($detalleCCcliente)){
+						$detalleCC=Detallectactecliente::model()->findByPk($detalleCCcliente);
+						$detalleCC->factura_idfactura=$model->idfactura;
+						$detalleCC->save();
+					}
+					$asientoFact=Asiento::model()->findByPk($asiento->idasiento);
+					$asientoFact->factura_idfactura=$model->idfactura;
+					$asientoFact->save();
+					$ivamov=Ivamovimiento::model()->find("factura_idfactura=:id",
+									array(':id'=>$model->idfactura));
+					if($model->importeIIBB != null){
+						$ivamov->importeiibb=$model->importeIIBB;
+					}
+					if($model->importe_per_iva != null){
+						$ivamov->importe_per_iva=$model->importe_per_iva;
+					}
+					$ivamov->importeneto=$model->importeneto;
+					$ivamov->importeiva=$model->ivatotal;
+					$model->estado=0; //estado normal
+					if($ivamov->tipofactura == 7){
+		    			$ivamov->tipofactura=1; //factura A
+		    		}
+		    		if($ivamov->tipofactura == 8){
+		    			$ivamov->tipofactura=2; //factura B 
+		    		}
+					if($model->save()){
+						if($ivamov->save()){
+							echo "true";
+						}
+					}
+			}
+   }
 	public function actionExcel(){
                 $mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];

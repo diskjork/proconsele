@@ -225,6 +225,14 @@ class IvamovimientoController extends Controller
 					$text="ND-Prov.";
 					return $text;
 					break;
+				case '7':
+					$text="F.(A) - ANULADA";
+					return $text;
+					break;
+				case '8':
+					$text="F. (B) - ANULADA";
+					return $text;
+					break;
 		}
 	}
 	
