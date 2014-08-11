@@ -819,6 +819,10 @@ class FacturaController extends Controller
 					$text="N.C.-Devolución";
 					return $text;
 					break;
+				case '3':
+					$text="Anulada";
+					return $text;
+					break;
 			
 		}
 	}
@@ -860,7 +864,35 @@ class FacturaController extends Controller
             //$this->renderPartial('imprimirFactura',array('factura'=>$factura,'detallefactura'=>$detallefactura),false,true);
                         
         }
-    
+    public function actionAnular($id){
+    	$factura=Factura::model()->findByPk($id);
+    	$factura->estado=3; // estado "factura anulada"
+    	if($factura->save()){
+    		$asiento=Asiento::model()->findByPk($factura->asiento_idasiento);
+    		if($asiento->delete()){
+    			if($this->borrado($factura)){
+		    		$ivamov=Ivamovimiento::model()->find("factura_idfactura=:id",
+		    				array(':id'=>$factura->idfactura));
+		    		if($ivamov->importeiibb != null){
+		    			$ivamov->importeiibb=null;
+		    		}
+		    		if($ivamov->importe_per_iva != null){
+		    			$ivamov->importe_per_iva=null;
+		    		}
+		    		if($ivamov->importeiva != null){
+		    			$ivamov->importeiva=0;
+		    		}
+		    		if($ivamov->importeneto != null){
+		    			$ivamov->importeneto=0;
+		    		}
+		    		if($ivamov->save()){
+		    			echo "true";  				   				
+		    		}
+    			}
+    		}
+    	}
+    }
+   //public function actionUndo
 	public function actionExcel(){
                 $mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];

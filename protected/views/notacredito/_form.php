@@ -131,7 +131,7 @@ if(isset($_GET['vista'])){
 				$mesv=$mes - 3;
 				break;
 		}
-		$cond1="MONTH(fecha)>=".$mesv;
+		$cond1="estado<>3 AND MONTH(fecha)>=".$mesv;
 		$años=(int)date('Y');
 		$cond2=$cond1." AND YEAR(fecha)>=".date('Y');
 		

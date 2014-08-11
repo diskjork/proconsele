@@ -55,7 +55,7 @@
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('width' =>'10%'),
-			'template'=>' {update} {delete} {remito} {imprimir} {imprimirB}',
+			'template'=>' {update} {delete} {remito} {imprimir} {imprimirB} {anular}',
             'buttons'=>array(
                 
               	'remito'=>
@@ -96,17 +96,20 @@
                     		 
                     ),
 	           	
-                    ),   
-                /*'anular'=>
-                    array(
-						'label'=>'Anular Factura',
-		            	'icon'=>TbHtml::ICON_BAN_CIRCLE,
-		            	'url'=>'Yii::app()->createUrl("factura/anularfactura", array("id"=>$data->idfactura))',
-                    	'options'=>array(
-	                  		'confirm' => 'Está seguro de anular la Factura?',
+                    ), 
+                      
+                'anular'=>array(
+	                  	'label'=>'Anular Factura',
+	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->estado == 0 ',
+	                  	'url'=>'Yii::app()->createUrl("factura/anular", array("id"=>$data->idfactura))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Desea anular la factura?',
+		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
-		                  			'success' => 'function(data){
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
 	                                	if(data == "true"){
 		                                    location.reload();
 		                                  alert("Fue anulada con éxito!");
@@ -118,7 +121,8 @@
 	                                	} 
 	                                }',
 	                  			),	
-		                  	),*/
+		                  	),
+		              	),
                )   
         ),
 	);

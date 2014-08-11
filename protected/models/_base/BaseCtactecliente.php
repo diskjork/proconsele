@@ -104,4 +104,16 @@ abstract class BaseCtactecliente extends GxActiveRecord {
 			),
 		));
 	}
+	public function behaviors()
+	{
+	    return array(
+	    	'datetimeI18NBehavior' => array('class' => 'ext.DateTimeI18NBehavior.DateTimeI18NBehavior'),
+	    	'ERememberFiltersBehavior' => array(
+            	'class' => 'application.components.ERememberFiltersBehavior',
+               	'defaults'=>array(),           /* optional line */
+               	'defaultStickOnClear'=>false   /* optional line */
+           	),
+	    
+	   ); // 'ext' is in Yii 1.0.8 version. For early versions, use 'application.extensions' instead.
+	}
 }

@@ -33,7 +33,7 @@ $model->ctactecliente_idctactecliente=$_GET['id'];
 			}else{
 				$anioTab=$_GET['anioTab'];
 			}
-		$anioInicio=2014;
+		$anioInicio=2013;
 		$anioSiguiente=date('Y')+1;
 		$nomVar='modoActive';
 		

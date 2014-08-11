@@ -80,7 +80,7 @@ abstract class BaseNotadebito extends GxActiveRecord {
 			'percepcionIIBB' => Yii::t('app', 'Percepcion Iibb'),
 			'importebruto' => Yii::t('app', 'Importebruto'),
 			'ivatotal' => Yii::t('app', 'Ivatotal'),
-			'importeneto' => Yii::t('app', 'Importe Neto'),
+			'importeneto' => Yii::t('app', 'Importe TOTAL'),
 			'importeIIBB' => Yii::t('app', 'Importe Iibb'),
 			'asiento_idasiento' => Yii::t('app', 'Asiento Idasiento'),
 			'cuenta_idcuenta' => Yii::t('app', 'Cuenta contable relacionada '),
