@@ -86,9 +86,12 @@ abstract class BaseAsiento extends GxActiveRecord {
 		$criteria->compare('movimientobanco_idmovimientobanco', $this->movimientobanco_idmovimientobanco);
 		$criteria->compare('movimientocaja_idmovimientocaja', $this->movimientocaja_idmovimientocaja);
 		$criteria->compare('factura_idfactura', $this->factura_idfactura);
-
+		
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort' => array(
+					'defaultOrder' => array('fecha ASC' => true),
+				),
 		));
 	}
 	public function behaviors()

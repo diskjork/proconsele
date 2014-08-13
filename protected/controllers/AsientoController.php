@@ -332,9 +332,17 @@ class AsientoController extends Controller
                 $tipo=$_GET['tipo'];
                 
                 $model=new Detalleasiento('search');
-		if($tipo == 0){
+		if(($tipo == 0) || ($tipo == 2) ){
+			if($tipo == 0){
                 $dataproviderDEBE=$model->generarArrayDEBE($anio_tab, $mes_tab)->data;
                 $dataproviderHABER=$model->generarArrayHABER($anio_tab, $mes_tab)->data;
+                $nombreArchivo='Resumen-Asiento Mes ('.date('m').') - Generado (' .date('d-m-Y').')';
+			}
+			if($tipo == 2){
+				$dataproviderDEBE=$model->generarArrayDEBE_anual($anio_tab)->data;
+                $dataproviderHABER=$model->generarArrayHABER_anual($anio_tab)->data;
+                $nombreArchivo='Resumen Anual-Asiento año ('.$anio_tab.') - Generado (' .date('d-m-Y').')';
+			}
                 if(empty($dataproviderDEBE) && empty($dataproviderHABER)){
                 	$this->redirect('admin');
                 	
@@ -364,9 +372,7 @@ class AsientoController extends Controller
                		}
                	
                }
-           //  print_r($dataproviderDEBE);
-             // die();
-             	$cant2=count($ResultadoTotal);
+               $cant2=count($ResultadoTotal);
                $dataProvider=new CArrayDataProvider($ResultadoTotal, array(
 				    'id'=>'codigo',
 				    'sort'=>array(
@@ -396,8 +402,10 @@ class AsientoController extends Controller
 							'value'=>'($data["haber"] !== null)? number_format($data["haber"], 2, ",", "."):""',
 						),
 					);
-					$nombreArchivo='Resumen-Asiento Mes ('.date('m').') - Generado (' .date('d-m-Y').')';
-		} else {
+					
+		}
+		
+		if($tipo == 1){
 			$dataproviderAsiento=$model->generarAsientos($anio_tab, $mes_tab)->data;
 			if(empty($dataproviderAsiento)){
                 	$this->redirect('admin');

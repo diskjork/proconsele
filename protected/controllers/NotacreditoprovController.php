@@ -314,16 +314,16 @@ class NotacreditoprovController extends Controller
 	public function ivamovimiento($model,$datoPOST){
 			$nuevo=new Ivamovimiento;
 			$nuevo->fecha=$datoPOST['fecha'];
-			$nuevo->tipomoviento=0; //ventas por débito fiscal
+			$nuevo->tipomoviento=1; //ventas por débito fiscal
 			$nuevo->nrocomprobante=$model->nronotacreditoprov;
 			$nuevo->proveedor_idproveedor=$model->proveedor_idproveedor;
 			$nuevo->cuitentidad=$model->proveedorIdproveedor->cuit;
 			$nuevo->tipofactura=5;
 			$nuevo->tipoiva=$model->iva;
-			
-			$nuevo->importeiibb=$model->importeIIBB;
-			$nuevo->importeiva=$model->ivatotal;
-			$nuevo->importeneto=$model->importeneto;
+			$nuevo->importe_per_iva=$model->importe_per_iva * -1;
+			$nuevo->importeiibb=$model->importeIIBB * -1;
+			$nuevo->importeiva=$model->ivatotal * -1;
+			$nuevo->importeneto=$model->importeneto * -1;
 			$nuevo->notacreditoprov_idnotacreditoprov=$model->idnotacreditoprov;
 			$nuevo->save();
 			
@@ -338,10 +338,10 @@ class NotacreditoprovController extends Controller
 			$nuevo->cuitentidad=$model->proveedorIdproveedor->cuit;
 			$nuevo->tipofactura=$model->tipofactura;
 			$nuevo->tipoiva=$model->iva;
-			$nuevo->importe_per_iva=$model->importe_per_iva;
-			$nuevo->importeiibb=$model->importeIIBB;
-			$nuevo->importeiva=$model->ivatotal;
-			$nuevo->importeneto=$model->importeneto;
+			$nuevo->importe_per_iva=$model->importe_per_iva * -1;
+			$nuevo->importeiibb=$model->importeIIBB * -1;
+			$nuevo->importeiva=$model->ivatotal * -1;
+			$nuevo->importeneto=$model->importeneto * -1;
 			$nuevo->save();
 			
 	}	

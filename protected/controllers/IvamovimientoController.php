@@ -331,4 +331,20 @@ class IvamovimientoController extends Controller
                
 				)); 
 	}
+	public function labeliva($data, $row){	
+	switch ($data->tipoiva){
+			case '1.21':
+				$text="21%";
+				return $text;
+				break;
+			case '1.27':
+				$text="27%";
+				return $text;
+				break;
+			case '1.105':
+				$text="10,5%";
+				return $text;
+				break;
+		}
+	}
 }
