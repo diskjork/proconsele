@@ -485,19 +485,19 @@ public function movCaja($model,$datosPOST){
 	public function updateImpuestos($datosviejos,$datosnuevos){
 			// IVATOTAL
 				if($datosviejos->ivatotal != $datosnuevos->ivatotal){
-					if(($datosviejos->ivatotal != null) && ($datosnuevos->ivatotal != null)){
+					if((($datosviejos->ivatotal != null) ||($datosviejos->ivatotal != 0)) && (($datosnuevos->ivatotal != null)|| ($datosnuevos->ivatotal != 0))){
 						$DeAsIVA=Detalleasiento::model()->find("asiento_idasiento=:asiento AND cuenta_idcuenta=:cuenta",
 								array(':asiento'=>$datosviejos->asiento_idasiento,
 									  ':cuenta' =>13)); //113100 Iva - Crédito Fiscal
 						$DeAsIVA->debe=$datosnuevos->ivatotal;
 						$DeAsIVA->save();
-					} elseif(($datosviejos->ivatotal == null) && ($datosnuevos->ivatotal != null)) {
+					} elseif((($datosviejos->ivatotal == null)||($datosviejos->ivatotal == 0)) && (($datosnuevos->ivatotal != null)||($datosnuevos->ivatotal != 0))) {
 						$NuevoDeAs=new Detalleasiento;
 						$NuevoDeAs->asiento_idasiento=$datosnuevos->asiento_idasiento;
 						$NuevoDeAs->cuenta_idcuenta=13; //113100 Iva - Crédito Fiscal
 						$NuevoDeAs->debe=$datosnuevos->ivatotal;
 						$NuevoDeAs->save();
-					} elseif(($datosviejos->ivatotal != null) && ($datosnuevos->ivatotal == null)){
+					} elseif((($datosviejos->ivatotal != null)||($datosviejos->ivatotal != 0)) && (($datosnuevos->ivatotal == null)||($datosnuevos->ivatotal == 0))){
 						$DeGuardado=Detalleasiento::model()->find("asiento_idasiento=:asiento AND cuenta_idcuenta=:cuenta",
 								array(':asiento'=>$datosviejos->asiento_idasiento,
 									  ':cuenta' =>13)); //113100 Iva - Crédito Fiscal
