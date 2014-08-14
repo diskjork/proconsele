@@ -27,6 +27,8 @@ $("#Compras_interes").keydown(function(event){
     solonumeromod(event);});
 $("#Compras_importe_per_iva").keydown(function(event){
     solonumeromod(event);});
+$("#Compras_impuestointerno").keydown(function(event){
+    solonumeromod(event);});
 sumatotal();
 //botonsubmit();
 if($("#Compras_tipofactura").val() == 3){
@@ -45,10 +47,12 @@ $("#Compras_tipofactura").change(function(event){
       $(".facturaA").show();
       $("#facturac").css('display', 'none');
       $("#block-totaliva").show();
+      $("#ivablock").text("");
     }
 });
 $("#Compras_importeIIBB").attr('readonly','true');
 $("#Compras_importe_per_iva").attr('readonly','true');
+$("#Compras_impuestointerno").attr('readonly','true');
 $("#Compras_descuento").attr('readonly','true');
 $("#Compras_interes").attr('readonly','true');
 $("#blockiibb").css('display','none');
@@ -85,6 +89,7 @@ $("#Compras_iibb").click(function() {
             $("#Compras_importeIIBB").attr('readonly', 'true');
             $("#Compras_importeIIBB").val("");
             $("#blockiibb").css('display','none');
+            $("#totaiibbblock").text("");
         }
         sumatotal();   
     });   
@@ -97,9 +102,23 @@ $("#Compras_perciva").click(function() {
             $("#Compras_importe_per_iva").attr('readonly', 'true');
             $("#Compras_importe_per_iva").val("");
             $("#blockperciva").css('display','none');
+            $("#totalperciva").text("");
         } 
         sumatotal();  
-    });       
+    });   
+$("#Compras_impint").click(function() { 
+        
+        if($("#Compras_impint").is(':checked')) {  
+          $("#Compras_impuestointerno").removeAttr('readonly');
+          $("#blockpercimpinter").show();
+        } else {  
+            $("#Compras_impuestointerno").attr('readonly', 'true');
+            $("#Compras_impuestointerno").val("");
+            $("#blockpercimpinter").css('display','none');
+             $("#totalpercimpinter").text("");
+        } 
+        sumatotal();  
+    });      
 $("#Compras_iva").on('change',function() {  
       sumatotal(); 
 });
@@ -168,6 +187,12 @@ function sumatotal(){
   }else {
     interes=parseFloat(interes);
   }
+  var impinter=$("#Compras_impuestointerno").val();
+  if(impinter == ""){
+    impinter=0;
+  }else {
+    impinter=parseFloat(impinter);
+  }
   //var totaliva=parseFloat($("#Compras_ivatotal").val());
   //precio neto gravado
   var netogravado=parseFloat($("#Compras_importebruto").val());
@@ -196,7 +221,7 @@ if(seleccion == 1){
         $("#ivablock").text(totalIvaTrasfor);
       }
   }
-  precioTOTAL=netogravado + totaliva + totalpercepcionIIBB + totalpercepcion_iva;
+  precioTOTAL=netogravado + totaliva + totalpercepcionIIBB + totalpercepcion_iva + impinter;
   if(totalpercepcionIIBB != ""){
     totalpercepcionIIBB=totalpercepcionIIBB.toFixed(2);
     $("#totaiibbblock").text($.number(totalpercepcionIIBB,2));
@@ -204,6 +229,10 @@ if(seleccion == 1){
   if(totalpercepcion_iva != ""){
     totalpercepcion_iva=totalpercepcion_iva.toFixed(2);
     $("#totalperciva").text($.number(totalpercepcion_iva,2));
+  }
+  if(impinter != ""){
+    impinter=impinter.toFixed(2);
+    $("#totalpercimpinter").text($.number(impinter,2));
   }
   if(!isNaN(precioTOTAL)){
      $("#totalnetoblock").text(precioTOTAL.toFixed(2));

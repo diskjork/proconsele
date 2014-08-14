@@ -42,6 +42,15 @@ if(isset($model->interes)){
 				
 				");
 	}
+if(isset($model->impuestointerno)){
+		Yii::app()->clientScript->registerScript('impint',"
+				$('#Compras_impInt').prop('checked',true);
+				 $('#Compras_impuestointerno').show();
+          $('#totaldiv-impint').show();
+				//$('div .form-actions').css('background-color','transparent');
+				
+				");
+	}
 ?>
 
 <div class="form" >
@@ -330,6 +339,27 @@ if(isset($model->interes)){
 						)); ?>
 			</td>
 			</tr>
+			<tr class="facturaA">
+			<td  style="width:110px">
+			<div class="row-fluid">
+			<div class="span2">
+			<?php echo $form->checkBox($model, 'impint',array('value'=>1));?>
+			</div>
+			<div class="span10">
+			<?php echo $form->label($model, 'impuestointerno');?>
+			</div>
+			</div>
+			</td>
+			<td>
+			<?php echo $form->textFieldControlGroup($model,'impuestointerno',array('span'=>12,
+										'label'=>false,
+										'onkeydown'=>' 
+			        				if(event.keyCode == 9 ||event.keyCode == 13)sumatotal()',
+										'onblur'=>'sumatotal();'
+			 						
+						)); ?>
+			</td>
+			</tr>
 			
 			</table>
 				
@@ -362,6 +392,13 @@ if(isset($model->interes)){
 				<div class=" well  " style="width:60px;height:60px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 						<h5 style="padding:0px">P.IVA</h5>
 						<h5 style="text-align:center;margin:0;margin-left:-4px;" id="totalperciva"></h5>
+				</div>
+			 
+			</div>
+			<div style="float:right; margin-right:10px; margin-top:10px;display:none;" id="blockpercimpinter">
+				<div class=" well  " style="width:60px;height:60px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+						<h5 style="padding:0px">Imp.Int</h5>
+						<h5 style="text-align:center;margin:0;margin-left:-4px;" id="totalpercimpinter"></h5>
 				</div>
 			 
 			</div>

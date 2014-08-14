@@ -407,7 +407,7 @@ if(isset($_GET['vista'])){
 	</td>
 	<td style="width:20%; vertical-align: top;"  class="well" >
 	
-	<div class="row-fluid">	
+	<div class="row-fluid" style="display:none;">	
 	<?php echo $form->label($model, 'impuestointerno');?>
 	<?php echo $form->checkBox($model, 'impInt',array('value'=>1));echo " Imp. Interno";?>
 	<?php echo $form->textFieldControlGroup($model,'impuestointerno',array('style'=>'width:15%;','label'=>false,

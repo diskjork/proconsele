@@ -16,7 +16,7 @@
  * @property Detalleasiento[] $detalleasientos
  */
 abstract class BaseAsiento extends GxActiveRecord {
-	public $totaldebe, $totalhaber;
+	public $totaldebe, $totalhaber,$anio,$anio2,$mes;
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -64,6 +64,9 @@ abstract class BaseAsiento extends GxActiveRecord {
 			'idasiento' => Yii::t('app', 'Idasiento'),
 			'fecha' => Yii::t('app', 'Fecha'),
 			'descripcion' => Yii::t('app', 'Descripcion'),
+			'anio' => Yii::t('app', 'Año'),
+			'anio2' => Yii::t('app', 'Año'),
+			'mes' => Yii::t('app', 'Mes'),
 			'detalleasientos' => null,
 			'factura_idfactura' => null,
 		);

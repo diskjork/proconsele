@@ -326,6 +326,11 @@ class AsientoController extends Controller
 			 }
 		}
 	}
+	public function labelSaldo($data, $row){	
+		$saldo=$data["debe"] - $data["haber"];
+		//$saldo=number_format($saldo, 2, ",", ".");
+		return $saldo;
+	}
 	public function actionExcel(){
 				$mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];
@@ -405,18 +410,26 @@ class AsientoController extends Controller
 					
 		}
 		
-		if($tipo == 1){
-			$dataproviderAsiento=$model->generarAsientos($anio_tab, $mes_tab)->data;
+		if(($tipo == 1) || ($tipo == 3)){
+			if($tipo == 1){
+				$dataproviderAsiento=$model->generarAsientos($anio_tab, $mes_tab)->data;
+				$nombreArchivo='Libro Diario Mes ('.date('m').') - Generado (' .date('d-m-Y').')';
+			}
+			if($tipo == 3){
+				$dataproviderAsiento=$model->generarAsientos_anual($anio_tab)->data;
+				$nombreArchivo='Libro Diario Año ('.date('Y').') - Generado (' .date('d-m-Y').')';
+			}
 			if(empty($dataproviderAsiento)){
                 	$this->redirect('admin');
-                	
-                }
+              }
 			$cantAsientos=count($dataproviderAsiento);
 		//echo $cantAsientos;die();
 			for($i=0;$i<$cantAsientos;$i++){
 				$dataproviderResultadoAsiento[$i]=$dataproviderAsiento[$i];
+				
 				if($i > 0){
 				if($dataproviderAsiento[$i]['asiento'] == $dataproviderAsiento[$i-1]['asiento']){
+					
 					$dataproviderResultadoAsiento[$i]['asiento']=null;
 					$dataproviderResultadoAsiento[$i]['descripcion']=null;
 					$dataproviderResultadoAsiento[$i]['fecha']=null;
@@ -439,13 +452,14 @@ class AsientoController extends Controller
 				));
 			$datos=	array(
 						array(
+               				'name' => 'asiento',
+							'header' => 'COD. INTERNO',
+               			), 
+						array(
                				'name' => 'fecha',
 							'header' => 'FECHA',
                			), 
-						array(
-               				'name' => 'asiento',
-							'header' => 'NRO ASIENTO',
-               			),
+						
                			array(
 							'name' => 'descripcion',
 							'header' => 'DESCRIPCION',
@@ -468,7 +482,55 @@ class AsientoController extends Controller
 						),
 						
 					);
-					$nombreArchivo='Libro Diario Mes ('.date('m').') - Generado (' .date('d-m-Y').')';
+					
+		}
+		if(($tipo == 4)||($tipo == 5)){ //exportación con saldos
+			if($tipo == 4){
+				 $dataproviderSALDOS=$model->generarArraySALDOS_mes($anio_tab, $mes_tab)->data;
+				 $nombreArchivo='Resumen cuentas saldos - Mes ('.date('m').') - Generado (' .date('d-m-Y').')';
+			}
+			if($tipo == 5){
+				 $dataproviderSALDOS=$model->generarArraySALDOS_anio($anio_tab)->data;
+				 $nombreArchivo='Resumen cuentas saldos - Año ('.date('Y').') - Generado (' .date('d-m-Y').')';
+			}
+			if(empty($dataproviderSALDOS)){
+                	$this->redirect('admin');
+              }
+			
+			$cantSaldos=count($dataproviderSALDOS);
+               $dataProvider=new CArrayDataProvider($dataproviderSALDOS, array(
+				    'id'=>'codigo',
+				    'sort'=>array(
+				        'attributes'=>array(
+				             'codigo','cuenta', 'debe', 'haber',
+				        ),
+				    ),
+				    'pagination'=>array(
+				        'pageSize'=>$cantSaldos,
+				    ),
+				));
+				$datos=	array( 
+               			array(
+               				'name' => 'codigo',
+							'header' => 'COD. CUENTA',
+               			),	
+						array(
+							'name' => 'cuenta',
+							'header' => 'NOMBRE',
+						),
+						array(
+							'header' => 'DEBE',
+							'value'=>'($data["debe"] !== null)? number_format($data["debe"], 2, ",", "."):"0.00"',
+						),
+						array(
+							'header' => 'HABER',
+							'value'=>'($data["haber"] !== null)? number_format($data["haber"], 2, ",", "."):"0.00"',
+						),
+						array(
+							'header' => 'SALDO',
+							'value'=>array($this,'labelSaldo'),
+						),
+					);
 		}
 				//print_r($dataProvider);die(); 
                // public $totaldebe, $totalhaber, $codigo, $Idcuenta ,$NombreCta;

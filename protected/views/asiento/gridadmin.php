@@ -1,8 +1,39 @@
 
 <div id="iconoExportar" align="right">
-<?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>0),'Exportar asiento resumen del mes',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
-<?php echo " ".TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_IMPORTANT)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>1),'Exportar Libro Diario del mes',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
-<?php echo " ".TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_WARNING)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>2),'Exportar asiento resumen anual',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+
+
+<?php echo " ".TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", 
+				array("color" => TbHtml::LABEL_COLOR_WARNING)),
+				array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>2),
+				'Exportar asiento resumen anual',
+				array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php echo " ".TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>",
+				array("color" => TbHtml::LABEL_COLOR_SUCCESS)),
+				array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>0),
+				'Exportar asiento resumen del mes',
+				array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php  echo " ".TbHtml::tooltip(TbHtml::labelTb(TbHtml::icon(TbHtml::ICON_TASKS),
+				 array("color" => TbHtml::LABEL_COLOR_WARNING)),
+				 array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>3),
+				 'Exportar Libro Diario Año',
+				 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php  echo " ".TbHtml::tooltip(TbHtml::labelTb(TbHtml::icon(TbHtml::ICON_TASKS),
+				 array("color" => TbHtml::LABEL_COLOR_SUCCESS)),
+				 array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>1),
+				 'Exportar Libro Diario del mes',
+				 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php  echo " ".TbHtml::tooltip(TbHtml::labelTb(TbHtml::icon(TbHtml::ICON_SIGNAL),
+				 array("color" => TbHtml::LABEL_COLOR_WARNING)),
+				 array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>5),
+				 'Resumen cuenta con saldos - Año',
+				 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php  echo " ".TbHtml::tooltip(TbHtml::labelTb(TbHtml::icon(TbHtml::ICON_SIGNAL),
+				 array("color" => TbHtml::LABEL_COLOR_SUCCESS)),
+				 array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>4),
+				 'Resumen cuenta con saldos - Mes',
+				 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+
+
 </div>
 <?php
 $dataProvider=$model->search($model->fecha=$anioTab."-".$mesTab);
