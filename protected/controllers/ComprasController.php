@@ -90,7 +90,7 @@ class ComprasController extends Controller
 							$detAs2->save();
 							
 							
-							//detalle asiento de percepcion IIBB
+						//detalle asiento de percepcion IIBB
 							if($model->importeIIBB != null){
 								$detAs3=new Detalleasiento;
 								
@@ -100,7 +100,7 @@ class ComprasController extends Controller
 								$detAs3->save();
 							}
 						//detalle asiento de percepcion IVA
-							if($model->importe_per_iva != null){
+							if(($model->importe_per_iva != null) || ($model->importe_per_iva != 0)){
 								$detAs3=new Detalleasiento;
 								$detAs3->debe=$model->importe_per_iva; //percepción iva
 								$detAs3->cuenta_idcuenta=14; // 113200 Ret. y Percep. de IVA
