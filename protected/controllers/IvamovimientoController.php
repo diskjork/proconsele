@@ -225,6 +225,14 @@ class IvamovimientoController extends Controller
 					$text="ND-Prov.";
 					return $text;
 					break;
+				case '7':
+					$text="F.(A) - ANULADA";
+					return $text;
+					break;
+				case '8':
+					$text="F. (B) - ANULADA";
+					return $text;
+					break;
 		}
 	}
 	
@@ -322,5 +330,21 @@ class IvamovimientoController extends Controller
 				    'columns'              => $datos,
                
 				)); 
+	}
+	public function labeliva($data, $row){	
+	switch ($data->tipoiva){
+			case '1.21':
+				$text="21%";
+				return $text;
+				break;
+			case '1.27':
+				$text="27%";
+				return $text;
+				break;
+			case '1.105':
+				$text="10,5%";
+				return $text;
+				break;
+		}
 	}
 }

@@ -13,7 +13,7 @@ array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>1),
 'Exportar Libro Compras',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
 </div>
 <?php
-$valores=array('1.21'=>'21%', '1.105'=>'10.5%');$columnas=array(
+$valores=array('1.21'=>'21%', '1.105'=>'10.5%','1.27'=>'27%');$columnas=array(
 	array(
 					'header' => '#',
                     'value'=>'$this->grid->dataProvider->pagination->currentPage*
@@ -48,7 +48,7 @@ $valores=array('1.21'=>'21%', '1.105'=>'10.5%');$columnas=array(
 		),
 		array(//'name' => 'tipoiva',
 				'header' => 'IVA',
-				'value'=>'($data->tipoiva == 1.21)?"21%" :"10,5%"',
+				'value'=>array($this,'labeliva'),
 				
 		),
 		array(

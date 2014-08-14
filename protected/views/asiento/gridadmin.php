@@ -1,26 +1,56 @@
 
 <div id="iconoExportar" align="right">
-<?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>0),'Exportar asiento resumen del mes',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
-<?php echo " ".TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_IMPORTANT)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>1),'Exportar todos los asientos del mes',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+
+
+<?php echo " ".TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", 
+				array("color" => TbHtml::LABEL_COLOR_WARNING)),
+				array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>2),
+				'Exportar asiento resumen anual',
+				array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php echo " ".TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>",
+				array("color" => TbHtml::LABEL_COLOR_SUCCESS)),
+				array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>0),
+				'Exportar asiento resumen del mes',
+				array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php  echo " ".TbHtml::tooltip(TbHtml::labelTb(TbHtml::icon(TbHtml::ICON_TASKS),
+				 array("color" => TbHtml::LABEL_COLOR_WARNING)),
+				 array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>3),
+				 'Exportar Libro Diario Año',
+				 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php  echo " ".TbHtml::tooltip(TbHtml::labelTb(TbHtml::icon(TbHtml::ICON_TASKS),
+				 array("color" => TbHtml::LABEL_COLOR_SUCCESS)),
+				 array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>1),
+				 'Exportar Libro Diario del mes',
+				 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php  echo " ".TbHtml::tooltip(TbHtml::labelTb(TbHtml::icon(TbHtml::ICON_SIGNAL),
+				 array("color" => TbHtml::LABEL_COLOR_WARNING)),
+				 array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>5),
+				 'Resumen cuenta con saldos - Año',
+				 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+<?php  echo " ".TbHtml::tooltip(TbHtml::labelTb(TbHtml::icon(TbHtml::ICON_SIGNAL),
+				 array("color" => TbHtml::LABEL_COLOR_SUCCESS)),
+				 array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>4),
+				 'Resumen cuenta con saldos - Mes',
+				 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+
+
 </div>
 <?php
 $dataProvider=$model->search($model->fecha=$anioTab."-".$mesTab);
 $dataProvider->setPagination(array('pageSize'=>200));
 $gridColumns= array(
-		array(
-				'header'=>'N°',
-				'name'=>'idasiento',
-				'htmlOptions' => array('width' =>'60px'),
-			),
+		
 		array(
 				'header'=>'FECHA',
 				'name'=>'fecha',
-				'htmlOptions' => array('width' =>'90px'),
+				'filter'=>false,
+				'htmlOptions' => array('width' =>'15px'),
 			),
 		array(
 			'header'=>'DESCRIPCION',
 			'name'=>'descripcion',
-			'htmlOptions' => array('width' =>'60%',
+			//'filter'
+			'htmlOptions' => array('width' =>'80%',
 										'style'=>'text-align:left;'),
 		),
 		
@@ -385,23 +415,29 @@ $gridColumns= array(
 
 //Yii::app()->getComponent('yiiwheels')->registerAssetJs('bootbox.min.js');
 $this->widget('yiiwheels.widgets.grid.WhGridView', array(
-	'id'=>'asientogrid',
+	//'id'=>'asientogrid',
 	'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
 	'dataProvider' =>$dataProvider,
 	'template' => "{items}",
-	
+	'filter'=>$model,
+	'afterAjaxUpdate'=>"js:function(id, data){
+						visualizar();
+						
+								}",
 	'columns' => array_merge(
 					$gridColumns,
 					array(
 						array(
 								'class' => 'yiiwheels.widgets.grid.WhRelationalColumn',
 								'name' => 'Visualizar',
+								'filter'=>false,
 								'url' => $this->createUrl('asiento/grilla'),
-								'value' =>'""',
+								'value' => '""',
 								'htmlOptions' => array('style' =>'width:5%; text-align:center;'),
 								'cacheData'=>false,
 								'afterAjaxUpdate' => 'js:function(tr,rowid,data){
 								$("td[colspan]").css("background-color","#F5F5DC");
+								//botonvisualizar();
 								//$("span.wh-relational-column[data-rowid="+rowid+"]").find("i").removeClass("icon-chevron-down");
 								//$("span.wh-relational-column[data-rowid="+rowid+"]").find("i").addClass("icon-chevron-up");
 								}'

@@ -1,6 +1,6 @@
 /**
-* Select2 Spanish translation
-*/
+ * Select2 Spanish translation
+ */
 (function ($) {
     "use strict";
 

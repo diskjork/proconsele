@@ -55,7 +55,7 @@
             'header'=>'Opciones',
             'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('width' =>'10%'),
-			'template'=>' {update} {delete} {remito} {imprimir} {imprimirB} {anular}',
+			'template'=>' {update} {delete} {remito} {imprimir} {imprimirB} {anular} {undoanular}',
             'buttons'=>array(
                 
               	'remito'=>
@@ -100,7 +100,7 @@
                       
                 'anular'=>array(
 	                  	'label'=>'Anular Factura',
-	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
+	                    'icon'=>TbHtml::ICON_BAN_CIRCLE,
 						'visible'=>'$data->estado == 0 ',
 	                  	'url'=>'Yii::app()->createUrl("factura/anular", array("id"=>$data->idfactura))',
 	                  	'options'=>array(
@@ -123,6 +123,32 @@
 	                  			),	
 		                  	),
 		              	),
+					 'undoanular'=>array(
+	                  	'label'=>'Deshacer Anulación',
+	                    'icon'=>TbHtml::ICON_SHARE_ALT,
+						'visible'=>'$data->estado == 3 ',
+	                  	'url'=>'Yii::app()->createUrl("factura/undoanular", array("id"=>$data->idfactura))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Desea deshacer la anulación de la factura?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue activada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo activarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+		              	
                )   
         ),
 	);

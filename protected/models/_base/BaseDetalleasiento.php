@@ -211,4 +211,136 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			return $dataProvider;
         }
         
+	public  function generarArrayDEBE_anual($anio){
+       		$sql='SELECT cuenta.codigocta as codigo,cuenta.nombre AS cuenta, SUM( detalleasiento.debe ) AS debe 
+					FROM asiento, cuenta, detalleasiento
+					WHERE YEAR( asiento.fecha ) ='.$anio.'
+					AND detalleasiento.asiento_idasiento = asiento.idasiento
+					AND detalleasiento.cuenta_idcuenta = cuenta.idcuenta
+					GROUP BY cuenta.nombre
+					';
+       		$count=Yii::app()->db->createCommand($sql)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql, array(
+			    //'totalItemCount'=>$count,
+			    'sort'=>array(
+			        'attributes'=>array(
+			             'codigo', 'cuenta', 'debe',
+			        ),
+			    ),
+			   'pagination'=>array(
+			        'pageSize'=>$count,
+			    ),
+				));
+			return $dataProvider;
+        }
+		public  function generarArrayHABER_anual($anio){
+        	
+        	//$count=Yii::app()->db->createCommand('SELECT COUNT(*) FROM tbl_user')->queryScalar();
+			$sql='SELECT cuenta.codigocta AS codigo, 
+						 cuenta.nombre AS cuenta, 
+						 SUM( detalleasiento.haber ) AS haber
+					FROM asiento, cuenta, detalleasiento
+					WHERE YEAR( asiento.fecha ) ='.$anio.'
+					AND detalleasiento.asiento_idasiento = asiento.idasiento
+					AND detalleasiento.cuenta_idcuenta = cuenta.idcuenta
+					GROUP BY cuenta.nombre ';
+			$count=Yii::app()->db->createCommand($sql)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql, array(
+			    //'totalItemCount'=>$count,
+			    'sort'=>array(
+			        'attributes'=>array(
+			             'codigo', 'cuenta', 'haber'
+			        ),
+			    ),
+			   'pagination'=>array(
+			        'pageSize'=>$count,
+			    ),
+				));
+			return $dataProvider;
+        }
+        
+	public  function generarAsientos_anual($anio){
+        	
+        	
+			$sql='SELECT asiento.fecha AS fecha, 
+						 asiento.idasiento AS asiento, 
+						 cuenta.codigocta AS codigo, 
+						 cuenta.nombre AS nombre, 
+						 detalleasiento.debe AS debe, 
+						 detalleasiento.haber AS haber,
+						 asiento.descripcion AS descripcion
+					FROM asiento, cuenta, detalleasiento
+					WHERE YEAR( asiento.fecha ) ='.$anio.'
+							AND detalleasiento.asiento_idasiento = asiento.idasiento
+							AND detalleasiento.cuenta_idcuenta = cuenta.idcuenta';
+			$count=Yii::app()->db->createCommand($sql)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql, array(
+			    'totalItemCount'=>$count,
+			    'sort'=>array(
+					'defaultOrder'=>'fecha ASC',
+			        'attributes'=>array(
+			             'fecha','asiento','nombre', 'codigo' , 'haber','debe', 'descripcion'
+			        ),
+			    ),
+			    'pagination'=>array(
+			        'pageSize'=>$count,
+			    ),
+				));
+			return $dataProvider;
+        }
+		public  function generarArraySALDOS_mes($anio,$mes){
+        	
+        	//$count=Yii::app()->db->createCommand('SELECT COUNT(*) FROM tbl_user')->queryScalar();
+			$sql='SELECT cuenta.codigocta AS codigo, 
+						 cuenta.nombre AS cuenta, 
+						 SUM( detalleasiento.debe ) AS debe,
+						 SUM( detalleasiento.haber ) AS haber
+					FROM asiento, cuenta, detalleasiento
+					WHERE YEAR( asiento.fecha ) ='.$anio.'
+					AND MONTH( asiento.fecha ) ='.$mes.'
+					AND detalleasiento.asiento_idasiento = asiento.idasiento
+					AND detalleasiento.cuenta_idcuenta = cuenta.idcuenta
+					GROUP BY cuenta.nombre ';
+			$count=Yii::app()->db->createCommand($sql)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql, array(
+			    //'totalItemCount'=>$count,
+			    'sort'=>array(
+					'defaultOrder'=>'codigo ASC',
+			        'attributes'=>array(
+			             'codigo', 'cuenta', 'debe','haber'
+			        ),
+			    ),
+			   'pagination'=>array(
+			        'pageSize'=>$count,
+			    ),
+				));
+			return $dataProvider;
+        } 
+        public  function generarArraySALDOS_anio($anio){
+        	
+        	//$count=Yii::app()->db->createCommand('SELECT COUNT(*) FROM tbl_user')->queryScalar();
+			$sql='SELECT cuenta.codigocta AS codigo, 
+						 cuenta.nombre AS cuenta, 
+						 SUM( detalleasiento.debe ) AS debe,
+						 SUM( detalleasiento.haber ) AS haber
+					FROM asiento, cuenta, detalleasiento
+					WHERE YEAR( asiento.fecha ) ='.$anio.'
+					AND detalleasiento.asiento_idasiento = asiento.idasiento
+					AND detalleasiento.cuenta_idcuenta = cuenta.idcuenta
+					GROUP BY cuenta.nombre ';
+			$count=Yii::app()->db->createCommand($sql)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql, array(
+			    //'totalItemCount'=>$count,
+			    'sort'=>array(
+					'defaultOrder'=>'codigo ASC',
+			        'attributes'=>array(
+			             'codigo', 'cuenta', 'debe','haber'
+			        ),
+			    ),
+			   'pagination'=>array(
+			        'pageSize'=>$count,
+			    ),
+				));
+			return $dataProvider;
+        } 
 }
