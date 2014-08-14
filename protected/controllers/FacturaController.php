@@ -150,7 +150,7 @@ class FacturaController extends Controller
 							$detAs4=new Detalleasiento;
 							$totalimpint=$model->importeImpInt;
 							$detAs4->haber=$model->importeImpInt;
-							$detAs4->cuenta_idcuenta=101; //cuenta 431190 Impuestos internos						      Impuestos Internos            						
+							$detAs4->cuenta_idcuenta=101; //cuenta 431190 Impuestos internos	           						
 							$detAs4->asiento_idasiento=$asiento->idasiento;
 							$detAs4->save();
 						}

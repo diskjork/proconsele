@@ -107,6 +107,14 @@ class ComprasController extends Controller
 								$detAs3->asiento_idasiento=$asiento->idasiento;
 								$detAs3->save();
 							}
+						//detalle asiento Impuestos internos
+							if($model->impuestointerno != null){
+								$detAs4=new Detalleasiento;
+								$detAs4->debe=$model->impuestointerno; //impuesto interno
+								$detAs4->cuenta_idcuenta=101; //cuenta 431190 Impuestos internos
+								$detAs4->asiento_idasiento=$asiento->idasiento;
+								$detAs4->save();
+							}
 						
 						// registro de la compra dependiendo de cuenta_idcuenta
 							$detAs5=new Detalleasiento;
@@ -541,7 +549,29 @@ public function movCaja($model,$datosPOST){
 					}
 					
 				}
-			//DESCUENTO 
+			// IMPUESTO INTERNO
+				if($datosviejos->impuestointerno != $datosnuevos->impuestointerno){
+					if(($datosviejos->impuestointerno != null) && ($datosnuevos->impuestointerno != null)){
+						$DeAsIMP=Detalleasiento::model()->find("asiento_idasiento=:asiento AND cuenta_idcuenta=:cuenta",
+								array(':asiento'=>$datosviejos->asiento_idasiento,
+									  ':cuenta' =>101)); //impuesto interno
+						$DeAsIMP->debe=$datosnuevos->impuestointerno;
+						$DeAsIMP->save();
+					} elseif(($datosviejos->impuestointerno == null) && ($datosnuevos->impuestointerno != null)) {
+						$NuevoDeAs=new Detalleasiento;
+						$NuevoDeAs->asiento_idasiento=$datosnuevos->asiento_idasiento;
+						$NuevoDeAs->cuenta_idcuenta=101; //impuesto interno
+						$NuevoDeAs->debe=$datosnuevos->impuestointerno;
+						$NuevoDeAs->save();
+					} elseif(($datosviejos->impuestointerno != null) && ($datosnuevos->impuestointerno == null)){
+						$DeGuardado=Detalleasiento::model()->find("asiento_idasiento=:asiento AND cuenta_idcuenta=:cuenta",
+								array(':asiento'=>$datosviejos->asiento_idasiento,
+									  ':cuenta' =>101)); // impuestointerno
+						$DeGuardado->delete();	
+					}
+					
+				}
+			
 				
 				
 		}
@@ -687,9 +717,17 @@ public function movCaja($model,$datosPOST){
 						  ":idcuenta"=>98));// interes
 				$DeAsInt->delete();
 			}
+			if($datosviejos->impuestointerno != null){
+				$DeAsIMP=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
+					array(":idasiento"=>$datosviejos->asiento_idasiento,
+						  ":idcuenta"=>101));// impuestointerno
+				$DeAsIMP->delete();
+			}
 			$modelGuardado=Compras::model()->findByPk($datosnuevos->idcompra);
 			$modelGuardado->importeIIBB=null;
+			$modelGuardado->importe_per_iva=null;
 			$modelGuardado->ivatotal=null;
+			$modelGuardado->impuestointerno=null;
 			$modelGuardado->save();
 			// detalle asiento de la cuenta relacionada tambien cuando cambia la cuenta_idcuenta
 			$this->updateTotalAsVta($datosviejos, $datosnuevos);
@@ -720,6 +758,14 @@ public function movCaja($model,$datosPOST){
 				$detAs3->cuenta_idcuenta=14; // 113200 Ret. y Percep. de IVA
 				$detAs3->asiento_idasiento=$datosnuevos->asiento_idasiento;
 				$detAs3->save();
+			}
+		//detalle asiento de impuesto interno
+			if($datosnuevos->impuestointerno != null){
+				$detAs4=new Detalleasiento;
+				$detAs4->debe=$datosnuevos->impuestointerno; //impuesto interno
+				$detAs4->cuenta_idcuenta=101; //Impuestos internos
+				$detAs4->asiento_idasiento=$datosnuevos->asiento_idasiento;
+				$detAs4->save();
 			}
 		//------------intereses-------------------
 			if($datosnuevos->interes != null ){
