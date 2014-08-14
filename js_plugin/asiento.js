@@ -2,10 +2,7 @@ $(document).on('ready',function(){
 
 $("label:contains('Fecha')").append('<span class="required">*</span>');
 //$("label:contains('Descripcion')").append('<span class="required">*</span>')
-$("span.wh-relational-column").append('<i class="icon-chevron-down"></i>');
-$("span.wh-relational-column").find("i").tooltip({
-	title: "Mostrar"
-	});
+visualizar();
 //función para cambiar el ícono utilizado para desplegar el asiento en la grilla
 $("span.wh-relational-column").find("i").click(function(){
  	var clase=$(this).attr('class');
@@ -31,6 +28,8 @@ $("span.wh-relational-column").find("i").click(function(){
  	}
  	
 });
+
+
 formato();
 $("#id_member").click(function(){
 	newElem();
@@ -42,6 +41,12 @@ $("#boton-submit").click(function(){
 });
 botonsubmit('0');
 });
+function visualizar(){
+$("span.wh-relational-column").append('<i class="icon-chevron-down"></i>');
+$("span.wh-relational-column").find("i").tooltip({
+	title: "Mostrar"
+	});
+}
 function formato(){
 	var cont1=$("table.table.mmf_table > tbody > tr").size();
 	var cont2=$("table.table.mmf_table > tbody > tr[style*='display:none;']").size();

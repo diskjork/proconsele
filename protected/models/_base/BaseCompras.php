@@ -33,7 +33,7 @@
  * @property Ivamovimiento[] $ivamovimientos
  */
 abstract class BaseCompras extends GxActiveRecord {
-	public $iibb, $percepcionIIBB2,$vista,$perciva,$desc,$inte;
+	public $iibb, $percepcionIIBB2,$vista,$perciva,$desc,$inte,$impint;
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -54,10 +54,10 @@ abstract class BaseCompras extends GxActiveRecord {
 		return array(
 			array('nrodefactura, tipofactura, fecha, formadepago, proveedor_idproveedor, importeneto, cuenta_idcuenta', 'required'),
 			array('nrodefactura, tipofactura, nroremito, formadepago, proveedor_idproveedor, estado, movimientocaja_idmovimientocaja, asiento_idasiento, cuenta_idcuenta', 'numerical', 'integerOnly'=>true),
-			array('iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, importe_per_iva, descuento, interes', 'numerical'),
+			array('iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, importe_per_iva, descuento, interes, impuestointerno', 'numerical'),
 			array('descripcion', 'length', 'max'=>150),
-			array('nroremito, descripcion, estado, iva, percepcionIIBB, importebruto, ivatotal, importeIIBB, movimientocaja_idmovimientocaja, asiento_idasiento, importe_per_iva, descuento, interes', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idcompra, nrodefactura, tipofactura, nroremito, fecha, descripcion, formadepago, proveedor_idproveedor, estado, iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, movimientocaja_idmovimientocaja, asiento_idasiento, cuenta_idcuenta, importe_per_iva, descuento, interes', 'safe', 'on'=>'search'),
+			array('nroremito, descripcion, estado, iva, percepcionIIBB, importebruto, ivatotal, importeIIBB, movimientocaja_idmovimientocaja, asiento_idasiento, importe_per_iva, descuento, interes, impuestointerno', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idcompra, nrodefactura, tipofactura, nroremito, fecha, descripcion, formadepago, proveedor_idproveedor, estado, iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, movimientocaja_idmovimientocaja, asiento_idasiento, cuenta_idcuenta, importe_per_iva, descuento, interes, impuestointerno', 'safe', 'on'=>'search'),
 			array('tipofactura','validarTipoFacturaIVA'),
 		);
 	}
@@ -97,6 +97,7 @@ abstract class BaseCompras extends GxActiveRecord {
 			'importeneto' => Yii::t('app', 'Importe TOTAL '),
 			'importeIIBB' => Yii::t('app', 'Percepción IIBB'),
 			'importe_per_iva' => Yii::t('app', 'Percepción IVA'),
+			'impuestointerno' => Yii::t('app', 'Impuesto Interno'),
 			'descuento' => Yii::t('app', 'Descuento'),
 			'interes' => Yii::t('app', 'Interés'),
 			'movimientocaja_idmovimientocaja' => Yii::t('app', 'Movimientocaja Idmovimientocaja'),
