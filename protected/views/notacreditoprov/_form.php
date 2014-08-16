@@ -320,7 +320,7 @@ if(isset($_GET['vista'])){
 								  //'name'=>'cuenta_idcuenta',
 								 'model'=>$model,
 								 'attribute'=>'iva',
-								  'data' => array("1.21"=>"21%","1.105"=>"10,5%"),
+								  'data' => array("1.21"=>"21%","1.105"=>"10,5%","1.27"=>"27%"),
 								
 								  'options'=>array(
 									   //'placeholder'=>'I.V.A.',

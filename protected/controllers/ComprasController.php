@@ -100,7 +100,7 @@ class ComprasController extends Controller
 								$detAs3->save();
 							}
 						//detalle asiento de percepcion IVA
-							if(($model->importe_per_iva != null) || ($model->importe_per_iva != 0)){
+							if($model->importe_per_iva != null){
 								$detAs3=new Detalleasiento;
 								$detAs3->debe=$model->importe_per_iva; //percepción iva
 								$detAs3->cuenta_idcuenta=14; // 113200 Ret. y Percep. de IVA
@@ -485,19 +485,19 @@ public function movCaja($model,$datosPOST){
 	public function updateImpuestos($datosviejos,$datosnuevos){
 			// IVATOTAL
 				if($datosviejos->ivatotal != $datosnuevos->ivatotal){
-					if((($datosviejos->ivatotal != null) ||($datosviejos->ivatotal != 0)) && (($datosnuevos->ivatotal != null)|| ($datosnuevos->ivatotal != 0))){
+					if(($datosviejos->ivatotal != null)  && ($datosnuevos->ivatotal != null)){
 						$DeAsIVA=Detalleasiento::model()->find("asiento_idasiento=:asiento AND cuenta_idcuenta=:cuenta",
 								array(':asiento'=>$datosviejos->asiento_idasiento,
 									  ':cuenta' =>13)); //113100 Iva - Crédito Fiscal
 						$DeAsIVA->debe=$datosnuevos->ivatotal;
 						$DeAsIVA->save();
-					} elseif((($datosviejos->ivatotal == null)||($datosviejos->ivatotal == 0)) && (($datosnuevos->ivatotal != null)||($datosnuevos->ivatotal != 0))) {
+					} elseif(($datosviejos->ivatotal == null) && ($datosnuevos->ivatotal != null)) {
 						$NuevoDeAs=new Detalleasiento;
 						$NuevoDeAs->asiento_idasiento=$datosnuevos->asiento_idasiento;
 						$NuevoDeAs->cuenta_idcuenta=13; //113100 Iva - Crédito Fiscal
 						$NuevoDeAs->debe=$datosnuevos->ivatotal;
 						$NuevoDeAs->save();
-					} elseif((($datosviejos->ivatotal != null)||($datosviejos->ivatotal != 0)) && (($datosnuevos->ivatotal == null)||($datosnuevos->ivatotal == 0))){
+					} elseif(($datosviejos->ivatotal != null) && ($datosnuevos->ivatotal == null)){
 						$DeGuardado=Detalleasiento::model()->find("asiento_idasiento=:asiento AND cuenta_idcuenta=:cuenta",
 								array(':asiento'=>$datosviejos->asiento_idasiento,
 									  ':cuenta' =>13)); //113100 Iva - Crédito Fiscal

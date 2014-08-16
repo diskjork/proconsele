@@ -269,7 +269,7 @@ if(isset($model->impuestointerno)){
 								  //'name'=>'cuenta_idcuenta',
 								 'model'=>$model,
 								 'attribute'=>'iva',
-								  'data' => array("1.21"=>"21%","1.105"=>"10,5%","1"=>"Exento","1.27"=>"27%"),
+								  'data' => array("1.21"=>"21%","1.105"=>"10,5%","1.27"=>"27%"),
 								
 								  'options'=>array(
 									   //'placeholder'=>'I.V.A.',
