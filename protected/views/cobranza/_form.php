@@ -106,7 +106,7 @@
 											   '3'=>'Cert. Retención IIBB',
 											   '4'=>'Cert. Retención IVA',
 											   '5'=>'Cert. Retención GANANCIAS',
-											   '6'=>'Cert. Retención PATRONALES'),
+											   '6'=>'Cert. Cont. PATRONALES'),
 								'prompt'=>'Seleccione tipo de cobro..',
 					            'class'=>'span2',
 								

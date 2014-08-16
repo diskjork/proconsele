@@ -280,6 +280,11 @@ class IvamovimientoController extends Controller
 				//'value'=>array($this,'labelNumIIBB'),
 			),
 		array(
+				'header' => 'PER.IVA',
+				'value'=>'($data->importe_per_iva != null) ? number_format($data->importe_per_iva, 2, ",", "."): ""',
+				//'value'=>array($this,'labelNumIIBB'),
+			),
+		array(
 				'header' => 'TOTAL IVA',
 				'value'=>'number_format($data->importeiva, 2, ",", ".")',
 			),

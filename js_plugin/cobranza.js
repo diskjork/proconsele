@@ -425,8 +425,8 @@ function seleccion(obj){
 		case (6): // RETENCIONES PATRONALES
 			newElem(id);
 			$("#"+patrnrocomp).parent().removeAttr("style");
-			$("#"+patrnrocomp).parent().find('label').html("Nro.Compr.R.Patronales").remove();
-			$("#"+patrnrocomp).parent().prepend("<label>Nro.Compr.R.Patronales</label>");
+			$("#"+patrnrocomp).parent().find('label').html("Nro.Compr.C.Patronales").remove();
+			$("#"+patrnrocomp).parent().prepend("<label>Nro.Compr.C.Patronales</label>");
 			$("#"+patrnrocomp).parent().css("text-align","left");
 
 			$("#"+patrfecha).parent().removeAttr("style");

@@ -31,7 +31,7 @@ if(isset($_GET['vista'])){
 	}
 	if(isset($model->impuestointerno)){
 		Yii::app()->clientScript->registerScript('impint',"
-				$('#Notacredito_impInt').prop('checked',true);
+				$('#Notacredito_impint').prop('checked',true);
 				 $('#Notacredito_impuestointerno').show();
           $('#totaldiv-impint').show();
 				//$('div .form-actions').css('background-color','transparent');

@@ -44,7 +44,7 @@ if(isset($model->interes)){
 	}
 if(isset($model->impuestointerno)){
 		Yii::app()->clientScript->registerScript('impint',"
-				$('#Compras_impInt').prop('checked',true);
+				$('#Compras_impint').prop('checked',true);
 				 $('#Compras_impuestointerno').show();
           $('#totaldiv-impint').show();
 				//$('div .form-actions').css('background-color','transparent');
