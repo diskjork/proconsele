@@ -199,7 +199,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			$dataProvider=new CSqlDataProvider($sql, array(
 			    'totalItemCount'=>$count,
 			    'sort'=>array(
-					'defaultOrder'=>'idasiento ASC',
+					'defaultOrder'=>'fecha ASC',
 			        'attributes'=>array(
 			             'fecha','asiento','nombre', 'codigo' , 'haber','debe', 'descripcion'
 			        ),

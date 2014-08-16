@@ -82,6 +82,7 @@ class CobranzaController extends Controller
 		
 		if (isset($_POST['Cobranza'])) {
 			$model->attributes=$_POST['Cobranza'];
+			$model->descripcioncobranza="Cobranza - ".$model->ctacteclienteIdctactecliente->clienteIdcliente->nombre;
 			//$nuevos=$this->nuevosElementosValidados($_POST['Cobranza']);
 		
 			if( //validate detail before saving the master
@@ -175,7 +176,7 @@ class CobranzaController extends Controller
 
 		if (isset($_POST['Cobranza'])) {
 			$model->attributes=$_POST['Cobranza'];
-			
+			$model->descripcioncobranza="Cobranza - ".$model->ctacteclienteIdctactecliente->clienteIdcliente->nombre;
 		//elementos ya guardados y que pueden ser modificados	
 			if (isset($_POST['Detallecobranza']['pk__'])){
 				$cantidadElementos=count($_POST['Detallecobranza']['pk__']); 
@@ -213,6 +214,14 @@ class CobranzaController extends Controller
 						$itemUpdate[$i]['ivafecha']=$_POST['Detallecobranza']['u__'][$i]['ivafecha'];
 						$itemUpdate[$i]['ivacomprelac']=$_POST['Detallecobranza']['u__'][$i]['ivacomprelac'];
 						$itemUpdate[$i]['ivatasa']=$_POST['Detallecobranza']['u__'][$i]['ivatasa'];
+						$itemUpdate[$i]['gannrocomp']=$_POST['Detallecobranza']['u__'][$i]['gannrocomp'];
+						$itemUpdate[$i]['ganfecha']=$_POST['Detallecobranza']['u__'][$i]['ganfecha'];
+						$itemUpdate[$i]['gancomprelac']=$_POST['Detallecobranza']['u__'][$i]['gancomprelac'];
+						$itemUpdate[$i]['gantasa']=$_POST['Detallecobranza']['u__'][$i]['gantasa'];
+						$itemUpdate[$i]['patrnrocomp']=$_POST['Detallecobranza']['u__'][$i]['patrnrocomp'];
+						$itemUpdate[$i]['patrfecha']=$_POST['Detallecobranza']['u__'][$i]['patrfecha'];
+						$itemUpdate[$i]['patrcomprelac']=$_POST['Detallecobranza']['u__'][$i]['patrcomprelac'];
+						$itemUpdate[$i]['patrtasa']=$_POST['Detallecobranza']['u__'][$i]['patrtasa'];
 
 						//Datos del detalle ya guardado-----------------------------------
 						
@@ -241,6 +250,15 @@ class CobranzaController extends Controller
 						$datos[$i]['ivafecha']=$DC_trabajo->ivafecha;
 						$datos[$i]['ivacomprelac']=$DC_trabajo->ivacomprelac;
 						$datos[$i]['ivatasa']=$DC_trabajo->ivatasa;
+						$datos[$i]['gannrocomp']=$DC_trabajo->gannrocomp;
+						$datos[$i]['ganfecha']=$DC_trabajo->ganfecha;
+						$datos[$i]['gancomprelac']=$DC_trabajo->gancomprelac;
+						$datos[$i]['gantasa']=$DC_trabajo->gantasa;
+						$datos[$i]['patrnrocomp']=$DC_trabajo->patrnrocomp;
+						$datos[$i]['patrfecha']=$DC_trabajo->patrfecha;
+						$datos[$i]['patrcomprelac']=$DC_trabajo->patrcomprelac;
+						$datos[$i]['patrtasa']=$DC_trabajo->patrtasa;
+						
 						
 					} else {
 						//elementos borrados
@@ -563,6 +581,28 @@ class CobranzaController extends Controller
 		$modeliva->detallecobranza_iddetallecobranza=$datos['iddetallecobranza'];
 		$modeliva->save();
 	}
+	public function nuevoGAN($datos){
+		$modelgan=new Retenciongan;
+		$modelgan->nrocomprobante=$datos['gannrocomp'];
+		$modelgan->fecha=$datos['fecha'];
+		$modelgan->cliente_idcliente=$datos['idcliente'];
+		$modelgan->comp_relacionado=$datos['gancomprelac'];
+		$modelgan->tasa=$datos['gantasa'];
+		$modelgan->importe=$datos['importe'];
+		$modelgan->detallecobranza_iddetallecobranza=$datos['iddetallecobranza'];
+		$modelgan->save();
+	}
+	public function nuevoPATR($datos){
+		$modelpatr=new Retencionpatr;
+		$modelpatr->nrocomprobante=$datos['patrnrocomp'];
+		$modelpatr->fecha=$datos['fecha'];
+		$modelpatr->cliente_idcliente=$datos['idcliente'];
+		$modelpatr->comp_relacionado=$datos['patrcomprelac'];
+		$modelpatr->tasa=$datos['patrtasa'];
+		$modelpatr->importe=$datos['importe'];
+		$modelpatr->detallecobranza_iddetallecobranza=$datos['iddetallecobranza'];
+		$modelpatr->save();
+	}
 	public function idCliente($idctacte){
 		$sql="SELECT cliente.idcliente as idcliente, cliente.nombre AS nombrecliente  FROM cliente,ctactecliente,cobranza 
 				WHERE cliente.idcliente =ctactecliente.cliente_idcliente and  ctactecliente.idctactecliente = ".$idctacte." LIMIT 1;";
@@ -687,6 +727,46 @@ class CobranzaController extends Controller
 			              $DeAsiva->save();
 		              }
 	              
+	             } elseif($validatedMembers[$a]['tipocobranza'] == 5 && (!isset($Deta))
+	             ){ //GANANCIA
+	              //nuevo comprobante de retención de GANACIA
+		              $Movgan=new Retenciongan;
+		              $Movgan->nrocomprobante=$validatedMembers[$a]['gannrocomp'];
+		              $Movgan->cliente_idcliente=$cliente->idcliente;
+		              $Movgan->fecha=$fecha;
+		              $Movgan->comp_relacionado=$validatedMembers[$a]['gancomprelac'];
+		              $Movgan->importe=$validatedMembers[$a]['importe'];
+		              $Movgan->tasa=$validatedMembers[$a]['gantasa'];
+		              $Movgan->detallecobranza_iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+		              if($Movgan->save()){
+			              $DeAsgan=new Detalleasiento;
+			              $DeAsgan->debe=$validatedMembers[$a]['importe'];
+			              $DeAsgan->cuenta_idcuenta=15;// 113300 -  RETENCION GANANCIA
+			              $DeAsgan->asiento_idasiento=$nroasiento;
+			              $DeAsgan->iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+			              $DeAsgan->save();
+		              }
+	              
+	             } elseif($validatedMembers[$a]['tipocobranza'] == 6 && (!isset($Deta))
+	             ){ //PATRONALES
+	              //nuevo comprobante de retención PATRONALES
+		              $Movpatr=new Retencionpatr;
+		              $Movpatr->nrocomprobante=$validatedMembers[$a]['patrnrocomp'];
+		              $Movpatr->cliente_idcliente=$cliente->idcliente;
+		              $Movpatr->fecha=$fecha;
+		              $Movpatr->comp_relacionado=$validatedMembers[$a]['patrcomprelac'];
+		              $Movpatr->importe=$validatedMembers[$a]['importe'];
+		              $Movpatr->tasa=$validatedMembers[$a]['patrtasa'];
+		              $Movpatr->detallecobranza_iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+		              if($Movpatr->save()){
+			              $DeAspatr=new Detalleasiento;
+			              $DeAspatr->debe=$validatedMembers[$a]['importe'];
+			              $DeAspatr->cuenta_idcuenta=19;// 113600 -  RETENCION PATRONALES
+			              $DeAspatr->asiento_idasiento=$nroasiento;
+			              $DeAspatr->iddetallecobranza=$validatedMembers[$a]['iddetallecobranza'];
+			              $DeAspatr->save();
+		              }
+	              
 	             }
 	             
              } //for
@@ -735,6 +815,18 @@ class CobranzaController extends Controller
    									array(':id'=>$datos['iddetallecobranza']));
 				$RetIVA->delete();   									
    				break;
+   			case 5 :
+   				//$this->resetDetalle($datos['iddetallecobranza']);	
+   				$RetGAN=Retenciongan::model()->find("detallecobranza_iddetallecobranza=:id",
+   									array(':id'=>$datos['iddetallecobranza']));
+				$RetGAN->delete();   									
+   				break;
+   			case 6 :
+   				//$this->resetDetalle($datos['iddetallecobranza']);	
+   				$RetPATR=Retencionpatr::model()->find("detallecobranza_iddetallecobranza=:id",
+   									array(':id'=>$datos['iddetallecobranza']));
+				$RetPATR->delete();   									
+   				break;
    		}
    	}
 	public function cambioTipoNuevoDetalle($datos){
@@ -764,6 +856,14 @@ class CobranzaController extends Controller
 			case 4:
 				
 				$this->nuevoIVA($datos);
+				break;
+			case 5:
+				
+				$this->nuevoGAN($datos);
+				break;
+			case 6:
+				
+				$this->nuevoPATR($datos);
 				break;
 		}
 	}
@@ -871,7 +971,47 @@ class CobranzaController extends Controller
 						$DeAs->debe=$nuevosdatos['importe'];
 						$DeAs->update();
 					}
-			break;		
+			break;	
+		case 5: //para GANANCIAS
+				$Movgan=Retenciongan::model()->find("detallecobranza_iddetallecobranza=:id",
+						array(':id'=>$datosviejos['iddetallecobranza']));
+						
+				if(	($datosviejos['gannrocomp'] != $nuevosdatos['gannrocomp']) || 
+					($datosviejos['ganfecha'] != $nuevosdatos['ganfecha']) ||
+					($datosviejos['gancomprelac'] != $nuevosdatos['gancomprelac']) ||
+					($datosviejos['gantasa'] != $nuevosdatos['gantasa']) ||
+					($datosviejos['importe'] != $nuevosdatos['importe']) ) 	{
+						//print_r($nuevosdatos);die();
+						$Movgan->nrocomprobante=$nuevosdatos['gannrocomp'];
+						$Movgan->fecha=$nuevosdatos['ganfecha'];
+						$Movgan->comp_relacionado=$nuevosdatos['gancomprelac'];
+						$Movgan->tasa=$nuevosdatos['gantasa'];
+						$Movgan->importe=$nuevosdatos['importe'];
+						$Movgan->save();
+						$DeAs->debe=$nuevosdatos['importe'];
+						$DeAs->update();
+					}
+			break;	
+		case 6: //para PATRONALES
+				$Movpatr=Retencionpatr::model()->find("detallecobranza_iddetallecobranza=:id",
+						array(':id'=>$datosviejos['iddetallecobranza']));
+						
+				if(	($datosviejos['patrnrocomp'] != $nuevosdatos['patrnrocomp']) || 
+					($datosviejos['patrfecha'] != $nuevosdatos['patrfecha']) ||
+					($datosviejos['patrcomprelac'] != $nuevosdatos['patrcomprelac']) ||
+					($datosviejos['patrtasa'] != $nuevosdatos['patrtasa']) ||
+					($datosviejos['importe'] != $nuevosdatos['importe']) ) 	{
+						//print_r($nuevosdatos);die();
+						$Movpatr->nrocomprobante=$nuevosdatos['patrnrocomp'];
+						$Movpatr->fecha=$nuevosdatos['patrfecha'];
+						$Movpatr->comp_relacionado=$nuevosdatos['patrcomprelac'];
+						$Movpatr->tasa=$nuevosdatos['patrtasa'];
+						$Movpatr->importe=$nuevosdatos['importe'];
+						$Movpatr->save();
+						$DeAs->debe=$nuevosdatos['importe'];
+						$DeAs->update();
+					}
+			break;	
 			}
 		}
 	
@@ -970,6 +1110,15 @@ class CobranzaController extends Controller
 			break;
 			case 4:
 				$DeAsiento->cuenta_idcuenta = 14;// retencion iva
+				$DeAsieto->debe=$nuevo['importe'];
+				$DeAsiento->save();
+			break;
+			case 5:
+				$DeAsiento->cuenta_idcuenta = 15;// retencion ganacias
+				$DeAsiento->save();
+			break;
+			case 6:
+				$DeAsiento->cuenta_idcuenta = 19;// retencion patronaes
 				$DeAsieto->debe=$nuevo['importe'];
 				$DeAsiento->save();
 			break;
@@ -1096,6 +1245,14 @@ class CobranzaController extends Controller
 		$detalle->ivafecha=null;
 		$detalle->ivacomprelac=null;
 		$detalle->ivatasa=null;
+		$detalle->gannrocomp=null;
+		$detalle->ganfecha=null;
+		$detalle->gancomprelac=null;
+		$detalle->gantasa=null;
+		$detalle->patrnrocomp=null;
+		$detalle->patrfecha=null;
+		$detalle->patrcomprelac=null;
+		$detalle->patrtasa=null;
 		$detalle->save();
 	}
 	public function actionEnvioctactecliente(){

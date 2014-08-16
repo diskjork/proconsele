@@ -1,7 +1,7 @@
 
 <?php 
 	$dataProvider= $model->search($model->fecha=$anioTab.'-'.$mesTab);
-	$cant=count($dataProvider);
+	$cant=count($dataProvider->data);
 	$dataProvider->setPagination(array('pageSize'=>$cant)); 
 ?>
 <div id="iconoExportar" align="right">

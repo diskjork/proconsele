@@ -117,6 +117,9 @@ abstract class BaseMovimientocaja extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort' => array(
+					'defaultOrder'=>'fecha ASC',
+			)
 		));
 	}
 //para listar los caja cargadas en solapas	

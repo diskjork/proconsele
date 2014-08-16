@@ -132,6 +132,9 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort' => array(
+					'defaultOrder'=>'fecha ASC',
+			)
 		));
 	}
 //para listar los ctasbancarias cargadas en solapas	
