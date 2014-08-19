@@ -116,6 +116,9 @@ abstract class BaseCheque extends GxActiveRecord {
 		
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort' => array(
+					'defaultOrder' => array('fecha ASC' => true),
+				),
 		));
 	}
 	public function behaviors()

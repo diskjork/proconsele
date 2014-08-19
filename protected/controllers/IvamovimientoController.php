@@ -276,20 +276,24 @@ class IvamovimientoController extends Controller
 				'value'=>'($data->tipoiva == 1.21)?"21%" :"10,5%"', ),
 		array(
 				'header' => 'IIBB',
+				//'value'=>'$data->importeiibb',
 				'value'=>'($data->importeiibb != null) ? number_format($data->importeiibb, 2, ",", "."): ""',
 				//'value'=>array($this,'labelNumIIBB'),
 			),
 		array(
 				'header' => 'PER.IVA',
+				//'value'=>'$data->importe_per_iva',
 				'value'=>'($data->importe_per_iva != null) ? number_format($data->importe_per_iva, 2, ",", "."): ""',
 				//'value'=>array($this,'labelNumIIBB'),
 			),
 		array(
 				'header' => 'TOTAL IVA',
+				//'value'=>'$data->importeiva',
 				'value'=>'number_format($data->importeiva, 2, ",", ".")',
 			),
 		array(
 				'header' => 'TOTAL NETO',
+				//'value'=>'$data->importeneto',
 				'value'=>'number_format($data->importeneto, 2, ",", ".")',
 			));
 			

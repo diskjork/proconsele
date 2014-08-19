@@ -108,7 +108,14 @@ class NotacreditoprovController extends Controller
 								$detAs3->asiento_idasiento=$asiento->idasiento;
 								$detAs3->save();
 							}
-						
+						//detalle asiento de impuesto interno
+							if($model->impuestointerno != null){
+								$detAs=new Detalleasiento;
+								$detAs->haber=$model->impuestointerno; //impuesto interno
+								$detAs->cuenta_idcuenta=101; // 431190 Impuesto interno
+								$detAs->asiento_idasiento=$asiento->idasiento;
+								$detAs->save();
+							}
 						// registro de la compra dependiendo de cuenta_idcuenta
 							$detAs5=new Detalleasiento;
 							$detAs5->haber=$model->importebruto;
@@ -428,6 +435,14 @@ public function actionBorrar($id){
 				$iibb=$nuevos->importe_per_iva;
 				$DeAsIIBB->save();
 			}
+			if($viejos->impuestointerno != $nuevos->impuestointerno){
+				$DeAsimpint=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
+							array(':idasiento'=>$viejos->asiento_idasiento,
+								  ':idcuenta'=>101));// Impuesto interno
+				$DeAsimpint->haber=$nuevos->impuestointerno;
+				$impint=$nuevos->impuestointerno;
+				$DeAsimpint->save();
+			}
 			if($viejos->interes != $nuevos->interes){
 				$DeAsInt=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
 							array(':idasiento'=>$viejos->asiento_idasiento,
@@ -553,6 +568,29 @@ public function actionBorrar($id){
 				$DeAs_per_iva->haber=$nuevos->importe_per_iva;
 			
 				$DeAs_per_iva->save();
+			}
+	//------IMPUESTO INTERNO------------
+			
+			if(($viejos->impuestointerno == null) && ($nuevos->impuestointerno != null)){
+				$detAs=new Detalleasiento;
+				$detAs->haber=$nuevos->impuestointerno;
+				$detAs->cuenta_idcuenta=101; // IMPUESTO INTERNO
+				$detAs->asiento_idasiento=$viejos->asiento_idasiento;
+				$detAs->save();
+			}
+			if((($viejos->impuestointerno != null) && ($nuevos->impuestointerno == null)) || (($viejos->impuestointerno != null) && ($viejos->tipofactura == 1) &&($nuevos->tipofactura == 3))){
+				$DeAs=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
+							array(':idasiento'=>$viejos->asiento_idasiento,
+								  ':idcuenta'=>101));// IMPUESTO INTERNO  
+				$DeAs->delete();
+			}
+			if(($viejos->impuestointerno != null) && ($nuevos->impuestointerno != null)){
+				$DeAs=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
+							array(':idasiento'=>$viejos->asiento_idasiento,
+								  ':idcuenta'=>101));// IMPUESTO INTERNO   
+				$DeAs->haber=$nuevos->impuestointerno;
+			
+				$DeAs->save();
 			}
 	//------INTERES------------
 			

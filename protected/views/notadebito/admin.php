@@ -79,9 +79,19 @@ $columnas=array(
 			'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right','width' =>'10%'),
-			'template'=>'{update} {delete}',
+			'template'=>'{imprimir} {update} {delete}',
+			'buttons'=>array(
+			 	'imprimir'=>
+                    array(
+						'label'=>'Imprimir Nota Debito',
+		            	'icon'=>TbHtml::ICON_PRINT,
+		            	'url'=>'Yii::app()->createUrl("notadebito/imprimirnotadebito", array("id"=>$data->idnotadebito))',
+                    	'options'=>array('target'=>'_blank'),
+	           	
+                 	),
 			
 		          ),
+		         ),
 		 );
 ?>
 <?php

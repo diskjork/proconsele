@@ -79,13 +79,17 @@ class NotacreditoController extends Controller
 						$model->asiento_idasiento=$asiento->idasiento;
 						$netogravado=$model->netogravado;
 						$D_R=0;
-						if(($model->descrecar != null) && ($model->tipodescrecar != null)){
-							if($model->tipodescrecar == 0){
-								$D_R=$netogravado * ($model->descrecar /100) *-1;
+						if(($model->facturaIdfactura->descrecar != null) && ($model->facturaIdfactura->tipodescrecar != null)){
+							
+							if($model->facturaIdfactura->tipodescrecar == 0){
+								$D_R=$netogravado * ($model->facturaIdfactura->descrecar /100) * -1;
+								
 							}else {
-								$D_R=$netogravado * ($model->descrecar /100);
+								$D_R=$netogravado * ($model->facturaIdfactura->descrecar /100);
 							}
 						}
+					
+						
 						//disminuye la cta cte de deudores por venta
 						$detAs=new Detalleasiento;
 						$detAs->haber=$model->importeneto;
@@ -95,6 +99,7 @@ class NotacreditoController extends Controller
 						$detalleCCcliente=$this->ctacte($model,$_POST['Notacredito']);
 					//----------------------Descuento-------------
 						if($D_R < 0){
+							$model->tipodescrecar=0;
 							$DeAsDesc=new Detalleasiento;
 							$DeAsDesc->haber=$D_R * -1;
 							$DeAsDesc->cuenta_idcuenta=143; //434090 Descuentos cedidos
@@ -148,6 +153,7 @@ class NotacreditoController extends Controller
 							$detAs5->save();
 					//----------- Recargo -------
 							if($D_R > 0){
+							$model->tipodescrecar=1;
 							$DeAsRecar=new Detalleasiento;
 							$DeAsRecar->debe=$D_R;
 							$DeAsRecar->cuenta_idcuenta=161; // recargos por ventas
@@ -205,6 +211,7 @@ class NotacreditoController extends Controller
 					}
 				} else {
 					$this->cambioDetalleAsiento($modelviejo, $model, $_POST['Notacredito']['fecha']);
+					$this->cambioDescuentoRecargo($modelviejo, $model);
 					$this->cambioEstadoFactura($modelviejo, $model);
 					if($this->cambioImporteCtaCte($modelviejo, $model, $_POST['Notacredito']['fecha'])){
 						$this->modificarIvamovimiento($model, $_POST['Notacredito']['fecha']);
@@ -375,11 +382,41 @@ class NotacreditoController extends Controller
 				$impInt=$nuevos->importeImpInt;
 				$DeAsIMP->save();
 			}
+			if($viejos->importe_per_iva != $nuevos->importe_per_iva){
+				$DeAsIMP=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
+							array(':idasiento'=>$viejos->asiento_idasiento,
+								  ':idcuenta'=>14)); // cuenta 113200 Ret. y Percep. de IVA	
+				$DeAsIMP->debe=$nuevos->importe_per_iva;
+				
+				$DeAsIMP->save();
+			}
+			if(($viejos->facturaIdfactura->descrecar != null) && ($viejos->facturaIdfactura->tipodescrecar != null)){
+							$netogravado=$nuevos->netogravado;
+							if($viejos->facturaIdfactura->tipodescrecar == 0){
+								$D_R= $netogravado * ($viejos->facturaIdfactura->descrecar /100) * -1;
+								
+							}else {
+								$D_R=$netogravado * ($model->facturaIdfactura->descrecar /100);
+							}
+						}
+			if($D_R < 0){
+				$DeAsDes=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
+							array(':idasiento'=>$viejos->asiento_idasiento,
+								  ':idcuenta'=>143)); //434090 Descuentos cedidos
+				$DeAsDes->haber=$D_R * -1;
+				$DeAsDes->save();			
+			} else {
+				$DeAsDes=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
+							array(':idasiento'=>$viejos->asiento_idasiento,
+								  ':idcuenta'=>161)); // recargos por ventas
+				$DeAsDes->debe=$D_R ;
+				$DeAsDes->save();
+			}
 			if($viejos->importeneto != $nuevos->importeneto){
 				$DeAsTN=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
 							array(':idasiento'=>$viejos->asiento_idasiento,
-								  ':idcuenta'=>160));//431285 -devoluciones por ventas 
-				$DeAsTN->debe=$nuevos->importeneto - $iva - $impInt - $iibb;
+								  ':idcuenta'=>$viejos->productoIdproducto->cuenta_idcuenta));//disminuye la venta
+				$DeAsTN->debe=$nuevos->netogravado;
 				$DeAsTN->save();
 				
 				$DeAsHaber=Detalleasiento::model()->find("asiento_idasiento=:idasiento AND cuenta_idcuenta=:idcuenta",
@@ -518,23 +555,24 @@ class NotacreditoController extends Controller
 	}
 	
 	public function cambioDescuentoRecargo($viejos,$nuevos){
-			if($viejos->descrecar != $nuevos->descrecar){
-				if(($viejos->descrecar == null) && ($nuevos->descrecar != null)){
-					if($nuevos->tipodescrecar == 0){
+			
+			if($viejos->facturaIdfactura->descrecar != $nuevos->facturaIdfactura->descrecar){
+				if(($viejos->facturaIdfactura->descrecar == null) && ($nuevos->facturaIdfactura->descrecar != null)){
+					if($nuevos->facturaIdfactura->tipodescrecar == 0){
 						$DeAsDesc=new Detalleasiento;
-						$DeAsDesc->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
+						$DeAsDesc->haber= $nuevos->netogravado * ($nuevos->descrecar/100);
 						$DeAsDesc->cuenta_idcuenta=143; //434090 Descuentos cedidos
-						$DeAsDesc->asiento_idasiento=$asiento->idasiento;
+						$DeAsDesc->asiento_idasiento=$viejos->asiento_idasiento;
 						$DeAsDesc->save();						
 					} else {
 						$DeAsRecar=new Detalleasiento;
 						$DeAsRecar->debe=$nuevos->netogravado * ($nuevos->descrecar/100);
 						$DeAsRecar->cuenta_idcuenta=161; // recargos por ventas
-						$DeAsRecar->asiento_idasiento=$asiento->idasiento;
+						$DeAsRecar->asiento_idasiento=$viejos->asiento_idasiento;
 						$DeAsRecar->save();
 					}
-				} elseif(($viejos->descrecar != null) && ($nuevos->descrecar == null)){
-					if($viejos->tipodescrecar == 0){
+				} elseif(($viejos->facturaIdfactura->descrecar != null) && ($nuevos->facturaIdfactura->descrecar == null)){
+					if($viejos->facturaIdfactura->tipodescrecar == 0){
 						$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
 											array(':cuenta'=>143, //434090 Descuentos cedidos
 												  ':asiento'=>$viejos->asiento_idasiento));
@@ -545,8 +583,8 @@ class NotacreditoController extends Controller
 												  ':asiento'=>$viejos->asiento_idasiento));
 						$DeAsDesc->delete();
 					}
-				} elseif(($viejos->descrecar != null) && ($nuevos->descrecar != null)){
-					if(($viejos->tipodescrecar == 0) && ($nuevos->tipodescrecar == 1)){
+				} elseif(($viejos->facturaIdfactura->descrecar != null) && ($nuevos->facturaIdfactura->descrecar != null)){
+					if(($viejos->facturaIdfactura->tipodescrecar == 0) && ($nuevos->facturaIdfactura->tipodescrecar == 1)){
 						$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
 											array(':cuenta'=>143, //434090 Descuentos cedidos
 												  ':asiento'=>$viejos->asiento_idasiento));
@@ -554,7 +592,7 @@ class NotacreditoController extends Controller
 						$DeAsDesc->debe=$nuevos->netogravado * ($nuevos->descrecar/100);
 						$DeAsDesc->cuenta_idcuenta=161; // recargos por ventas
 						$DeAsDesc->update();
-					} elseif(($viejos->tipodescrecar == 1) && ($nuevos->tipodescrecar == 0)){
+					} elseif(($viejos->facturaIdfactura->tipodescrecar == 1) && ($nuevos->facturaIdfactura->tipodescrecar == 0)){
 						$DeAsDescR=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
 											array(':cuenta'=>161, //recargos por ventas
 												  ':asiento'=>$viejos->asiento_idasiento));
@@ -562,8 +600,8 @@ class NotacreditoController extends Controller
 						$DeAsDescR->haber=$nuevos->netogravado * ($nuevos->descrecar/100);					
 						$DeAsDescR->cuenta_idcuenta=143; //434090 Descuentos cedidos
 						$DeAsDescR->update();
-					} elseif(($viejos->tipodescrecar == $nuevos->tipodescrecar)){
-						if($viejos->tipodescrecar == 0){
+					} elseif(($viejos->facturaIdfactura->tipodescrecar == $nuevos->facturaIdfactura->tipodescrecar)){
+						if($viejos->facturaIdfactura->tipodescrecar == 0){
 							$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
 											array(':cuenta'=>143, //434090 Descuentos cedidos
 												  ':asiento'=>$viejos->asiento_idasiento));
@@ -578,8 +616,8 @@ class NotacreditoController extends Controller
 						}
 					}
 				}
-			} elseif(($viejos->descrecar == $nuevos->descrecar) && ($viejos->descrecar != null)){
-				if(($viejos->tipodescrecar == 0) && ($nuevos->tipodescrecar == 1)){
+			} elseif(($viejos->facturaIdfactura->descrecar == $nuevos->facturaIdfactura->descrecar) && ($viejos->facturaIdfactura->descrecar != null)){
+				if(($viejos->facturaIdfactura->tipodescrecar == 0) && ($nuevos->facturaIdfactura->tipodescrecar == 1)){
 						$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
 											array(':cuenta'=>143, //434090 Descuentos cedidos
 												  ':asiento'=>$viejos->asiento_idasiento));
@@ -587,7 +625,7 @@ class NotacreditoController extends Controller
 						$DeAsDesc->debe=$nuevos->netogravado * ($nuevos->descrecar/100);
 						$DeAsDesc->cuenta_idcuenta=161; // recargos por ventas
 						$DeAsDesc->update();
-					} elseif(($viejos->tipodescrecar == 1) && ($nuevos->tipodescrecar == 0)){
+					} elseif(($viejos->facturaIdfactura->tipodescrecar == 1) && ($nuevos->facturaIdfactura->tipodescrecar == 0)){
 						$DeAsDescR=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
 											array(':cuenta'=>161, //recargos por ventas
 												  ':asiento'=>$viejos->asiento_idasiento));
@@ -595,8 +633,8 @@ class NotacreditoController extends Controller
 						$DeAsDescR->haber=$nuevos->netogravado * ($nuevos->descrecar/100);					
 						$DeAsDescR->cuenta_idcuenta=143; //434090 Descuentos cedidos
 						$DeAsDescR->update();
-					} elseif(($viejos->tipodescrecar == $nuevos->tipodescrecar)){
-						if($viejos->tipodescrecar == 0){
+					} elseif(($viejos->facturaIdfactura->tipodescrecar == $nuevos->facturaIdfactura->tipodescrecar)){
+						if($viejos->facturaIdfactura->tipodescrecar == 0){
 							$DeAsDesc=Detalleasiento::model()->find("cuenta_idcuenta=:cuenta AND asiento_idasiento=:asiento", 
 											array(':cuenta'=>143, //434090 Descuentos cedidos
 												  ':asiento'=>$viejos->asiento_idasiento));
@@ -639,8 +677,16 @@ class NotacreditoController extends Controller
 			$nuevo->cuitentidad=$model->clienteIdcliente->cuit;
 			$nuevo->tipofactura=3;
 			$nuevo->tipoiva=$model->iva;
+			if($model->importe_per_iva != 0 ){
 			$nuevo->importe_per_iva=$model->importe_per_iva * -1;
+			} else {
+				$nuevo->importe_per_iva=null;
+			}
+			if($model->importeIIBB != 0){
 			$nuevo->importeiibb=$model->importeIIBB * -1;
+			} else {
+				$nuevo->importeiibb=null;
+			}
 			$nuevo->importeiva=$model->ivatotal * -1;
 			$nuevo->importeneto=$model->importeneto * -1; //importe total
 			$nuevo->notacredito_idnotacredito=$model->idnotacredito;
@@ -704,6 +750,23 @@ class NotacreditoController extends Controller
 			
 		}
 		
-	
+	public function actionImprimirNotaCredito($id) {
+            
+            $this->layout='//layouts/imprimir'; // defines el archivo protected/views/layouts/imprimir.php como layout por defecto sólo para esta acción.
+            
+            $notacredito = Notacredito::model()->findByPk($id); // agregas el código a ejecutar que cargará los datos que enviarás a la vista y que generarán tu factura
+           
+            //CON HTML2PDF
+            $html2pdf = Yii::app()->ePdf->HTML2PDF();
+            
+            $html2pdf=Yii::app()->ePdf->mpdf('utf-8', 'Letter-L');
+			$html2pdf->ignore_invalid_utf8 = true;
+            $html2pdf = new HTML2PDF('P', 'A4', 'es');
+	        $html2pdf->WriteHTML($this->render('imprimirNotaCredito', array('notacredito'=>$notacredito), true));
+	        $html2pdf->Output();
+ 
+            //$this->renderPartial('imprimirFactura',array('factura'=>$factura),false,true);
+                        
+        }
 	
 }

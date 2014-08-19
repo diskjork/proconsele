@@ -389,4 +389,22 @@ class NotadebitoController extends Controller
 			$asiento->save();
 			
 		}	
+	public function actionImprimirNotaDebito($id) {
+            
+            $this->layout='//layouts/imprimir'; // defines el archivo protected/views/layouts/imprimir.php como layout por defecto sólo para esta acción.
+            
+            $notadebito = Notadebito::model()->findByPk($id); // agregas el código a ejecutar que cargará los datos que enviarás a la vista y que generarán tu factura
+           
+            //CON HTML2PDF
+            $html2pdf = Yii::app()->ePdf->HTML2PDF();
+            
+            $html2pdf=Yii::app()->ePdf->mpdf('utf-8', 'Letter-L');
+			$html2pdf->ignore_invalid_utf8 = true;
+            $html2pdf = new HTML2PDF('P', 'A4', 'es');
+	        $html2pdf->WriteHTML($this->render('imprimirNotaDebito', array('notadebito'=>$notadebito), true));
+	        $html2pdf->Output();
+ 
+            //$this->renderPartial('imprimirFactura',array('factura'=>$factura),false,true);
+                        
+        }
 }

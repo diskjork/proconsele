@@ -443,13 +443,13 @@ class FacturaController extends Controller
 						$DeAsDesc=new Detalleasiento;
 						$DeAsDesc->debe=$nuevos->netogravado * ($nuevos->descrecar/100);
 						$DeAsDesc->cuenta_idcuenta=143; //434090 Descuentos cedidos
-						$DeAsDesc->asiento_idasiento=$asiento->idasiento;
+						$DeAsDesc->asiento_idasiento=$viejos->asiento_idasiento;
 						$DeAsDesc->save();						
 					} else {
 						$DeAsRecar=new Detalleasiento;
 						$DeAsRecar->haber=$nuevos->netogravado * ($nuevos->descrecar/100);
 						$DeAsRecar->cuenta_idcuenta=161; // recargo por ventas
-						$DeAsRecar->asiento_idasiento=$asiento->idasiento;
+						$DeAsRecar->asiento_idasiento=$viejos->asiento_idasiento;
 						$DeAsRecar->save();
 					}
 				} elseif(($viejos->descrecar != null) && ($nuevos->descrecar == null)){

@@ -210,6 +210,9 @@ abstract class BaseCompras extends GxActiveRecord {
                 $result = Compras::model()->find($criteria); 
                 return new CActiveDataProvider($this, array(
                         'criteria'=>$criteria,
+                		'sort' => array(
+					'defaultOrder' => array('fecha ASC' => true),
+					),
                 ));
         }    
     public function reporteComprasIVA($anio)

@@ -30,7 +30,7 @@
  * @property Asiento[] $asientos
  */
 abstract class BaseNotacreditoprov extends GxActiveRecord {
-	public $iibb,$vista,$perciva,$desc,$inte;
+	public $iibb,$vista,$perciva,$desc,$inte, $impint;
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -51,11 +51,11 @@ abstract class BaseNotacreditoprov extends GxActiveRecord {
 		return array(
 			array(' tipofactura, fecha, proveedor_idproveedor, importeneto,  nronotacreditoprov, compras_idcompras', 'required'),
 			array('nrodefactura, tipofactura, proveedor_idproveedor, estado, asiento_idasiento', 'numerical', 'integerOnly'=>true),
-			array('iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, importe_per_iva, descuento, interes', 'numerical'),
+			array('iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, importe_per_iva, descuento, interes,impuestointerno', 'numerical'),
 			array('descripcion', 'length', 'max'=>150),
 			array('nronotacreditoprov', 'length', 'max'=>45),
-			array('descripcion, estado, iva, percepcionIIBB, importebruto, ivatotal, importeIIBB, asiento_idasiento, importe_per_iva, descuento, interes', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idnotacreditoprov, nrodefactura, tipofactura, fecha, descripcion, proveedor_idproveedor, estado, iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, asiento_idasiento,  compras_idcompras, nronotacreditoprov, importe_per_iva, descuento, interes', 'safe', 'on'=>'search'),
+			array('descripcion, estado, iva, percepcionIIBB, importebruto, ivatotal, importeIIBB, asiento_idasiento, importe_per_iva, descuento, interes,impuestointerno', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idnotacreditoprov, nrodefactura, tipofactura, fecha, descripcion, proveedor_idproveedor, estado, iva, percepcionIIBB, importebruto, ivatotal, importeneto, importeIIBB, asiento_idasiento,  compras_idcompras, nronotacreditoprov, importe_per_iva, descuento, interes,impuestointerno', 'safe', 'on'=>'search'),
 			array('factura_idfactura','validarFactura','on'=>'insert'),
 	);
 	}
