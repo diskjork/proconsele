@@ -81,17 +81,32 @@ $columnas=array_merge(array(
 								 		))',
 						
 	                  ),
-	            'delete'=>array(
-					'label'=>'Borrar Factura',
-	                    //'icon'=>TbHtml::ICON_PENCIL,
-	                    'visible'=>'$data->tipo == 0',
-						'url'=> 'Yii::app()->createUrl("factura/delete",
-								 array(	"id"=>$data->iddocumento,
-								 		
-								 		))',
-	                  'options'=>array('class'=>'delete'),
-						
-	                  ),
+				'delete'=>array(
+	                  	'label'=>'Borrar Factura',
+	                    //'icon'=>TbHtml::ICON_REMOVE_SIGN,
+						'visible'=>'$data->tipo == 0',
+	                  	'url'=>'Yii::app()->createUrl("factura/borrar", array("id"=>$data->factura_idfactura))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de borrar la Factura?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		                  			'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		                            'success' => 'function(data){
+	                                	if(data == "true"){
+		                                    location.reload();
+		                                  alert("Fue borrada con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		   //location.reload();
+	                                		alert("No pudo borrarse.");
+	                                		return false;
+	                                	} 
+	                                }',
+	                  			),	
+		                  	),
+		              	),
+	            
 	            'deletecobranza'=>array(
 					'label'=>'Borrar Cobranza',
 	                    'icon'=>TbHtml::ICON_TRASH,
