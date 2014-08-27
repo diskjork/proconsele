@@ -636,6 +636,8 @@ public function movCaja($model,$datosPOST){
 		$nuevo->importe_per_iva=$model->importe_per_iva;
 		$nuevo->importeiva=$model->ivatotal;
 		$nuevo->importeneto=$model->importeneto;
+		$nuevo->netogravado=$model->importebruto;
+		$nuevo->impuestointerno=$model->impuestointerno;
 		$nuevo->compra_idcompra=$model->idcompra;
 		$nuevo->save();
 		
@@ -656,6 +658,8 @@ public function movCaja($model,$datosPOST){
 		$IvaMovGuardado->importe_per_iva=$datosnuevos->importe_per_iva;
 		$IvaMovGuardado->importeiva=$datosnuevos->ivatotal;
 		$IvaMovGuardado->importeneto=$datosnuevos->importeneto;
+		$IvaMovGuardado->netogravado=$datosnuevos->importebruto;
+		$IvaMovGuardado->impuestointerno=$datosnuevos->impuestointerno;
 		$IvaMovGuardado->save();
 		} elseif(($datosviejos->tipofactura == 1) && ($datosnuevos->tipofactura > 1) ) {
 			$IvaMovGuardado=Ivamovimiento::model()->find("compra_idcompra=:idcompra",
@@ -673,6 +677,8 @@ public function movCaja($model,$datosPOST){
 			$IvaMovGuardado->importe_per_iva=$datosnuevos->importe_per_iva;
 			$IvaMovGuardado->importeiva=$datosnuevos->ivatotal;
 			$IvaMovGuardado->importeneto=$datosnuevos->importeneto;
+			$IvaMovGuardado->netogravado=$datosnuevos->importebruto;
+			$IvaMovGuardado->impuestointerno=$datosnuevos->impuestointerno;
 			$IvaMovGuardado->save();	
 		}
 		}

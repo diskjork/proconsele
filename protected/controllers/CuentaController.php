@@ -221,6 +221,12 @@ class CuentaController extends Controller
         $cuenta=Cuenta::model()->findByPk($idcuenta);
 		$dataProviderRe= $model->generargrilladetallecuenta($idcuenta, $fecha, $fecha2)->data;
 		$cant=count($dataProviderRe);
+		$totaldebe=0;
+		$totalhaber=0;
+		for($i=0;$i<$cant;$i++){
+			$totaldebe=$totaldebe +$dataProviderRe[$i]['debeT'];
+			$totalhaber=$totalhaber +$dataProviderRe[$i]['haberT'];
+		}
 		$dataProvider=new CArrayDataProvider($dataProviderRe, array(
 				    'id'=>'idcuent',
 				    'sort'=>array(
@@ -255,6 +261,12 @@ $datos=array(
 			'header' => 'HABER',
 			'value'=>'($data["haberT"] !== null)? number_format($data["haberT"], 2, ",", "."):"-"',
 		),
+		array(
+			  		'header'=>'SALDO',
+			  		'value'=>"",
+			 		'footer'=>"$".number_format($totaldebe - $totalhaber,2,".",","),
+  			),
+		
 	);
 				
 		

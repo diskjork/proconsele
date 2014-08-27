@@ -1,8 +1,10 @@
 
 <?php 
 	$dataProvider= $model->search($model->fecha=$anioTab."-".$mesTab, $model->tipomoviento= 1);
-	$dataProvider->setPagination(array('pageSize'=>$model->count()));
 	
+	$dataProvider->setPagination(array('pageSize'=>$model->count()));
+	$dataProviderTotales=$model->obtenerTotales($mesTab,$anioTab,1);
+	$totales=$dataProviderTotales->getData();
 	
 ?>
 <br>
@@ -10,7 +12,10 @@
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", 
 array("color" => TbHtml::LABEL_COLOR_SUCCESS)),
 array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'tipo'=>1),
-'Exportar Libro Compras',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
+
+'Exportar Libro Compras',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT));
+
+?>
 </div>
 <?php
 $valores=array('1.21'=>'21%', '1.105'=>'10.5%','1.27'=>'27%');$columnas=array(
@@ -54,22 +59,32 @@ $valores=array('1.21'=>'21%', '1.105'=>'10.5%','1.27'=>'27%');$columnas=array(
 		array(
 				'header' => 'IIBB',
 				'value'=>'($data->importeiibb != null) ? "$".number_format($data->importeiibb, 2, ".", ","): ""',
-								
+				'footer'=>"$".number_format($totales[0]['totaliibb'],2,".",","),				
 		),
 		array(
 				'header' => 'P.IVA',
 				'value'=>'($data->importe_per_iva != null) ? "$".number_format($data->importe_per_iva, 2, ".", ","): ""',
-								
+				'footer'=>"$".number_format($totales[0]['total_per_iva'],2,".",","),							
+		),
+		array(
+				'header' => 'IMP.INT',
+				'value'=>'($data->impuestointerno != null) ? "$".number_format($data->impuestointerno, 2, ".", ","): ""',
+				'footer'=>"$".number_format($totales[0]['totalimpint'],2,".",","),						
 		),
 		array(
 				'header' => 'TOTAL IVA',
 				'value'=>'"$".number_format($data->importeiva, 2, ".", ",")',
-								
+				'footer'=>"$".number_format($totales[0]['totaliva'],2,".",","),							
 		),
 		array(
-				'header' => 'TOTAL NETO',
+				'header' => 'NETO',
+				'value'=>'"$".number_format($data->netogravado, 2, ".", ",")',
+				'footer'=>"$".number_format($totales[0]['totalnetogravado'],2,".",","),							
+		),
+		array(
+				'header' => 'TOTAL',
 				'value'=>'"$".number_format($data->importeneto, 2, ".", ",")',
-								
+				'footer'=>"$".number_format($totales[0]['total_total'],2,".",","),							
 		),
 
 	/*	array(

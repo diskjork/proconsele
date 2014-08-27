@@ -370,12 +370,21 @@ public function checkUpdateAsiento($datosGuardados, $datosPOST){
 	public function actionExcel(){
                 $mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];
+                $bancoid=$_GET['bancoid'];
                 $model=new Movimientocaja('search');
-                	
+                $dataProvider= $model->search(array($model->fecha=$anio_tab."-".$mes_tab,$model->caja_idcaja=$bancoid));
+                $dataProviderRe=$dataProvider->getData();
+                $cant=count($dataProviderRe);
+                $totaldebe=0;
+				$totalhaber=0;
+				for($i=0;$i<$cant;$i++){
+						$totaldebe=$totaldebe +$dataProviderRe[$i]['debe'];
+						$totalhaber=$totalhaber +$dataProviderRe[$i]['haber'];
+					}
                	$this->widget('application.components.widgets.EExcelView', array(
                 	
 				    'id'                   => 'some-grid',
-				    'dataProvider'		   => $model->Search($model->fecha=$mes_tab."/".$anio_tab),
+				    'dataProvider'		   => $dataProvider,
 				    'grid_mode'            => 'export', // Same usage as EExcelView v0.33
 				    //'template'             => "{summary}\n{items}\n{exportbuttons}\n{pager}",
 				    'title'                => 'Caja ' . date('d-m-Y'),
@@ -427,6 +436,11 @@ public function checkUpdateAsiento($datosGuardados, $datosPOST){
 					  		'header'=>'EGRESOS',
 				        	'value'=>'number_format($data->haber, 2, ",", ".")',
 				        ),
+				        array(
+					  		'header'=>'SALDO',
+					  		'value'=>"",
+					 		'footer'=>"$".number_format($totaldebe - $totalhaber,2,".",","),
+		  			),
 					) 
 				)); 
                

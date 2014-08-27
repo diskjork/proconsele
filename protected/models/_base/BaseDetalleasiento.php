@@ -127,6 +127,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			
 		));
 	}
 		
@@ -199,7 +200,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			$dataProvider=new CSqlDataProvider($sql, array(
 			    'totalItemCount'=>$count,
 			    'sort'=>array(
-					'defaultOrder'=>'fecha ASC',
+					'defaultOrder'=>array('fecha'=>CSort::SORT_ASC),
 			        'attributes'=>array(
 			             'fecha','asiento','nombre', 'codigo' , 'haber','debe', 'descripcion'
 			        ),
@@ -277,7 +278,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			$dataProvider=new CSqlDataProvider($sql, array(
 			    'totalItemCount'=>$count,
 			    'sort'=>array(
-					'defaultOrder'=>'fecha ASC',
+					'defaultOrder'=>array('fecha'=>CSort::SORT_ASC),
 			        'attributes'=>array(
 			             'fecha','asiento','nombre', 'codigo' , 'haber','debe', 'descripcion'
 			        ),
@@ -305,7 +306,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			$dataProvider=new CSqlDataProvider($sql, array(
 			    //'totalItemCount'=>$count,
 			    'sort'=>array(
-					'defaultOrder'=>'codigo ASC',
+					'defaultOrder'=>array('codigo'=>CSort::SORT_ASC),
 			        'attributes'=>array(
 			             'codigo', 'cuenta', 'debe','haber'
 			        ),
@@ -332,7 +333,7 @@ abstract class BaseDetalleasiento extends GxActiveRecord {
 			$dataProvider=new CSqlDataProvider($sql, array(
 			    //'totalItemCount'=>$count,
 			    'sort'=>array(
-					'defaultOrder'=>'codigo ASC',
+					'defaultOrder'=>array('codigo'=>CSort::SORT_ASC),
 			        'attributes'=>array(
 			             'codigo', 'cuenta', 'debe','haber'
 			        ),

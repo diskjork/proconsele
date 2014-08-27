@@ -43,7 +43,7 @@ $columnas=array_merge(array(
 					'htmlOptions' => array('width' =>'85px'),
               		'cssClassExpression' => '$data["debe"] > 0 ? "colorDebe": ""',
 					'value'=>'($data->debe !== null && $data->debe > 0)?number_format($data->debe, 2, ".", ","): "-"',
-              		'footer'=>"$ ".number_format($dataProviderDebeHaber[0]['total_debe']-$dataProviderDebeHaber[0]['total_haber'],2,".",","),
+              		'footer'=>"Saldo: $ ".number_format($dataProviderDebeHaber[0]['total_debe']-$dataProviderDebeHaber[0]['total_haber'],2,".",","),
               		'footerHtmlOptions'=>array('colspan'=>2,'style'=>'text-align:center;font-weight:bold;'),
         ),
         array(

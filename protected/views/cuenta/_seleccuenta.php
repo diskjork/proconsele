@@ -1,3 +1,4 @@
+
 <?php
 	$dataProvider= $model->generargrilladetallecuenta($idcuenta, $fecha, $fecha2);
 	//print_r($dataProvider); die();
@@ -29,7 +30,7 @@ $columnas=array(
 			'name'=>'fechaasiento',
 			'header' => 'FECHA',
 			'htmlOptions' => array('class' =>'span2'),
-					
+				
 	            ), 
 		array(
 			'name'=>'descripcionasiento',
@@ -71,4 +72,16 @@ $columnas=array(
  
 ?>
 
+<script type="text/javascript">
 
+var $table = $("#cuentas-grid").children('table');
+var $tbody = $table.children('tfoot');
+var debe=$("tfoot > tr > td:eq(3)").text();
+debe=parseFloat(Number(debe.replace(/[^0-9\.]+/g,"")));
+var haber=$("tfoot > tr > td:eq(4)").text();
+haber=parseFloat(Number(haber.replace(/[^0-9\.]+/g,"")));
+var saldo= debe - haber;
+saldo="Saldo:  $"+$.number(saldo,2);
+$tbody.append('<tr> <td></td> <td></td> <td></td> <td colspan=2 style="text-align:center;">'+saldo+'</td>  </tr>');
+
+</script>

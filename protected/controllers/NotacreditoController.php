@@ -687,6 +687,8 @@ class NotacreditoController extends Controller
 			} else {
 				$nuevo->importeiibb=null;
 			}
+			
+			$nuevo->netogravado=$model->netogravado * -1;
 			$nuevo->importeiva=$model->ivatotal * -1;
 			$nuevo->importeneto=$model->importeneto * -1; //importe total
 			$nuevo->notacredito_idnotacredito=$model->idnotacredito;
@@ -700,9 +702,18 @@ class NotacreditoController extends Controller
 			$nuevo->nrocomprobante=$model->nronotacredito;
 			$nuevo->cliente_idcliente=$model->cliente_idcliente;
 			$nuevo->cuitentidad=$model->clienteIdcliente->cuit;
+			if($model->importe_per_iva != 0 ){
 			$nuevo->importe_per_iva=$model->importe_per_iva * -1;
-			//$nuevo->tipoiva=$model->iva;
+			} else {
+				$nuevo->importe_per_iva=null;
+			}
+			if($model->importeIIBB != 0){
 			$nuevo->importeiibb=$model->importeIIBB * -1;
+			} else {
+				$nuevo->importeiibb=null;
+			}
+			
+			$nuevo->netogravado=$model->netogravado * -1;
 			$nuevo->importeiva=$model->ivatotal * -1;
 			$nuevo->importeneto=$model->importeneto * -1;
 			$nuevo->save();

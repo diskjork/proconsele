@@ -1,3 +1,4 @@
+<?php  Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/teamdf-jquery-number-c19aa59/jquery.number.js', CClientScript::POS_HEAD);?>
 <?php 
 /* @var $this CuentaController */
 /* @var $model Cuenta */

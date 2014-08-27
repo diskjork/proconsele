@@ -122,7 +122,7 @@ abstract class BaseNotacreditoprov extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort' => array(
-					'defaultOrder'=>'fecha ASC',
+					'defaultOrder'=>array('fecha'=>CSort::SORT_ASC),
 			)
 		));
 	}

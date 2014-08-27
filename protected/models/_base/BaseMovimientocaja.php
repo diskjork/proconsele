@@ -51,11 +51,11 @@ abstract class BaseMovimientocaja extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('descripcion, fecha, debeohaber, caja_idcaja, cuenta_idcuenta', 'required'),
-			array('debeohaber, id_de_trabajo, caja_idcaja, asiento_idasiento, cuenta_idcuenta, idfactura , idcompra, iddetallecobranza, iddetalleordendepago', 'numerical', 'integerOnly'=>true),
+			array('debeohaber, id_de_trabajo, caja_idcaja, asiento_idasiento, cuenta_idcuenta, idfactura , idcompra, iddetallecobranza, iddetalleordendepago, desdeasiento', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('descripcion', 'length', 'max'=>150),
-			array('debe, haber, id_de_trabajo, asiento_idasiento,  idfactura , idcompra, iddetallecobranza, iddetalleordendepago', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idmovimientocaja, descripcion, fecha, debeohaber, debe, haber, id_de_trabajo, caja_idcaja, asiento_idasiento, cuenta_idcuenta,  idfactura , idcompra, iddetallecobranza, iddetalleordendepago', 'safe', 'on'=>'search'),
+			array('debe, haber, id_de_trabajo, asiento_idasiento,  idfactura , idcompra, iddetallecobranza, iddetalleordendepago, desdeasiento', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idmovimientocaja, descripcion, fecha, debeohaber, debe, haber, id_de_trabajo, caja_idcaja, asiento_idasiento, cuenta_idcuenta,  idfactura , idcompra, iddetallecobranza, iddetalleordendepago, desdeasiento', 'safe', 'on'=>'search'),
 			array('fechacobro','safe'),
 			array('fechacobro', 'length', 'max'=>20),
 			array('fechacobro','compararFechas'),
@@ -118,7 +118,7 @@ abstract class BaseMovimientocaja extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort' => array(
-					'defaultOrder'=>'fecha ASC',
+					'defaultOrder'=>array('fecha'=>CSort::SORT_ASC),
 			)
 		));
 	}

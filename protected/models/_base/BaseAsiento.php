@@ -93,7 +93,7 @@ abstract class BaseAsiento extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort' => array(
-					'defaultOrder' => array('fecha ASC' => true),
+					'defaultOrder' => array('fecha'=>CSort::SORT_ASC),
 				),
 		));
 	}

@@ -143,11 +143,10 @@ abstract class BaseCuenta extends GxActiveRecord {
 				'keyField'=>'idcuent',
 			    'totalItemCount'=>$count,
 			    'sort'=>array(
-					'defaultOrder'=>'fechaasiento ASC',
-			        'attributes'=>array(
-			             'fechaasiento', 'codigocuenta' ,'nombrecuenta','descripcionasiento','idcuent','debeT', 'haberT'
-			        ),
-			    ),
+					'defaultOrder'=>'fechaasiento ASC'),
+			        
+			       
+			    
 			    'pagination'=>array(
 			        'pageSize'=>$count,
 			    ),

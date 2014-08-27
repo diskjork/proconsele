@@ -2,7 +2,8 @@
 <?php 
 	$dataProvider= $model->search($model->fecha=$anioTab."-".$mesTab, $model->tipomoviento= 0);
 	$dataProvider->setPagination(array('pageSize'=>$model->count()));
-	
+	$dataProviderTotales=$model->obtenerTotales($mesTab,$anioTab,0);
+	$totales=$dataProviderTotales->getData();
 ?>
 <br>
 <div id="iconoExportar" align="right">
@@ -50,27 +51,37 @@ $columnas=array(
 		array(//'name' => 'tipoiva',
 				'header' => 'IVA',
 				'value'=>'($data->tipoiva == 1.21)?"21%" :"10,5%"',
-								
+							
 		),
 		array(
 				'header' => 'IIBB',
 				'value'=>'($data->importeiibb != null) ? "$".number_format($data->importeiibb, 2, ".", ","): ""',
-								
+				'footer'=>"$".number_format($totales[0]['totaliibb'],2,".",","),				
 		),
 		array(
 				'header' => 'P.IVA',
 				'value'=>'($data->importe_per_iva != null) ? "$".number_format($data->importe_per_iva, 2, ".", ","): ""',
-								
+				'footer'=>"$".number_format($totales[0]['total_per_iva'],2,".",","),				
 		),
+		/*array(
+				'header' => 'IMP.INT',
+				'value'=>'($data->impuestointerno != null) ? "$".number_format($data->impuestointerno, 2, ".", ","): ""',
+								
+		),*/
 		array(
 				'header' => 'TOTAL IVA',
 				'value'=>'"$".number_format($data->importeiva, 2, ".", ",")',
-								
+				'footer'=>"$".number_format($totales[0]['totaliva'],2,".",","),				
 		),
 		array(
-				'header' => 'TOTAL NETO',
+				'header' => 'NETO',
+				'value'=>'"$".number_format($data->netogravado, 2, ".", ",")',
+				'footer'=>"$".number_format($totales[0]['totalnetogravado'],2,".",","),				
+		),
+		array(
+				'header' => 'TOTAL',
 				'value'=>'"$".number_format($data->importeneto, 2, ".", ",")',
-								
+				'footer'=>"$".number_format($totales[0]['total_total'],2,".",","),			
 		),
 
 		/*array(

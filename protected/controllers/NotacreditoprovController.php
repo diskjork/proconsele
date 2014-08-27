@@ -321,14 +321,28 @@ class NotacreditoprovController extends Controller
 	public function ivamovimiento($model,$datoPOST){
 			$nuevo=new Ivamovimiento;
 			$nuevo->fecha=$datoPOST['fecha'];
-			$nuevo->tipomoviento=1; //ventas por débito fiscal
+			$nuevo->tipomoviento=1; //compras crédito fiscal
 			$nuevo->nrocomprobante=$model->nronotacreditoprov;
 			$nuevo->proveedor_idproveedor=$model->proveedor_idproveedor;
 			$nuevo->cuitentidad=$model->proveedorIdproveedor->cuit;
 			$nuevo->tipofactura=5;
 			$nuevo->tipoiva=$model->iva;
+			if($model->importe_per_iva != 0 ){
 			$nuevo->importe_per_iva=$model->importe_per_iva * -1;
+			} else {
+				$nuevo->importe_per_iva=null;
+			}
+			if($model->importeIIBB != 0){
 			$nuevo->importeiibb=$model->importeIIBB * -1;
+			} else {
+				$nuevo->importeiibb=null;
+			}
+			if($model->impuestointerno != 0){
+			$nuevo->impuestointerno=$model->impuestointerno * -1;
+			} else {
+				$nuevo->impuestointerno=null;
+			}
+			$nuevo->netogravado=$model->importebruto * -1;
 			$nuevo->importeiva=$model->ivatotal * -1;
 			$nuevo->importeneto=$model->importeneto * -1;
 			$nuevo->notacreditoprov_idnotacreditoprov=$model->idnotacreditoprov;
@@ -345,8 +359,22 @@ class NotacreditoprovController extends Controller
 			$nuevo->cuitentidad=$model->proveedorIdproveedor->cuit;
 			$nuevo->tipofactura=$model->tipofactura;
 			$nuevo->tipoiva=$model->iva;
+			if($model->importe_per_iva != 0 ){
 			$nuevo->importe_per_iva=$model->importe_per_iva * -1;
+			} else {
+				$nuevo->importe_per_iva=null;
+			}
+			if($model->importeIIBB != 0){
 			$nuevo->importeiibb=$model->importeIIBB * -1;
+			} else {
+				$nuevo->importeiibb=null;
+			}
+			if($model->impuestointerno != 0){
+			$nuevo->impuestointerno=$model->impuestointerno * -1;
+			} else {
+				$nuevo->impuestointerno=null;
+			}
+			$nuevo->netogravado=$model->importebruto * -1;
 			$nuevo->importeiva=$model->ivatotal * -1;
 			$nuevo->importeneto=$model->importeneto * -1;
 			$nuevo->save();

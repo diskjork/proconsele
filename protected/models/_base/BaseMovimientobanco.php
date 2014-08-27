@@ -56,12 +56,12 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('fecha, debeohaber, ctabancaria_idctabancaria, cuenta_idcuenta, descripcion', 'required'),
-			array('debeohaber, ctabancaria_idctabancaria, cheque_idcheque, cuenta_idcuenta, asiento_idasiento, iddetallecobranza, iddetalleordendepago', 'numerical', 'integerOnly'=>true),
+			array('debeohaber, ctabancaria_idctabancaria, cheque_idcheque, cuenta_idcuenta, asiento_idasiento, iddetallecobranza, iddetalleordendepago, desdeasiento', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('descripcion', 'length', 'max'=>100),
 			array('numerooperacion', 'length', 'max'=>20),
-			array('descripcion, debe, haber, numerooperacion, cheque_idcheque,  asiento_idasiento, iddetallecobranza, iddetalleordendepago', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idmovimientobanco, descripcion, fecha, debeohaber, debe, haber, numerooperacion, ctabancaria_idctabancaria, cheque_idcheque, cuenta_idcuenta, asiento_idasiento, iddetallecobranza, iddetalleordendepago', 'safe', 'on'=>'search'),
+			array('descripcion, debe, haber, numerooperacion, cheque_idcheque,  asiento_idasiento, iddetallecobranza, iddetalleordendepago, desdeasiento', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idmovimientobanco, descripcion, fecha, debeohaber, debe, haber, numerooperacion, ctabancaria_idctabancaria, cheque_idcheque, cuenta_idcuenta, asiento_idasiento, iddetallecobranza, iddetalleordendepago, desdeasiento', 'safe', 'on'=>'search'),
 			array('fechacobro','safe'),
 			array('fechacobro', 'length', 'max'=>20),
 			array('fechacobro','compararFechas'),
@@ -133,7 +133,7 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort' => array(
-					'defaultOrder'=>'fecha ASC',
+					'defaultOrder'=>array('fecha'=>CSort::SORT_ASC),
 			)
 		));
 	}

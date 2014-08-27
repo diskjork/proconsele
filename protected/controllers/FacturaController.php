@@ -758,6 +758,7 @@ class FacturaController extends Controller
 			$nuevo->importe_per_iva=$model->importe_per_iva;
 			$nuevo->importeiva=$model->ivatotal;
 			$nuevo->importeneto=$model->importeneto;
+			$nuevo->netogravado=$model->netogravado;
 			$nuevo->factura_idfactura=$model->idfactura;
 			$nuevo->save();
 			
@@ -775,6 +776,7 @@ class FacturaController extends Controller
 			$nuevo->importe_per_iva=$model->importe_per_iva;
 			$nuevo->importeiva=$model->ivatotal;
 			$nuevo->importeneto=$model->importeneto;
+			$nuevo->netogravado=$model->netogravado;
 			$nuevo->save();
 			
 	}		
@@ -873,6 +875,9 @@ class FacturaController extends Controller
 		    		}
 		    		if($ivamov->importeneto != null){
 		    			$ivamov->importeneto=0;
+		    		}
+    				if($ivamov->netogravado != null){
+		    			$ivamov->netogravado=0;
 		    		}
 		    		if($factura->tipofactura == 1){
 		    			$ivamov->tipofactura=7; //factura A anulada
@@ -1011,6 +1016,7 @@ class FacturaController extends Controller
 						$ivamov->importe_per_iva=$model->importe_per_iva;
 					}
 					$ivamov->importeneto=$model->importeneto;
+					$ivamov->netogravado=$model->netogravado;
 					$ivamov->importeiva=$model->ivatotal;
 					$model->estado=0; //estado normal
 					if($ivamov->tipofactura == 7){

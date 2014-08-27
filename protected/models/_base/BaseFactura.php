@@ -189,7 +189,7 @@ abstract class BaseFactura extends GxActiveRecord {
                         'criteria'=>$criteria,
                 ));
         }
-	public function reportefactura($anio)
+	public function reportefactura_A($anio)
         {
                 $criteria=new CDbCriteria;
                 
@@ -201,6 +201,26 @@ abstract class BaseFactura extends GxActiveRecord {
                 	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=04,importeneto,0)) AS abr',
 	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=05,importeneto,0)) AS may',
 	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=06,importeneto,0)) AS jun',
+	                
+                );
+
+                $criteria->condition = 'YEAR(fecha)='.$anio;
+                //$criteria->condition = 'cliente_idcliente IN (select cliente_idcliente from cliente where tipocliente_idtipocliente in (select idtipocliente from tipocliente order by idtipocliente))';
+                //$criteria->group = 'producto_idproducto';
+                //$criteria->order = 'cliente_idcliente IN (select cliente_idcliente from cliente order by nombre desc)';
+                
+                $result = Factura::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+        }  
+   	public function reportefactura_B($anio)
+        {
+                $criteria=new CDbCriteria;
+                
+                $criteria->select = array(
+                	
+                	
 	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=07,importeneto,0)) AS jul',
 	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=08,importeneto,0)) AS ago',
 	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=09,importeneto,0)) AS sep',
@@ -218,8 +238,8 @@ abstract class BaseFactura extends GxActiveRecord {
                 return new CActiveDataProvider($this, array(
                         'criteria'=>$criteria,
                 ));
-        }    
-    public function reportefacturaIVA($anio)
+        }   
+    public function reportefacturaIVA_A($anio)
         {
                 $criteria=new CDbCriteria;
                 
@@ -231,6 +251,26 @@ abstract class BaseFactura extends GxActiveRecord {
                 	'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=04,ivatotal,0)) AS abr',
 	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=05,ivatotal,0)) AS may',
 	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=06,ivatotal,0)) AS jun',
+	                
+                );
+
+                $criteria->condition = 'YEAR(fecha)='.$anio;
+                //$criteria->condition = 'cliente_idcliente IN (select cliente_idcliente from cliente where tipocliente_idtipocliente in (select idtipocliente from tipocliente order by idtipocliente))';
+                //$criteria->group = 'producto_idproducto';
+                //$criteria->order = 'cliente_idcliente IN (select cliente_idcliente from cliente order by nombre desc)';
+                
+                $result = Factura::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+        }    
+	public function reportefacturaIVA_B($anio)
+        {
+                $criteria=new CDbCriteria;
+                
+                $criteria->select = array(
+                	
+                
 	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=07,ivatotal,0)) AS jul',
 	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=08,ivatotal,0)) AS ago',
 	                'SUM(if(YEAR(fecha)='.$anio.' and MONTH(fecha)=09,ivatotal,0)) AS sep',
@@ -248,7 +288,7 @@ abstract class BaseFactura extends GxActiveRecord {
                 return new CActiveDataProvider($this, array(
                         'criteria'=>$criteria,
                 ));
-        }    
+        }
         
 	public function behaviors()
 		{

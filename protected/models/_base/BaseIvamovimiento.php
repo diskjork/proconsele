@@ -49,11 +49,11 @@ abstract class BaseIvamovimiento extends GxActiveRecord {
 		return array(
 			array('tipomoviento, fecha, nrocomprobante, tipofactura, tipoiva, importeiva, importeneto', 'required'),
 			array('tipomoviento, nrocomprobante, proveedor_idproveedor, cliente_idcliente, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov', 'numerical', 'integerOnly'=>true),
-			array('tipoiva, importeiibb, importeiva, importeneto, importe_per_iva', 'numerical'),
+			array('tipoiva, importeiibb, importeiva, importeneto, importe_per_iva, impuestointerno,netogravado', 'numerical'),
 			array('cuitentidad', 'length', 'max'=>45),
 			array('tipofactura', 'length', 'max'=>1),
-			array('proveedor_idproveedor, cliente_idcliente, cuitentidad, importeiibb, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov, importe_per_iva', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idivamovimiento, tipomoviento, fecha, nrocomprobante, proveedor_idproveedor, cliente_idcliente, cuitentidad, tipofactura, tipoiva, importeiibb, importeiva, importeneto, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov, importe_per_iva', 'safe', 'on'=>'search'),
+			array('proveedor_idproveedor, cliente_idcliente, cuitentidad, importeiibb, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov, importe_per_iva, impuestointerno,netogravado', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idivamovimiento, tipomoviento, fecha, nrocomprobante, proveedor_idproveedor, cliente_idcliente, cuitentidad, tipofactura, tipoiva, importeiibb, importeiva, importeneto, compra_idcompra, factura_idfactura, notacredito_idnotacredito, notacreditoprov_idnotacreditoprov, notadebitoprov_idnotadebitoprov, importe_per_iva, impuestointerno,netogravado', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -86,6 +86,8 @@ abstract class BaseIvamovimiento extends GxActiveRecord {
 			'importeiibb' => Yii::t('app', 'Importeiibb'),
 			'importeiva' => Yii::t('app', 'Importeiva'),
 			'importeneto' => Yii::t('app', 'Importeneto'),
+			'impuestointerno' => Yii::t('app', 'Imp. Int.'),
+			'netogravado' => Yii::t('app', 'Neto G.'),
 			'importe_per_iva' => Yii::t('app', 'Importe Perc. IVA'),
 			'compra_idcompra' => null,
 			'factura_idfactura' => null,
@@ -117,7 +119,7 @@ abstract class BaseIvamovimiento extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort' => array(
-					'defaultOrder'=>'fecha ASC',
+					'defaultOrder'=>array('fecha'=>CSort::SORT_ASC),
 			)
 		));
 	}
@@ -133,4 +135,24 @@ abstract class BaseIvamovimiento extends GxActiveRecord {
 		    
 		   ); // 'ext' is in Yii 1.0.8 version. For early versions, use 'application.extensions' instead.
 		}
+		public $totaliibb,$totaliva,$total_total,$totalnetogravado,$total_per_iva,$totalimpint;
+		public function obtenerTotales($mes,$anio,$tipo)
+        {
+                $criteria=new CDbCriteria;
+                
+                $criteria->select = array(
+                	'SUM(importeiibb) AS totaliibb,
+                	 SUM(importeiva) AS totaliva,
+                	 SUM(importeneto) AS total_total,
+                	 SUM(netogravado) AS totalnetogravado,
+                	 SUM(importe_per_iva) AS total_per_iva,
+                	 SUM(impuestointerno) AS totalimpint',
+                );
+
+                $criteria->condition = 'YEAR(fecha)='.$anio.' and MONTH(fecha)='.$mes.' AND tipomoviento='.$tipo;
+                $result = Ivamovimiento::model()->find($criteria); 
+                return new CActiveDataProvider($this, array(
+                        'criteria'=>$criteria,
+                ));
+        }	
 }

@@ -56,8 +56,14 @@
 				
 			),
 			array(
+			  		'header'=>'SALDO',
+			  		'value'=>"",
+  			 		'footer'=>'<strong>'."$".number_format($dataProviderDebeHaber[0]['total_debe'] - $dataProviderDebeHaber[0]['total_haber'],2,".",",").'</strong>',
+  			),
+			array(
 				'class'=>'bootstrap.widgets.TbButtonColumn',
 				 'header'=>'Opciones',
+				'template' => ' {view}{update}{updateasiento}',
 				'buttons'=>array(
 					 'view'=>
 	                    array(
@@ -71,6 +77,20 @@
 	                            ),
 	                        ),*/
 	                    ),
+	                    'update'=>
+	                    array(
+	                    	'label'=>'Modificar',
+	                    	'visible'=>'$data->asiento_idasiento != NULL AND
+	                    				$data->desdeasiento == NULL',
+	                  	),
+	                  	'updateasiento'=>
+	                    array(
+	                    	'label'=>'Modificar asiento',
+	                    	'icon'=>TbHtml::ICON_PENCIL,
+	                    	'visible'=>'$data->asiento_idasiento == NULL AND
+	                    				$data->desdeasiento != NULL',
+	                    	'url'=>'Yii::app()->createUrl("asiento/update", array("id"=>$data->desdeasiento))',
+	                  )
 					),
 				'headerHtmlOptions'=>array('colspan'=>2),
 	            'htmlOptions' => array('colspan'=>2),
