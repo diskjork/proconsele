@@ -83,7 +83,9 @@ abstract class BaseCobranza extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
-			'defaultOrder' => array('fecha'=>CSort::SORT_ASC),
+			'sort' => array(
+					'defaultOrder' => array('fecha'=>CSort::SORT_ASC),
+				),
 				
 		));
 	}

@@ -1,28 +1,58 @@
 <?php
-
-	$datos= $model->generarGrillaSaldos($model->ctactecliente_idctactecliente,$anioTab,$mesTab,0);
-
-
-$datos_array=$datos->data;
-$cant=count($datos_array);	
-
-$datos->setPagination(array('pageSize'=>$cant)); 
-
-
+$idctacte=$_GET['id'];
+$nombre=$_GET['nombre'];
+$this->menu=array(
+	array(
+		'label'=>'Ctas. Ctes. Cliente', 
+		'url'=>Yii::app()->createUrl('ctactecliente/admin'),
+	),
+	array(
+		'label'=>'Vista filtrada', 
+		'url'=>Yii::app()->createUrl('detallectactecliente/admin',array("id"=>$idctacte,"nombre"=>$nombre) ),
+	),
+	array(
+		'label'=>'Nueva Cobranza', 
+		'url'=>Yii::app()->createUrl("cobranza/create")
+		),
+	array(
+		'label'=>'Nueva Nota Crédito', 
+		'url'=>Yii::app()->createUrl("notacredito/create")
+		),	
+	array(
+		'label'=>'Nueva Nota Débito', 
+		'url'=>Yii::app()->createUrl("notadebito/create")
+		),
+	
+);
 ?>
+<h5 class="well well-small">CTA. CTE. - CLIENTE - <?php echo $nombre;?></h5>
+<br>
 <div id="iconoExportar" align="right">
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", 
 array("color" => TbHtml::LABEL_COLOR_SUCCESS)),
-array('Excel','mesTab'=>$mesTab,
-			  'anioTab'=>$anioTab,
-			  'idctactecliente'=>$model->ctactecliente_idctactecliente,
+array('Excel','mesTab'=>'08',
+			  'anioTab'=>'2014',
+			  'idctactecliente'=>$idctacte,
 			  'nombre'=>$nombre,
-			  'caso'=>0),
+			  'caso'=>1),
 'Exportar',
 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
 </div>
 <?php
-
+$datos= $model->generarGrillaSaldos_secuencial($idctacte,'2014','08',1)->data;
+$cant=count($datos);
+			$datos=new CArrayDataProvider($datos, array(
+				    'keyField'=>'iddetallectactecliente',
+				    'sort'=>array(
+				        'attributes'=>array(
+				           'iddetallectactecliente','fecha', 'descripcion',
+				        ),
+				        
+				    ),
+				    'pagination'=>array(
+				        'pageSize'=>40,
+				    ),
+				));
 $columnas=array(
 		array(
 	    	'value'=>'$this->grid->dataProvider->pagination->currentPage*
@@ -220,19 +250,8 @@ $columnas=array(
 <?php $this->widget('bootstrap.widgets.TbGridView',array(
 	//'id'=>'detallectactecliente-grid',
 	'dataProvider'=>$datos,
-	'filter'=>$model,
+	//'filter'=>$datos,
 	'columns'=>$columnas,
-	'template' => "{items}",
+	'template' => "{items}{pager}",
 	'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
 )); ?>
-
-<script type="text/javascript">
-<!--
-/*
-var $table = $("<?php //echo "#yw".date("n",strtotime($anioTab."-".$mesTab));?>").children('table');
-var $tbody = $table.children('tbody');
-$tbody.append('<tr> <td></td> <td></td> <td></td> <td></td> <td> <?php //echo "$ ".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",");?></td><td><?php// echo "$ ".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",");?></td><td colspan="2"></td>  </tr>');
-*/
-//-->
-</script>	
-

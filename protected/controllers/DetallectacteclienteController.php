@@ -177,7 +177,7 @@ class DetallectacteclienteController extends Controller
 		}
 	}
 	public function labelTipo($data, $row){	
-	switch ($data->tipo){
+	switch ($data['tipo']){
 			case '0':
 				$text="Factura";
 				return $text;
@@ -197,30 +197,93 @@ class DetallectacteclienteController extends Controller
 			
 		}
 	}
+	public function actionSecuencial($id)
+	{
+		$model=new Detallectactecliente('search');
+		$model->unsetAttributes();  // clear any default values
+		
+		if (isset($_GET['Detallectactecliente'])) {
+			$model->attributes=$_GET['Detallectactecliente'];
+		}
+
+		$this->render('secuencial',array(
+			'model'=>$model,
+		));
+	}
 	public function actionExcel(){
                 $mes_tab=$_GET['mesTab'];
                 $anio_tab=$_GET['anioTab'];
                 $idcliente=$_GET['idctactecliente'];
-                $model=new Detallectactecliente('search');
+                $caso=$_GET['caso'];
+                $nombre=$_GET['nombre'];
+                $model=new Detallectactecliente;
+                if($caso == 0){
+                $datos= $model->generarGrillaSaldos($idcliente,$anio_tab,$mes_tab,0);	
+                
+                	$titulo_shee="C.C.".$nombre ;
+                	$titulo="C.C.".$nombre." ".$anio_tab."-".$mes_tab;
+                } else {
+                	$datos= $model->generarGrillaSaldos_secuencial($idcliente,$anio_tab,$mes_tab,1)->data;
+                	$cantSaldos=count($datos);
+	               $datos=new CArrayDataProvider($datos, array(
+					    'id'=>'iddetallectactecliente',
+					    'sort'=>array(
+	               			'defaultOrder'=>array('fecha'=>CSort::SORT_ASC),
+					        'attributes'=>array(
+					             'iddetallectactecliente','fecha', 'debe', 'haber','saldo'
+					        ),
+					    ),
+					    'pagination'=>array(
+					        'pageSize'=>$cantSaldos,
+					    ),
+					));	
+                  	$titulo_shee="C.C.".$nombre ;
+                	$titulo="C.C.".$nombre." Total";
+                }
+                $tabla=	array( 
+               			array(
+               				'header' => 'FECHA',
+               				'value'=>'$data["fecha"]',
+						),
+						array(
+							'header' => 'DESCRIPCION',
+							'value'=>'$data["descripcion"]',
+						),
+						array(
+							'header' => 'TIPO',
+							'value'=>array($this,'labelTipo'),
+						),
+				       	array(
+				         	'header'=>'DEBE',
+				       		'value'=>'number_format($data["debe"], 2, ",", ".")',
+				        ),
+				        array(
+					  		'header'=>'HABER',
+				        	'value'=>'number_format($data["haber"], 2, ",", ".")',
+				        ), 
+				         array(
+					  		'header'=>'SALDO',
+				        	'value'=>'number_format($data["saldo"], 2, ",", ".")',
+				        )); 
                 	
                	$this->widget('application.components.widgets.EExcelView', array(
                 	
 				    'id'                   => 'some-grid',
-				    'dataProvider'		   => $model->Search($model->fecha=$mes_tab."/".$anio_tab,$model->ctactecliente_idctactecliente=$idcliente),
+				    'dataProvider'		   => $datos,
 				    'grid_mode'            => 'export', // Same usage as EExcelView v0.33
 				    //'template'             => "{summary}\n{items}\n{exportbuttons}\n{pager}",
-				    'title'                => 'CC Cliente ' . date('d-m-Y'),
+				    'title'                => $titulo,
 				    'creator'              => 'YVN',
 				    'subject'              => mb_convert_encoding('Something important with a date in French: ' . utf8_encode(strftime('%e %B %Y')), 'ISO-8859-1', 'UTF-8'),
 				    'description'          => mb_convert_encoding('Etat de production g�n�r� � la demande par l\'administrateur (some text in French).', 'ISO-8859-1', 'UTF-8'),
 				    'lastModifiedBy'       => 'YVN',
-				    'sheetTitle'           => 'CC Cliente ' . date('m-d-Y H-i'),
+				    'sheetTitle'           => $titulo_shee,
 				    'keywords'             => '',
 				    'category'             => '',
 				    'landscapeDisplay'     => true, // Default: false
 				    'A4'                   => true, // Default: false - ie : Letter (PHPExcel default)
 				    'pageFooterText'       => '&RThis is page no. &P of &N pages', // Default: '&RPage &P of &N'
-				    'automaticSum'         => true, // Default: false
+				    'automaticSum'         => false, // Default: false
 				    'decimalSeparator'     => ',', // Default: '.'
 				    'thousandsSeparator'   => '.', // Default: ','
 				    //'displayZeros'       => false,
@@ -240,29 +303,7 @@ class DetallectacteclienteController extends Controller
 				    'footerHeight'         => 25, // Default: 20
 				    'exportType'		   => 'Excel2007',
                 	'enablePagination'		=> true,
-				    'columns'              => array( // an array of your CGridColumns
-
-               			array(
-               				'name' => 'fecha',
-							'header' => 'FECHA',
-						),
-						array(
-							'name' => 'descripcion',
-							'header' => 'DESCRIPCION',
-						),
-						array(
-							'header' => 'TIPO',
-							'value'=>'($data->tipo == 0)? "Factura": "Cobranza"',
-						),
-				       	array(
-				         	'header'=>'DEBE',
-				       		'value'=>'number_format($data->debe, 2, ",", ".")',
-				        ),
-				        array(
-					  		'header'=>'HABER',
-				        	'value'=>'number_format($data->haber, 2, ",", ".")',
-				        ),
-					) 
+				    'columns'              => $tabla,
 				)); 
                
         	

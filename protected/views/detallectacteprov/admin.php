@@ -13,6 +13,14 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
+	array(
+		'label'=>'Ctas. Ctes. Proveedor', 
+		'url'=>Yii::app()->createUrl('ctactprov/admin'),
+	),
+	array(
+		'label'=>'Vista secuencial',
+		'url'=>Yii::app()->createUrl('detallectacteprov/secuencial',array("id"=>$idctacte,"nombre"=>$nombre)
+	)),
 	array('label'=>'Nueva Orden de Pago', 'url'=>Yii::app()->createUrl("ordendepago/create" 
 			)),
 	array('label'=>'Nueva Nota Crédito', 'url'=>Yii::app()->createUrl("notacreditoprov/create" 
@@ -76,7 +84,7 @@ $model->ctacteprov_idctacteprov=$_GET['id'];
 		if (date('m')==$meses[$i][0]){
 			$$varTempMes=true;
 		}
-		$arregloTabsMeses[]=array('label'=>$meses[$i][1],'content'=>$this->renderPartial('gridctacteprov', array('model'=>$model,'mesTab'=>$meses[$i][0],'anioTab'=>$anioTab,'model->ctacteprov_idctacteprov'=>$model->ctacteprov_idctacteprov), true),'active'=>$$varTempMes);
+		$arregloTabsMeses[]=array('label'=>$meses[$i][1],'content'=>$this->renderPartial('gridctacteprov', array('model'=>$model,'mesTab'=>$meses[$i][0],'anioTab'=>$anioTab,'model->ctacteprov_idctacteprov'=>$model->ctacteprov_idctacteprov,'nombre'=>$nombre), true),'active'=>$$varTempMes);
 		}
 
 
