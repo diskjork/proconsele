@@ -2,14 +2,14 @@
 <?php
 	$dataProvider= $model->generargrilladetallecuenta($idcuenta, $fecha, $fecha2);
 	//print_r($dataProvider); die();
-	$dataArray=$dataProvider->getData();
+	/*$dataArray=$dataProvider->getData();
 	
 	$dataDebeTotal=0;$dataHaberTotal=0;
 
 	for ($i=0;$i<count($dataArray);$i++){
 		$dataDebeTotal+=$dataArray[$i]['debeT'];
 		$dataHaberTotal+=$dataArray[$i]['haberT'];
-	}
+	}*/
 ?>
 <br>
 <div id="iconoExportar" align="right">
@@ -43,7 +43,7 @@ $columnas=array(
 					'header' => 'DEBE',
 					'value'=>'($data["debeT"] != null)?"$".number_format($data["debeT"], 2, ".", ","):""',
 					'htmlOptions' => array('class' =>'span2'),
-					'footer'=>"$".number_format($dataDebeTotal, 2, ".", ","),	
+					//'footer'=>"$".number_format($dataDebeTotal, 2, ".", ","),	
 					//'filter' => CHtml::activeDropDownList($model, 'chequeraIdchequera', CHtml::listData(Chequera::model()->findAll(), 'idchequera', 'nombre'), array('prompt' => ' ')),
 		),	
 		
@@ -51,9 +51,14 @@ $columnas=array(
 				'header' => 'HABER',
 				'value'=>'($data["haberT"] != null)?"$".number_format($data["haberT"], 2, ".", ","):""',
 				'htmlOptions' => array('class' =>'span2'),
-				'footer'=>"$".number_format($dataHaberTotal, 2, ".", ","),				
+				//'footer'=>"$".number_format($dataHaberTotal, 2, ".", ","),				
 		),	
-		
+		array(//'name' => 'haberT',
+				'header' => 'SALDO',
+				'value'=>'($data["saldo"] != null)?"$".number_format($data["saldo"], 2, ".", ","):""',
+				'htmlOptions' => array('class' =>'span2'),
+								
+		),
 
 		
 		 );
@@ -73,7 +78,7 @@ $columnas=array(
 ?>
 
 <script type="text/javascript">
-
+/*
 var $table = $("#cuentas-grid").children('table');
 var $tbody = $table.children('tfoot');
 var debe=$("tfoot > tr > td:eq(3)").text();
@@ -83,5 +88,5 @@ haber=parseFloat(Number(haber.replace(/[^0-9\.]+/g,"")));
 var saldo= debe - haber;
 saldo="Saldo:  $"+$.number(saldo,2);
 $tbody.append('<tr> <td></td> <td></td> <td></td> <td colspan=2 style="text-align:center;">'+saldo+'</td>  </tr>');
-
+*/
 </script>

@@ -333,7 +333,7 @@ class IvamovimientoController extends Controller
 				    
 				    //'displayZeros'       => false,
 				    'zeroPlaceholder'      => '-',
-				    //'sumLabel'             => 'TOTALES:', // Default: 'Totals'
+				    'sumLabel'             => 'TOTALES:', // Default: 'Totals'
 				    'borderColor'          => '000000', // Default: '000000'
 				    'bgColor'              => 'E0E0E0', // Default: 'FFFFFF'
 				    'textColor'            => '000000', // Default: '000000'

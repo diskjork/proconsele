@@ -203,6 +203,28 @@ public function compararFechas($attribute,$params)
                 return new CActiveDataProvider($this, array(
                         'criteria'=>$criteria,
                 ));
-        }	
+        }
+        public $saldo,$descr;
+     public  function generarGrillaSaldos($anio, $mes,$idcuenta){
+        	      	
+        	$sql1="call saldo_banco('".$anio."','".$mes."',".$idcuenta.");";
+			$cant=Yii::app()->db->createCommand($sql1)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql1, array(
+				'keyField' => 'idmovimientobanco', 
+                'totalItemCount' => $cant,
+				'sort'=>array(
+					'defaultOrder' => array(
+                            'fecha' => CSort::SORT_ASC, //default sort value
+                        ),
+					'attributes'=>array(
+					             'idmovimientobanco','descr', 'debe', 'haber','saldo'
+					        ),
+			     ), 
+ 				'pagination'=>array(
+			        'pageSize'=>$cant,
+			    ),
+				));
+			return $dataProvider;
+        }  
 
 }

@@ -126,18 +126,7 @@ abstract class BaseCuenta extends GxActiveRecord {
         	/*$anio2=$fecha2->format('Y');
         	$mes2=$fecha2->format('m');
         	$dia2=$fecha2->format('d');*/
-			$sql="SELECT asiento.fecha AS fechaasiento,
-						 cuenta.codigocta AS codigocuenta,
-						 cuenta.nombre AS nombrecuenta, 
-						 asiento.descripcion AS descripcionasiento,
-						 detalleasiento.cuenta_idcuenta as idcuent, 
-						 detalleasiento.debe AS debeT, 
-						 detalleasiento.haber AS haberT
-					FROM detalleasiento, asiento, cuenta
-					WHERE detalleasiento.cuenta_idcuenta ='".$idcuenta."'
-					AND detalleasiento.asiento_idasiento = asiento.idasiento
-					AND cuenta.idcuenta = detalleasiento.cuenta_idcuenta
-					AND asiento.fecha between '".$fecha."' and '".$fecha2."'";
+			$sql="call saldo_cuenta(".$idcuenta.",'".$fecha."','".$fecha2."');";
 			$count=Yii::app()->db->createCommand($sql)->queryScalar();
 			$dataProvider=new CSqlDataProvider($sql, array(
 				'keyField'=>'idcuent',

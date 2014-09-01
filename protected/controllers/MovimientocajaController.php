@@ -372,15 +372,15 @@ public function checkUpdateAsiento($datosGuardados, $datosPOST){
                 $anio_tab=$_GET['anioTab'];
                 $bancoid=$_GET['bancoid'];
                 $model=new Movimientocaja('search');
-                $dataProvider= $model->search(array($model->fecha=$anio_tab."-".$mes_tab,$model->caja_idcaja=$bancoid));
-                $dataProviderRe=$dataProvider->getData();
+                $dataProvider= $model->generarGrillaSaldos($anio_tab,$mes_tab,$bancoid);
+               /* $dataProviderRe=$dataProvider->getData();
                 $cant=count($dataProviderRe);
                 $totaldebe=0;
 				$totalhaber=0;
 				for($i=0;$i<$cant;$i++){
 						$totaldebe=$totaldebe +$dataProviderRe[$i]['debe'];
 						$totalhaber=$totalhaber +$dataProviderRe[$i]['haber'];
-					}
+					}*/
                	$this->widget('application.components.widgets.EExcelView', array(
                 	
 				    'id'                   => 'some-grid',
@@ -421,25 +421,27 @@ public function checkUpdateAsiento($datosGuardados, $datosPOST){
 				    'columns'              => array( // an array of your CGridColumns
 
                			array(
-               				'name' => 'fecha',
+               				//'name' => 'fecha',
 							'header' => 'FECHA',
+               				'value'=>'$data["fecha"]'
 						),
 						array(
-							'name' => 'descripcion',
+							//'name' => 'descripcion',
 							'header' => 'DESCRIPCION',
+							'value'=>'$data["descr"]'
 						),
 				       	array(
 				         	'header'=>'INGRESOS',
-				       		'value'=>'number_format($data->debe, 2, ",", ".")',
+				       		'value'=>'number_format($data["debe"], 2, ",", ".")',
 				        ),
 				        array(
 					  		'header'=>'EGRESOS',
-				        	'value'=>'number_format($data->haber, 2, ",", ".")',
+				        	'value'=>'number_format($data["haber"], 2, ",", ".")',
 				        ),
 				        array(
 					  		'header'=>'SALDO',
-					  		'value'=>"",
-					 		'footer'=>"$".number_format($totaldebe - $totalhaber,2,".",","),
+					  		'value'=>'number_format($data["saldo"], 2, ",", ".")',
+					 		'footer'=>"-",
 		  			),
 					) 
 				)); 

@@ -1,20 +1,7 @@
 
 <?php 
-$dataProvider= $model->search(array($model->fecha=$anioTab."-".$mesTab,$model->caja_idcaja=$bancoid));
-/*$dataProvider=$model->findAll('year(fecha)=:ano and month(fecha)=:mes and caja_idcaja=:caja',
-							array(':ano'=>$anioTab,
-								  ':mes'=>$mesTab,
-								  ':caja'=>$bancoid)); */
-							
-
-
-	$dataProvider->setPagination(array('pageSize'=>$model->count()));
-	$datosArray=$dataProvider->getData();
-	
-	//Obtener total debe y haber;
-	$dataProviderDH=$model->obtenerDebeHaber($mesTab,$anioTab,$bancoid);
-	
-	$dataProviderDebeHaber=$dataProviderDH->getData();
+$dataProvider= $model->generarGrillaSaldos($anioTab,$mesTab,$bancoid);
+//print_r($dataProvider); die();
 ?>
 <div id="iconoExportar" align="right">
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", array("color" => TbHtml::LABEL_COLOR_SUCCESS)),array('Excel','mesTab'=>$mesTab,'anioTab'=>$anioTab,'bancoid'=>$bancoid),'Exportar',array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
@@ -29,36 +16,38 @@ $columnas=array_merge(array(
 			  
           	  array(
           	  		'header'=>'FECHA',
-          	  		'name' => 'fecha',
-					'htmlOptions' => array('width' =>'50px'),
+          	  		//'name' => 'fecha',
+          	  		'value'=>'$data["fecha"]',
+					//'htmlOptions' => array('width' =>'50px'),
           	  		'filter'=>"",
           	  		),
           	array(
           	  		'header'=>'DESCRIPCION',
-					'name' => 'descripcion',
+					//'name' => 'descripcion',
+					'value'=>'$data["descr"]',
           	  		),
               array(
               		'header'=>'INGRESOS',
-              		'name' => 'debe',
+              		//'name' => 'debe',
 					'htmlOptions' => array('width' =>'75px'),
               		'cssClassExpression' => '$data["debe"] > 0 ? "colorDebe": ""',
-					'value'=>'($data->debe !== null && $data->debe > 0)? "$".number_format($data->debe, 2, ".", ","): "-"',
+					'value'=>'($data["debe"] !== null && $data["debe"] > 0)? "$".number_format($data["debe"], 2, ".", ","): "-"',
               		//'footer'=>"$ ".number_format($dataProviderDebeHaber[0]['total_debe']-$dataProviderDebeHaber[0]['total_haber'],2,".",","),
-              		'footer'=>"$".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",","),
+              		//'footer'=>"$".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",","),
               		//'footerHtmlOptions'=>array('style'=>'text-align:center;font-weight:bold;'),
               ),
 			  array(
 			  		'header'=>'EGRESOS',
-			  		'name' => 'haber',
+			  		//'name' => 'haber',
 					'htmlOptions' => array('width' =>'75px'),
               		'cssClassExpression' => '$data["haber"] > 0 ? "colorHaber": ""',
-			  		'value'=>'($data->haber !== null && $data->haber > 0)?"$".number_format($data->haber, 2, ".", ","): "-"',
-			 		'footer'=>"$".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",","),
+			  		'value'=>'($data["haber"] !== null && $data["haber"] > 0)?"$".number_format($data["haber"], 2, ".", ","): "-"',
+			 		//'footer'=>"$".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",","),
   			),
   			 array(
 			  		'header'=>'SALDO',
-			  		'value'=>"",
-  			 		'footer'=>'<strong>'."$".number_format($dataProviderDebeHaber[0]['total_debe'] - $dataProviderDebeHaber[0]['total_haber'],2,".",",").'</strong>',
+			  		'value'=>'"$".number_format($data["saldo"],2,".",",")',
+  			 		//'footer'=>'<strong>'."$".number_format($dataProviderDebeHaber[0]['total_debe'] - $dataProviderDebeHaber[0]['total_haber'],2,".",",").'</strong>',
   			),
 			 array(
 	            'header'=>'Opciones',
@@ -70,10 +59,10 @@ $columnas=array_merge(array(
 	                 'view'=>
 	                    array(
 	                    	'label'=>'Ver asiento contable',
-	                    	'visible'=>'$data->idcompra == NULL AND $data->idfactura == NULL AND $data->iddetallecobranza == NULL AND
-									$data->iddetalleordendepago == NULL AND
-									$data->asiento_idasiento != NULL',
-	                        'url'=>'Yii::app()->createUrl("asiento/update", array("id"=>$data->asiento_idasiento,"vista"=>2))',
+	                    	'visible'=>'$data["idcompra"] == NULL AND $data["idfactura"] == NULL AND $data["iddetallecobranza"] == NULL AND
+									$data["iddetalleordendepago"] == NULL AND
+									$data["asiento_idasiento"] != NULL',
+	                        'url'=>'Yii::app()->createUrl("asiento/update", array("id"=>$data["asiento_idasiento"],"vista"=>2))',
 	                       /* 'options'=>array(
 	                            'ajax'=>array(
 	                                'type'=>'POST',
@@ -85,16 +74,16 @@ $columnas=array_merge(array(
 	                    'update'=>
 	                    array(
 	                    	'label'=>'Modificar ',
-	                    	'visible'=>'$data->asiento_idasiento != NULL AND
-	                    				$data->desdeasiento == NULL',
+	                    	'visible'=>'$data["asiento_idasiento"] != NULL AND
+	                    				$data["desdeasiento"] == NULL',
 	                  	),
 	                  	'updateasiento'=>
 	                    array(
 	                    	'label'=>'Modificar asiento',
 	                    	'icon'=>TbHtml::ICON_PENCIL,
-	                    	'visible'=>'$data->asiento_idasiento == NULL AND
-	                    				$data->desdeasiento != NULL',
-	                    	'url'=>'Yii::app()->createUrl("asiento/update", array("id"=>$data->desdeasiento))',
+	                    	'visible'=>'$data["asiento_idasiento"] == NULL AND
+	                    				$data["desdeasiento"] != NULL',
+	                    	'url'=>'Yii::app()->createUrl("asiento/update", array("id"=>$data["desdeasiento"]))',
 	                  )
 	                    
 	            ),

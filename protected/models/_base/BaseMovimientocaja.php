@@ -187,4 +187,26 @@ public function compararFechas($attribute,$params)
                         'criteria'=>$criteria,
                 ));
         }
+    public $saldo,$descr;
+    public  function generarGrillaSaldos($anio, $mes,$idcaja){
+        	      	
+        	$sql1="call saldo_caja('".$anio."','".$mes."',".$idcaja.");";
+			$cant=Yii::app()->db->createCommand($sql1)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql1, array(
+				'keyField' => 'idmovimientocaja', 
+                'totalItemCount' => $cant,
+				'sort'=>array(
+					'defaultOrder' => array(
+                            'fecha' => CSort::SORT_ASC, //default sort value
+                        ),
+					'attributes'=>array(
+					             'idmovimientocaja','descr', 'debe', 'haber','saldo'
+					        ),
+			     ), 
+ 				'pagination'=>array(
+			        'pageSize'=>$cant,
+			    ),
+				));
+			return $dataProvider;
+        }  
 }

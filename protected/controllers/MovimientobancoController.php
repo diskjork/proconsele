@@ -375,27 +375,20 @@ public function checkUpdateAsiento($datosGuardados, $datosPOST){
                 $anio_tab=$_GET['anioTab'];
                 $bancoid=$_GET['idbanco'];
                 $model=new Movimientobanco('search');
-				 $dataProvider= $model->search(array($model->fecha=$anio_tab."-".$mes_tab,$model->ctabancaria_idctabancaria=$bancoid));
-                $dataProviderRe=$dataProvider->getData();
-                $cant=count($dataProviderRe);
-                $totaldebe=0;
-				$totalhaber=0;
-				for($i=0;$i<$cant;$i++){
-						$totaldebe=$totaldebe +$dataProviderRe[$i]['debe'];
-						$totalhaber=$totalhaber +$dataProviderRe[$i]['haber'];
-					}	
+				 $dataProvider= $model->generarGrillaSaldos($anio_tab,$mes_tab,$bancoid);
+                	
                	$this->widget('application.components.widgets.EExcelView', array(
                 	
 				    'id'                   => 'some-grid',
 				    'dataProvider'		   => $dataProvider,
 				    'grid_mode'            => 'export', // Same usage as EExcelView v0.33
 				    //'template'             => "{summary}\n{items}\n{exportbuttons}\n{pager}",
-				    'title'                => 'Bancos ' . date('d-m-Y'),
+				    'title'                => 'Banco ' . date('d-m-Y'),
 				    'creator'              => 'YVN',
 				    'subject'              => mb_convert_encoding('Something important with a date in French: ' . utf8_encode(strftime('%e %B %Y')), 'ISO-8859-1', 'UTF-8'),
 				    'description'          => mb_convert_encoding('Etat de production g�n�r� � la demande par l\'administrateur (some text in French).', 'ISO-8859-1', 'UTF-8'),
 				    'lastModifiedBy'       => 'YVN',
-				    'sheetTitle'           => 'Bancos ' . date('m-d-Y H-i'),
+				    'sheetTitle'           => 'Bancos '.$anio_tab.'-'.$mes_tab ,
 				    'keywords'             => '',
 				    'category'             => '',
 				    'landscapeDisplay'     => true, // Default: false
@@ -424,25 +417,32 @@ public function checkUpdateAsiento($datosGuardados, $datosPOST){
 				    'columns'              => array( // an array of your CGridColumns
 
                			array(
-               				'name' => 'fecha',
+               				//'name' => 'fecha',
 							'header' => 'FECHA',
+               				'value'=>'$data["fecha"]'
 						),
 						array(
-							'name' => 'descripcion',
+               				//'name' => 'fecha',
+							'header' => 'FECHA',
+							'value'=>'$data["nombre"]'
+						),
+						array(
+							//'name' => 'descripcion',
 							'header' => 'DESCRIPCION',
+							'value'=>'$data["descr"]'
 						),
 				       	array(
 				         	'header'=>'INGRESOS',
-				       		'value'=>'number_format($data->debe, 2, ",", ".")',
+				       		'value'=>'($data["debe"] !== null && $data["debe"] > 0)?number_format($data["debe"], 2, ",", "."): "-"',
 				        ),
 				        array(
 					  		'header'=>'EGRESOS',
-				        	'value'=>'number_format($data->haber, 2, ",", ".")',
+				        	'value'=>'($data["haber"] !== null && $data["haber"] > 0)?number_format($data["haber"], 2, ",", "."): "-"',
 				        ),
 				        array(
 					  		'header'=>'SALDO',
-					  		'value'=>"",
-					 		'footer'=>"$".number_format($totaldebe - $totalhaber,2,".",","),
+					  		'value'=>'number_format($data["saldo"], 2, ",", ".")',
+					 		//'footer'=>"$".number_format($totaldebe - $totalhaber,2,".",","),
 		  			),
 					) 
 				)); 
