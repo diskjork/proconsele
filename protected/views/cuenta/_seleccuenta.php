@@ -27,8 +27,9 @@ $columnas=array(
        				),
 		
 		array(
-			'name'=>'fechaasiento',
+			//'name'=>'fechaasiento',
 			'header' => 'FECHA',
+			'value'=>'DateTime::createFromFormat("Y-m-d", $data["fechaasiento"])->format("d/m/Y")',
 			'htmlOptions' => array('class' =>'span2'),
 				
 	            ), 

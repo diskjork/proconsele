@@ -17,7 +17,7 @@ $columnas=array_merge(array(
           	  array(
           	  		'header'=>'FECHA',
           	  		//'name' => 'fecha',
-          	  		'value'=>'$data["fecha"]',
+          	  		'value'=>'DateTime::createFromFormat("Y-m-d", $data["fecha"])->format("d/m/Y")',
 					//'htmlOptions' => array('width' =>'50px'),
           	  		'filter'=>"",
           	  		),

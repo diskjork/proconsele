@@ -21,7 +21,7 @@
 			array(
 				//'name' => 'fecha',
 				'header'=>'FECHA',
-				'value'=>'$data["fecha"]',
+				'value'=>'DateTime::createFromFormat("Y-m-d", $data["fecha"])->format("d/m/Y")',
 						'htmlOptions' => array('width' =>'100px'),
 						'filter'=>"",
 						),
