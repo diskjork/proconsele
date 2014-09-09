@@ -113,7 +113,8 @@
 					 </div>
 				</div>
 				<div class="span5">	
-		           	<?php  echo $form->label($model, 'fechacobro')?>
+		           	<?php echo $form->textAreaControlGroup($model,'fecharechazado', array('span' => 2, 'rows' => 2,
+            				)); ?>
 		            <div class="input-append">
 		           
 		            <?php $this->widget('yiiwheels.widgets.datepicker.WhDatePicker', array(

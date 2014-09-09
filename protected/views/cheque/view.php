@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 	'Cheques'=>array('index'),
 	$model->idcheque,
 );
-$arrayEstado=array('A pagar','Pagado','A cobrar','Cobrado por Ventanilla','Endozado','Depositado en Banco Propio');
+$arrayEstado=array('A pagar','Pagado','A cobrar','Cobrado por Ventanilla','Endozado','Depositado en Banco Propio', 'Rechazado');
 
 ?>
 
@@ -56,6 +56,10 @@ $arrayEstado=array('A pagar','Pagado','A cobrar','Cobrado por Ventanilla','Endoz
 		array(
 			'name'=>'estado',
 			'value'=>$arrayEstado[$model->estado],
+		),
+		array(
+			'name'=>'comentario',
+			'value'=>($model->comentario == null)? "-" : $model->comentario,
 		),				
 	),
 )); ?>

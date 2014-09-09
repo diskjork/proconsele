@@ -207,6 +207,10 @@ class DetallectacteprovController extends Controller
 				$text="Nota Débito -  Proveedor";
 				return $text;
 				break;
+			case '4':
+				$text="Cheque Rechazado";
+				return $text;
+				break;
 			
 		}
 	}

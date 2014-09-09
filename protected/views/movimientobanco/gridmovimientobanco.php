@@ -67,6 +67,7 @@
 				'buttons'=>array(
 					 'view'=>
 	                    array(
+	                    	'visible'=>'$data["asiento_idasiento"] != NULL',
 	                    	'label'=>'Ver asiento contable',
 	                        'url'=>'Yii::app()->createUrl("asiento/update", array("id"=>$data["asiento_idasiento"],"vista"=>1))',
 	                       /* 'options'=>array(

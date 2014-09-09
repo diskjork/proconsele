@@ -194,7 +194,10 @@ class DetallectacteclienteController extends Controller
 				$text="Nota Débito";
 				return $text;
 				break;
-			
+			case '4':
+				$text="Cheque Rechazado";
+				return $text;
+				break;
 		}
 	}
 	public function actionSecuencial($id)

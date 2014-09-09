@@ -230,9 +230,14 @@ class IvamovimientoController extends Controller
 					return $text;
 					break;
 				case '8':
-					$text="F. (B) - ANULADA";
+					$text="F.(B) - ANULADA";
 					return $text;
 					break;
+				case '9':
+					$text="F.(C) ";
+					return $text;
+					break;
+				
 		}
 	}
 	
@@ -364,6 +369,10 @@ class IvamovimientoController extends Controller
 				break;
 			case '1.105':
 				$text="10,5%";
+				return $text;
+				break;
+			case '0':
+				$text="Exento";
 				return $text;
 				break;
 		}

@@ -31,11 +31,11 @@
 	<b><?php echo CHtml::encode($data->getAttributeLabel('debe')); ?>:</b>
 	<?php echo CHtml::encode($data->debe); ?>
 	<br />
-
+	
 	<b><?php echo CHtml::encode($data->getAttributeLabel('haber')); ?>:</b>
 	<?php echo CHtml::encode($data->haber); ?>
 	<br />
-
+	
 	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('debeohaber')); ?>:</b>
 	<?php echo CHtml::encode($data->debeohaber); ?>

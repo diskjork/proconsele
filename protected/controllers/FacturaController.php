@@ -617,7 +617,7 @@ class FacturaController extends Controller
 									  ':cuenta' =>68)); //215100 IVA - Débito Fiscal
 						$DeAsIVA->haber=$datosnuevos->ivatotal;
 						$DeAsIVA->save();
-					} elseif(($datosviejos->ivatotal == null) && ($datosnuevos->ivatotal != null)) {
+					} /*elseif(($datosviejos->ivatotal == null) && ($datosnuevos->ivatotal != null)) {
 						$NuevoDeAs=new Detalleasiento;
 						$NuevoDeAs->asiento_idasiento=$datosnuevos->asiento_idasiento;
 						$NuevoDeAs->cuenta_idcuenta=68; //215100 IVA - Débito Fiscal
@@ -628,7 +628,7 @@ class FacturaController extends Controller
 								array(':asiento'=>$datosviejos->asiento_idasiento,
 									  ':cuenta' =>68));
 						$DeGuardado->delete();	
-					}
+					}*/
 					
 				}
 				// IMPORTEIIBB

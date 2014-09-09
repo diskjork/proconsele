@@ -1,6 +1,8 @@
 
 <?php 
 	$dataProvider= $model->search($model->fecha=$anioTab.'-'.$mesTab);
+	
+	
 	$cant=count($dataProvider->data);
 	$dataProvider->setPagination(array('pageSize'=>$cant)); 
 ?>
@@ -76,7 +78,7 @@
 	    'headerOffset' => 20, // height of the main navigation at bootstrap
 	    'dataProvider' => $dataProvider,
 	    'columns' => $gridColumns,
-		'template' => "{items}",
+		'template' => "{items}{pager}",
 		'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
 	
     ));

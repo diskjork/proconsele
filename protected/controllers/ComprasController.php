@@ -77,6 +77,9 @@ class ComprasController extends Controller
 					$asiento->descripcion="Factura '".$this->tipoFactura($model->tipofactura)."' Compra N°: ".$model->nrodefactura." -  ".$model->proveedorIdproveedor;
 					$totaliva=0;
 					$totaliibb=0;
+					if($model->tipofactura == 3){
+						$model->iva=0;
+					}
 					if($asiento->save()){
 						
 						$model->asiento_idasiento=$asiento->idasiento;
@@ -179,9 +182,9 @@ class ComprasController extends Controller
 							$asientoCompra=Asiento::model()->findByPk($asiento->idasiento);
 							$asientoCompra->compra_idcompra=$model->idcompra;
 							$asientoCompra->save();
-							if($model->tipofactura == 1){
+							//if($model->tipofactura == 1){
 							$this->ivamovimiento($model, $_POST['Compras']);
-							}
+							//}
 					}
 				Yii::app()->user->setFlash('success', "<strong>Factura creada correctamente.</strong>");
 				$this->redirect(array('admin','id'=>$model->idcompra));
@@ -249,14 +252,15 @@ class ComprasController extends Controller
 				}
 				//se modifican formadepago y tipofactura
 				if(($model->formadepago != $modeloviejo->formadepago) && ($modeloviejo->tipofactura != $model->tipofactura)){
-					$this->updateDatosAsiento($modeloviejo, $model, $_POST['Compras']);
+					
 					$this->updateCambioFormadepago($modeloviejo, $model, $_POST['Compras']);
 					$this->cambioTipofactura($modeloviejo, $model, $_POST['Compras']);
-					
-					if($model->tipofactura == 1){
+					$this->updateDatosAsiento($modeloviejo, $model, $_POST['Compras']);
+									
+					/*if($model->tipofactura == 1){
 						$this->updateImpuestos($modeloviejo, $model);
 						
-					} 
+					}*/
 				   $this->updateIvaMovimiento($modeloviejo, $model, $_POST['Compras']['fecha']);
 					if($_POST['Compras']['vista'] == 2){
 						$this->redirect(Yii::app()->request->baseUrl.'/asiento/admin');
@@ -491,7 +495,7 @@ public function movCaja($model,$datosPOST){
 									  ':cuenta' =>13)); //113100 Iva - Crédito Fiscal
 						$DeAsIVA->debe=$datosnuevos->ivatotal;
 						$DeAsIVA->save();
-					} elseif(($datosviejos->ivatotal == null) && ($datosnuevos->ivatotal != null)) {
+					} /*elseif(($datosviejos->ivatotal == null) && ($datosnuevos->ivatotal != null)) {
 						$NuevoDeAs=new Detalleasiento;
 						$NuevoDeAs->asiento_idasiento=$datosnuevos->asiento_idasiento;
 						$NuevoDeAs->cuenta_idcuenta=13; //113100 Iva - Crédito Fiscal
@@ -502,7 +506,7 @@ public function movCaja($model,$datosPOST){
 								array(':asiento'=>$datosviejos->asiento_idasiento,
 									  ':cuenta' =>13)); //113100 Iva - Crédito Fiscal
 						$DeGuardado->delete();	
-					}
+					}*/
 					
 				}
 				// IMPORTEIIBB
@@ -630,16 +634,26 @@ public function movCaja($model,$datosPOST){
 		$nuevo->nrocomprobante=$model->nrodefactura;
 		$nuevo->proveedor_idproveedor=$model->proveedor_idproveedor;
 		$nuevo->cuitentidad=$model->proveedorIdproveedor->cuit;
-		$nuevo->tipofactura=$model->tipofactura;
-		$nuevo->tipoiva=$model->iva;
+		
 		$nuevo->importeiibb=$model->importeIIBB;
 		$nuevo->importe_per_iva=$model->importe_per_iva;
-		$nuevo->importeiva=$model->ivatotal;
+		if($model->tipofactura == 3){
+			$nuevo->tipoiva=0;
+			$nuevo->importeiva=0;
+			$nuevo->netogravado=$model->importeneto;
+			$nuevo->tipofactura=9; //factura c
+		}else {
+			$nuevo->tipoiva=$model->iva;
+			$nuevo->importeiva=$model->ivatotal;
+			$nuevo->netogravado=$model->importebruto;
+			$nuevo->tipofactura=$model->tipofactura;
+		}
 		$nuevo->importeneto=$model->importeneto;
-		$nuevo->netogravado=$model->importebruto;
+		
 		$nuevo->impuestointerno=$model->impuestointerno;
 		$nuevo->compra_idcompra=$model->idcompra;
 		$nuevo->save();
+			
 		
 	}
 	public function updateIvaMovimiento($datosviejos, $datosnuevos, $fecha){
@@ -661,12 +675,24 @@ public function movCaja($model,$datosPOST){
 		$IvaMovGuardado->netogravado=$datosnuevos->importebruto;
 		$IvaMovGuardado->impuestointerno=$datosnuevos->impuestointerno;
 		$IvaMovGuardado->save();
-		} elseif(($datosviejos->tipofactura == 1) && ($datosnuevos->tipofactura > 1) ) {
-			$IvaMovGuardado=Ivamovimiento::model()->find("compra_idcompra=:idcompra",
+		} elseif(($datosviejos->tipofactura == 1) && ($datosnuevos->tipofactura == 3) ) {
+			$IvaMovGuardado->fecha=$fecha;
+			$IvaMovGuardado->nrocomprobante=$datosnuevos->nrodefactura;
+			$IvaMovGuardado->proveedor_idproveedor=$datosnuevos->proveedor_idproveedor;
+			$IvaMovGuardado->cuitentidad=$datosnuevos->proveedorIdproveedor->cuit;
+			$IvaMovGuardado->tipofactura=9; //factura c
+			$IvaMovGuardado->tipoiva=0;
+			$IvaMovGuardado->importeiva=0;
+			$IvaMovGuardado->netogravado=$datosnuevos->importeneto;
+			$IvaMovGuardado->importeiibb=null;
+			$IvaMovGuardado->importe_per_iva=null;
+			$IvaMovGuardado->importeneto=$datosnuevos->importeneto;
+			$IvaMovGuardado->impuestointerno=null;
+			$IvaMovGuardado->save();
+			/* $IvaMovGuardado=Ivamovimiento::model()->find("compra_idcompra=:idcompra",
 						array(':idcompra'=>$datosviejos->idcompra));
-			$IvaMovGuardado->delete();
-		} elseif(($datosviejos->tipofactura > 1) &&($datosnuevos->tipofactura == 1)){
-			$IvaMovGuardado=new Ivamovimiento;
+			$IvaMovGuardado->delete(); */
+		} elseif(($datosviejos->tipofactura == 3) &&($datosnuevos->tipofactura == 1)){
 			$IvaMovGuardado->fecha=$fecha;
 			$IvaMovGuardado->nrocomprobante=$datosnuevos->nrodefactura;
 			$IvaMovGuardado->proveedor_idproveedor=$datosnuevos->proveedor_idproveedor;
@@ -680,17 +706,27 @@ public function movCaja($model,$datosPOST){
 			$IvaMovGuardado->netogravado=$datosnuevos->importebruto;
 			$IvaMovGuardado->impuestointerno=$datosnuevos->impuestointerno;
 			$IvaMovGuardado->save();	
-		}
+		}  elseif(($datosviejos->tipofactura == 3) &&($datosnuevos->tipofactura == 3)){
+			$IvaMovGuardado->fecha=$fecha;
+			$IvaMovGuardado->nrocomprobante=$datosnuevos->nrodefactura;
+			$IvaMovGuardado->proveedor_idproveedor=$datosnuevos->proveedor_idproveedor;
+			$IvaMovGuardado->cuitentidad=$datosnuevos->proveedorIdproveedor->cuit;
+			$IvaMovGuardado->importeiva=0;
+			$IvaMovGuardado->importeneto=$datosnuevos->importeneto;
+			$IvaMovGuardado->netogravado=$datosnuevos->importeneto;
+			$IvaMovGuardado->save();
 		}
 	}
-	
+	}
 	public function borradoIvaMov($model){
 		$ivamov=Ivamovimiento::model()->find("compra_idcompra=:factura",array(':factura'=>$model->idcompra));
 		return $ivamov->delete();
 	}
+	
 	//corresponde a la actualizacion de la parde del debe del  asiento
 	public function cambioTipofactura($datosviejos, $datosnuevos, $datosPOST){
-		if(($datosviejos->tipofactura == 1) && ($datosnuevos->tipofactura > 1)){
+		if(($datosviejos->tipofactura == 1) && ($datosnuevos->tipofactura == 3)){
+			
 			
 			//detalle del asiento de la cuenta al impuesto, se borra ya que se pasa  a una factura tipo B 
 			//y no se contabiliza el crédito fiscal en este caso
@@ -738,17 +774,16 @@ public function movCaja($model,$datosPOST){
 			// detalle asiento de la cuenta relacionada tambien cuando cambia la cuenta_idcuenta
 			$this->updateTotalAsVta($datosviejos, $datosnuevos);
 		}
-		if(($datosviejos->tipofactura > 1 ) && ($datosnuevos->tipofactura == 1)){
+		if(($datosviejos->tipofactura == 3 ) && ($datosnuevos->tipofactura == 1)){
 			
 			//detalle asiento nuevo para el IVA
 			$DeAsIVA=new Detalleasiento;
-			$totaliva=$datosnuevos->ivatotal;
 			$DeAsIVA->debe=$datosnuevos->ivatotal; //por que el iva es un credito fiscal
 			$DeAsIVA->cuenta_idcuenta=13;//113100 Iva - Crédito Fiscal
 			$DeAsIVA->asiento_idasiento=$datosviejos->asiento_idasiento;
 			$DeAsIVA->save();
 			
-			$this->ivamovimiento($datosnuevos, $datosPOST);
+			//$this->updateIvaMovimiento($datosviejos, $datosnuevos);
 		//detalle asiento de retenciones IIBB
 			if($datosnuevos->importeIIBB != null){
 				$detAs3=new Detalleasiento;

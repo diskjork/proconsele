@@ -83,7 +83,7 @@ abstract class BaseOrdendepago extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort' => array(
-					'defaultOrder'=>'fecha ASC',
+					'defaultOrder'=>'fecha DESC',
 			)
 		));
 	}

@@ -328,6 +328,14 @@ public function labelEstado($data, $row){
 				$text="Cobrado-Banco";
 				return $text;
 				break;
+			case '6': //cheque endozado
+				$text="Rechazado";
+				return $text;
+				break;
+			case '7':  //cheque depositado
+				$text="Rechazado";
+				return $text;
+				break;
 		}
 	}
 	public function actionAcreditar($id){
@@ -858,5 +866,162 @@ public function labelEstado($data, $row){
 		} 
 	}
 	}
+
+	public function actionRechazar($id){
+		$model=$this->loadModel($id);
+		//$this->performAjaxValidation($model);
+		
+		if (isset($_POST['Cheque'])) {
+		
+		
+			 $model->attributes=$_POST['Cheque'];
+			// $model->estado=6; // cheque rechazado
+		
+			if ($model->validate()) {
+				$importe=$model->debe;
+				$asie=new Asiento;
+				$asie->fecha=$_POST['Cheque']['fecharechazado'];
+				$asie->descripcion="Cheque rechazado de ".$model->clienteIdcliente->nombre;
+				$asie->idcheque="r".$model->idcheque;
+				$asie->save();
+				$model->asiento_idasiento=$asie->idasiento;
+				$DA=new Detalleasiento;
+				$DA->asiento_idasiento=$asie->idasiento;
+				$DA->cuenta_idcuenta=168; //Cuenta cheque rechazados 710000
+				$DA->debe=$importe;
+				$DA2=new Detalleasiento;
+				$DA2->asiento_idasiento=$asie->idasiento;
+			 if($model->estado == 4){  //es un cheque endozado?
+				$DA2->cuenta_idcuenta=48; //211100 Proveedores compras varias
+				$model->estado=6; // cheque(endozado) rechazado
+				$model->save();
+			 }elseif($model->estado == 5){ // el cheque depositado fue rechazado
+			 	$mov=Movimientobanco::model()->find("cheque_idcheque=:id",array(':id'=>$model->idcheque));
+				$DA2->cuenta_idcuenta=$mov->ctabancariaIdctabancaria->cuenta_idcuenta; //ctabancaria y banco donde fue depositado el cheque
+				$model->estado=7; // cheque(depositado) rechazado 
+				$model->save();
+			 }
+				$DA2->haber=$importe;
+				$DA->save();
+				$DA2->save();
+				
+				$DA3=new Detalleasiento;
+				$DA3->asiento_idasiento=$asie->idasiento;
+				$DA3->cuenta_idcuenta=11;  //112100 deudores por venta
+				$DA3->debe=$importe;
+				$DA3->save();
+				$DA4=new Detalleasiento;
+				$DA4->asiento_idasiento=$asie->idasiento;
+				$DA4->cuenta_idcuenta=168; //Cuenta cheque rechazados 710000
+				$DA4->haber=$importe;
+				$DA4->save();
+			 if($model->estado == 6){  //es un cheque endozado?
+				$ctacteprov=Ctacteprov::model()->find("proveedor_idproveedor=:id",array(':id'=>$model->proveedor_idproveedor));
+				if(isset($ctacteprov)){
+				$Dctacteprov=new Detallectacteprov;
+				$Dctacteprov->ctacteprov_idctacteprov=$ctacteprov->idctacteprov;
+				$Dctacteprov->haber=$importe;
+				$Dctacteprov->descripcion="Cheque rechazado de ".$model->clienteIdcliente->nombre;
+				$Dctacteprov->tipo=4; //cheque rechazado
+				$Dctacteprov->fecha=$_POST['Cheque']['fecharechazado'];
+				$Dctacteprov->iddocumento=$model->idcheque;
+				$Dctacteprov->save();
+				$ctacteprov->haber=$ctacteprov->haber + $importe;
+				$ctacteprov->saldo=$ctacteprov->debe - $ctacteprov->haber;
+				$ctacteprov->save();
+				}
+			  }elseif($model->estado == 7){ // el cheque depositado fue rechazado
+			   $newMov=new  Movimientobanco;
+			   $newMov->fecha=$_POST['Cheque']['fecharechazado'];
+			   $newMov->descripcion="Cheque rechazado de ".$model->clienteIdcliente;
+			   $newMov->debeohaber=1; //haber
+			   $newMov->haber=$importe;
+			   $newMov->ctabancaria_idctabancaria=$mov->ctabancaria_idctabancaria;
+			   $newMov->cuenta_idcuenta=168; //Cuenta cheque rechazados 710000
+			   $newMov->chequerechazado=$model->idcheque;
+			   $newMov->save();
+			  // print_r($newMov->getErrors());die();
+			  }
+				$ctactecliente=Ctactecliente::model()->find("cliente_idcliente=:id",
+						array(':id'=>$model->cliente_idcliente));
+				$Dctactecliente=new Detallectactecliente;
+				$Dctactecliente->fecha=$_POST['Cheque']['fecharechazado'];
+				$Dctactecliente->debe=$importe;
+				$Dctactecliente->tipo=4;// cheque rechazado
+				$Dctactecliente->descripcion="Cheque rechazado N°: ".$model->nrocheque;
+				$Dctactecliente->iddocumento=$model->idcheque;
+				$Dctactecliente->ctactecliente_idctactecliente=$ctactecliente->idctactecliente;
+				$Dctactecliente->save();
+				$ctactecliente->debe=$ctactecliente->debe + $importe;
+				$ctactecliente->saldo=$ctactecliente->debe - $ctactecliente->haber;
+				$ctactecliente->save();
+				$this->redirect(Yii::app()->request->baseUrl.'/cheque/recibido');
+			}
+		
+		}	
+				
+		$this->render('rechazar',array(
+			'model'=>$model,
+		));
+	}
+	
+	public function actionCanrechazar($id){
+		$model=$this->loadModel($id);
+		$importe=$model->debe;
+		$asiento=Asiento::model()->find("idcheque=:id", array(':id'=>"r".$model->idcheque));
+		
+		if($model->estado == 6){ // cheque endozado (rechazado)
+			$ctacteprov=Ctacteprov::model()->find("proveedor_idproveedor=:id",array(':id'=>$model->proveedor_idproveedor));
+			if(isset($ctacteprov)){
+				$deCtaCteprov=Detallectacteprov::model()->find("iddocumento=:id and
+														 ctacteprov_idctacteprov=:ctacteprov and
+														 tipo=:tipo", 
+													array(':id'=>$model->idcheque,
+														  ':ctacteprov'=>$ctacteprov->idctacteprov,
+														  ':tipo'=>4)); //cheque rechazado
+				if(isset($deCtaCteprov)){
+					$deCtaCteprov->delete();
+					$ctacteprov->haber=$ctacteprov->haber - $importe;
+					$ctacteprov->saldo=$ctacteprov->debe - $ctacteprov->haber;
+					$model->estado=4;
+					$ctacteprov->save();				
+				}
+			}
+			
+			
+		} elseif($model->estado == 7) {// cheque depositado rechazado
+			$movB=Movimientobanco::model()->find("chequerechazado=:id",array(':id'=>$model->idcheque));
+			if(isset($movB)){
+				$movB->delete();
+			$model->estado=5;
+			
+			}
+		}
+		
+		$ctactecliente=Ctactecliente::model()->find("cliente_idcliente=:id ",
+						array(':id'=>$model->cliente_idcliente));
+		if(isset($ctactecliente)){
+			$deCtactecliente=Detallectactecliente::model()->find("iddocumento=:id and
+													ctactecliente_idctactecliente=:ctactecliente and
+													tipo=:tipo",
+						array(':id'=>$model->idcheque,
+							  ':ctactecliente'=>$ctactecliente->idctactecliente,
+							  ':tipo'=>4));
+			if(isset($deCtactecliente)){
+				if($deCtactecliente->delete()){
+					$ctactecliente->debe=$ctactecliente->debe - $importe;
+					$ctactecliente->saldo=$ctactecliente->debe - $ctactecliente->haber;
+					$ctactecliente->save();
+				}
+			}
+			
+		    	$model->comentario="";
+				if($asiento->delete()){
+			    	if($model->save()){
+						echo "true";
+					}
+				}
+			}	
+		}
 	
 }//end app
