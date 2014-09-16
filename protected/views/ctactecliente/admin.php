@@ -3,6 +3,8 @@
 /* @var $model Ctactecliente */
 
 ?>
+<?php // Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/scroll/dataBase.js', CClientScript::POS_HEAD);?>
+<?php // Yii::app()->clientScript->registerScriptFile(Yii::app()->request->baseUrl.'/js_plugin/ccCliente.js', CClientScript::POS_HEAD);?>
 <?php
 $this->menu=array(
 	array('label'=>'Cta. Cte. - Clientes', 'url'=>array('admin'),	'active' => true,
@@ -77,8 +79,14 @@ $columnas=array(
 	'filter'=>$model,
 	'columns'=>$columnas,
 	'fixedHeader' => false,
+	/*'afterAjaxUpdate' =>'function(){ $("#ctactecliente-grid > table").dataTable( {
+        "scrollY":        "200px",
+        "scrollCollapse": true,
+        "paging":         false
+    } );}',*/
     'headerOffset' => 40, // 40px is the height of the main navigation at bootstrap
     'template' => "{summary}{items}{pager}",
 	'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
-		
-)); ?>
+	 
+  ));	
+?>

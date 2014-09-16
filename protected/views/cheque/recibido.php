@@ -31,7 +31,7 @@ $this->menu=array(
 
 <?php 
 	$dataProvider= $model->search($model->debeohaber=0);
-	$dataProvider->setPagination(array('pageSize'=>20));
+	$dataProvider->setPagination(array('pageSize'=>30));
 	$dataArray=$dataProvider->getData();
 	$dataDebeTotal=0;$dataHaberTotal=0;
 
@@ -126,7 +126,7 @@ $columnas=array(
 			'header'=>'Opciones',
 			'class'=>'bootstrap.widgets.TbButtonColumn',
 			'htmlOptions' => array('style' =>'text-align: right'),
-			'template'=>'{view} {update}  {acreditar} {canAcreditarCaja} {canAcreditarBanco}',
+			'template'=>'{view} {update}  {acreditar} {canAcreditarCaja} {canAcreditarBanco} {rechazado} {canrechazado}',
 			
 			'buttons' => array(
 				'view'=>
@@ -205,6 +205,40 @@ $columnas=array(
 	                  			),	
 		                  	),
 		              	),
+		           'rechazado'=>array(
+	                  	'label'=>'Marcar como cheque rechazado',
+	                    'icon'=>TbHtml::ICON_RETWEET,
+						'visible'=>'$data->estado == 4 || $data->estado == 5',
+	                  	'url'=>'Yii::app()->createUrl("cheque/rechazar", array("id"=>$data->idcheque))',
+	                  
+		              	),
+		            'canrechazado'=>array(
+	                  	'label'=>'Cancelar rechazo de cheque',
+	                    'icon'=>TbHtml::ICON_RANDOM,
+						'visible'=>'$data->estado == 6 || $data->estado == 7',
+	                  	'url'=>'Yii::app()->createUrl("cheque/canrechazar", array("id"=>$data->idcheque))',
+	                  	'options'=>array(
+	                  		'confirm' => 'Está seguro de cancelar el rechazo del cheque?',
+		                  		'ajax' => array(
+		                            'type' => 'POST',
+		                            'url' => "js:$(this).attr('href')",
+		              				'error'=>'function(jqXHR ,textStatus,errorThrown){alert(jqXHR.responseText);}',
+		              				'success' => 'function(data){
+	                                	if(data == "true"){
+		                                  $.fn.yiiGridView.update("cheque-grid");
+		                                  alert("Fue cancelado con éxito!");
+		                                  return false;
+	                                	} else {
+	                                		$.fn.yiiGridView.update("cheque-grid");
+	                                		alert("No pudo cancelar el chechazo.");
+	                                		return false;
+	                                	} 
+	                                }',
+		              			
+	                  			),	
+		                  	),
+		              	),
+		             
 	             )
 			),
 		

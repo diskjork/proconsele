@@ -65,7 +65,7 @@ function newElem(idinput){
 		
 	var cTR=$("table.table.mmf_table > tbody > tr").size();
 	
-		var n=1+ 19*(cTR-1);
+		var n=1+ 27*(cTR-1);
 		var id_input=$("td.mmf_cell:eq("+n+") > select").attr("id");
 
 		if(id_input == null){
@@ -90,6 +90,14 @@ function newElem(idinput){
 		var ivafecha=viewid(0,0,id,18);
 		var ivacomprelac=viewid(0,0,id,19);
 		var ivatasa=viewid(0,0,id,20);
+		var gannrocomp=viewid(0,0,id,21);
+		var ganfecha=viewid(0,0,id,22);
+		var gancomprelac=viewid(0,0,id,23);
+		var gantasa=viewid(0,0,id,24);
+		var patrnrocomp=viewid(0,0,id,25);
+		var patrfecha=viewid(0,0,id,26);
+		var patrcomprelac=viewid(0,0,id,27);
+		var patrtasa=viewid(0,0,id,28);
 	} else {
 		var id_input=idinput;
 		//alert(id_input);
@@ -112,6 +120,14 @@ function newElem(idinput){
 		var ivafecha=viewid(1,1,id,18);
 		var ivacomprelac=viewid(1,1,id,19);
 		var ivatasa=viewid(1,1,id,20);
+		var gannrocomp=viewid(1,1,id,21);
+		var ganfecha=viewid(1,1,id,22);
+		var gancomprelac=viewid(1,1,id,23);
+		var gantasa=viewid(1,1,id,24);
+		var patrnrocomp=viewid(1,1,id,25);
+		var patrfecha=viewid(1,1,id,26);
+		var patrcomprelac=viewid(1,1,id,27);
+		var patrtasa=viewid(1,1,id,28);
 	}
 		//alert(id_input);
 		
@@ -174,6 +190,30 @@ function newElem(idinput){
 
 		$("#"+ivatasa).parent().removeAttr("style");
 		$("#"+ivatasa).parent().css("display","none");
+
+		$("#"+gannrocomp).parent().removeAttr("style");
+		$("#"+gannrocomp).parent().css("display","none");
+
+		$("#"+ganfecha).parent().removeAttr("style");
+		$("#"+ganfecha).parent().css("display","none");
+
+		$("#"+gancomprelac).parent().removeAttr("style");
+		$("#"+gancomprelac).parent().css("display","none");
+
+		$("#"+gantasa).parent().removeAttr("style");
+		$("#"+gantasa).parent().css("display","none");
+
+		$("#"+patrnrocomp).parent().removeAttr("style");
+		$("#"+patrnrocomp).parent().css("display","none");
+
+		$("#"+patrfecha).parent().removeAttr("style");
+		$("#"+patrfecha).parent().css("display","none");
+
+		$("#"+patrcomprelac).parent().removeAttr("style");
+		$("#"+patrcomprelac).parent().css("display","none");
+
+		$("#"+patrtasa).parent().removeAttr("style");
+		$("#"+patrtasa).parent().css("display","none");
 		
 }
 
@@ -197,6 +237,14 @@ function seleccion(obj){
 	var ivafecha=viewid(1,1,id,18);
 	var ivacomprelac=viewid(1,1,id,19);
 	var ivatasa=viewid(1,1,id,20);
+	var gannrocomp=viewid(1,1,id,21);
+	var ganfecha=viewid(1,1,id,22);
+	var gancomprelac=viewid(1,1,id,23);
+	var gantasa=viewid(1,1,id,24);
+	var patrnrocomp=viewid(1,1,id,25);
+	var patrfecha=viewid(1,1,id,26);
+	var patrcomprelac=viewid(1,1,id,27);
+	var patrtasa=viewid(1,1,id,28);
 	valor=parseInt(valor);
 	switch(valor){
 		case (0): //efectivo
@@ -343,6 +391,68 @@ function seleccion(obj){
 			$("#"+id_impor).parent().css("text-align","left");
 			
 			break;
+		case (5): //GANANCIAS
+			newElem(id);
+			$("#"+gannrocomp).parent().removeAttr("style");
+			$("#"+gannrocomp).parent().find('label').html("Nro.Compr.R.Ganancias").remove();
+			$("#"+gannrocomp).parent().prepend("<label>Nro.Compr.R.Ganancias</label>");
+			$("#"+gannrocomp).parent().css("text-align","left");
+
+			$("#"+ganfecha).parent().removeAttr("style");
+			$("#"+ganfecha).parent().find('label').html("Fecha").remove();
+			$("#"+ganfecha).parent().css("width","70px");
+			$("#"+ganfecha).parent().find('input').css("width","90%");
+			$("#"+ganfecha).parent().prepend("<label>Fecha</label>");
+			$("#"+ganfecha).parent().find('label').css("width","70px");
+			$("#"+ganfecha).parent().css("text-align","left");
+			
+			$("#"+gancomprelac).parent().removeAttr("style");
+			$("#"+gancomprelac).parent().find('label').html("Compr.Relac.").remove();
+			$("#"+gancomprelac).parent().prepend("<label>Compr.Relac.</label>");
+			$("#"+gancomprelac).parent().css("text-align","left");
+
+			$("#"+gantasa).parent().removeAttr("style");
+			$("#"+gantasa).parent().find('label').html("Tasa %").remove();
+			$("#"+gantasa).parent().prepend("<label>Tasa %</label>");
+			$("#"+gantasa).parent().css("text-align","left");
+
+			$("#"+id_impor).parent().removeAttr("style");
+			$("#"+id_impor).parent().find('label').html("Importe").remove();
+			$("#"+id_impor).parent().prepend("<label>Importe</label>");
+			$("#"+id_impor).parent().css("text-align","left");
+			
+			break;
+		case (6): // RETENCIONES PATRONALES
+			newElem(id);
+			$("#"+patrnrocomp).parent().removeAttr("style");
+			$("#"+patrnrocomp).parent().find('label').html("Nro.Compr.C.Patronales").remove();
+			$("#"+patrnrocomp).parent().prepend("<label>Nro.Compr.C.Patronales</label>");
+			$("#"+patrnrocomp).parent().css("text-align","left");
+
+			$("#"+patrfecha).parent().removeAttr("style");
+			$("#"+patrfecha).parent().find('label').html("Fecha").remove();
+			$("#"+patrfecha).parent().css("width","70px");
+			$("#"+patrfecha).parent().find('input').css("width","90%");
+			$("#"+patrfecha).parent().prepend("<label>Fecha</label>");
+			$("#"+patrfecha).parent().find('label').css("width","70px");
+			$("#"+patrfecha).parent().css("text-align","left");
+			
+			$("#"+patrcomprelac).parent().removeAttr("style");
+			$("#"+patrcomprelac).parent().find('label').html("Compr.Relac.").remove();
+			$("#"+patrcomprelac).parent().prepend("<label>Compr.Relac.</label>");
+			$("#"+patrcomprelac).parent().css("text-align","left");
+
+			$("#"+patrtasa).parent().removeAttr("style");
+			$("#"+patrtasa).parent().find('label').html("Tasa %").remove();
+			$("#"+patrtasa).parent().prepend("<label>Tasa %</label>");
+			$("#"+patrtasa).parent().css("text-align","left");
+
+			$("#"+id_impor).parent().removeAttr("style");
+			$("#"+id_impor).parent().find('label').html("Importe").remove();
+			$("#"+id_impor).parent().prepend("<label>Importe</label>");
+			$("#"+id_impor).parent().css("text-align","left");
+			
+			break;
 
 	}
 
@@ -354,8 +464,8 @@ function sumatotal(){
 	if(cTR != 0){
 	var total=0;
 	for(i=0;i < cTR;i++){
-		var n=17;
-		n=n+(19*i);
+		var n=25; //17
+		n=n+(27*i); //19
 		var subtotal=parseFloat($( "td.mmf_cell:eq("+n+") > input" ).val());
 		if($.isNumeric(subtotal))
 		total=total+subtotal;
@@ -372,7 +482,7 @@ function elementosnovalidados(){
 		
 		for(i=0;i < cTR-1;i++){
 		var n=0;
-		n=n+(19*i);
+		n=n+(27*i); //19
 		var valor=parseFloat($( "td.mmf_cell:eq("+n+") > select" ).val());
 		var id=$( "td.mmf_cell:eq("+n+") > select" ).attr("id");
 		obj={id:id,val:valor};
@@ -510,6 +620,44 @@ function viewid(cantidad1,cantidad2, id , atributo){
 				return id_ivatasa;
 				//console.log(ivafecha);
 				break;
+			case (21): //gan número de comprobante
+				var id_gannrocomp="Detallecobranza"+indexid+"gannrocomp";
+				return id_gannrocomp;
+				
+				break;
+			case (22): //ganancia fecha del comprobante
+				var id_ganfecha="Detallecobranza"+indexid+"ganfecha";
+				return id_ganfecha;
+				
+				break;
+			case (23): //ganancia número de comprobante
+				var id_gancomprelac="Detallecobranza"+indexid+"gancomprelac";
+				return id_gancomprelac;
+				
+				break;
+			case (24): //ganancia tasa de retencion
+				var id_gantasa="Detallecobranza"+indexid+"gantasa";
+				return id_gantasa;
+			case (25): //patr número de comprobante
+				var id_patrnrocomp="Detallecobranza"+indexid+"patrnrocomp";
+				return id_patrnrocomp;
+				
+				break;
+			case (26): //patrancia fecha del comprobante
+				var id_patrfecha="Detallecobranza"+indexid+"patrfecha";
+				return id_patrfecha;
+				
+				break;
+			case (27): //patrancia número de comprobante
+				var id_patrcomprelac="Detallecobranza"+indexid+"patrcomprelac";
+				return id_patrcomprelac;
+				
+				break;
+			case (28): //patrancia tasa de retencion
+				var id_patrtasa="Detallecobranza"+indexid+"patrtasa";
+				return id_patrtasa;
+				
+				break;
 			} 
 	}else {
 		indexid = id_input.substring(cant2,id_input.length);
@@ -597,6 +745,46 @@ function viewid(cantidad1,cantidad2, id , atributo){
 			return id_ivatasa;
 			//console.log(ivafecha);
 			break;
+		case (21): //gan número de comprobante
+			var id_gannrocomp="Detallecobranza_gannrocomp"+indexid;
+			return id_gannrocomp;
+			//console.log(id_gannrocomp);
+			break;
+		case (22): //gan fecha del comprobante
+			var id_ganfecha="Detallecobranza_ganfecha"+indexid;
+			return id_ganfecha;
+			//console.log(ganfecha);
+			break;
+		case (23): //gan número de comprobante
+			var id_gancomprelac="Detallecobranza_gancomprelac"+indexid;
+			return id_gancomprelac;
+			//console.log(ganfecha);
+			break;
+		case (24): //gan tasa de retencion
+			var id_gantasa="Detallecobranza_gantasa"+indexid;
+			return id_gantasa;
+			//console.log(ganfecha);
+			break;
+		case (25): //patr número de comprobante
+			var id_patrnrocomp="Detallecobranza_patrnrocomp"+indexid;
+			return id_patrnrocomp;
+			//console.log(id_patrnrocomp);
+			break;
+		case (26): //patr fecha del comprobante
+			var id_patrfecha="Detallecobranza_patrfecha"+indexid;
+			return id_patrfecha;
+			//console.log(patrfecha);
+			break;
+		case (27): //patr número de comprobante
+			var id_patrcomprelac="Detallecobranza_patrcomprelac"+indexid;
+			return id_patrcomprelac;
+			//console.log(patrfecha);
+			break;
+		case (28): //patr tasa de retencion
+			var id_patrtasa="Detallecobranza_patrtasa"+indexid;
+			return id_patrtasa;
+			//console.log(patrfecha);
+			break;
 		}
 		
 	}
@@ -622,6 +810,14 @@ function borradoinputs(id){
 	var ivafecha=viewid(1,1,id,18);
 	var ivacomprelac=viewid(1,1,id,19);
 	var ivatasa=viewid(1,1,id,20);
+	var gannrocomp=viewid(1,1,id,21);
+	var ganfecha=viewid(1,1,id,22);
+	var gancomprelac=viewid(1,1,id,23);
+	var gantasa=viewid(1,1,id,24);
+	var patrnrocomp=viewid(1,1,id,25);
+	var patrfecha=viewid(1,1,id,26);
+	var patrcomprelac=viewid(1,1,id,27);
+	var patrtasa=viewid(1,1,id,28);
 
 	$("#"+bancoT).val("");
 	$("#"+banco).val("");
@@ -640,6 +836,14 @@ function borradoinputs(id){
 	$("#"+ivafecha).val("");
 	$("#"+ivacomprelac).val("");
 	$("#"+ivatasa).val("");
+	$("#"+gancomprelac).val("");
+	$("#"+ganfecha).val("");
+	$("#"+gancomprelac).val("");
+	$("#"+gantasa).val("");
+	$("#"+patrcomprelac).val("");
+	$("#"+patrfecha).val("");
+	$("#"+patrcomprelac).val("");
+	$("#"+patrtasa).val("");
 }
 
 function botonsubmit(){

@@ -44,7 +44,7 @@ if(isset($model->interes)){
 	}
 if(isset($model->impuestointerno)){
 		Yii::app()->clientScript->registerScript('impint',"
-				$('#Compras_impInt').prop('checked',true);
+				$('#Compras_impint').prop('checked',true);
 				 $('#Compras_impuestointerno').show();
           $('#totaldiv-impint').show();
 				//$('div .form-actions').css('background-color','transparent');
@@ -269,7 +269,7 @@ if(isset($model->impuestointerno)){
 								  //'name'=>'cuenta_idcuenta',
 								 'model'=>$model,
 								 'attribute'=>'iva',
-								  'data' => array("1.21"=>"21%","1.105"=>"10,5%","1"=>"Exento","1.27"=>"27%"),
+								  'data' => array("1.21"=>"21%","1.105"=>"10,5%","1.27"=>"27%"),
 								
 								  'options'=>array(
 									   //'placeholder'=>'I.V.A.',

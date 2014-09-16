@@ -56,12 +56,12 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 	public function rules() {
 		return array(
 			array('fecha, debeohaber, ctabancaria_idctabancaria, cuenta_idcuenta, descripcion', 'required'),
-			array('debeohaber, ctabancaria_idctabancaria, cheque_idcheque, cuenta_idcuenta, asiento_idasiento, iddetallecobranza, iddetalleordendepago', 'numerical', 'integerOnly'=>true),
+			array('debeohaber, ctabancaria_idctabancaria, cheque_idcheque, cuenta_idcuenta, asiento_idasiento, iddetallecobranza, iddetalleordendepago, desdeasiento, chequerechazado', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('descripcion', 'length', 'max'=>100),
 			array('numerooperacion', 'length', 'max'=>20),
-			array('descripcion, debe, haber, numerooperacion, cheque_idcheque,  asiento_idasiento, iddetallecobranza, iddetalleordendepago', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idmovimientobanco, descripcion, fecha, debeohaber, debe, haber, numerooperacion, ctabancaria_idctabancaria, cheque_idcheque, cuenta_idcuenta, asiento_idasiento, iddetallecobranza, iddetalleordendepago', 'safe', 'on'=>'search'),
+			array('descripcion, debe, haber, numerooperacion, cheque_idcheque,  asiento_idasiento, iddetallecobranza, iddetalleordendepago, desdeasiento, chequerechazado', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idmovimientobanco, descripcion, fecha, debeohaber, debe, haber, numerooperacion, ctabancaria_idctabancaria, cheque_idcheque, cuenta_idcuenta, asiento_idasiento, iddetallecobranza, iddetalleordendepago, desdeasiento, chequerechazado', 'safe', 'on'=>'search'),
 			array('fechacobro','safe'),
 			array('fechacobro', 'length', 'max'=>20),
 			array('fechacobro','compararFechas'),
@@ -132,6 +132,9 @@ abstract class BaseMovimientobanco extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort' => array(
+					'defaultOrder'=>array('fecha'=>CSort::SORT_ASC),
+			)
 		));
 	}
 //para listar los ctasbancarias cargadas en solapas	
@@ -200,6 +203,28 @@ public function compararFechas($attribute,$params)
                 return new CActiveDataProvider($this, array(
                         'criteria'=>$criteria,
                 ));
-        }	
+        }
+        public $saldo,$descr;
+     public  function generarGrillaSaldos($anio, $mes,$idcuenta){
+        	      	
+        	$sql1="call saldo_banco('".$anio."','".$mes."',".$idcuenta.");";
+			$cant=Yii::app()->db->createCommand($sql1)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql1, array(
+				'keyField' => 'idmovimientobanco', 
+                'totalItemCount' => $cant,
+				'sort'=>array(
+					'defaultOrder' => array(
+                            'fecha' => CSort::SORT_ASC, //default sort value
+                        ),
+					'attributes'=>array(
+					             'idmovimientobanco','descr', 'debe', 'haber','saldo'
+					        ),
+			     ), 
+ 				'pagination'=>array(
+			        'pageSize'=>$cant,
+			    ),
+				));
+			return $dataProvider;
+        }  
 
 }

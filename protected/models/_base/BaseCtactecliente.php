@@ -100,7 +100,7 @@ abstract class BaseCtactecliente extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort'=>array(
-            	'defaultOrder'=>'nombre ASC',
+            	'defaultOrder'=>array('nombre'=>CSort::SORT_ASC),
 			),
 		));
 	}

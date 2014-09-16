@@ -73,7 +73,8 @@ $gridColumns= array(
 	                    		    $data->notadebito_idnotadebito == NULL AND
 	                    		    $data->notacreditoprov_idnotacreditoprov == NULL AND
 	                    		    $data->notadebitoprov_idnotadebitoprov == NULL AND
-	                    		    $data->notacredito_idnotacredito == NULL
+	                    		    $data->notacredito_idnotacredito == NULL AND
+	                    		    $data->idcheque == NULL
 	                    		    ',
 				 ),
                  'update'=>array(
@@ -88,7 +89,8 @@ $gridColumns= array(
 	                    		    $data->notadebito_idnotadebito == NULL AND
 	                    		    $data->notacreditoprov_idnotacreditoprov == NULL AND
 	                    		    $data->notadebitoprov_idnotadebitoprov == NULL AND
-	                    		    $data->notacredito_idnotacredito == NULL
+	                    		    $data->notacredito_idnotacredito == NULL AND
+	                    		    $data->idcheque == NULL
 	                    		    ',
 						'url'=> 'Yii::app()->createUrl("asiento/update",
 								 array(	"id"=>$data->idasiento,

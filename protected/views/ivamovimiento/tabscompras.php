@@ -89,4 +89,5 @@ for($i=0;$i<12;$i++){
 		'type' => TbHtml::NAV_TYPE_TABS,
 		'tabs'=>$arregloTabsMeses,
 	));
+	
 ?>

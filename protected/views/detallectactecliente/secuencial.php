@@ -1,26 +1,58 @@
 <?php
-
-$datos= $model->generarGrillaSaldos($model->ctacteprov_idctacteprov,$anioTab,$mesTab,0);
-
-
-$datos_array=$datos->data;
-$cant=count($datos_array);	
-
-$datos->setPagination(array('pageSize'=>$cant)); 
+$idctacte=$_GET['id'];
+$nombre=$_GET['nombre'];
+$this->menu=array(
+	array(
+		'label'=>'Ctas. Ctes. Cliente', 
+		'url'=>Yii::app()->createUrl('ctactecliente/admin'),
+	),
+	array(
+		'label'=>'Vista filtrada', 
+		'url'=>Yii::app()->createUrl('detallectactecliente/admin',array("id"=>$idctacte,"nombre"=>$nombre) ),
+	),
+	array(
+		'label'=>'Nueva Cobranza', 
+		'url'=>Yii::app()->createUrl("cobranza/create")
+		),
+	array(
+		'label'=>'Nueva Nota Crédito', 
+		'url'=>Yii::app()->createUrl("notacredito/create")
+		),	
+	array(
+		'label'=>'Nueva Nota Débito', 
+		'url'=>Yii::app()->createUrl("notadebito/create")
+		),
+	
+);
 ?>
-<<div id="iconoExportar" align="right">
+<h5 class="well well-small">CTA. CTE. - CLIENTE - <?php echo $nombre;?></h5>
+<br>
+<div id="iconoExportar" align="right">
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", 
 array("color" => TbHtml::LABEL_COLOR_SUCCESS)),
-array('Excel','mesTab'=>$mesTab,
-			  'anioTab'=>$anioTab,
-			  'idctacteprov'=>$model->ctacteprov_idctacteprov,
+array('Excel','mesTab'=>'08',
+			  'anioTab'=>'2014',
+			  'idctactecliente'=>$idctacte,
 			  'nombre'=>$nombre,
-			  'caso'=>0),
+			  'caso'=>1),
 'Exportar',
 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
 </div>
 <?php
-
+$datos= $model->generarGrillaSaldos_secuencial($idctacte,'2014','08',1)->data;
+$cant=count($datos);
+			$datos=new CArrayDataProvider($datos, array(
+				    'keyField'=>'iddetallectactecliente',
+				    'sort'=>array(
+				        'attributes'=>array(
+				           'iddetallectactecliente','fecha', 'descripcion',
+				        ),
+				        
+				    ),
+				    'pagination'=>array(
+				        'pageSize'=>40,
+				    ),
+				));
 $columnas=array(
 		array(
 	    	'value'=>'$this->grid->dataProvider->pagination->currentPage*
@@ -74,36 +106,36 @@ $columnas=array(
         	'footerHtmlOptions'=>array('colspan'=>2),
 			'class'=>'bootstrap.widgets.TbButtonColumn',
         	'deleteConfirmation'=>'Seguro que quiere eliminar el elemento?',
-			'template'=>'{update}{updatefact}{delete}{deleteordendepago}{actNC}{actND}{borrarND}{borrarNC}',
+			'template'=>'{update}{updatefact}{delete}{deletecobranza}{actNC}{actND}{borrarND}{borrarNC}',
 			'buttons' => array(
 				'update'=>array(
-					'label'=>'Modificar ordendepago',
+					'label'=>'Modificar Cobranza',
 	                    //'icon'=>TbHtml::ICON_MINUS_SIGN,
 	                    'visible'=>'$data["tipo"] == 1',
-						'url'=> 'Yii::app()->createUrl("ordendepago/update",
-								 array(	"id"=>$data["ordendepago_idordendepago"],
-								 		"idctacte"=>$data["ctacteprov_idctacteprov"],
-								 		"nombre"=>$data["proveedor"],
+						'url'=> 'Yii::app()->createUrl("cobranza/update",
+								 array(	"id"=>$data["cobranza_idcobranza"],
+								 		"idctacte"=>$data["ctactecliente_idctactecliente"],
+								 		"nombre"=>$data["cliente"],
 								 		))',
 						
 	                  ),
 	            'updatefact'=>array(
-					'label'=>'Modificar compra',
+					'label'=>'Modificar Factura',
 	                    'icon'=>TbHtml::ICON_PENCIL,
 	                    'visible'=>'$data["tipo"] == 0',
-						'url'=> 'Yii::app()->createUrl("compra/update",
-								 array(	"id"=>$data["compra_idcompra"],
+						'url'=> 'Yii::app()->createUrl("factura/update",
+								 array(	"id"=>$data["factura_idfactura"],
 								 		
 								 		))',
 						
 	                  ),
 				'delete'=>array(
-	                  	'label'=>'Borrar compra',
+	                  	'label'=>'Borrar Factura',
 	                    //'icon'=>TbHtml::ICON_REMOVE_SIGN,
 						'visible'=>'$data["tipo"] == 0',
-	                  	'url'=>'Yii::app()->createUrl("compra/borrar", array("id"=>$data["compra_idcompra"]))',
+	                  	'url'=>'Yii::app()->createUrl("factura/borrar", array("id"=>$data["factura_idfactura"]))',
 	                  	'options'=>array(
-	                  		'confirm' => 'Está seguro de borrar la compra?',
+	                  		'confirm' => 'Está seguro de borrar la Factura?',
 		                  		'ajax' => array(
 		                            'type' => 'POST',
 		                            'url' => "js:$(this).attr('href')",
@@ -123,12 +155,12 @@ $columnas=array(
 		                  	),
 		              	),
 	            
-	            'deleteordendepago'=>array(
-					'label'=>'Borrar ordendepago',
+	            'deletecobranza'=>array(
+					'label'=>'Borrar Cobranza',
 	                    'icon'=>TbHtml::ICON_TRASH,
 	                    'visible'=>'$data["tipo"] == 1',
-						'url'=> '$this->grid->controller->createUrl("ordendepago/delete",
-								 array("id"=>$data["ordendepago_idordendepago"]))',
+						'url'=> '$this->grid->controller->createUrl("cobranza/delete",
+								 array("id"=>$data["cobranza_idcobranza"]))',
 	                   'options'=>array('class'=>'delete',
 	                  		/*	'ajax'=>array(
                                         'type'=>'GET',
@@ -143,9 +175,9 @@ $columnas=array(
 	             'actNC'=>array(
 						'label'=>'Modificar Nota Crédito',
 	                    'icon'=>TbHtml::ICON_PENCIL,
-	                    'visible'=>'$data["notacreditoprov_idnotacreditoprov"] != NULL',
-						'url'=> 'Yii::app()->createUrl("notacreditoprov/update",
-								 array(	"id"=>$data["notacreditoprov_idnotacreditoprov"],
+	                    'visible'=>'$data["notacredito_idnotacredito"] != NULL',
+						'url'=> 'Yii::app()->createUrl("notacredito/update",
+								 array(	"id"=>$data["notacredito_idnotacredito"],
 								 		"vista"=>2,
 								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',
@@ -154,8 +186,8 @@ $columnas=array(
 				  'borrarNC'=>array(
 	                  	'label'=>'Borrar Nota Crédito ',
 	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
-						'visible'=>'$data["notacreditoprov_idnotacreditoprov"] != NULL',
-	                  	'url'=>'Yii::app()->createUrl("notacreditoprov/borrar", array("id"=>$data["notacreditoprov_idnotacreditoprov"]))',
+						'visible'=>'$data["notacredito_idnotacredito"] != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notacredito/borrar", array("id"=>$data["notacredito_idnotacredito"]))',
 	                  	'options'=>array(
 	                  		'confirm' => 'Está seguro de borrar la Nota de crédito?',
 		                  		'ajax' => array(
@@ -179,9 +211,9 @@ $columnas=array(
 		         'actND'=>array(
 						'label'=>'Modificar Nota Débito',
 	                    'icon'=>TbHtml::ICON_PENCIL,
-	                    'visible'=>'$data["notadebitoprov_idnotadebitoprov"] != NULL',
-						'url'=> 'Yii::app()->createUrl("notadebitoprov/update",
-								 array(	"id"=>$data["notadebitoprov_idnotadebitoprov"],
+	                    'visible'=>'$data["notadebito_idnotadebito"] != NULL',
+						'url'=> 'Yii::app()->createUrl("notadebito/update",
+								 array(	"id"=>$data["notadebito_idnotadebito"],
 								 		"vista"=>2,
 								 		//"nombre"=>$data->ctacteprovIdctacteprov->proveedorIdproveedor->nombre,
 								 		))',
@@ -190,8 +222,8 @@ $columnas=array(
 				  'borrarND'=>array(
 	                  	'label'=>'Borrar Nota Débito',
 	                    'icon'=>TbHtml::ICON_REMOVE_SIGN,
-						'visible'=>'$data["notadebitoprov_idnotadebitoprov"] != NULL',
-	                  	'url'=>'Yii::app()->createUrl("notadebitoprov/borrar", array("id"=>$data["notadebitoprov_idnotadebitoprov"]))',
+						'visible'=>'$data["notadebito_idnotadebito"] != NULL',
+	                  	'url'=>'Yii::app()->createUrl("notadebito/borrar", array("id"=>$data["notadebito_idnotadebito"]))',
 	                  	'options'=>array(
 	                  		'confirm' => 'Está seguro de borrar la Nota de débito?',
 		                  		'ajax' => array(
@@ -217,21 +249,10 @@ $columnas=array(
 	);
 ?>
 <?php $this->widget('bootstrap.widgets.TbGridView',array(
-	//'id'=>'detallectacteprov-grid',
+	//'id'=>'detallectactecliente-grid',
 	'dataProvider'=>$datos,
-	'filter'=>$model,
+	//'filter'=>$datos,
 	'columns'=>$columnas,
-	'template' => "{items}",
+	'template' => "{items}{pager}",
 	'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
 )); ?>
-
-<script type="text/javascript">
-<!--
-/*
-var $table = $("<?php //echo "#yw".date("n",strtotime($anioTab."-".$mesTab));?>").children('table');
-var $tbody = $table.children('tbody');
-$tbody.append('<tr> <td></td> <td></td> <td></td> <td></td> <td><?php //echo "$ ".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",");?></td><td><?php //echo "$ ".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",");?></td><td colspan="2"></td>  </tr>');
-*/
-//-->
-</script>	
-

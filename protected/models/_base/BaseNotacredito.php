@@ -148,6 +148,9 @@ abstract class BaseNotacredito extends GxActiveRecord {
 
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort' => array(
+					'defaultOrder'=>array('fecha'=>CSort::SORT_ASC),
+			)
 		));
 	}
 	public function behaviors()

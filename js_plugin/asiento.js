@@ -176,6 +176,7 @@ function chekpartidadoble(){
 				//debe=$.isNumeric(debe);
 				console.log("n="+n+"\n debe="+debe);
 				totaldebe=totaldebe + debe;
+				
 			}
 		
 		
@@ -186,11 +187,14 @@ function chekpartidadoble(){
 				//haber=$.isNumeric(haber);
 				console.log("n="+n+"\n hebe="+haber);
 				totalhaber=totalhaber+haber;
+
 			}
 			
 	}
 		
 	}
+	totaldebe=totaldebe.toFixed(2);
+	totalhaber=totalhaber.toFixed(2);
 	console.log("totaldebe="+totaldebe+"\nTotalhaber="+totalhaber);
 	$("#Asiento_totalhaber").val(totalhaber);
 	$("#Asiento_totaldebe").val(totaldebe);

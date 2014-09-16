@@ -121,4 +121,39 @@ abstract class BaseDetallectacteprov extends GxActiveRecord {
                         'criteria'=>$criteria,
                 ));
         }
+   	public  $saldo;  
+    // caso variable para diferenciar lo devuelto por método, 0 filtrado por año y mes, 1 lista completa 
+	public  function generarGrillaSaldos($idcuenta,$anio, $mes, $caso){
+        	      	
+        	$sql1="call saldos_prov(".$idcuenta.",'".$anio."','".$mes."',".$caso.");";
+			$cant=Yii::app()->db->createCommand($sql1)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql1, array(
+				'keyField' => 'iddetallectacteprov', 
+				//'totalItemCount'=>$cant,
+			    'sort'=>array(
+					'defaultOrder'=>'fecha ASC'),
+			      
+			    'pagination'=>array(
+			        'pageSize'=>$cant,
+			    ),
+				));
+			return $dataProvider;
+        }
+          
+     public  function generarGrillaSaldos_secuencial($idcuenta,$anio, $mes, $caso){
+        	      	
+        	$sql1="call saldos_prov(".$idcuenta.",'".$anio."','".$mes."',".$caso.");";
+			$cant=Yii::app()->db->createCommand($sql1)->queryScalar();
+			$dataProvider=new CSqlDataProvider($sql1, array(
+				'keyField' => 'iddetallectacteprov', 
+				//'totalItemCount'=>$cant,
+			    'sort'=>array(
+					'defaultOrder'=>array('fecha'=>CSort::SORT_DESC),
+			      ),
+			    'pagination'=>array(
+			        'pageSize'=>$cant,
+			    ),
+				));
+			return $dataProvider;
+        }  
 }

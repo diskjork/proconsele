@@ -388,13 +388,21 @@ class NotadebitoController extends Controller
 			//$asiento->fecha=$fecha;
 			$asiento->save();
 			
+<<<<<<< HEAD
 		}
 
+=======
+		}	
+>>>>>>> dcac37a85c40593b29ddd3df54756029f4e214f0
 	public function actionImprimirNotaDebito($id) {
             
             $this->layout='//layouts/imprimir'; // defines el archivo protected/views/layouts/imprimir.php como layout por defecto sólo para esta acción.
             
+<<<<<<< HEAD
             $notadebito = Notacredito::model()->findByPk($id); // agregas el código a ejecutar que cargará los datos que enviarás a la vista y que generarán tu factura
+=======
+            $notadebito = Notadebito::model()->findByPk($id); // agregas el código a ejecutar que cargará los datos que enviarás a la vista y que generarán tu factura
+>>>>>>> dcac37a85c40593b29ddd3df54756029f4e214f0
            
             //CON HTML2PDF
             $html2pdf = Yii::app()->ePdf->HTML2PDF();

@@ -51,17 +51,19 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
 		return array(
 			array('tipocobranza, importe', 'required'),
 			array('tipocobranza, chequebanco, cobranza_idcobranza,  caja_idcaja, iibbnrocomp , ivanrocomp', 'numerical', 'integerOnly'=>true),
-			array('importe, iibbtasa', 'numerical'),
+			array('importe, iibbtasa,ivatasa,gantasa,patrtasa', 'numerical'),
 			array('transferenciabanco, chequetitular, chequecuittitular, iibbcomprelac, ivacomprelac', 'length', 'max'=>100),
 			array('nrocheque', 'length', 'max'=>20),
 			array('chequefechacobro, chequefechaingreso, iibbfecha', 'safe'),
-			array('transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, caja_idcaja, iibbfecha, iibbnrocomp, iibbcomprelac, iibbtasa, ivafecha, ivanrocomp, ivacomprelac, ivatasa', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('iddetallecobranza, tipocobranza, importe, transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, cobranza_idcobranza, caja_idcaja, iibbfecha, iibbnrocomp, iibbcomprelac, iibbtasa, ivafecha, ivanrocomp, ivacomprelac, ivatasa', 'safe', 'on'=>'search'),
+			array('transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, caja_idcaja, iibbfecha, iibbnrocomp, iibbcomprelac, iibbtasa, ivafecha, ivanrocomp, ivacomprelac, ivatasa,ganfecha,gannrocomp,gancomprelac,gantasa,patrfecha,patrnrocomp,patrcomprelac,patrtasa', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('iddetallecobranza, tipocobranza, importe, transferenciabanco, chequefechacobro, chequefechaingreso, nrocheque, chequebanco, chequetitular, chequecuittitular, cobranza_idcobranza, caja_idcaja, iibbfecha, iibbnrocomp, iibbcomprelac, iibbtasa, ivafecha, ivanrocomp, ivacomprelac, ivatasa,ganfecha,gannrocomp,gancomprelac,gantasa,patrfecha,patrnrocomp,patrcomprelac,patrtasa', 'safe', 'on'=>'search'),
 			array('tipocobranza','validarDatosCheque'),
 			array('tipocobranza','validarDatosTransfe'),
 			array('tipocobranza','validarDatosEfectivo'),
 			array('tipocobranza','validarDatosIIBB'),
 			array('tipocobranza','validarDatosIVA'),
+			array('tipocobranza','validarDatosGAN'),
+			array('tipocobranza','validarDatosPATR'),
 		);
 	}
 
@@ -98,6 +100,14 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
 			'ivafecha' => Yii::t('app', 'Fecha'),
 			'ivacomprelac'=> Yii::t('app', 'Compr.Relacionado'),
 			'ivatasa'=>Yii::t('app', 'Tasa %'),
+			'gannrocomp' => Yii::t('app', 'Nro.Compr'),
+			'ganfecha' => Yii::t('app', 'Fecha'),
+			'gancomprelac'=> Yii::t('app', 'Compr.Relacionado'),
+			'gantasa'=>Yii::t('app', 'Tasa %'),
+			'patrnrocomp' => Yii::t('app', 'Nro.Compr'),
+			'patrfecha' => Yii::t('app', 'Fecha'),
+			'patrcomprelac'=> Yii::t('app', 'Compr.Relacionado'),
+			'patrtasa'=>Yii::t('app', 'Tasa %'),
 			'cobranza_idcobranza' => null,
 			'cobranzaIdcobranza' => null,
 			'cajaIdcaja'=> null,
@@ -122,7 +132,18 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
 		$criteria->compare('iibbfecha', $this->iibbfecha);
 		$criteria->compare('iibbcomprelac', $this->iibbcomprelac);
 		$criteria->compare('iibbtasa', $this->iibbtasa);
-
+		$criteria->compare('ivanrocomp', $this->ivanrocomp);
+		$criteria->compare('ivafecha', $this->ivafecha);
+		$criteria->compare('ivacomprelac', $this->ivacomprelac);
+		$criteria->compare('ivatasa', $this->ivatasa);
+		$criteria->compare('gannrocomp', $this->gannrocomp);
+		$criteria->compare('ganfecha', $this->ganfecha);
+		$criteria->compare('gancomprelac', $this->gancomprelac);
+		$criteria->compare('gantasa', $this->gantasa);
+		$criteria->compare('patrnrocomp', $this->patrnrocomp);
+		$criteria->compare('patrfecha', $this->patrfecha);
+		$criteria->compare('patrcomprelac', $this->patrcomprelac);
+		$criteria->compare('patrtasa', $this->patrtasa);
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 		));
@@ -203,6 +224,36 @@ abstract class BaseDetallecobranza extends GxActiveRecord {
     				break;
     			case ($this->ivafecha == null):
     				$this->addError('ivafecha', 'Fecha No puede ser nula');
+    				break;
+    						
+    		}
+    	}
+    }
+	public function validarDatosGAN($attribute,$params){
+      	
+    	if( $this->tipocobranza == 5){
+    		
+    		switch (true){
+    			case ($this->gannrocomp == null):
+    				$this->addError('gannrocomp', 'No puede ser nulo');
+    				break;
+    			case ($this->ganfecha == null):
+    				$this->addError('ganfecha', 'Fecha No puede ser nula');
+    				break;
+    						
+    		}
+    	}
+    }
+	public function validarDatosPATR($attribute,$params){
+      	
+    	if( $this->tipocobranza == 6){
+    		
+    		switch (true){
+    			case ($this->patrnrocomp == null):
+    				$this->addError('patrnrocomp', 'No puede ser nulo');
+    				break;
+    			case ($this->patrfecha == null):
+    				$this->addError('patrfecha', 'Fecha No puede ser nula');
     				break;
     						
     		}

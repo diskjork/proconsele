@@ -31,7 +31,7 @@ if(isset($_GET['vista'])){
 	}
 	if(isset($model->impuestointerno)){
 		Yii::app()->clientScript->registerScript('impint',"
-				$('#Notacredito_impInt').prop('checked',true);
+				$('#Notacredito_impint').prop('checked',true);
 				 $('#Notacredito_impuestointerno').show();
           $('#totaldiv-impint').show();
 				//$('div .form-actions').css('background-color','transparent');
@@ -244,6 +244,12 @@ if(isset($_GET['vista'])){
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-interes"></h6>
 	</div>	
 	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-impint">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-impint">Imp.Int.</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-impint"></h6>
+	</div>	
+	</div>
 	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-netogravado">
 	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-15%;" id="label-netogravado">Neto G.</h5>
@@ -296,6 +302,12 @@ if(isset($_GET['vista'])){
 		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-interesNC"></h6>
 	</div>	
 	</div>
+	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-impintNC">
+	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
+		<h5 style="padding:0px;margin-left:-15%;" id="label-impintNC">Imp.Int.</h5>
+		<h6 style="text-align:center;margin:0;margin-left:-4px;" id="total-impintNC"></h6>
+	</div>	
+	</div>
 	<div style="float:right; margin-right:10px; margin-top:10px; display:none;" id="totaldiv-netogravadoNC">
 	<div  class=" well " style="width:60px;height:50px;padding-top:0px;text-align:center;margin-right:auto;margin-left:auto;">
 		<h5 style="padding:0px;margin-left:-15%;" id="label-netogravadoNC">Neto G.</h5>
@@ -320,7 +332,7 @@ if(isset($_GET['vista'])){
 								  //'name'=>'cuenta_idcuenta',
 								 'model'=>$model,
 								 'attribute'=>'iva',
-								  'data' => array("1.21"=>"21%","1.105"=>"10,5%"),
+								  'data' => array("1.21"=>"21%","1.105"=>"10,5%","1.27"=>"27%"),
 								
 								  'options'=>array(
 									   //'placeholder'=>'I.V.A.',
@@ -378,7 +390,7 @@ if(isset($_GET['vista'])){
 	<?php  echo $form->hiddenField($model,'importe_per_iva',array('span'=>4,)); ?>
 	<?php  echo $form->hiddenField($model,'descuento',array('span'=>4,)); ?>
 	<?php  echo $form->hiddenField($model,'interes',array('span'=>4,)); ?>
-	<?php //echo $form->hiddenField($model,'importebruto',array('span'=>5)); ?>
+	<?php echo $form->hiddenField($model,'impuestointerno',array('span'=>5)); ?>
 	<?php echo $form->hiddenField($model,'asiento_idasiento',array('span'=>5)); ?>
     <?php echo $form->hiddenField($model, 'vista', array());?>    
             

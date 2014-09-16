@@ -75,6 +75,7 @@ class OrdendepagoController extends Controller
 		
 		if (isset($_POST['Ordendepago'])) {
 			$model->attributes=$_POST['Ordendepago'];
+			$model->descripcionordendepago="Orden de pago - ".$model->ctacteprovIdctacteprov->proveedorIdproveedor->nombre;
 			//$nuevos=$this->nuevosElementosValidados($_POST['Ordendepago']);
  			
 			
@@ -173,7 +174,7 @@ public function actionUpdate($id)
 
 		if (isset($_POST['Ordendepago'])) {
 			$model->attributes=$_POST['Ordendepago'];
-		
+			$model->descripcionordendepago="Orden de pago - ".$model->ctacteprovIdctacteprov->proveedorIdproveedor->nombre;
 		//elementos ya guardados y que pueden ser modificados		
 			if (isset($_POST['Detalleordendepago']['pk__'])){
 				$cantidadElementos=count($_POST['Detalleordendepago']['pk__']); 

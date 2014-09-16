@@ -113,12 +113,14 @@ function sumatotal(){
 			TOTALdes_rec=subtotalbruto_B * Descuento;
 			subtotalbruto_B=subtotalbruto_B - TOTALdes_rec;
 			var importe_des= $.number( TOTALdes_rec, 2 );
+
 			$("#descuento_recargo_importeNC").text("-"+importe_des);
 			
 		} else {
 		// para el caso de una factura A
 		TOTALdes_rec=subtotalbruto * Descuento;
 		var importe_des= $.number( TOTALdes_rec, 2 );
+		
 		$("#descuento_recargo_importeNC").text("-"+importe_des);
 		subtotalbruto=subtotalbruto - TOTALdes_rec;
 		}
@@ -130,12 +132,14 @@ function sumatotal(){
 			TOTALdes_rec= subtotalbruto_B * Recargo;
 			subtotalbruto_B=subtotalbruto_B + TOTALdes_rec;
 			var rec_impote= $.number(TOTALdes_rec, 2 ); 
+			
 			$("#descuento_recargo_importeNC").text(rec_impote);
 		} else { 
 	// para el caso de una factura A
 		TOTALdes_rec= subtotalbruto * Recargo;
 		subtotalbruto=subtotalbruto + TOTALdes_rec;
 		var rec_impote= $.number(TOTALdes_rec, 2 ); 
+		
 		$("#descuento_recargo_importeNC").text(rec_impote);
 	}
 	}
@@ -466,6 +470,7 @@ function ajaxFactura(id, estado){
 		          if(data.tipodescrecar == 0){
 		          	$('input[name="Notacredito[tipodescrecar]"][value="0"]').attr('checked', true).attr('disabled','disabled');
 		          	$("#Notacredito_tipodescrecar_1").attr('disabled','disabled');
+		          	
 		          	$("#descuento_recargo").text("Descuento");
 					$("#desc_recar").show();
 		          	var res=data.netogravado * (data.descrecar /100);
@@ -473,8 +478,9 @@ function ajaxFactura(id, estado){
 
 		         
 		          } else if(data.tipodescrecar == 1){
-		          	$('input[name="Notacredito[tipodescrecar]"][value="1"]').attr('checked', true);
+		          	$('input[name="Notacredito[tipodescrecar]"][value="1"]').attr('checked', true).attr('disabled','disabled');
 		          	$("#Notacredito_tipodescrecar_0").attr('disabled','disabled');
+		          
 		          	$("#descuento_recargo").text("Recargo");
 					$("#desc_recar").show();
 					var res=data.netogravado * (data.descrecar /100);

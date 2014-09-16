@@ -27,7 +27,7 @@
  *
  */
 abstract class BaseCheque extends GxActiveRecord {
-	public $importe;
+	public $importe,$fecharechazado;
 	public static function model($className=__CLASS__) {
 		return parent::model($className);
 	}
@@ -50,10 +50,10 @@ abstract class BaseCheque extends GxActiveRecord {
 			array('debeohaber, Banco_idBanco, estado, proveedor_idproveedor, cliente_idcliente, chequera_idchequera, iddetallecobranza, iddetalleordendepago', 'numerical', 'integerOnly'=>true),
 			array('debe, haber', 'numerical'),
 			array('nrocheque', 'length', 'max'=>20),
-			array('titular', 'length', 'max'=>255),
+			array('titular,comentario', 'length', 'max'=>255),
 			array('cuittitular', 'length', 'max'=>50),
-			array('cuittitular, debe, haber, Banco_idBanco, proveedor_idproveedor, cliente_idcliente, chequera_idchequera, iddetallecobranza, iddetalleordendepago', 'default', 'setOnEmpty' => true, 'value' => null),
-			array('idcheque, nrocheque, titular, cuittitular, fechaingreso, fechacobro, debe, haber, debeohaber, Banco_idBanco, estado, proveedor_idproveedor, cliente_idcliente, chequera_idchequera, iddetallecobranza, iddetalleordendepago', 'safe', 'on'=>'search'),
+			array('cuittitular, debe, haber, Banco_idBanco, proveedor_idproveedor, cliente_idcliente, chequera_idchequera, iddetallecobranza, iddetalleordendepago,comentario', 'default', 'setOnEmpty' => true, 'value' => null),
+			array('idcheque, nrocheque, titular, cuittitular, fechaingreso, fechacobro, debe, haber, debeohaber, Banco_idBanco, estado, proveedor_idproveedor, cliente_idcliente, chequera_idchequera, iddetallecobranza, iddetalleordendepago, comentario', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -86,6 +86,7 @@ abstract class BaseCheque extends GxActiveRecord {
 			'debeohaber' => Yii::t('app', 'Debeohaber'),
 			'Banco_idBanco' => Yii::t('app', 'Banco Id Banco'),
 			'estado' => Yii::t('app', 'Estado'),
+			'fecharechazado' => Yii::t('app', 'Fecha Asiento'),
 			'proveedor_idproveedor' => Yii::t('app', 'Proveedor Idproveedor'),
 			'cliente_idcliente' => Yii::t('app', 'Cliente Idcliente'),
 			'chequera_idchequera' => Yii::t('app', 'Chequera Idchequera'),
@@ -116,6 +117,9 @@ abstract class BaseCheque extends GxActiveRecord {
 		
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
+			'sort' => array(
+					'defaultOrder' => array('fecha ASC' => true),
+				),
 		));
 	}
 	public function behaviors()

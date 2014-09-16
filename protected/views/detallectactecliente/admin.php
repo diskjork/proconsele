@@ -13,9 +13,27 @@ $this->breadcrumbs=array(
 );
 
 $this->menu=array(
-	array('label'=>'Volver', 'url'=>Yii::app()->request->Urlreferrer 
-			),
+	array(
+		'label'=>'Ctas. Ctes. Cliente', 
+		'url'=>Yii::app()->createUrl('ctactecliente/admin'),
+	),
+	array(
+		'label'=>'Vista secuencial',
+		'url'=>Yii::app()->createUrl('detallectactecliente/secuencial',array("id"=>$idctacte,"nombre"=>$nombre)
+	)),
 	
+	array(
+		'label'=>'Nueva Cobranza', 
+		'url'=>Yii::app()->createUrl("cobranza/create")
+		),
+	array(
+		'label'=>'Nueva Nota Crédito', 
+		'url'=>Yii::app()->createUrl("notacredito/create")
+		),	
+	array(
+		'label'=>'Nueva Nota Débito', 
+		'url'=>Yii::app()->createUrl("notadebito/create")
+		),
 			);
 
 ?>
@@ -24,7 +42,8 @@ $this->menu=array(
 
 
 <br>
-<?php
+<?php // $this->renderPartial('gridctactecliente', array('model'=>$model,'idctacte'=>$idctacte)); ?>
+<?php 
 $model->ctactecliente_idctactecliente=$_GET['id'];
 
 //para la barra de los a�os 
@@ -74,7 +93,7 @@ $model->ctactecliente_idctactecliente=$_GET['id'];
 		if (date('m')==$meses[$i][0]){
 			$$varTempMes=true;
 		}
-		$arregloTabsMeses[]=array('label'=>$meses[$i][1],'content'=>$this->renderPartial('gridctactecliente', array('model'=>$model,'mesTab'=>$meses[$i][0],'anioTab'=>$anioTab,'model->ctactecliente_idctactecliente'=>$model->ctactecliente_idctactecliente), true),'active'=>$$varTempMes);
+		$arregloTabsMeses[]=array('label'=>$meses[$i][1],'content'=>$this->renderPartial('gridctactecliente', array('model'=>$model,'mesTab'=>$meses[$i][0],'anioTab'=>$anioTab,'model->ctactecliente_idctactecliente'=>$model->ctactecliente_idctactecliente,'nombre'=>$nombre), true),'active'=>$$varTempMes);
 		}
 
 

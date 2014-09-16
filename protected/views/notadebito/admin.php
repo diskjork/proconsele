@@ -89,9 +89,16 @@ $columnas=array(
                     	'options'=>array('target'=>'_blank'),
 	           	
                  	),
+<<<<<<< HEAD
 			),
 		),
 	);
+=======
+			
+		          ),
+		         ),
+		 );
+>>>>>>> dcac37a85c40593b29ddd3df54756029f4e214f0
 ?>
 <?php
 	

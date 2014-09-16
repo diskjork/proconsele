@@ -230,9 +230,14 @@ class IvamovimientoController extends Controller
 					return $text;
 					break;
 				case '8':
-					$text="F. (B) - ANULADA";
+					$text="F.(B) - ANULADA";
 					return $text;
 					break;
+				case '9':
+					$text="F.(C) ";
+					return $text;
+					break;
+				
 		}
 	}
 	
@@ -273,18 +278,39 @@ class IvamovimientoController extends Controller
 				'value'=>array($this,'labelEstado') ),	
 		array(
 				'header' => 'IVA',
-				'value'=>'($data->tipoiva == 1.21)?"21%" :"10,5%"', ),
+				'value'=>array($this,'labeliva'),
+			),
 		array(
 				'header' => 'IIBB',
+				//'value'=>'$data->importeiibb',
 				'value'=>'($data->importeiibb != null) ? number_format($data->importeiibb, 2, ",", "."): ""',
 				//'value'=>array($this,'labelNumIIBB'),
 			),
 		array(
+				'header' => 'PER.IVA',
+				//'value'=>'$data->importe_per_iva',
+				'value'=>'($data->importe_per_iva != null) ? number_format($data->importe_per_iva, 2, ",", "."): ""',
+				//'value'=>array($this,'labelNumIIBB'),
+			),
+		array(
+				'header' => 'IMP.INT.',
+				//'value'=>'$data->importe_per_iva',
+				'value'=>'($data->impuestointerno != null) ? number_format($data->impuestointerno, 2, ",", "."): ""',
+				//'value'=>array($this,'labelNumIIBB'),
+			),
+		array(
 				'header' => 'TOTAL IVA',
+				//'value'=>'$data->importeiva',
 				'value'=>'number_format($data->importeiva, 2, ",", ".")',
 			),
 		array(
-				'header' => 'TOTAL NETO',
+				'header' => 'NETO',
+				//'value'=>'$data->importeneto',
+				'value'=>'number_format($data->netogravado, 2, ",", ".")',
+			),
+		array(
+				'header' => 'TOTAL',
+				//'value'=>'$data->importeneto',
 				'value'=>'number_format($data->importeneto, 2, ",", ".")',
 			));
 			
@@ -312,7 +338,7 @@ class IvamovimientoController extends Controller
 				    
 				    //'displayZeros'       => false,
 				    'zeroPlaceholder'      => '-',
-				    //'sumLabel'             => 'TOTALES:', // Default: 'Totals'
+				    'sumLabel'             => 'TOTALES:', // Default: 'Totals'
 				    'borderColor'          => '000000', // Default: '000000'
 				    'bgColor'              => 'E0E0E0', // Default: 'FFFFFF'
 				    'textColor'            => '000000', // Default: '000000'
@@ -343,6 +369,10 @@ class IvamovimientoController extends Controller
 				break;
 			case '1.105':
 				$text="10,5%";
+				return $text;
+				break;
+			case '0':
+				$text="Exento";
 				return $text;
 				break;
 		}

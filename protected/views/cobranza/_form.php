@@ -104,7 +104,9 @@
 											   '1'=>'Cheque',
 											   '2'=>'Transferencia',
 											   '3'=>'Cert. Retención IIBB',
-											   '4'=>'Cert. Retención IVA'),
+											   '4'=>'Cert. Retención IVA',
+											   '5'=>'Cert. Retención GANANCIAS',
+											   '6'=>'Cert. Cont. PATRONALES'),
 								'prompt'=>'Seleccione tipo de cobro..',
 					            'class'=>'span2',
 								
@@ -205,7 +207,49 @@
 					            'type'=>'text',
 					            'class'=>'span1',
 					        	'onkeydown'=>'solonumeromod(event);',
+					        ),
+					        'gannrocomp'=>array(
+					            'type'=>'text',
+					            'class'=>'span2',
+					        	'onkeydown'=>'solonumeromod(event);',
+					        ),
+					        'ganfecha'=>array(              
+               					 'type'=>'zii.widgets.jui.CJuiDatePicker',
+                				 'language'=>'es',
+					                'options'=>array(
+					                    'showAnim'=>'fold',
+							            ),
+			                ),
+			                 'gancomprelac'=>array(
+					            'type'=>'text',
+					            'class'=>'span2',
+					        ),
+					        'gantasa'=>array(
+					            'type'=>'text',
+					            'class'=>'span1',
+					        	'onkeydown'=>'solonumeromod(event);',
 					        ),	
+					        'patrnrocomp'=>array(
+					            'type'=>'text',
+					            'class'=>'span2',
+					        	'onkeydown'=>'solonumeromod(event);',
+					        ),
+					        'patrfecha'=>array(              
+               					 'type'=>'zii.widgets.jui.CJuiDatePicker',
+                				 'language'=>'es',
+					                'options'=>array(
+					                    'showAnim'=>'fold',
+							            ),
+			                ),
+			                 'patrcomprelac'=>array(
+					            'type'=>'text',
+					            'class'=>'span2',
+					        ),
+					        'patrtasa'=>array(
+					            'type'=>'text',
+					            'class'=>'span1',
+					        	'onkeydown'=>'solonumeromod(event);',
+					        ),		
 					        'importe'=>array(
 					            'type'=>'text',
 					            'class'=>'span1',

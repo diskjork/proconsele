@@ -48,7 +48,7 @@ td.mmf_cell {
 					        'htmlOptions' => array(
 					            //'placeholder' => 'Seleccionar fecha',
 					        	'class' => 'input-small',
-					        	
+					        	'onblur'=>'botonsubmit("1")',
 					            'value'=>date('d/m/Y'),
 					        )
 					    ));
@@ -58,7 +58,8 @@ td.mmf_cell {
             <?php echo $form->hiddenField($model,'totaldebe',array('span'=>5)); ?>
             <?php echo $form->hiddenField($model,'totalhaber',array('span'=>5)); ?>
 
-            <?php echo $form->textAreaControlGroup($model,'descripcion', array('span' => 6, 'rows' => 2)); ?>
+            <?php echo $form->textAreaControlGroup($model,'descripcion', array('span' => 6, 'rows' => 2,
+            				'onblur'=>'botonsubmit("1");')); ?>
 	<?php
 
     // see http://www.yiiframework.com/doc/guide/1.1/en/form.table

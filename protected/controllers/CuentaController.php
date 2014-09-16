@@ -221,11 +221,17 @@ class CuentaController extends Controller
         $cuenta=Cuenta::model()->findByPk($idcuenta);
 		$dataProviderRe= $model->generargrilladetallecuenta($idcuenta, $fecha, $fecha2)->data;
 		$cant=count($dataProviderRe);
+		$totaldebe=0;
+		$totalhaber=0;
+		/*for($i=0;$i<$cant;$i++){
+			$totaldebe=$totaldebe +$dataProviderRe[$i]['debeT'];
+			$totalhaber=$totalhaber +$dataProviderRe[$i]['haberT'];
+		}*/
 		$dataProvider=new CArrayDataProvider($dataProviderRe, array(
 				    'id'=>'idcuent',
 				    'sort'=>array(
 				        'attributes'=>array(
-				           'fechaasiento', 'codigocuenta' ,'nombrecuenta','descripcionasiento','idcuent','debeT', 'haberT'
+				           'fechaasiento', 'codigocuenta' ,'nombrecuenta','descripcionasiento','idcuent','debeT', 'haberT','saldo',
 				        ),
 				    ),
 				    'pagination'=>array(
@@ -249,12 +255,18 @@ $datos=array(
 		),
 		array(
 			'header' => 'DEBE',
-			'value'=>'($data["debeT"] !== null)? number_format($data["debeT"], 2, ",", "."):"-"',
+			'value'=>'($data["debeT"] !== null)? number_format($data["debeT"], 2, ",", "."):"0.00"',
 		),
 		array(
 			'header' => 'HABER',
-			'value'=>'($data["haberT"] !== null)? number_format($data["haberT"], 2, ",", "."):"-"',
+			'value'=>'($data["haberT"] !== null)? number_format($data["haberT"], 2, ",", "."):"0.00"',
 		),
+		array(
+			 'header'=>'SALDO',
+			 'value'=>'number_format($data["saldo"],2,".",",")',
+			 'footer'=>'-'
+  			),
+		
 	);
 				
 		
@@ -281,7 +293,7 @@ $datos=array(
 				    'decimalSeparator'     => ',', // Default: '.'
 				    'thousandsSeparator'   => '.', // Default: ','
 				    //'displayZeros'       => false,
-				    'zeroPlaceholder'      => '-',
+				    'zeroPlaceholder'      => '0.00',
 				    //'sumLabel'             => 'TOTALES:', // Default: 'Totals'
 				    'borderColor'          => '000000', // Default: '000000'
 				    'bgColor'              => 'E0E0E0', // Default: 'FFFFFF'

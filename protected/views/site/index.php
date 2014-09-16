@@ -13,10 +13,10 @@ $this->pageTitle=Yii::app()->name;
 <div id="bloqueMain">
 	<div id="bloqueUpRight">
 	<div id="tituloDashboard">Compras por mes</div>
-	<br>
+	<br><br>
 	<?php
 		$compras = new Compras;
-		$dataProviderCompras = $compras->reporteCompras(date('Y'));
+		$dataProviderCompras = $compras->reporteCompras_A(date('Y'));
 		$dataCompras=$dataProviderCompras->getData();
 		//foreach ($dataCompras as $data){}
 
@@ -54,6 +54,32 @@ $this->pageTitle=Yii::app()->name;
 				'value'=>'number_format($data->jun,2,".",",")',
 				 
 				),
+			
+ 		);
+	?>
+	
+	<?php 
+		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
+	    //'filter'=>$model,
+	    //'fixedHeader' => true,
+	    //'headerOffset' => 0, // 40px is the height of the main navigation at bootstrap
+	    'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED),
+		//'rowCssClassExpression'=>'$data->color', //Se debe modificar linea 32 y 38 de profile.css
+	    'dataProvider' => $dataProviderCompras,
+	    'columns' => $gridColumnsCompras,
+		'summaryText'=>'',
+		'template'=>'{items}',
+		//'pagerCssClass'=>'pagination pagination-small pagination-centered',
+	    ));
+	?>		
+	<?php
+		$compras = new Compras;
+		$dataProviderCompras = $compras->reporteCompras_B(date('Y'));
+		$dataCompras=$dataProviderCompras->getData();
+		//foreach ($dataCompras as $data){}
+		$gridColumnsCompras= array(
+			//'idmateriaprima',
+			           
 			array(
 				'header'=>'JUL',
 				'value'=>'number_format($data->jul,2,".",",")',
@@ -86,7 +112,7 @@ $this->pageTitle=Yii::app()->name;
 				),
  		);
 	?>
-	<br>
+	
 	<?php 
 		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
 	    //'filter'=>$model,
@@ -102,15 +128,14 @@ $this->pageTitle=Yii::app()->name;
 	    ));
 	?>		
 	
-	
 	</div>
 	
 	<div id="bloqueUpLeft">
 	<div id="tituloDashboard">Facturación por mes</div>
-	<br>
+	<br><br>
 	<?php
 		$factura = new Factura;
-		$dataProviderfactura = $factura->reportefactura(date('Y'));
+		$dataProviderfactura = $factura->reportefactura_A(date('Y'));
 		$datafactura=$dataProviderfactura->getData();
 		//foreach ($datafactura as $data){}
 
@@ -148,6 +173,32 @@ $this->pageTitle=Yii::app()->name;
 				'value'=>'number_format($data->jun,2,".",",")',
 				 
 				),
+			
+ 		);
+	?>
+	<?php 
+		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
+	    //'filter'=>$model,
+	    //'fixedHeader' => true,
+	    //'headerOffset' => 0, // 40px is the height of the main navigation at bootstrap
+	    'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED),
+		//'rowCssClassExpression'=>'$data->color', //Se debe modificar linea 32 y 38 de profile.css
+	    'dataProvider' => $dataProviderfactura,
+	    'columns' => $gridColumnsfactura,
+		'summaryText'=>'',
+		'template'=>'{items}',
+		//'pagerCssClass'=>'pagination pagination-small pagination-centered',
+	    ));
+	?>	
+	<?php
+		$factura = new Factura;
+		$dataProviderfactura = $factura->reportefactura_B(date('Y'));
+		$datafactura=$dataProviderfactura->getData();
+		//foreach ($datafactura as $data){}
+
+		$gridColumnsfactura= array(
+			//'idmateriaprima',
+			          
 			array(
 				'header'=>'JUL',
 				'value'=>'number_format($data->jul,2,".",",")',
@@ -180,7 +231,6 @@ $this->pageTitle=Yii::app()->name;
 				),
  		);
 	?>
-	<br>
 	<?php 
 		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
 	    //'filter'=>$model,
@@ -195,14 +245,13 @@ $this->pageTitle=Yii::app()->name;
 		//'pagerCssClass'=>'pagination pagination-small pagination-centered',
 	    ));
 	?>	
-	
 	</div>
 	<div id="bloqueDownRight">
 		<div id="tituloDashboard">Total de IVA COMPRAS por mes</div>
-		<br>	
+		<br><BR>
 	<?php
 		$compras = new Compras;
-		$dataProviderCompras = $compras->reporteComprasIVA(date('Y'));
+		$dataProviderCompras = $compras->reporteComprasIVA_A(date('Y'));
 		$dataCompras=$dataProviderCompras->getData();
 		//foreach ($dataCompras as $data){}
 
@@ -240,6 +289,34 @@ $this->pageTitle=Yii::app()->name;
 				'value'=>'number_format($data->jun,2,".",",")',
 				 
 				),
+			
+ 		);
+	?>
+	
+	<?php 
+		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
+	    //'filter'=>$model,
+	    //'fixedHeader' => true,
+	    //'headerOffset' => 0, // 40px is the height of the main navigation at bootstrap
+	    'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED),
+		//'rowCssClassExpression'=>'$data->color', //Se debe modificar linea 32 y 38 de profile.css
+	    'dataProvider' => $dataProviderCompras,
+	    'columns' => $gridColumnsCompras,
+		'summaryText'=>'',
+		'template'=>'{items}',
+		//'pagerCssClass'=>'pagination pagination-small pagination-centered',
+	    ));
+	?>		
+	<?php
+		$compras = new Compras;
+		$dataProviderCompras = $compras->reporteComprasIVA_B(date('Y'));
+		$dataCompras=$dataProviderCompras->getData();
+		//foreach ($dataCompras as $data){}
+
+		$gridColumnsCompras= array(
+			//'idmateriaprima',
+			
+           
 			array(
 				'header'=>'JUL',
 				'value'=>'number_format($data->jul,2,".",",")',
@@ -272,7 +349,7 @@ $this->pageTitle=Yii::app()->name;
 				),
  		);
 	?>
-	<br>
+	
 	<?php 
 		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
 	    //'filter'=>$model,
@@ -291,10 +368,10 @@ $this->pageTitle=Yii::app()->name;
 		</div>
 	<div id="bloqueDownLeft">
 		<div id="tituloDashboard">Total de IVA VENTAS por mes</div>
-	<br>	
+	<br><br>	
 	<?php
 		$factura = new Factura;
-		$dataProviderfactura = $factura->reportefacturaIVA(date('Y'));
+		$dataProviderfactura = $factura->reportefacturaIVA_A(date('Y'));
 		$datafactura=$dataProviderfactura->getData();
 		foreach ($datafactura as $data){}
 
@@ -330,8 +407,35 @@ $this->pageTitle=Yii::app()->name;
 			array(
 				'header'=>'JUN',
 				'value'=>'number_format($data->jun,2,".",",")',
-				 
 				),
+	
+ 		);
+	?>
+	
+	<?php 
+		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
+	    //'filter'=>$model,
+	    //'fixedHeader' => true,
+	    //'headerOffset' => 0, // 40px is the height of the main navigation at bootstrap
+	    'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED),
+		//'rowCssClassExpression'=>'$data->color', //Se debe modificar linea 32 y 38 de profile.css
+	    'dataProvider' => $dataProviderfactura,
+	    'columns' => $gridColumnsfactura,
+		'summaryText'=>'',
+		'template'=>'{items}',
+		//'pagerCssClass'=>'pagination pagination-small pagination-centered',
+	    ));
+	?>	
+	<?php
+		$factura = new Factura;
+		$dataProviderfactura = $factura->reportefacturaIVA_B(date('Y'));
+		$datafactura=$dataProviderfactura->getData();
+		foreach ($datafactura as $data){}
+
+		$gridColumnsfactura= array(
+			//'idmateriaprima',
+			
+          
 			array(
 				'header'=>'JUL',
 				'value'=>'number_format($data->jul,2,".",",")',
@@ -364,7 +468,7 @@ $this->pageTitle=Yii::app()->name;
 				),
  		);
 	?>
-	<br>
+	
 	<?php 
 		$this->widget('yiiwheels.widgets.grid.WhGridView', array(
 	    //'filter'=>$model,
@@ -379,6 +483,5 @@ $this->pageTitle=Yii::app()->name;
 		//'pagerCssClass'=>'pagination pagination-small pagination-centered',
 	    ));
 	?>	
-	
 		</div>
 </div>

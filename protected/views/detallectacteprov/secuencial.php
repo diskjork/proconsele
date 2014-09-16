@@ -1,26 +1,57 @@
 <?php
-
-$datos= $model->generarGrillaSaldos($model->ctacteprov_idctacteprov,$anioTab,$mesTab,0);
-
-
-$datos_array=$datos->data;
-$cant=count($datos_array);	
-
-$datos->setPagination(array('pageSize'=>$cant)); 
+$idctacte=$_GET['id'];
+$nombre=$_GET['nombre'];
+$this->menu=array(
+	array(
+		'label'=>'Ctas. Ctes. Proveedor', 
+		'url'=>Yii::app()->createUrl('ctacteprov/admin'),
+	),
+	array(
+		'label'=>'Vista filtrada', 
+		'url'=>Yii::app()->createUrl('detallectacteprov/admin',array("id"=>$idctacte,"nombre"=>$nombre) ),
+	),
+	array(
+		'label'=>'Nueva ordendepago', 
+		'url'=>Yii::app()->createUrl("ordendepago/create")
+		),
+	array(
+		'label'=>'Nueva Nota Crédito', 
+		'url'=>Yii::app()->createUrl("notacreditoprov/create")
+		),	
+	array(
+		'label'=>'Nueva Nota Débito', 
+		'url'=>Yii::app()->createUrl("notadebitoprov/create")
+		),
+	
+);
 ?>
-<<div id="iconoExportar" align="right">
+<h5 class="well well-small">CTA. CTE. - PROVEEDOR - <?php echo $nombre;?></h5>
+<br>
+<div id="iconoExportar" align="right">
 <?php echo TbHtml::tooltip(TbHtml::labelTb("<i class='icon-download-alt icon-white'></i>", 
 array("color" => TbHtml::LABEL_COLOR_SUCCESS)),
-array('Excel','mesTab'=>$mesTab,
-			  'anioTab'=>$anioTab,
-			  'idctacteprov'=>$model->ctacteprov_idctacteprov,
+array('Excel','mesTab'=>'08',
+			  'anioTab'=>'2014',
+			  'idctacteprov'=>$idctacte,
 			  'nombre'=>$nombre,
-			  'caso'=>0),
+			  'caso'=>1),
 'Exportar',
 array('placement' => TbHtml::TOOLTIP_PLACEMENT_RIGHT)); ?>
 </div>
 <?php
-
+$datos= $model->generarGrillaSaldos_secuencial($idctacte,'2014','08',1)->data;
+$cant=count($datos);
+			$datos=new CArrayDataProvider($datos, array(
+				    'keyField'=>'iddetallectacteprov',
+				    'sort'=>array(
+				        'attributes'=>array(
+				           'iddetallectacteprov','fecha', 'descripcion',
+				        ),
+				    ),
+				    'pagination'=>array(
+				        'pageSize'=>40,
+				    ),
+				));
 $columnas=array(
 		array(
 	    	'value'=>'$this->grid->dataProvider->pagination->currentPage*
@@ -219,19 +250,8 @@ $columnas=array(
 <?php $this->widget('bootstrap.widgets.TbGridView',array(
 	//'id'=>'detallectacteprov-grid',
 	'dataProvider'=>$datos,
-	'filter'=>$model,
+	//'filter'=>$datos->sort(),
 	'columns'=>$columnas,
-	'template' => "{items}",
+	'template' => "{items}{pager}",
 	'type' => array(TbHtml::GRID_TYPE_CONDENSED,TbHtml::GRID_TYPE_BORDERED,TbHtml::GRID_TYPE_HOVER),
 )); ?>
-
-<script type="text/javascript">
-<!--
-/*
-var $table = $("<?php //echo "#yw".date("n",strtotime($anioTab."-".$mesTab));?>").children('table');
-var $tbody = $table.children('tbody');
-$tbody.append('<tr> <td></td> <td></td> <td></td> <td></td> <td><?php //echo "$ ".number_format($dataProviderDebeHaber[0]['total_debe'],2,".",",");?></td><td><?php //echo "$ ".number_format($dataProviderDebeHaber[0]['total_haber'],2,".",",");?></td><td colspan="2"></td>  </tr>');
-*/
-//-->
-</script>	
-
