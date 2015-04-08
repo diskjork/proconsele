@@ -163,7 +163,11 @@ function sumatotal(){
 	// para el caso de factura "B"
 	if(tipofactura == 2){ 
 		subtotalbruto_B= subtotalbruto; // con IVA traido desde ajax
-		netogravado=(subtotalbruto / IVA);// sin iva
+        var iva_coef= IVA - 1 ;
+        var temp_total_iva=iva_coef * subtotalbruto;
+        temp_total_iva= $.number(temp_total_iva,2);
+        netogravado=subtotalbruto - temp_total_iva;// sin iva
+		//netogravado=(subtotalbruto / IVA);// sin iva
 		
 	}
 	var cofIVA=IVA - 1;
@@ -192,7 +196,7 @@ function sumatotal(){
 			
 		}
 		if(e == 1){ //recargo
-			var deReBloc=$("#Factura_descrecar").val();
+			deReBloc=$("#Factura_descrecar").val();
 			descRecar=parseFloat(deReBloc);
 			Recargo=descRecar/100;
 						
@@ -207,7 +211,7 @@ function sumatotal(){
 	if(Descuento != 1){
 		if(tipofactura == 2){  //factura B
 			TOTALdes_rec= subtotalbruto_B * Descuento;
-			subtotalbruto_B=subtotalbruto_B - TOTALdes_rec;
+			subtotalbruto_B= subtotalbruto_B - TOTALdes_rec;
 			
 			var importe_des= $.number( TOTALdes_rec, 2 );
 			$("#descuento_recargo_importe").text("-"+importe_des);
@@ -216,7 +220,7 @@ function sumatotal(){
 		// para el caso de una factura A
 		TOTALdes_rec=subtotalbruto * Descuento;
 
-		var importe_des= $.number( TOTALdes_rec, 2 );
+		 importe_des= $.number( TOTALdes_rec, 2 );
 		$("#descuento_recargo_importe").text("-"+importe_des);
 		subtotalbruto=subtotalbruto - TOTALdes_rec;
 		}
@@ -233,7 +237,7 @@ function sumatotal(){
 		// para el caso de una factura A
 		TOTALdes_rec= subtotalbruto * Recargo;
 		subtotalbruto=subtotalbruto + TOTALdes_rec;
-		var rec_impote= $.number(TOTALdes_rec, 2 ); 
+		rec_impote= $.number(TOTALdes_rec, 2 );
 		$("#descuento_recargo_importe").text(rec_impote);
 	}
 	}
@@ -259,27 +263,34 @@ function sumatotal(){
 		$("#Factura_importeImpInt").val(TOTALimpint);
 
 	}
-	console.log(TOTALimpint);
+	//console.log(TOTALimpint);
 	//-----------------------IVA----------------------------
 	if(tipofactura == 1){
 		subtotalbruto=subtotalbruto;
 		TOTALiva= subtotalbruto * cofIVA;
+        //TOTALiva= $.number(TOTALiva,2);
+        TOTALiva=TOTALiva.toFixed(2);
+        TOTALiva=parseFloat(TOTALiva);
 	} else {
 		subtotalbruto_B= subtotalbruto_B ;
 		//subtotalbruto_B_con_iva= netogravado * IVA;
 	}
 	//console.log(subtotalbruto_B);
 	//----------------CALCULO TOTALNETO--------------------
-		if(tipofactura == 2){  //factura B
-			
-			SUBtotal=subtotalbruto_B;
-			TOTALiva=subtotalbruto_B - (subtotalbruto_B / IVA);
-			TOTALNETO=subtotalbruto_B + TOTALimpint;
-		} else {
-		 SUBtotal=subtotalbruto;
-		 TOTALNETO=subtotalbruto+TOTALiva+TOTALimpint ;
+	if(tipofactura == 2){  //factura B
+        SUBtotal=subtotalbruto_B;
+		//TOTALiva= su
+		// btotalbruto_B - (subtotalbruto_B / IVA);
+        TOTALiva=  temp_total_iva;
+		//TOTALNETO= SUBtotal + TOTALimpint;
+        TOTALNETO= netogravado + TOTALimpint;
+	} else {
+		SUBtotal=subtotalbruto;
+		TOTALNETO=subtotalbruto+TOTALiva+TOTALimpint ;
+//        console.log(TOTALiva+"este");
 	}
-		 
+
+  //  die();
 //----------------------IIBB---------------------------
 	//console.log("checkiibb="+checkiibb+" coficienteiibb="+coficienteiibb);
 	var TOTALiibb=0;
@@ -339,7 +350,7 @@ function sumatotal(){
 	$("#Factura_importebruto").val(SUBtotal.toFixed(2));// subtotal
 
 	$("#totalnetoblock").text(totalnetotransfor);
-	$("#Factura_importeneto").val(TOTALNETO.toFixed(2)); // total d la factura
+	$("#Factura_importeneto").val(TOTALNETO); // total d la factura
 	$("#Factura_netogravado").val(netogravado.toFixed(2)); //neto gravado sin impuesto
 	totalIvaTrasfor = $.number(TOTALiva, 2);
 	if(tipofactura == 1){

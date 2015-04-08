@@ -128,7 +128,7 @@ if(isset($_GET['vista'])){
 			case '1':
 				$mesv=10;
 			default:
-				$mesv=$mes - 3;
+				$mesv=$mes - 7;
 				break;
 		}
 		$cond1="MONTH(fecha)>=".$mesv;

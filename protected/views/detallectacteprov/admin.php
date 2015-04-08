@@ -15,7 +15,7 @@ $this->breadcrumbs=array(
 $this->menu=array(
 	array(
 		'label'=>'Ctas. Ctes. Proveedor', 
-		'url'=>Yii::app()->createUrl('ctactprov/admin'),
+		'url'=>Yii::app()->createUrl('ctacteprov/admin'),
 	),
 	array(
 		'label'=>'Vista secuencial',

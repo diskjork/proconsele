@@ -161,7 +161,7 @@ abstract class BaseFactura extends GxActiveRecord {
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'sort' => array(
-					'defaultOrder'=>'idfactura DESC',
+					'defaultOrder'=>'fecha DESC',
 		),
 		));
 	}
